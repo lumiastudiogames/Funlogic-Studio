@@ -139,8 +139,10 @@
     starsCollected = 0;
     gameWon = false;
     gameOver = false;
-    document.getElementById('star-count').textContent = '0/3';
-    document.getElementById('level-badge').textContent = `FASE ${currentLevelIdx + 1}`;
+    const starEl = document.getElementById('star-count');
+    if (starEl) starEl.textContent = '0/3';
+    const lvlEl = document.getElementById('level-badge');
+    if (lvlEl) lvlEl.textContent = `FASE ${currentLevelIdx + 1}`;
 
     // Setup candy & ropes
     const firstRope = def.ropes[0];
@@ -310,7 +312,8 @@
         if (d < candy.radius + 18) {
           star.collected = true;
           starsCollected++;
-          document.getElementById('star-count').textContent = `${starsCollected}/3`;
+          const starEl = document.getElementById('star-count');
+          if (starEl) starEl.textContent = `${starsCollected}/3`;
           AudioEngine.playStar();
           createParticles(star.x, star.y, '#ffd700', 12);
         }

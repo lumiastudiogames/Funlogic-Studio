@@ -2428,14 +2428,19 @@
         /* MODAL CONTROLS */
         function showLevelClearModal() {
           const lvl = LEVELS[state.currentLevelIndex];
-          document.getElementById('clear-stat-lvl').textContent = lvl.id;
-          document.getElementById('clear-stat-planks').textContent = `3/3`;
-          document.getElementById('clear-stat-score').textContent = `+360`;
+          const lvlStat = document.getElementById('clear-stat-lvl');
+          if (lvlStat) lvlStat.textContent = lvl.id;
+          const plankStat = document.getElementById('clear-stat-planks');
+          if (plankStat) plankStat.textContent = `3/3`;
+          const scoreStat = document.getElementById('clear-stat-score');
+          if (scoreStat) scoreStat.textContent = `+360`;
 
           const starsElem = document.getElementById('clear-stars');
-          if (state.hearts === 3) starsElem.textContent = '★★★';
-          else if (state.hearts === 2) starsElem.textContent = '★★☆';
-          else starsElem.textContent = '★☆☆';
+          if (starsElem) {
+            if (state.hearts === 3) starsElem.textContent = '★★★';
+            else if (state.hearts === 2) starsElem.textContent = '★★☆';
+            else starsElem.textContent = '★☆☆';
+          }
 
           if (state.currentLevelIndex + 1 > state.unlockedLevelIndex) {
             state.unlockedLevelIndex = Math.min(state.currentLevelIndex + 1, 9);
@@ -2443,17 +2448,19 @@
           }
 
           if (state.currentLevelIndex >= 9) {
-            document.getElementById('vic-total-score').textContent = `${state.score} pts`;
-            modalVictory.classList.add('active');
+            const vicScore = document.getElementById('vic-total-score');
+            if (vicScore) vicScore.textContent = `${state.score} pts`;
+            if (modalVictory) modalVictory.classList.add('active');
           } else {
-            modalClear.classList.add('active');
+            if (modalClear) modalClear.classList.add('active');
           }
         }
 
         function showLevelFailModal() {
           const failedCount = state.plankStates.filter(p => p === false).length;
-          document.getElementById('fail-stat-ans').textContent = `${failedCount} broken plank${failedCount > 1 ? 's' : ''}`;
-          modalFail.classList.add('active');
+          const failAns = document.getElementById('fail-stat-ans');
+          if (failAns) failAns.textContent = `${failedCount} broken plank${failedCount > 1 ? 's' : ''}`;
+          if (modalFail) modalFail.classList.add('active');
         }
 
         function openLevelSelect() {

@@ -3,6 +3,12 @@ export type MasterCategoryId =
   | 'all-puzzle';
 
 export type SpecificCategoryId =
+  | 'logic'
+  | 'escape'
+  | 'physics'
+  | 'sudoku'
+  | 'three-d'
+  | 'chess'
   | 'water-sort'
   | 'mahjong'
   | 'sokoban'

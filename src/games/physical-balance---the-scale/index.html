@@ -2214,12 +2214,16 @@
         if (currentLevelIndex === LEVELS_DATA.length - 1) {
           let totalStars = 0;
           Object.values(levelStars).forEach(s => totalStars += s);
-          document.getElementById('total-stars-val').textContent = `${totalStars} / ${LEVELS_DATA.length * 3}`;
+          const totEl = document.getElementById('total-stars-val');
+          if (totEl) totEl.textContent = `${totalStars} / ${LEVELS_DATA.length * 3}`;
           showModal('game-win-modal');
         } else {
-          document.getElementById('win-stars-display').textContent = '★'.repeat(stars) + '☆'.repeat(3 - stars);
-          document.getElementById('win-stat-moves').textContent = movesCount.toString();
-          document.getElementById('win-stat-target').textContent = `${rightTotal.toFixed(1)} kg`;
+          const wStars = document.getElementById('win-stars-display');
+          if (wStars) wStars.textContent = '★'.repeat(stars) + '☆'.repeat(3 - stars);
+          const wMoves = document.getElementById('win-stat-moves');
+          if (wMoves) wMoves.textContent = movesCount.toString();
+          const wTarget = document.getElementById('win-stat-target');
+          if (wTarget) wTarget.textContent = `${rightTotal.toFixed(1)} kg`;
           showModal('victory-modal');
         }
       }

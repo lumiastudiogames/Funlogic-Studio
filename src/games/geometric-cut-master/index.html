@@ -1860,8 +1860,10 @@
           };
 
           // Update HUD
-          document.getElementById("level-display").textContent = `${String(lvl.id).padStart(2, '0')}/20`;
-          document.getElementById("shape-title").textContent = lvl.name;
+          const lvlDisp = document.getElementById("level-display");
+          if (lvlDisp) lvlDisp.textContent = `${String(lvl.id).padStart(2, '0')}/20`;
+          const shapeTitle = document.getElementById("shape-title");
+          if (shapeTitle) shapeTitle.textContent = lvl.name;
           document.getElementById("cut-banner").classList.remove("visible");
 
           closeAllModals();
@@ -2577,43 +2579,58 @@
 
         function showSuccessModal(data) {
           const m = document.getElementById("modal-success");
-          document.getElementById("success-accuracy").textContent = `${data.accuracy.toFixed(1)}%`;
-          document.getElementById("success-accuracy-bar").style.width = `${data.accuracy}%`;
-          document.getElementById("success-parts").textContent = `${data.ratioA.toFixed(1)}% / ${data.ratioB.toFixed(1)}%`;
-          document.getElementById("success-split-a").style.width = `${data.ratioA}%`;
-          document.getElementById("success-split-b").style.width = `${data.ratioB}%`;
+          const sAcc = document.getElementById("success-accuracy");
+          if (sAcc) sAcc.textContent = `${data.accuracy.toFixed(1)}%`;
+          const sBar = document.getElementById("success-accuracy-bar");
+          if (sBar) sBar.style.width = `${data.accuracy}%`;
+          const sParts = document.getElementById("success-parts");
+          if (sParts) sParts.textContent = `${data.ratioA.toFixed(1)}% / ${data.ratioB.toFixed(1)}%`;
+          const sSplitA = document.getElementById("success-split-a");
+          if (sSplitA) sSplitA.style.width = `${data.ratioA}%`;
+          const sSplitB = document.getElementById("success-split-b");
+          if (sSplitB) sSplitB.style.width = `${data.ratioB}%`;
 
           for (let i = 1; i <= 3; i++) {
             const starEl = document.getElementById(`star-${i}`);
-            if (i <= data.stars) {
-              starEl.classList.add("active");
-            } else {
-              starEl.classList.remove("active");
+            if (starEl) {
+              if (i <= data.stars) {
+                starEl.classList.add("active");
+              } else {
+                starEl.classList.remove("active");
+              }
             }
           }
           openModal("modal-success");
         }
 
         function showFailModal(data) {
-          document.getElementById("fail-accuracy").textContent = `${data.accuracy.toFixed(1)}%`;
-          document.getElementById("fail-accuracy-bar").style.width = `${data.accuracy}%`;
-          document.getElementById("fail-parts").textContent = `${data.ratioA.toFixed(1)}% / ${data.ratioB.toFixed(1)}%`;
-          document.getElementById("fail-split-a").style.width = `${data.ratioA}%`;
-          document.getElementById("fail-split-b").style.width = `${data.ratioB}%`;
-          document.getElementById("fail-min-acc").textContent = `${data.minAccuracy}%`;
+          const fAcc = document.getElementById("fail-accuracy");
+          if (fAcc) fAcc.textContent = `${data.accuracy.toFixed(1)}%`;
+          const fBar = document.getElementById("fail-accuracy-bar");
+          if (fBar) fBar.style.width = `${data.accuracy}%`;
+          const fParts = document.getElementById("fail-parts");
+          if (fParts) fParts.textContent = `${data.ratioA.toFixed(1)}% / ${data.ratioB.toFixed(1)}%`;
+          const fSplitA = document.getElementById("fail-split-a");
+          if (fSplitA) fSplitA.style.width = `${data.ratioA}%`;
+          const fSplitB = document.getElementById("fail-split-b");
+          if (fSplitB) fSplitB.style.width = `${data.ratioB}%`;
+          const fMinAcc = document.getElementById("fail-min-acc");
+          if (fMinAcc) fMinAcc.textContent = `${data.minAccuracy}%`;
           openModal("modal-fail");
         }
 
         function showVictoryModal() {
-          document.getElementById("victory-stars").textContent = `${countTotalStars()} / 60`;
+          const vStars = document.getElementById("victory-stars");
+          if (vStars) vStars.textContent = `${countTotalStars()} / 60`;
           openModal("modal-victory");
         }
 
         function renderLevelsGrid() {
           const grid = document.getElementById("levels-grid");
-          grid.innerHTML = "";
+          if (grid) grid.innerHTML = "";
 
-          document.getElementById("total-stars-count").textContent = `${countTotalStars()} / 60`;
+          const totStars = document.getElementById("total-stars-count");
+          if (totStars) totStars.textContent = `${countTotalStars()} / 60`;
 
           LEVELS.forEach((lvl, idx) => {
             const isUnlocked = lvl.id <= gameState.unlockedLevel;
@@ -2657,8 +2674,10 @@
         document.getElementById("btn-hint").addEventListener("click", () => {
           playSoundClick();
           const lvl = LEVELS[gameState.currentLevelIndex];
-          document.getElementById("hint-shape-name").textContent = lvl.name;
-          document.getElementById("hint-text").textContent = lvl.hint;
+          const hName = document.getElementById("hint-shape-name");
+          if (hName) hName.textContent = lvl.name;
+          const hText = document.getElementById("hint-text");
+          if (hText) hText.textContent = lvl.hint;
           openModal("modal-hint");
         });
 
@@ -2670,7 +2689,8 @@
 
         document.getElementById("btn-sound").addEventListener("click", () => {
           soundEnabled = !soundEnabled;
-          document.getElementById("sound-icon").textContent = soundEnabled ? "🔊" : "🔇";
+          const sndIcon = document.getElementById("sound-icon");
+          if (sndIcon) sndIcon.textContent = soundEnabled ? "🔊" : "🔇";
           saveProgress();
           updateBgmVolume();
           playSoundClick();
@@ -2733,8 +2753,10 @@
         document.getElementById("btn-fail-hint").addEventListener("click", () => {
           playSoundClick();
           const lvl = LEVELS[gameState.currentLevelIndex];
-          document.getElementById("hint-shape-name").textContent = lvl.name;
-          document.getElementById("hint-text").textContent = lvl.hint;
+          const hName = document.getElementById("hint-shape-name");
+          if (hName) hName.textContent = lvl.name;
+          const hText = document.getElementById("hint-text");
+          if (hText) hText.textContent = lvl.hint;
           openModal("modal-hint");
         });
 

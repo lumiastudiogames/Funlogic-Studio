@@ -135,7 +135,8 @@
     initDOM() {
       document.getElementById('btn-sound-toggle').addEventListener('click', () => {
         const muted = this.sound.toggle();
-        document.getElementById('sound-icon').textContent = muted ? '🔇' : '🔊';
+        const soundIcon = document.getElementById('sound-icon');
+        if (soundIcon) soundIcon.textContent = muted ? '🔇' : '🔊';
       });
 
       this.undoBtn.addEventListener('click', () => this.undoLastTile());
@@ -414,10 +415,16 @@
 
       remaining.forEach((t, idx) => {
         t.data = symbols[idx];
-        t.element.querySelector('.tile-symbol').className = `tile-symbol ${t.data.css}`;
-        t.element.querySelector('.tile-symbol').textContent = t.data.symbol;
-        t.element.querySelector('.tile-badge').className = `tile-badge ${t.data.css}`;
-        t.element.querySelector('.tile-badge').textContent = t.data.badge;
+        const symEl = t.element.querySelector('.tile-symbol');
+        if (symEl) {
+          symEl.className = `tile-symbol ${t.data.css}`;
+          symEl.textContent = t.data.symbol;
+        }
+        const badgeEl = t.element.querySelector('.tile-badge');
+        if (badgeEl) {
+          badgeEl.className = `tile-badge ${t.data.css}`;
+          badgeEl.textContent = t.data.badge;
+        }
       });
 
       this.sound.playCollect();
@@ -512,8 +519,10 @@
           window.parent.postMessage({ type: 'win', time: timeInSeconds }, '*');
         }
 
-        document.getElementById('win-time').textContent = `${timeInSeconds}s`;
-        document.getElementById('win-score').textContent = this.score;
+        const winTimeEl = document.getElementById('win-time');
+        if (winTimeEl) winTimeEl.textContent = `${timeInSeconds}s`;
+        const winScoreEl = document.getElementById('win-score');
+        if (winScoreEl) winScoreEl.textContent = this.score;
         document.getElementById('modal-win').classList.add('active');
       }
     }

@@ -124,12 +124,16 @@ export function showGamePrerollAd(options: {
     }, 250);
   };
 
-  // Skip button unlocks after 2 seconds or finishes immediately
-  let canSkip = false;
+  // Skip button is enabled immediately for instant game play
+  let canSkip = true;
+  if (skipBtn && skipLabel) {
+    skipBtn.classList.remove('bg-slate-800', 'text-slate-300');
+    skipBtn.classList.add('bg-[#58CC02]', 'text-white', 'hover:bg-[#4EBA02]');
+    skipLabel.textContent = 'Play Now';
+  }
+
   skipBtn?.addEventListener('click', () => {
-    if (canSkip || remaining <= 1) {
-      finishAndStartGame();
-    }
+    finishAndStartGame();
   });
 
   const totalSteps = duration * 10;

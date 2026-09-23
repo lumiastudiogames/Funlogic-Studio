@@ -75,9 +75,12 @@ function updateUI() {
     if (moves <= par) stars = 3;
     else if (moves <= par + 2) stars = 2;
 
-    document.getElementById('win-level-badge').textContent = `LEVEL ${lvlNum} CLEARED!`;
-    document.getElementById('win-moves-stat').textContent = `${moves} / ${par}`;
-    document.getElementById('win-coins-stat').textContent = `+${stars * 10 + 15}`;
+    const lvlBadge = document.getElementById('win-level-badge');
+    if (lvlBadge) lvlBadge.textContent = `LEVEL ${lvlNum} CLEARED!`;
+    const movesStat = document.getElementById('win-moves-stat');
+    if (movesStat) movesStat.textContent = `${moves} / ${par}`;
+    const coinsStat = document.getElementById('win-coins-stat');
+    if (coinsStat) coinsStat.textContent = `+${stars * 10 + 15}`;
 
     for (let s = 1; s <= 3; s++) {
       const starElem = document.getElementById(`win-star-${s}`);

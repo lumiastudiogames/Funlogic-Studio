@@ -149,7 +149,8 @@
       // Sound toggle
       document.getElementById('btn-sound-toggle').addEventListener('click', () => {
         const muted = this.sound.toggle();
-        document.getElementById('sound-icon').textContent = muted ? '🔇' : '🔊';
+        const soundIcon = document.getElementById('sound-icon');
+        if (soundIcon) soundIcon.textContent = muted ? '🔇' : '🔊';
       });
 
       // Quick 90 deg rotation buttons
@@ -476,10 +477,18 @@
       active.forEach((t, idx) => {
         t.data = symbols[idx];
         const front = t.element.querySelector('.face-front');
-        front.querySelector('.tile-symbol').className = `tile-symbol ${t.data.css}`;
-        front.querySelector('.tile-symbol').textContent = t.data.symbol;
-        front.querySelector('.tile-badge').className = `tile-badge ${t.data.css}`;
-        front.querySelector('.tile-badge').textContent = t.data.badge;
+        if (front) {
+          const symEl = front.querySelector('.tile-symbol');
+          if (symEl) {
+            symEl.className = `tile-symbol ${t.data.css}`;
+            symEl.textContent = t.data.symbol;
+          }
+          const badgeEl = front.querySelector('.tile-badge');
+          if (badgeEl) {
+            badgeEl.className = `tile-badge ${t.data.css}`;
+            badgeEl.textContent = t.data.badge;
+          }
+        }
       });
 
       if (this.selectedTile) {
@@ -574,8 +583,10 @@
           window.parent.postMessage({ type: 'win', time: timeInSeconds }, '*');
         }
 
-        document.getElementById('win-time').textContent = `${timeInSeconds}s`;
-        document.getElementById('win-score').textContent = this.score;
+        const winTimeEl = document.getElementById('win-time');
+        if (winTimeEl) winTimeEl.textContent = `${timeInSeconds}s`;
+        const winScoreEl = document.getElementById('win-score');
+        if (winScoreEl) winScoreEl.textContent = this.score;
         document.getElementById('modal-win').classList.add('active');
       }
     }

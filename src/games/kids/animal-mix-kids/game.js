@@ -236,7 +236,8 @@
 
     // Show local win modal
     setTimeout(() => {
-      document.getElementById('win-time').textContent = `${elapsedSeconds}s`;
+      const wtEl = document.getElementById('win-time');
+      if (wtEl) wtEl.textContent = `${elapsedSeconds}s`;
       document.getElementById('win-modal').classList.add('active');
     }, 400);
   }

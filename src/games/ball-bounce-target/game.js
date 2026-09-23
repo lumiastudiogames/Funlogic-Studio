@@ -2404,8 +2404,10 @@
       this.setTheme(level.theme || "blueprint");
       this.activeHint = false;
       this.hideVictory();
-      document.getElementById("hud-level-label").textContent = `LEVEL ${level.id}`;
-      document.getElementById("hud-goal-text").textContent = level.title;
+      const lvlEl = document.getElementById("hud-level-label");
+      if (lvlEl) lvlEl.textContent = `LEVEL ${level.id}`;
+      const goalEl = document.getElementById("hud-goal-text");
+      if (goalEl) goalEl.textContent = level.title;
       this.resetLevelEntities();
     }
     resetLevelEntities() {

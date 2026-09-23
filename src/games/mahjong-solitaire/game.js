@@ -577,10 +577,16 @@
 
       remaining.forEach((t, idx) => {
         t.tileData = symbols[idx];
-        t.element.querySelector('.tile-symbol').className = `tile-symbol ${t.tileData.cssClass}`;
-        t.element.querySelector('.tile-symbol').textContent = t.tileData.symbol;
-        t.element.querySelector('.tile-badge').className = `tile-badge ${t.tileData.cssClass}`;
-        t.element.querySelector('.tile-badge').textContent = t.tileData.badge;
+        const symEl = t.element.querySelector('.tile-symbol');
+        if (symEl) {
+          symEl.className = `tile-symbol ${t.tileData.cssClass}`;
+          symEl.textContent = t.tileData.symbol;
+        }
+        const badgeEl = t.element.querySelector('.tile-badge');
+        if (badgeEl) {
+          badgeEl.className = `tile-badge ${t.tileData.cssClass}`;
+          badgeEl.textContent = t.tileData.badge;
+        }
       });
 
       if (this.selectedTile) {
@@ -680,8 +686,10 @@
         }
 
         // Show standalone win card
-        document.getElementById('win-time').textContent = `${timeInSeconds}s`;
-        document.getElementById('win-score').textContent = this.score;
+        const winTimeEl = document.getElementById('win-time');
+        if (winTimeEl) winTimeEl.textContent = `${timeInSeconds}s`;
+        const winScoreEl = document.getElementById('win-score');
+        if (winScoreEl) winScoreEl.textContent = this.score;
         document.getElementById('modal-win').classList.add('active');
       }
     }

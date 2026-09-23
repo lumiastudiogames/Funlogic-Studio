@@ -127,9 +127,12 @@
   }
 
   function updateHUD() {
-    document.getElementById('move-counter').textContent = moves;
-    document.getElementById('streak-counter').textContent = comboStreak > 1 ? `${comboStreak}x` : '-';
-    document.getElementById('undo-counter').textContent = history.length;
+    const moveEl = document.getElementById('move-counter');
+    if (moveEl) moveEl.textContent = moves;
+    const streakEl = document.getElementById('streak-counter');
+    if (streakEl) streakEl.textContent = comboStreak > 1 ? `${comboStreak}x` : '-';
+    const undoEl = document.getElementById('undo-counter');
+    if (undoEl) undoEl.textContent = history.length;
   }
 
   function updateTimer() {

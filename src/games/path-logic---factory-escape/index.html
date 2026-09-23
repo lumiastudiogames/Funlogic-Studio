@@ -2102,19 +2102,22 @@
         }
 
         showVictoryModal(stars, steps) {
-          document.getElementById('v-steps').textContent = steps;
+          const vSteps = document.getElementById('v-steps');
+          if (vSteps) vSteps.textContent = steps;
           
           for (let s = 1; s <= 3; s++) {
             const starEl = document.getElementById(`star-${s}`);
-            starEl.classList.remove('earned');
-            if (s <= stars) {
-              setTimeout(() => {
-                starEl.classList.add('earned');
-              }, s * 180);
+            if (starEl) {
+              starEl.classList.remove('earned');
+              if (s <= stars) {
+                setTimeout(() => {
+                  starEl.classList.add('earned');
+                }, s * 180);
+              }
             }
           }
 
-          this.modalVictory.classList.add('active');
+          if (this.modalVictory) this.modalVictory.classList.add('active');
         }
 
         showGameWon() {
@@ -2123,8 +2126,9 @@
           for (let i = 0; i < LEVELS.length; i++) {
             totalStars += (this.levelStars[i] || 3);
           }
-          document.getElementById('gw-stars').textContent = `${totalStars} / 60 ★`;
-          this.modalGameWon.classList.add('active');
+          const gwStars = document.getElementById('gw-stars');
+          if (gwStars) gwStars.textContent = `${totalStars} / 60 ★`;
+          if (this.modalGameWon) this.modalGameWon.classList.add('active');
         }
 
         openLevelsModal() {
