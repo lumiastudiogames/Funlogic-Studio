@@ -1,0 +1,37 @@
+{
+  "title": "Metro Subway Train Yard",
+  "categoryId": "logic",
+  "icon": "🚇",
+  "instructions": "Switch track junctions and tap trains to start or emergency brake. Route multi-car subway trains to their matching color tunnel portals without collisions across 30 challenging levels.",
+  "description": "Metro Subway Train Yard is a high-speed logic and timing rail puzzle game. Take command as the central metro dispatcher! Manage 2 to 4-car subway trains running on parallel yard tracks, control switch turnout crossovers, prevent disastrous collisions, and safely guide every train to its assigned line tunnel.",
+  "keywords": [
+    "metro train yard",
+    "subway simulator",
+    "train switch puzzle",
+    "railway dispatcher",
+    "train routing",
+    "metro lines",
+    "traffic controller",
+    "logic puzzle",
+    "train collision",
+    "online railway game"
+  ],
+  "faqs": [
+    {
+      "q": "How do I switch tracks in Metro Subway Train Yard?",
+      "a": "Tap or click on any track switch junction on the yard to toggle between the straight rail and the diagonal turnout crossover. Glowing LED arrows indicate the active route."
+    },
+    {
+      "q": "How do I prevent train collisions?",
+      "a": "Tap directly on any moving train to apply emergency air brakes and hold it in place. Tap the train again to release and resume full speed when the track is clear."
+    },
+    {
+      "q": "How many levels are available?",
+      "a": "The game features 30 progressive levels, introducing longer 3-car and 4-car trains, complex scissor crossovers, speed variations, and multi-track diamond webs."
+    },
+    {
+      "q": "Does it work on touch mobile devices?",
+      "a": "Yes, the game is 100% responsive and optimized for mobile phones, tablets, and desktop computers with instant touch response."
+    }
+  ]
+}

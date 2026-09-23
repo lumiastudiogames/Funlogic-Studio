@@ -1,0 +1,6 @@
+{
+  "name": "Number Link Flow",
+  "description": "Connect matching colored numbers to fill the entire grid without crossing pipes.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

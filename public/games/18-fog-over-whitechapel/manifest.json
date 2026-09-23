@@ -1,0 +1,18 @@
+{
+  "name": "The Fog Over Whitechapel",
+  "short_name": "The Fog Over",
+  "description": "London, autumn 1888. Yellow sulfurous peasouper fog blankets the gaslit streets of East London. Match the inspectors to their patrol sectors and forensic evidence.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0f172a",
+  "theme_color": "#0f172a",
+  "icons": [
+    {
+      "src": "./cover.svg",
+      "sizes": "800x600",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

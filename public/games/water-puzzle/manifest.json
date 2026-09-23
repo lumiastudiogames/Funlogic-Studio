@@ -1,0 +1,18 @@
+{
+  "name": "Water Puzzle (Timer Rush)",
+  "short_name": "Water Puzzle",
+  "description": "High-octane water sorting against a ticking clock! You have strictly 90 seconds to organize 4 vibrant colors across 6 laboratory tubes. If time expires, the round is lost. Test your quick decision making under pressure.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0f172a",
+  "theme_color": "#0f172a",
+  "icons": [
+    {
+      "src": "./cover.svg",
+      "sizes": "800x600",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

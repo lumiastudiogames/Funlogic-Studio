@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#0f0c08"/>
+      <stop offset="50%" stop-color="#2a1a0c"/>
+      <stop offset="100%" stop-color="#451a03"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fef08a"/>
+      <stop offset="50%" stop-color="#f59e0b"/>
+      <stop offset="100%" stop-color="#b45309"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#fbbf24" stop-opacity="0.6"/>
+      <stop offset="100%" stop-color="#d97706" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Background Sky & Sand -->
+  <rect width="600" height="400" fill="url(#bg)"/>
+
+  <!-- Moon Glow -->
+  <circle cx="480" cy="90" r="100" fill="url(#glow)"/>
+  <circle cx="480" cy="90" r="35" fill="#fef08a"/>
+
+  <!-- Pyramids -->
+  <polygon points="120,280 230,120 340,280" fill="#78350f"/>
+  <polygon points="230,120 340,280 230,280" fill="#451a03"/>
+
+  <polygon points="300,290 390,160 480,290" fill="#92400e"/>
+  <polygon points="390,160 480,290 390,290" fill="#542105"/>
+
+  <!-- Dune -->
+  <path d="M0,280 Q180,240 380,290 T600,270 L600,400 L0,400 Z" fill="#b45309"/>
+
+  <!-- Artifact Altar Frame -->
+  <rect x="220" y="240" width="160" height="70" rx="10" fill="#1c120c" stroke="#f59e0b" stroke-width="3"/>
+  <circle cx="300" cy="275" r="28" fill="url(#gold)"/>
+  <text x="300" y="285" font-size="32" text-anchor="middle" fill="#1c120c" font-weight="bold">𓆣</text>
+
+  <!-- Typography -->
+  <text x="300" y="75" font-family="system-ui, sans-serif" font-size="34" font-weight="900" text-anchor="middle" fill="url(#gold)" letter-spacing="2">
+    ANCIENT EGYPT
+  </text>
+  <text x="300" y="110" font-family="system-ui, sans-serif" font-size="20" font-weight="700" text-anchor="middle" fill="#fde68a" letter-spacing="4">
+    LOGIC GRID EXPLORERS
+  </text>
+</svg>

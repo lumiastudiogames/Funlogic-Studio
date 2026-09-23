@@ -1,0 +1,18 @@
+{
+  "name": "Mahjong Dimensions 3D Cube",
+  "short_name": "Mahjong Dime",
+  "description": "Mahjong Dimensions 3D brings the classic matching puzzle into three dimensions. Rotate a floating 3D cube of tiles in 360 degrees, discover unblocked matching pairs, and chain fast combos before the countdown expires.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0f172a",
+  "theme_color": "#0f172a",
+  "icons": [
+    {
+      "src": "./cover.svg",
+      "sizes": "800x600",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

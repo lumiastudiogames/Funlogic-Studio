@@ -1,0 +1,129 @@
+/* Steampunk Clockwork Tactile CSS for Gear Train Cogs */
+* {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
+  box-sizing: border-box;
+}
+
+body, html {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  background: #0f0a07;
+  font-family: 'Cinzel', 'Georgia', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, serif;
+  color: #e6ca98;
+  overflow: hidden;
+}
+
+/* Steampunk tactile buttons */
+.btn-tactile {
+  transition: all 0.12s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 
+    0 4px 8px -1px rgba(0, 0, 0, 0.5), 
+    0 2px 4px -2px rgba(0, 0, 0, 0.3), 
+    inset 0 1px 0 rgba(255, 255, 255, 0.35),
+    inset 0 -2px 0 rgba(0, 0, 0, 0.4);
+  border: 1px solid #78522e;
+}
+
+.btn-tactile:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 
+    0 6px 12px -2px rgba(0, 0, 0, 0.6), 
+    inset 0 1px 0 rgba(255, 255, 255, 0.5),
+    inset 0 -2px 0 rgba(0, 0, 0, 0.4);
+  filter: brightness(1.1);
+}
+
+.btn-tactile:active:not(:disabled) {
+  transform: translateY(1px);
+  box-shadow: 
+    0 1px 2px rgba(0, 0, 0, 0.5), 
+    inset 0 2px 5px rgba(0, 0, 0, 0.6);
+}
+
+.btn-gold {
+  background: linear-gradient(180deg, #d4a036 0%, #a1701e 50%, #68450d 100%);
+  color: #fff9e6;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+  border-color: #ffd276;
+}
+
+.btn-copper {
+  background: linear-gradient(180deg, #c86d43 0%, #8e4420 50%, #56250e 100%);
+  color: #fff2eb;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+  border-color: #f7a079;
+}
+
+.btn-dark {
+  background: linear-gradient(180deg, #382a20 0%, #221812 50%, #150e0a 100%);
+  color: #d1b58a;
+  border-color: #553e2a;
+}
+
+.btn-green {
+  background: linear-gradient(180deg, #2e7d32 0%, #1b5e20 50%, #0d3810 100%);
+  color: #e8f5e9;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+  border-color: #81c784;
+}
+
+/* Steampunk parchment look */
+.parchment {
+  background: #f4ecd8 linear-gradient(135deg, rgba(212, 160, 54, 0.08) 0%, rgba(138, 63, 27, 0.12) 100%);
+  color: #3b2814;
+  border: 2px solid #8e6837;
+  box-shadow: inset 0 0 15px rgba(110, 68, 20, 0.25), 0 6px 15px rgba(0, 0, 0, 0.4);
+  font-family: 'Georgia', 'Times New Roman', serif;
+}
+
+/* Custom scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #19110b;
+}
+::-webkit-scrollbar-thumb {
+  background: #684a2d;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #a1701e;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none !important;
+}
+.no-scrollbar {
+  -ms-overflow-style: none !important;
+  scrollbar-width: none !important;
+}
+
+/* Problem expandable accordion */
+.accordion-content {
+  transition: max-height 0.25s ease-in-out, opacity 0.2s ease-in-out;
+}
+
+/* Glow effects */
+.glow-gold {
+  filter: drop-shadow(0 0 8px rgba(212, 160, 54, 0.6));
+}
+
+.glow-spark {
+  filter: drop-shadow(0 0 10px rgba(255, 209, 102, 0.9));
+}
+
+/* Metallic frame border */
+.metallic-frame {
+  border: 3px solid #634529;
+  box-shadow: 
+    inset 0 0 0 1px #a47c4a,
+    inset 0 0 20px rgba(0,0,0,0.8),
+    0 10px 30px rgba(0,0,0,0.8);
+}

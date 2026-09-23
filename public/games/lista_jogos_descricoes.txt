@@ -1,0 +1,726 @@
+====================================================================
+                 FUNLOGIC.GAMES - JOGOS E DESCRIÇÕES               
+====================================================================
+TOTAL DE JOGOS: 103
+
+--------------------------------------------------------------------
+1. 💡 15 PUZZLE CLASSIC
+--------------------------------------------------------------------
+Slug/ID   : sliding-puzzle-15
+Categoria : Logic Challenges (logic)
+Descrição : The historic 15 Puzzle (Gem Puzzle / Boss Puzzle) on a 4x4 grid. Slide the tiles adjacent to the empty space to sort numbers 1 to 15 in ascending order with smooth tactile slides, move tracking, and solvable randomization.
+
+--------------------------------------------------------------------
+2. 💡 2048 5X5 EXPERT
+--------------------------------------------------------------------
+Slug/ID   : game-2048-5x5
+Categoria : Logic Challenges (logic)
+Descrição : 2048 5x5 Expert is the ultimate test of endurance for puzzle masters who have mastered the classic 4x4. With 25 tiles on the board, strategic tile packing and prolonged combos unlock massive scores and the elusive 4096 tile.
+
+--------------------------------------------------------------------
+3. 💡 2048 CLASSIC
+--------------------------------------------------------------------
+Slug/ID   : 2048-classic
+Categoria : Logic Challenges (logic)
+Descrição : 2048 Classic is a polished online HTML5 puzzle game designed to test your spatial reasoning, strategy, and logic. Play full levels free directly in your web browser.
+
+--------------------------------------------------------------------
+4. 💡 2048 CLASSIC
+--------------------------------------------------------------------
+Slug/ID   : game-2048-classic
+Categoria : Logic Challenges (logic)
+Descrição : 2048 Classic is the legendary tile-sliding math puzzle on a 4x4 grid. Slide matching numbered tiles together to merge them into higher values, chasing the coveted 2048 tile with undo support, high-score tracking, and silky smooth animations.
+
+--------------------------------------------------------------------
+5. 💡 2048 FIBONACCI
+--------------------------------------------------------------------
+Slug/ID   : game-2048-fibonacci
+Categoria : Logic Challenges (logic)
+Descrição : 2048 Fibonacci introduces the mathematical beauty of the Fibonacci sequence to sliding tile puzzles. Instead of powers of two, combine consecutive Fibonacci numbers to reach 2584 with smooth slides, undo moves, and high score tracking.
+
+--------------------------------------------------------------------
+6. 💡 ANCIENT EGYPT EXPLORERS: LOGIC GRID
+--------------------------------------------------------------------
+Slug/ID   : ancient-egypt-explorers---logic-grid
+Categoria : Logic Challenges (logic)
+Descrição : Ancient Egypt Explorers: Logic Grid is a polished online HTML5 puzzle game designed to test your spatial reasoning, strategy, and logic. Play full levels free directly in your web browser.
+
+--------------------------------------------------------------------
+7. 🧪 ANIMAL MIX KIDS
+--------------------------------------------------------------------
+Slug/ID   : animal-mix-kids
+Categoria : Water Sort (water-sort)
+Descrição : Animal Mix Kids is a delightful color-sorting puzzle designed for young kids. Sort cute puppies, kittens, and bunnies across 4 cozy test tubes until every animal has its own tube.
+
+--------------------------------------------------------------------
+8. 🧸 ANIMAL TIC-TAC KIDS
+--------------------------------------------------------------------
+Slug/ID   : animal-tictac-kids
+Categoria : Kids (kids)
+Descrição : Animal Tic-Tac Kids brings the classic 3x3 game to life with cute barnyard pets. Designed with soft, forgiving AI and bright animations for young kids.
+
+--------------------------------------------------------------------
+9. ⚙️ BALL BOUNCE TARGET
+--------------------------------------------------------------------
+Slug/ID   : ball-bounce-target
+Categoria : Physics & Mechanics (physics)
+Descrição : Ball Bounce Target is a challenging HTML5 puzzle game designed to sharpen your cognitive and problem-solving skills with intuitive controls and progressive level difficulties.
+
+--------------------------------------------------------------------
+10. 💡 BALL SORT PUZZLE
+--------------------------------------------------------------------
+Slug/ID   : ball-sort-puzzle
+Categoria : Logic Challenges (logic)
+Descrição : Ball Sort Puzzle is a satisfying brain-teaser where you organize bouncing colored spheres into their respective test tubes. Tap the top ball to raise it, then drop it onto matching colored balls or into empty tubes until all tubes lock.
+
+--------------------------------------------------------------------
+11. 🀄 BIG TILE MATCH 60+
+--------------------------------------------------------------------
+Slug/ID   : big-tile-match
+Categoria : Mahjong Classic (mahjong)
+Descrição : Big Tile Match 60+ is a gentle Mahjong solitaire game featuring 16 extra-large 100px tiles with high-contrast symbols and no time limit.
+
+--------------------------------------------------------------------
+12. 💡 BOX PUSH EASY 60+
+--------------------------------------------------------------------
+Slug/ID   : box-push-easy
+Categoria : Logic Challenges (logic)
+Descrição : Box Push Easy 60+ is a gentle Sokoban puzzle designed for seniors. Features only 1 box to push, a compact 6x6 room, 60px on-screen arrow controls, and unlimited undo.
+
+--------------------------------------------------------------------
+13. 🧸 BUNNY TRAIL KIDS
+--------------------------------------------------------------------
+Slug/ID   : bunny-trail-kids
+Categoria : Kids (kids)
+Descrição : Bunny Trail Kids is a calm, friendly 7x7 garden labyrinth made especially for young explorers. Guide the cheerful bunny along sunny cobblestone paths to find a yummy carrot treat.
+
+--------------------------------------------------------------------
+14. 💡 CALM MAZE 60+
+--------------------------------------------------------------------
+Slug/ID   : calm-maze
+Categoria : Logic Challenges (logic)
+Descrição : Calm Maze 60+ is an accessible 9x9 maze puzzle with extra-thick 6px walls, large clear walker icons, no timer, and comfortable touch controls.
+
+--------------------------------------------------------------------
+15. ♟️ CHESS MATE IN ONE
+--------------------------------------------------------------------
+Slug/ID   : chess-mate-in-one
+Categoria : Chess & Tactics (chess)
+Descrição : Chess Mate In One is a challenging HTML5 puzzle game designed to sharpen your cognitive and problem-solving skills with intuitive controls and progressive level difficulties.
+
+--------------------------------------------------------------------
+16. 💡 CHRONOS STATION: TIME PARADOX
+--------------------------------------------------------------------
+Slug/ID   : 07-time-paradox-chronos
+Categoria : Logic Challenges (logic)
+Descrição : When history begins rewriting itself in the Chronos temporal archives, four time agents are dispatched across millennia to retrieve displaced artifacts.
+
+--------------------------------------------------------------------
+17. 💡 CITY PARKING JAM
+--------------------------------------------------------------------
+Slug/ID   : city-parking-jam
+Categoria : Logic Challenges (logic)
+Descrição : City Parking Jam is a challenging HTML5 puzzle game designed to sharpen your cognitive and problem-solving skills with intuitive controls and progressive level difficulties.
+
+--------------------------------------------------------------------
+18. 💡 CLOCK GEARS RATIO & SPEED CHALLENGE
+--------------------------------------------------------------------
+Slug/ID   : clock-gears---ratio-&-speed-challenge
+Categoria : Logic Challenges (logic)
+Descrição : Clock Gears Ratio & Speed Challenge is a challenging HTML5 puzzle game designed to sharpen your cognitive and problem-solving skills with intuitive controls and progressive level difficulties.
+
+--------------------------------------------------------------------
+19. 🎴 COLOR PARROT KIDS
+--------------------------------------------------------------------
+Slug/ID   : color-parrot-kids
+Categoria : Memory & Pairs (memory)
+Descrição : Color Parrot Kids is a friendly musical memory game for young kids. Follow the tropical parrot's cheerful color songs and train your ears and memory.
+
+--------------------------------------------------------------------
+20. 💡 COLOR SORT (SOLID BLOCKS)
+--------------------------------------------------------------------
+Slug/ID   : color-sort
+Categoria : Logic Challenges (logic)
+Descrição : Designed for fast thumbs and rapid puzzle speedruns: Color Sort swaps liquid physics for crisp solid color blocks. With instant movement animations and no pouring delays, chain your moves together quickly to build high score streaks and clear the board in record time.
+
+--------------------------------------------------------------------
+21. ⚙️ CUT THE ROPE - SLICE PUZZLE
+--------------------------------------------------------------------
+Slug/ID   : cut-the-rope
+Categoria : Physics & Mechanics (physics)
+Descrição : Cut the Rope - Slice Puzzle is a polished online HTML5 puzzle game designed to test your spatial reasoning, strategy, and logic. Play full levels free directly in your web browser.
+
+--------------------------------------------------------------------
+22. 💡 CYBER DYSTOPIA: STOLEN MEMORIES
+--------------------------------------------------------------------
+Slug/ID   : 19-cyber-dystopia-memories
+Categoria : Logic Challenges (logic)
+Descrição : In an electric rain-swept metropolis, personal memories are downloaded and traded as commodities. Deduce which hacker hoards which illegal encrypted memory shard.
+
+--------------------------------------------------------------------
+23. 🔢 DAILY SUDOKU CHALLENGE
+--------------------------------------------------------------------
+Slug/ID   : sudoku-daily
+Categoria : Sudoku & Numbers (sudoku)
+Descrição : Daily Sudoku Challenge provides a brand-new, globally synchronized 9x9 Sudoku puzzle every single day based on the calendar date. Build consecutive daily win streaks, track completion times, and use pencil notes and smart hints.
+
+--------------------------------------------------------------------
+24. 🚪 DEATH ON THE NILE STEAMER
+--------------------------------------------------------------------
+Slug/ID   : 04-death-on-the-nile
+Categoria : Escape Room (escape)
+Descrição : A grand paddle steamer sails past the monuments of Luxor. When an heiress vanishes, Hercule Renard gathers all suspects in the salon to expose the deceit using precise grid deduction.
+
+--------------------------------------------------------------------
+25. 💡 DERELICT CHIMERA: ALIEN PROTOCOL
+--------------------------------------------------------------------
+Slug/ID   : 05-deep-space-chimera
+Categoria : Logic Challenges (logic)
+Descrição : Drifting in the Orion nebula, the research ship Chimera went dark. Board the silent vessel, review log terminals, and deduce who quarantined which module.
+
+--------------------------------------------------------------------
+26. 💡 DOMINÓ CLASSIC
+--------------------------------------------------------------------
+Slug/ID   : domino-classic
+Categoria : Logic Challenges (logic)
+Descrição : Domino Classic is a challenging HTML5 puzzle game designed to sharpen your cognitive and problem-solving skills with intuitive controls and progressive level difficulties.
+
+--------------------------------------------------------------------
+27. 🔢 EASY SUDOKU 60+
+--------------------------------------------------------------------
+Slug/ID   : easy-sudoku
+Categoria : Sudoku & Numbers (sudoku)
+Descrição : Easy Sudoku 60+ is a large-print, high-contrast 9x9 Sudoku designed for seniors. Features 45 pre-filled numbers, 60px cells, untimed play, and big number buttons.
+
+--------------------------------------------------------------------
+28. 🧸 FRUIT MERGE KIDS
+--------------------------------------------------------------------
+Slug/ID   : fruit-merge-kids
+Categoria : Kids (kids)
+Descrição : Fruit Merge Kids is an adorable 3x3 fruit evolution puzzle for kids. Combine tasty apples, bananas, grapes, and oranges to discover the grand watermelon.
+
+--------------------------------------------------------------------
+29. ⚙️ GARDEN FLOW 60+
+--------------------------------------------------------------------
+Slug/ID   : garden-flow
+Categoria : Physics & Mechanics (physics)
+Descrição : Garden Flow 60+ is a peaceful 4x4 pipe connection puzzle for seniors. Features extra-thick high-visibility pipes, large easy-touch tiles, and gentle water sounds.
+
+--------------------------------------------------------------------
+30. 🧊 GEOMETRIC CUT MASTER
+--------------------------------------------------------------------
+Slug/ID   : geometric-cut-master
+Categoria : 3D Puzzles (three-d)
+Descrição : Geometric Cut Master is a challenging HTML5 puzzle game designed to sharpen your cognitive and problem-solving skills with intuitive controls and progressive level difficulties.
+
+--------------------------------------------------------------------
+31. 💡 HACKER LOGIC - DECODE
+--------------------------------------------------------------------
+Slug/ID   : hacker-logic
+Categoria : Logic Challenges (logic)
+Descrição : Hacker Logic - Decode is a polished online HTML5 puzzle game designed to test your spatial reasoning, strategy, and logic. Play full levels free directly in your web browser.
+
+--------------------------------------------------------------------
+32. 🧪 LARGE TUBE SORT 60+
+--------------------------------------------------------------------
+Slug/ID   : large-tube-sort
+Categoria : Water Sort (water-sort)
+Descrição : Large Tube Sort 60+ is a calming color sorting puzzle designed for seniors. Features 6 extra-wide tubes, large clear color blocks, no timer, and gentle fluid sounds.
+
+--------------------------------------------------------------------
+33. 🧸 LEGO STACK KIDS
+--------------------------------------------------------------------
+Slug/ID   : lego-stack-kids
+Categoria : Kids (kids)
+Descrição : Lego Stack Kids is a cozy, no-gravity block puzzle for children. Fit colorful duo-bricks onto a 6x6 studded toy board and enjoy popping complete rows.
+
+--------------------------------------------------------------------
+34. 💡 LIGHTS OUT MATRIX
+--------------------------------------------------------------------
+Slug/ID   : lights-out-matrix
+Categoria : Logic Challenges (logic)
+Descrição : Lights Out Matrix is a challenging HTML5 puzzle game designed to sharpen your cognitive and problem-solving skills with intuitive controls and progressive level difficulties.
+
+--------------------------------------------------------------------
+35. 🧪 LIQUID SORT (TRANSLUCENT)
+--------------------------------------------------------------------
+Slug/ID   : liquid-sort
+Categoria : Water Sort (water-sort)
+Descrição : A visually striking twist on water sort featuring translucent chromatic fluids with 0.8 opacity that reveal submerged colors. Beware: attempted illegal transfers trigger an unstable reaction, turning the liquid murky brown for 2 seconds with rapid shaking!
+
+--------------------------------------------------------------------
+36. 💡 LOGIC GRID WHO OWNS THE FISH 
+--------------------------------------------------------------------
+Slug/ID   : logic-grid---who-owns-the-fish_
+Categoria : Logic Challenges (logic)
+Descrição : Logic Grid Who Owns The Fish  is a challenging HTML5 puzzle game designed to sharpen your cognitive and problem-solving skills with intuitive controls and progressive level difficulties.
+
+--------------------------------------------------------------------
+37. 💡 LOGIC PATTERN SERIES
+--------------------------------------------------------------------
+Slug/ID   : logic-pattern-series
+Categoria : Logic Challenges (logic)
+Descrição : Logic Pattern Series is a challenging HTML5 puzzle game designed to sharpen your cognitive and problem-solving skills with intuitive controls and progressive level difficulties.
+
+--------------------------------------------------------------------
+38. 👵 MAHJONG 24 TILES - QUICK PLAY
+--------------------------------------------------------------------
+Slug/ID   : mahjong-24-tiles
+Categoria : Seniors (seniors)
+Descrição : Mahjong 24 Tiles is a quick-play mini version of classic Mahjong Solitaire designed for rapid 40-second rounds, seniors, and beginners. Features extra-large high-contrast tiles, instant replay, local best records, and zero eye strain.
+
+--------------------------------------------------------------------
+39. 🀄 MAHJONG CONNECT - LINK PUZZLE
+--------------------------------------------------------------------
+Slug/ID   : mahjong-connect
+Categoria : Mahjong Classic (mahjong)
+Descrição : Mahjong Connect (Onet Link) is a fast-paced pair-matching puzzle game played on a 12x8 flat board. Find matching tiles that can be linked by lines with no more than 2 turns. Features path drawing animations, hints, shuffle, and combo multipliers.
+
+--------------------------------------------------------------------
+40. 🧊 MAHJONG DIMENSIONS 3D CUBE
+--------------------------------------------------------------------
+Slug/ID   : mahjong-dimensions-3d
+Categoria : 3D Puzzles (three-d)
+Descrição : Mahjong Dimensions 3D brings the classic matching puzzle into three dimensions. Rotate a floating 3D cube of tiles in 360 degrees, discover unblocked matching pairs, and chain fast combos before the countdown expires.
+
+--------------------------------------------------------------------
+41. 🀄 MAHJONG SOLITAIRE CLASSIC
+--------------------------------------------------------------------
+Slug/ID   : mahjong-solitaire
+Categoria : Mahjong Classic (mahjong)
+Descrição : Play the quintessential 144-tile Mahjong Solitaire puzzle with authentic Chinese suits (Wan, Sou, Pin, Winds, Dragons, Flowers). Features tactile 3D tiles, undo, hint system, shuffle assistance, and realistic sound effects.
+
+--------------------------------------------------------------------
+42. 🀄 MAHJONG TRIPLE - MATCH 3
+--------------------------------------------------------------------
+Slug/ID   : mahjong-triple
+Categoria : Mahjong Classic (mahjong)
+Descrição : Mahjong Triple merges classic tile matching with modern Match-3 tray mechanics. Choose exposed tiles from the multilayer board and place them in your 7-slot collector bar. Form trios to clear room and survive to clear the entire board.
+
+--------------------------------------------------------------------
+43. 💡 MARS COLONY: DOME 7 BREACH
+--------------------------------------------------------------------
+Slug/ID   : 15-mars-colony-breach
+Categoria : Logic Challenges (logic)
+Descrição : In the red dust of Acidalia Planitia, Dome 7 suffered sudden pressure loss. Colonists must pinpoint who handled which maintenance gear and why.
+
+--------------------------------------------------------------------
+44. 💡 MATCHSTICK LOGIC
+--------------------------------------------------------------------
+Slug/ID   : matchstick-logic
+Categoria : Logic Challenges (logic)
+Descrição : Matchstick Logic is a challenging HTML5 puzzle game designed to sharpen your cognitive and problem-solving skills with intuitive controls and progressive level difficulties.
+
+--------------------------------------------------------------------
+45. 💡 MATH 2048 OPERATIONS
+--------------------------------------------------------------------
+Slug/ID   : math-2048-operations
+Categoria : Logic Challenges (logic)
+Descrição : Math 2048 Operations is the educational math twist on classic 2048. Instead of standard doubling, the game cycles operations (+, -, ×) on every move, challenging players to perform mental arithmetic on the fly and build toward high scores.
+
+--------------------------------------------------------------------
+46. ⚙️ MATH BRIDGE BUILDER
+--------------------------------------------------------------------
+Slug/ID   : math-bridge-builder
+Categoria : Physics & Mechanics (physics)
+Descrição : Math Bridge Builder is a challenging HTML5 puzzle game designed to sharpen your cognitive and problem-solving skills with intuitive controls and progressive level difficulties.
+
+--------------------------------------------------------------------
+47. 🎴 MEMORY CARE
+--------------------------------------------------------------------
+Slug/ID   : memory-care
+Categoria : Memory & Pairs (memory)
+Descrição : Memory Care is a therapeutic, soothing card matching game designed for seniors. Features 12 extra-large 110px cards, slow 0.8s card turns, cozy familiar symbols, and unlimited moves.
+
+--------------------------------------------------------------------
+48. 🎴 MEMORY PALACE THE MANSION
+--------------------------------------------------------------------
+Slug/ID   : memory-palace---the-mansion
+Categoria : Memory & Pairs (memory)
+Descrição : Memory Palace The Mansion is a challenging HTML5 puzzle game designed to sharpen your cognitive and problem-solving skills with intuitive controls and progressive level difficulties.
+
+--------------------------------------------------------------------
+49. 💡 METRO SUBWAY TRAIN YARD
+--------------------------------------------------------------------
+Slug/ID   : metro-subway-train-yard
+Categoria : Logic Challenges (logic)
+Descrição : Metro Subway Train Yard is a challenging HTML5 puzzle game designed to sharpen your cognitive and problem-solving skills with intuitive controls and progressive level difficulties.
+
+--------------------------------------------------------------------
+50. 💡 MINESWEEPER CLASSIC
+--------------------------------------------------------------------
+Slug/ID   : campo-minado
+Categoria : Logic Challenges (logic)
+Descrição : Campo Minado is a challenging HTML5 puzzle game designed to sharpen your cognitive and problem-solving skills with intuitive controls and progressive level difficulties.
+
+--------------------------------------------------------------------
+51. 💡 MURDER ON THE CONTINENTAL EXPRESS
+--------------------------------------------------------------------
+Slug/ID   : 01-murder-orient-express
+Categoria : Logic Challenges (logic)
+Descrição : Murder on the Continental Express is a classic 1930s train murder mystery logic grid puzzle. Solve the cross-references between suspects, luxury compartments, and critical physical evidence before the locomotive reaches Istanbul.
+
+--------------------------------------------------------------------
+52. 💡 MUSEUM ART HEIST LOGIC GRID
+--------------------------------------------------------------------
+Slug/ID   : museum-art-heist---logic-grid
+Categoria : Logic Challenges (logic)
+Descrição : Museum Art Heist Logic Grid is a challenging HTML5 puzzle game designed to sharpen your cognitive and problem-solving skills with intuitive controls and progressive level difficulties.
+
+--------------------------------------------------------------------
+53. 💡 NEON SYNDICATE: MEMORY BREACH
+--------------------------------------------------------------------
+Slug/ID   : 03-cyberpunk-neon-syndicate
+Categoria : Logic Challenges (logic)
+Descrição : In Neo-Kyoto 2099, a high-value memory canister containing military cyberware blueprints was compromised. Cross-reference netrunner handles, corporate subnets, and black-market cybernetic decks.
+
+--------------------------------------------------------------------
+54. 💡 NEXUS PROTOCOL: THE ROGUE AI
+--------------------------------------------------------------------
+Slug/ID   : 11-nexus-protocol-rogue-ai
+Categoria : Logic Challenges (logic)
+Descrição : Inside the subterranean data vaults of Titan Corporation, four synthetic intelligence cores broke containment protocols. Use logic grids to neutralize the cyber breach.
+
+--------------------------------------------------------------------
+55. 💡 NUMBER CALM 60+
+--------------------------------------------------------------------
+Slug/ID   : number-calm
+Categoria : Logic Challenges (logic)
+Descrição : Number Calm 60+ is a relaxed, gentle 4x4 sliding number puzzle for seniors. Features smooth 0.4s slow motion, large readable numbers, no score rush, and a gentle goal of 512.
+
+--------------------------------------------------------------------
+56. 🔢 NUMBER FARM KIDS
+--------------------------------------------------------------------
+Slug/ID   : number-farm-kids
+Categoria : Sudoku & Numbers (sudoku)
+Descrição : Number Farm Kids transforms classic Sudoku into an intuitive 4x4 animal puzzle for young learners. Develop logic and spatial thinking with lovely barnyard friends.
+
+--------------------------------------------------------------------
+57. 💡 NUMBER LINK FLOW
+--------------------------------------------------------------------
+Slug/ID   : number-link-flow
+Categoria : Logic Challenges (logic)
+Descrição : Number Link Flow is a challenging HTML5 puzzle game designed to sharpen your cognitive and problem-solving skills with intuitive controls and progressive level difficulties.
+
+--------------------------------------------------------------------
+58. 💡 NUMBER MERGE 10 TO 100
+--------------------------------------------------------------------
+Slug/ID   : number-merge-10-100
+Categoria : Logic Challenges (logic)
+Descrição : Number Merge 10 to 100 is an addictive ball-merging puzzle with glossy 3D spheres. Slide identical balls together to advance from 10 all the way to 100 with satisfying bubble sounds and haptic visual feedback.
+
+--------------------------------------------------------------------
+59. 🚪 NUMBER SEQUENCE THE VAULT
+--------------------------------------------------------------------
+Slug/ID   : number-sequence---the-vault
+Categoria : Escape Room (escape)
+Descrição : Number Sequence The Vault is a challenging HTML5 puzzle game designed to sharpen your cognitive and problem-solving skills with intuitive controls and progressive level difficulties.
+
+--------------------------------------------------------------------
+60. 🚪 PATH LOGIC FACTORY ESCAPE
+--------------------------------------------------------------------
+Slug/ID   : path-logic---factory-escape
+Categoria : Escape Room (escape)
+Descrição : Path Logic Factory Escape is a challenging HTML5 puzzle game designed to sharpen your cognitive and problem-solving skills with intuitive controls and progressive level difficulties.
+
+--------------------------------------------------------------------
+61. 💡 PEG SOLITAIRE CLASSIC
+--------------------------------------------------------------------
+Slug/ID   : resta-1
+Categoria : Logic Challenges (logic)
+Descrição : Peg Solitaire is a challenging HTML5 puzzle game designed to sharpen your cognitive and problem-solving skills with intuitive controls and progressive level difficulties.
+
+--------------------------------------------------------------------
+62. ⚙️ PHYSICAL BALANCE THE SCALE
+--------------------------------------------------------------------
+Slug/ID   : physical-balance---the-scale
+Categoria : Physics & Mechanics (physics)
+Descrição : Physical Balance The Scale is a challenging HTML5 puzzle game designed to sharpen your cognitive and problem-solving skills with intuitive controls and progressive level difficulties.
+
+--------------------------------------------------------------------
+63. 💡 PIPE FLOW PLUMBER
+--------------------------------------------------------------------
+Slug/ID   : pipe-flow-plumber
+Categoria : Logic Challenges (logic)
+Descrição : Pipe Flow Plumber is a challenging HTML5 puzzle game designed to sharpen your cognitive and problem-solving skills with intuitive controls and progressive level difficulties.
+
+--------------------------------------------------------------------
+64. 💡 QUANTUM REALM: THE VANISHED FORMULA
+--------------------------------------------------------------------
+Slug/ID   : 17-quantum-lab-theft
+Categoria : Logic Challenges (logic)
+Descrição : At the Geneva particle facility, a revolutionary unified quantum field theorem was extracted from encrypted cleanrooms. Use logic matrix deduction to trace the theft.
+
+--------------------------------------------------------------------
+65. 💡 RIVER CROSSING EASY
+--------------------------------------------------------------------
+Slug/ID   : river-crossing-easy
+Categoria : Logic Challenges (logic)
+Descrição : River Crossing Easy is an accessible logic puzzle for seniors. Features only 3 companions (Wolf, Sheep, Cabbage), large readable buttons, and clear calm instructions.
+
+--------------------------------------------------------------------
+66. 💡 ROBOX - ROBOT BOX PUSHER
+--------------------------------------------------------------------
+Slug/ID   : robox
+Categoria : Logic Challenges (logic)
+Descrição : Robox is a challenging HTML5 puzzle game designed to sharpen your cognitive and problem-solving skills with intuitive controls and progressive level difficulties.
+
+--------------------------------------------------------------------
+67. ⚙️ SAVE THE DOG - DRAW TO SAVE
+--------------------------------------------------------------------
+Slug/ID   : save-the-dog
+Categoria : Physics & Mechanics (physics)
+Descrição : Save the Dog - Draw to Save is a polished online HTML5 puzzle game designed to test your spatial reasoning, strategy, and logic. Play full levels free directly in your web browser.
+
+--------------------------------------------------------------------
+68. 💡 SCIENCE FAIR LOGIC GRID
+--------------------------------------------------------------------
+Slug/ID   : science-fair_-logic-grid
+Categoria : Logic Challenges (logic)
+Descrição : Science Fair Logic Grid is a classic deductive reasoning puzzle game for all ages. Solve science fair mystery grids by cross-referencing clues, eliminating possibilities with crosses, and finding matches with checkmarks. Features interactive 2.5D science experiment booths, step-by-step hints, audio feedback, and multiple difficulty levels.
+
+--------------------------------------------------------------------
+69. 🧊 SHADOW LOGIC
+--------------------------------------------------------------------
+Slug/ID   : shadow-logic
+Categoria : 3D Puzzles (three-d)
+Descrição : Shadow Logic is an intriguing spatial perception and 3D geometric puzzle. Observe dynamic light angles, predict silhouette projections of complex solid shapes in real-time, and match the correct cast shadows across 12 challenging stages.
+
+--------------------------------------------------------------------
+70. 💡 SHADOWS OVER CHICAGO: 1932
+--------------------------------------------------------------------
+Slug/ID   : 08-noir-shadows-chicago
+Categoria : Logic Challenges (logic)
+Descrição : Prohibition-era Chicago is caught between crooked syndicate bosses and private eyes in fedoras. Deduce where mobsters stashed stolen diamonds and counterfeit bank notes.
+
+--------------------------------------------------------------------
+71. 👵 SHAPE FIT RELAX
+--------------------------------------------------------------------
+Slug/ID   : shape-fit-relax
+Categoria : Seniors (seniors)
+Descrição : Shape Fit Relax is a soothing spatial puzzle for seniors. Features only 2 large shapes with soft prominent shadows, untimed play, and intuitive drag-and-drop or tap placement.
+
+--------------------------------------------------------------------
+72. 🧸 SHAPE PUZZLE KIDS
+--------------------------------------------------------------------
+Slug/ID   : shape-puzzle-kids
+Categoria : Kids (kids)
+Descrição : Shape Puzzle Kids simplifies Tangram into an accessible 3-piece geometry puzzle for young children. Match bold shapes to bring a playful kitten to life.
+
+--------------------------------------------------------------------
+73. 💡 SKY CONTROL AIR TRAFFIC COLLISION AVOIDANCE
+--------------------------------------------------------------------
+Slug/ID   : sky-control---air-traffic-collision-avoidance
+Categoria : Logic Challenges (logic)
+Descrição : Sky Control Air Traffic Collision Avoidance is a challenging HTML5 puzzle game designed to sharpen your cognitive and problem-solving skills with intuitive controls and progressive level difficulties.
+
+--------------------------------------------------------------------
+74. 💡 SOKOBAN WAREHOUSE
+--------------------------------------------------------------------
+Slug/ID   : sokoban-warehouse
+Categoria : Logic Challenges (logic)
+Descrição : Sokoban Warehouse is a challenging HTML5 puzzle game designed to sharpen your cognitive and problem-solving skills with intuitive controls and progressive level difficulties.
+
+--------------------------------------------------------------------
+75. 🧪 SORT WATER (ZEN MODE)
+--------------------------------------------------------------------
+Slug/ID   : sort-water
+Categoria : Water Sort (water-sort)
+Descrição : Escape the rush with Sort Water Zen. There are no timers, no penalties, and no stress. Features calming pastel water gradients, synthesized organic water droplet chimes, and unlimited undos so you can solve serene color harmony at your own peaceful pace.
+
+--------------------------------------------------------------------
+76. 🎴 SPIDER SOLITAIRE - 1 NAIPE
+--------------------------------------------------------------------
+Slug/ID   : spider-solitaire
+Categoria : Memory & Pairs (memory)
+Descrição : Spider Solitaire - 1 Naipe is a polished online HTML5 puzzle game designed to test your spatial reasoning, strategy, and logic. Play full levels free directly in your web browser.
+
+--------------------------------------------------------------------
+77. 💡 STATION ALPHA: ORBITAL SABOTAGE
+--------------------------------------------------------------------
+Slug/ID   : 09-station-alpha-sabotage
+Categoria : Logic Challenges (logic)
+Descrição : High above Earth in geostationary orbit, orbital telemetry drops off. A saboteur has compromised station subsystems before the supply shuttle arrives.
+
+--------------------------------------------------------------------
+78. 🚪 SUB-ZERO: OUTPOST 31 ENIGMA
+--------------------------------------------------------------------
+Slug/ID   : 13-sub-zero-outpost-31
+Categoria : Escape Room (escape)
+Descrição : Cut off by a catastrophic polar blizzard at -60 degrees, four polar researchers uncover an ancient specimen frozen deep beneath the ice sheet.
+
+--------------------------------------------------------------------
+79. 🔢 SUDOKU 6X6 QUICK
+--------------------------------------------------------------------
+Slug/ID   : sudoku-6x6
+Categoria : Sudoku & Numbers (sudoku)
+Descrição : Sudoku 6x6 is the fast-paced, mobile-friendly sibling of traditional Sudoku. Featuring a compact 6x6 grid with 2x3 sub-quadrants, it offers quick bite-sized mental workouts with multiple difficulty levels, hint rewards, and pencil notes.
+
+--------------------------------------------------------------------
+80. 🔢 SUDOKU CLASSIC 9X9
+--------------------------------------------------------------------
+Slug/ID   : sudoku-classic
+Categoria : Sudoku & Numbers (sudoku)
+Descrição : Sudoku Classic 9x9 is the quintessential number puzzle game with three curated difficulty tiers: Easy, Medium, and Hard. Features intelligent conflict highlighting, pencil notes mode, undo, hints, and precise touch controls.
+
+--------------------------------------------------------------------
+81. 🔢 SUDOKU X DIAGONAL
+--------------------------------------------------------------------
+Slug/ID   : sudoku-x
+Categoria : Sudoku & Numbers (sudoku)
+Descrição : Sudoku X (Diagonal Sudoku) is a popular brain-twisting variation where both 9-cell main diagonals forming the giant X must also contain all numbers from 1 through 9 without duplication. Includes diagonal overlays, smart conflict alerts, and pencil notes.
+
+--------------------------------------------------------------------
+82. 🎴 TEDDY PAIR KIDS
+--------------------------------------------------------------------
+Slug/ID   : teddy-pair-kids
+Categoria : Memory & Pairs (memory)
+Descrição : Teddy Pair Kids is a gentle 12-card memory matching game featuring cute teddies, pandas, koalas, and cubs. Perfect for boosting focus and visual memory.
+
+--------------------------------------------------------------------
+83. 🧪 TEST TUBE SORT (LAB EDITION)
+--------------------------------------------------------------------
+Slug/ID   : test-tube-sort
+Categoria : Water Sort (water-sort)
+Descrição : Step into the research laboratory! Test Tube Sort features 10 authentic borosilicate glass tubes resting in a polished mahogany wooden rack. Reagents react with realistic liquid and glass acoustic synthesis. If you get stuck, tap the Hint button to highlight the next logical pour.
+
+--------------------------------------------------------------------
+84. 💡 THE ARSENIC TEA PARTY AT MORRINGTON
+--------------------------------------------------------------------
+Slug/ID   : 14-arsenic-tea-morrington
+Categoria : Logic Challenges (logic)
+Descrição : During a refined 5 o'clock afternoon tea in the Cotswolds, bitter almond scent drifted from the silver teapot. Sift through the polite conversation to expose the poisoned teacup.
+
+--------------------------------------------------------------------
+85. 🚪 THE CURSE OF BLACKWOOD ABBEY
+--------------------------------------------------------------------
+Slug/ID   : 10-curse-blackwood-abbey
+Categoria : Escape Room (escape)
+Descrição : In an isolated Yorkshire monastery ruin, candlelight flickers through hollow stone arches. Uncover medieval manuscripts, secret reliquaries, and hidden motives.
+
+--------------------------------------------------------------------
+86. 🚪 THE FLANNAN ISLE LIGHTHOUSE ENIGMA
+--------------------------------------------------------------------
+Slug/ID   : 20-lighthouse-enigma
+Categoria : Escape Room (escape)
+Descrição : On a remote gale-swept Hebridean rock, the lighthouse light went dark. The relief crew arrived to find an untouched dinner, a stopped clock, and no living soul.
+
+--------------------------------------------------------------------
+87. 💡 THE FOG OVER WHITECHAPEL
+--------------------------------------------------------------------
+Slug/ID   : 18-fog-over-whitechapel
+Categoria : Logic Challenges (logic)
+Descrição : London, autumn 1888. Yellow sulfurous peasouper fog blankets the gaslit streets of East London. Match the inspectors to their patrol sectors and forensic evidence.
+
+--------------------------------------------------------------------
+88. 💡 THE HOUND OF DARTMOOR MOOR
+--------------------------------------------------------------------
+Slug/ID   : 02-baker-street-hound
+Categoria : Logic Challenges (logic)
+Descrição : Step into Victorian England as Sherlock Holmes and Dr. Watson investigate supernatural sightings across Dartmoor. Use deductive reasoning to catalog footprints, phosphorescent chemicals, and abandoned walking canes.
+
+--------------------------------------------------------------------
+89. 🚪 THE LOST KEYS LOGIC PUZZLE
+--------------------------------------------------------------------
+Slug/ID   : the-lost-keys---logic-puzzle
+Categoria : Escape Room (escape)
+Descrição : The Lost Keys Logic Puzzle is a challenging HTML5 puzzle game designed to sharpen your cognitive and problem-solving skills with intuitive controls and progressive level difficulties.
+
+--------------------------------------------------------------------
+90. 💡 THE MYSTERY OF BLACKWOOD MANOR
+--------------------------------------------------------------------
+Slug/ID   : 06-blackwood-manor
+Categoria : Logic Challenges (logic)
+Descrição : Lord Blackwood summoned his relatives to read his new last will. By midnight, the patriarch was silenced. Can you determine who had what motive and where they hid?
+
+--------------------------------------------------------------------
+91. 🚪 THE PHANTOM OF THE PARIS OPERA
+--------------------------------------------------------------------
+Slug/ID   : 16-phantom-opera-vaults
+Categoria : Escape Room (escape)
+Descrição : Paris, 1890. Grand chandeliers rattle and music echoes from the underground subterranean lake beneath the Opera house. Follow the theatrical clues to locate the phantom's lair.
+
+--------------------------------------------------------------------
+92. 💡 THE POISONED COFFEE LIAR'S LOGIC
+--------------------------------------------------------------------
+Slug/ID   : the-poisoned-coffee---liar's-logic
+Categoria : Logic Challenges (logic)
+Descrição : The Poisoned Coffee Liar'S Logic is a challenging HTML5 puzzle game designed to sharpen your cognitive and problem-solving skills with intuitive controls and progressive level difficulties.
+
+--------------------------------------------------------------------
+93. 🚪 THE SECRET CODE VAULT BREAKER
+--------------------------------------------------------------------
+Slug/ID   : the-secret-code_-vault-breaker
+Categoria : Escape Room (escape)
+Descrição : The Secret Code Vault Breaker is a challenging HTML5 puzzle game designed to sharpen your cognitive and problem-solving skills with intuitive controls and progressive level difficulties.
+
+--------------------------------------------------------------------
+94. 💡 THE VENICE CARNIVAL CONSPIRACY
+--------------------------------------------------------------------
+Slug/ID   : 12-venice-carnival-conspiracy
+Categoria : Logic Challenges (logic)
+Descrição : Behind gilded porcelain masks and silk capes, a secret plot threatens the Republic of Venice. Use deduction to identify which masquerader carried which poisoned artifact along the Grand Canal.
+
+--------------------------------------------------------------------
+95. 💡 TIC TAC TOE AI
+--------------------------------------------------------------------
+Slug/ID   : jogo-da-velha
+Categoria : Logic Challenges (logic)
+Descrição : Tic Tac Toe AI is a polished online HTML5 puzzle game designed to test your spatial reasoning, strategy, and logic. Play full levels free directly in your web browser.
+
+--------------------------------------------------------------------
+96. 🧊 TUBE SORT 3D
+--------------------------------------------------------------------
+Slug/ID   : tube-sort-3d
+Categoria : 3D Puzzles (three-d)
+Descrição : Experience liquid sorting in complete 3D space. Drag horizontally to rotate the laboratory turntable, allowing you to examine lower color layers hidden behind perspective angles. Tap to select and pour matching liquids until all colors are segregated.
+
+--------------------------------------------------------------------
+97. 🚪 UNBLOCK RED KEY
+--------------------------------------------------------------------
+Slug/ID   : unblock-red-key
+Categoria : Escape Room (escape)
+Descrição : Unblock Red Key is a challenging HTML5 puzzle game designed to sharpen your cognitive and problem-solving skills with intuitive controls and progressive level difficulties.
+
+--------------------------------------------------------------------
+98. 🧪 WATER PUZZLE (TIMER RUSH)
+--------------------------------------------------------------------
+Slug/ID   : water-puzzle
+Categoria : Water Sort (water-sort)
+Descrição : High-octane water sorting against a ticking clock! You have strictly 90 seconds to organize 4 vibrant colors across 6 laboratory tubes. If time expires, the round is lost. Test your quick decision making under pressure.
+
+--------------------------------------------------------------------
+99. 💡 WATER SORT 100 LEVELS
+--------------------------------------------------------------------
+Slug/ID   : water-sort-100-levels
+Categoria : Logic Challenges (logic)
+Descrição : The definitive campaign: climb from Level 1 to Level 100! Start with 3 easy colors, gradually ramping up to 12 colors across 14 tubes. Strategically ration your 3 undos per level and unlock the entire puzzle journey.
+
+--------------------------------------------------------------------
+100. 🧪 WATER SORT 12 TUBES (EXPERT)
+--------------------------------------------------------------------
+Slug/ID   : water-sort-12-tubes
+Categoria : Water Sort (water-sort)
+Descrição : The ultimate test for sorting masters: Water Sort 12 Tubes features 10 intricate vibrant fluid colors and 2 maneuvering tubes. Carefully pour identical colors together and keep at least one tube empty for strategic maneuvering.
+
+--------------------------------------------------------------------
+101. 🧪 WATER SORT 5 LAYERS (HARD)
+--------------------------------------------------------------------
+Slug/ID   : water-sort-5-colors
+Categoria : Water Sort (water-sort)
+Descrição : A high-difficulty challenge featuring deep test tubes with 5 liquid layers each. With 35 total layers to organize, foresight is critical. Crucial tip: never carelessly fill an empty tube early in the game or you will get hopelessly stuck.
+
+--------------------------------------------------------------------
+102. 🧪 WATER SORT LAB
+--------------------------------------------------------------------
+Slug/ID   : water-sort-lab
+Categoria : Water Sort (water-sort)
+Descrição : Water Sort Lab is a challenging HTML5 puzzle game designed to sharpen your cognitive and problem-solving skills with intuitive controls and progressive level difficulties.
+
+--------------------------------------------------------------------
+103. 💡 WATER TO FLOWER KIDS
+--------------------------------------------------------------------
+Slug/ID   : water-flower-kids
+Categoria : Logic Challenges (logic)
+Descrição : Water to Flower Kids is a simplified 3-pipe connection puzzle for children. Rotate chunky water pipes to guide clear stream water from the tap to help a garden blossom grow.
+

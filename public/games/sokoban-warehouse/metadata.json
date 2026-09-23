@@ -1,0 +1,6 @@
+{
+  "name": "Sokoban Warehouse",
+  "description": "Push cargo crates onto designated target storage zones across isometric 2.5D warehouse levels without trapping them against walls.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

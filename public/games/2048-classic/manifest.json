@@ -1,0 +1,18 @@
+{
+  "name": "2048 Classic",
+  "short_name": "2048 Classic",
+  "description": "2048 Classic is a polished online HTML5 puzzle game designed to test your spatial reasoning, strategy, and logic. Play full levels free directly in your web browser.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0f172a",
+  "theme_color": "#0f172a",
+  "icons": [
+    {
+      "src": "./cover.svg",
+      "sizes": "800x600",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "title": "Clock Gears - Ratio & Speed Challenge",
+  "categoryId": "physics",
+  "icon": "⚙️",
+  "instructions": "Drag and drop the correct gear onto the output axle to solve the gear ratio equation and achieve the target RPM and rotation direction.",
+  "description": "Clock Gears is an intuitive mechanical engineering and ratio physics puzzle. Drag gears of different teeth counts (12T, 16T, 20T, 24T, 30T, 36T, 40T, 48T, 60T) into position to calculate gear ratios, speed adjustments, and torque transmission.",
+  "keywords": [
+    "clock gears",
+    "gear ratio",
+    "gear train",
+    "speed and torque",
+    "physics puzzle",
+    "mechanical cogs",
+    "math ratios",
+    "rotation calculator",
+    "educational game"
+  ],
+  "faqs": [
+    {
+      "q": "How is the speed of Gear B calculated?",
+      "a": "Speed_B = Speed_A × (Teeth_A / Teeth_B). Interlocking gears also reverse direction (Clockwise becomes Counterclockwise)."
+    },
+    {
+      "q": "How to play?",
+      "a": "Drag a gear from the bottom dock and drop it into the Gear B slot. The formula parchment shows the live step-by-step arithmetic."
+    },
+    {
+      "q": "Does it work on touchscreens?",
+      "a": "Yes! Both touch drag-and-drop and tap-to-place are supported smoothly on all devices."
+    }
+  ]
+}

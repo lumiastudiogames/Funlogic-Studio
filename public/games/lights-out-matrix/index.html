@@ -1,0 +1,692 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    <title>Lights Out Matrix</title>
+    <meta name="description" content="Jogo de lógica e luzes em matriz. Toque nas lâmpadas para alternar o seu estado e dos vizinhos até acender todas as luzes." />
+    <meta property="og:title" content="Lights Out Matrix" />
+    <meta property="og:description" content="Jogo clássico de lógica e luzes em matriz. Feito em Vanilla JS e CSS 3D." />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="stylesheet" href="/src/index.css" />
+  
+  <script>
+    function triggerPlatformWin(timeInSeconds) {
+      const elapsed = Math.round(timeInSeconds || 45);
+      try {
+        if (typeof window.onWin === 'function') {
+          window.onWin(elapsed);
+        }
+        if (window.parent && window.parent !== window) {
+          window.parent.postMessage({ type: 'win', time: elapsed }, '*');
+        }
+      } catch(e) { console.error('Platform win notify error:', e); }
+    }
+  </script>
+
+</head>
+  <body class="bg-[#070a12] text-slate-100 antialiased select-none">
+    
+    <!-- Atmospheric Ambient Background Orbs -->
+    <div class="ambient-scene-bg" aria-hidden="true">
+      <div class="bokeh-orb w-96 h-96 bg-blue-600/20 top-[-10%] left-[-10%]"></div>
+      <div class="bokeh-orb w-80 h-80 bg-amber-500/15 top-[20%] right-[-5%]"></div>
+      <div class="bokeh-orb w-96 h-96 bg-indigo-600/25 bottom-[-10%] left-[30%]"></div>
+      <div class="bokeh-orb w-72 h-72 bg-sky-500/15 bottom-[15%] right-[15%]"></div>
+    </div>
+
+    <!-- 60FPS Canvas Layer for Sparks, Embers, and Confetti -->
+    <canvas id="game-canvas" class="absolute inset-0 w-full h-full pointer-events-none z-20"></canvas>
+
+    <!-- Master Game Stage Envelope -->
+    <main id="game-stage" class="w-full max-w-4xl h-[100dvh] sm:h-[94vh] sm:max-h-[890px] mx-auto flex flex-col relative overflow-hidden glass-panel sm:rounded-3xl shadow-2xl z-10 px-3 py-2.5 sm:px-6 sm:py-4">
+      
+      <!-- Top Bar: Title & Framework-free Badges & Controls -->
+      <header class="w-full flex items-center justify-between gap-2 border-b border-white/10 pb-2.5 shrink-0">
+        
+        <!-- Left: Logo & Badges matching user image -->
+        <div class="flex items-center gap-2 sm:gap-3 shrink min-w-0">
+          <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-amber-500/20 border border-amber-400/40 flex items-center justify-center text-amber-300 text-lg shadow-[0_0_15px_rgba(251,191,36,0.4)] shrink-0">
+            💡
+          </div>
+          <div class="truncate">
+            <h1 class="text-xs sm:text-base md:text-lg font-black tracking-wider text-white uppercase flex items-center gap-1.5 sm:gap-2 truncate">
+              LIGHTS OUT <span class="text-slate-400 font-light">·</span> MATRIX
+            </h1>
+          </div>
+
+          <!-- Badges from Image (hidden on tighter screens to keep header in 1 single clean row) -->
+          <div class="hidden lg:flex items-center gap-1.5 ml-2 shrink-0">
+            <span class="px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-sky-500/20 text-sky-300 border border-sky-400/30 flex items-center gap-1 whitespace-nowrap">
+              <span>🍃</span> vanilla JS · CSS3D
+            </span>
+            <span class="px-2 py-0.5 rounded-full text-[11px] font-semibold bg-slate-800/80 text-slate-300 border border-slate-700/60 whitespace-nowrap">
+              Pure DOM
+            </span>
+          </div>
+        </div>
+
+        <!-- Right: Mobile-safe Shrink-0 Utility Controls -->
+        <div class="flex items-center gap-1 sm:gap-2 shrink-0">
+          
+          <!-- Home / Start Menu Button -->
+          <button id="btn-open-menu" class="btn-tactile px-2 sm:px-2.5 py-1.5 rounded-xl bg-slate-800/90 hover:bg-slate-700 border border-white/10 text-xs font-bold text-amber-300 flex items-center gap-1 shrink-0" title="Main Menu">
+            <span>🏠</span>
+            <span class="hidden sm:inline text-[11px]">MENU</span>
+          </button>
+
+          <!-- Level Select Button -->
+          <button id="btn-open-levels" class="btn-tactile px-2 sm:px-3 py-1.5 rounded-xl bg-slate-800/90 hover:bg-slate-700 border border-white/10 text-xs font-bold text-amber-300 flex items-center gap-1 shrink-0" title="Select Level">
+            <span id="header-level-badge">LEVEL 1</span>
+            <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+
+          <!-- Undo Button -->
+          <button id="btn-undo" class="btn-tactile px-2 sm:px-2.5 py-1.5 rounded-xl bg-slate-800/90 hover:bg-slate-700 border border-white/10 text-xs font-bold text-slate-200 flex items-center gap-1 shrink-0" title="Undo Move">
+            <svg class="w-4 h-4 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6" />
+            </svg>
+            <span class="hidden md:inline text-[11px]">UNDO</span>
+          </button>
+
+          <!-- Sound Toggle Button -->
+          <button id="btn-sound" class="btn-tactile w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-slate-800/90 hover:bg-slate-700 border border-white/10 flex items-center justify-center shrink-0" title="Toggle Sound">
+            <span id="sound-icon" class="text-sm">🔊</span>
+          </button>
+
+          <!-- How to Play Tutorial Button -->
+          <button id="btn-how-to-play" class="btn-tactile w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-slate-800/90 hover:bg-slate-700 border border-white/10 flex items-center justify-center text-xs font-bold text-slate-300 shrink-0" title="How to Play">
+            ?
+          </button>
+
+        </div>
+      </header>
+
+      <!-- Sub-header: Objective & Score HUD Bar (Clean, unconstrained, fully responsive) -->
+      <section class="w-full flex items-center justify-between gap-1.5 sm:gap-3 py-1.5 sm:py-2 shrink-0">
+        
+        <!-- Objective Pill: Fully visible on any screen width -->
+        <div class="flex items-center gap-1.5 sm:gap-2 bg-slate-800/80 border border-amber-400/30 rounded-xl px-2.5 sm:px-3.5 py-1.5 shadow-inner shrink-0">
+          <span class="w-2.5 h-2.5 rounded-full bg-amber-400 animate-pulse shrink-0 shadow-[0_0_8px_rgba(251,191,36,0.9)]"></span>
+          <span class="text-xs sm:text-sm font-semibold text-slate-200 whitespace-nowrap">
+            <span class="hidden sm:inline text-white font-bold">Goal: </span>Turn <span class="text-amber-300 font-extrabold bg-amber-500/20 px-1.5 py-0.5 rounded text-[11px] sm:text-xs">ALL ON</span>
+          </span>
+        </div>
+
+        <!-- Right Side Counters: Moves and Best -->
+        <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
+          <!-- Moves Counter -->
+          <div class="bg-slate-800/80 border border-white/10 rounded-xl px-2 sm:px-3 py-1.5 flex items-center gap-1 shrink-0 shadow-inner text-xs">
+            <svg class="w-3.5 h-3.5 text-sky-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+            </svg>
+            <span class="text-slate-400 text-[11px]">Moves:</span>
+            <span id="hud-moves" class="font-black text-xs sm:text-sm text-amber-300 min-w-[16px] text-center">0</span>
+          </div>
+
+          <!-- Best Counter -->
+          <div class="bg-slate-800/80 border border-white/10 rounded-xl px-2 sm:px-3 py-1.5 flex items-center gap-1 shrink-0 shadow-inner text-xs">
+            <span class="text-amber-400 text-xs">🏆</span>
+            <span class="text-slate-400 text-[11px]">Best:</span>
+            <span id="hud-best" class="font-black text-xs sm:text-sm text-amber-300 min-w-[16px] text-center">--</span>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- Main Game Canvas / Matrix Area (Flex-1: Constrains matrix from overlapping header or footer) -->
+      <section id="matrix-stage-container" class="flex-1 w-full flex items-center justify-center relative min-h-0 py-1 overflow-hidden">
+        
+        <!-- The Matrix Grid: Dynamically responsive square, bounded by parent container in both height & width -->
+        <div id="lights-matrix-grid" class="h-full max-h-full w-auto max-w-full max-h-[480px] max-w-[480px] aspect-square grid gap-2 sm:gap-3 p-2.5 sm:p-3.5 bg-slate-950/60 rounded-2xl border border-white/10 shadow-[inset_0_2px_12px_rgba(0,0,0,0.8)] relative min-h-0 min-w-0 mx-auto">
+          <!-- Bulb tiles rendered dynamically -->
+        </div>
+
+        <!-- Interactive Contextual Tooltip -->
+        <div id="matrix-tooltip" class="tooltip-bubble hidden bg-slate-900/95 border border-amber-400/40 text-amber-200 px-3 py-1.5 rounded-xl text-[11px] font-medium shadow-2xl backdrop-blur-md flex items-center gap-1.5">
+          <span>💡</span>
+          <span>Click toggles this + adjacent neighbors</span>
+        </div>
+
+      </section>
+
+      <!-- Bottom Control Bar matching the image: [Reset] [Hint] [New Puzzle] -->
+      <footer class="w-full pt-2 flex flex-col gap-2 shrink-0 border-t border-white/10">
+        
+        <div class="flex items-center justify-center gap-2 sm:gap-3">
+          
+          <!-- Reset Button -->
+          <button id="btn-reset" class="btn-tactile flex-1 max-w-[130px] sm:max-w-[150px] py-2 sm:py-2.5 px-3 rounded-xl bg-slate-800/90 hover:bg-slate-700 border border-white/15 text-slate-200 font-bold text-xs sm:text-sm flex items-center justify-center gap-1.5" title="Reiniciar tabuleiro atual">
+            <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+            </svg>
+            <span>Reset</span>
+          </button>
+
+          <!-- Hint Button -->
+          <button id="btn-hint" class="btn-tactile flex-1 max-w-[130px] sm:max-w-[150px] py-2 sm:py-2.5 px-3 rounded-xl bg-slate-800/90 hover:bg-slate-700 border border-white/15 text-amber-300 font-bold text-xs sm:text-sm flex items-center justify-center gap-1.5" title="Dica matemática">
+            <span class="text-sm">💡</span>
+            <span>Hint</span>
+          </button>
+
+          <!-- New Puzzle Button (Highlighted with blue accent from image) -->
+          <button id="btn-new-puzzle" class="btn-tactile flex-1 max-w-[150px] sm:max-w-[180px] py-2 sm:py-2.5 px-3 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 border border-sky-400/40 text-white font-black text-xs sm:text-sm flex items-center justify-center gap-1.5 shadow-[0_0_15px_rgba(59,130,246,0.35)]" title="Gerar novo quebra-cabeça">
+            <span>🎲</span>
+            <span>New Puzzle</span>
+          </button>
+
+        </div>
+
+        <!-- Footer Info Status matching bottom line of the screenshot -->
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-1 text-[10px] sm:text-[11px] text-slate-400 px-1 pt-1 border-t border-white/5">
+          <div id="footer-state-counter" class="font-mono font-medium text-slate-300">
+            state: 14/25 ON • 11/25 OFF
+          </div>
+          <div class="text-center sm:text-right text-slate-400 truncate max-w-full">
+            Click a bulb to toggle it & its neighbors (up / down / left / right) • Goal: Turn all lights ON!
+          </div>
+        </div>
+
+      </footer>
+
+      <!-- Modals Container Overlay -->
+      <div id="modal-overlay" class="absolute inset-0 bg-black/75 backdrop-blur-md z-40 flex items-center justify-center p-3 sm:p-6 hidden">
+        
+        <!-- 0. Initial Start Menu Modal -->
+        <div id="modal-start-menu" class="w-full max-w-sm bg-slate-900 border border-white/15 rounded-3xl p-5 sm:p-7 shadow-2xl flex flex-col items-center text-center gap-4 hidden">
+          <!-- Animated Bulb Icon -->
+          <div class="relative w-16 h-16 rounded-2xl bg-amber-500/20 border border-amber-400/50 flex items-center justify-center text-3xl shadow-[0_0_25px_rgba(251,191,36,0.4)]">
+            <span>💡</span>
+            <span class="absolute -top-1 -right-1 w-3.5 h-3.5 bg-amber-400 rounded-full animate-ping"></span>
+          </div>
+
+          <div>
+            <h2 class="text-xl sm:text-2xl font-black text-white tracking-wider uppercase">
+              LIGHTS OUT
+            </h2>
+            <div class="text-xs font-semibold text-amber-300 uppercase tracking-widest mt-0.5">
+              MATRIX EDITION
+            </div>
+            <p class="text-xs text-slate-300 mt-2 px-2">
+              Turn on all lights in the matrix to win! Each tap toggles the bulb and its adjacent neighbors in a cross pattern.
+            </p>
+          </div>
+
+          <!-- Quick Stats Pill -->
+          <div class="w-full bg-slate-950/70 border border-white/10 rounded-2xl p-3 flex items-center justify-around text-xs">
+            <div class="flex flex-col items-center">
+              <span class="text-slate-400 text-[10px]">Progress</span>
+              <span id="menu-unlocked-level" class="font-bold text-amber-300 text-sm">Level 1 / 12</span>
+            </div>
+            <div class="w-px h-6 bg-white/10"></div>
+            <div class="flex flex-col items-center">
+              <span class="text-slate-400 text-[10px]">Stars</span>
+              <span id="menu-total-stars" class="font-bold text-amber-400 text-sm">⭐ 0</span>
+            </div>
+          </div>
+
+          <!-- Menu Action Buttons -->
+          <div class="w-full flex flex-col gap-2.5 pt-1">
+            <!-- Play / Continue Button -->
+            <button id="menu-btn-play" class="btn-tactile w-full py-3 rounded-xl bg-gradient-to-r from-amber-500 to-amber-400 hover:from-amber-400 hover:to-amber-300 text-slate-950 font-black text-sm uppercase tracking-wider shadow-[0_0_15px_rgba(251,191,36,0.4)] flex items-center justify-center gap-2">
+              <span>▶</span>
+              <span id="menu-btn-play-text">Continue Game</span>
+            </button>
+
+            <!-- Select Level Button -->
+            <button id="menu-btn-levels" class="btn-tactile w-full py-2.5 rounded-xl bg-slate-800/90 hover:bg-slate-700 border border-white/10 text-white font-bold text-xs sm:text-sm flex items-center justify-center gap-2">
+              <span>🗺️</span>
+              <span>Select Level</span>
+            </button>
+
+            <!-- How to Play Button -->
+            <button id="menu-btn-how-to-play" class="btn-tactile w-full py-2.5 rounded-xl bg-slate-800/60 hover:bg-slate-700/80 border border-white/10 text-slate-300 font-semibold text-xs sm:text-sm flex items-center justify-center gap-2">
+              <span>📖</span>
+              <span>How to Play</span>
+            </button>
+          </div>
+
+          <!-- Tech stack badge -->
+          
+        </div>
+
+        <!-- 1. Level Select Modal -->
+        <div id="modal-level-select" class="w-full max-w-lg bg-slate-900 border border-white/15 rounded-3xl p-4 sm:p-6 shadow-2xl flex flex-col gap-4 hidden max-h-[85vh] overflow-y-auto">
+          <div class="flex items-center justify-between border-b border-white/10 pb-3">
+            <div class="flex items-center gap-2">
+              <span class="text-xl">🗺️</span>
+              <h2 class="text-base sm:text-lg font-black text-white uppercase tracking-wider">Select Level</h2>
+            </div>
+            <button id="modal-close-levels" class="w-8 h-8 rounded-full bg-slate-800 hover:bg-slate-700 flex items-center justify-center text-slate-400 hover:text-white">
+              ✕
+            </button>
+          </div>
+
+          <div id="levels-grid" class="grid grid-cols-3 sm:grid-cols-4 gap-2.5 sm:gap-3 py-2">
+            <!-- Level cards injected by JS -->
+          </div>
+
+          <p class="text-[11px] text-slate-400 text-center">
+            Complete each level to unlock the next. Try to achieve 3 stars! ⭐
+          </p>
+        </div>
+
+        <!-- 2. How to Play Modal (3 Step Cards per manual) -->
+        <div id="modal-how-to-play" class="w-full max-w-lg bg-slate-900 border border-white/15 rounded-3xl p-4 sm:p-6 shadow-2xl flex flex-col gap-4 hidden">
+          <div class="flex items-center justify-between border-b border-white/10 pb-3">
+            <div class="flex items-center gap-2">
+              <span class="text-xl">📖</span>
+              <h2 class="text-base sm:text-lg font-black text-white uppercase tracking-wider">How to Play</h2>
+            </div>
+            <button id="modal-close-help" class="w-8 h-8 rounded-full bg-slate-800 hover:bg-slate-700 flex items-center justify-center text-slate-400 hover:text-white">
+              ✕
+            </button>
+          </div>
+
+          <!-- 3 Horizontal Tutorial Cards -->
+          <div class="flex flex-col gap-3 py-1">
+            
+            <div class="p-3 bg-slate-800/70 border border-white/10 rounded-2xl flex items-start gap-3">
+              <div class="w-10 h-10 rounded-xl bg-amber-500/20 border border-amber-400/40 flex items-center justify-center text-amber-300 text-lg shrink-0">
+                1
+              </div>
+              <div>
+                <h3 class="text-xs sm:text-sm font-black text-amber-300 uppercase">What to Tap</h3>
+                <p class="text-xs text-slate-300 mt-0.5">
+                  Tap any lit or unlit bulb on the light matrix grid.
+                </p>
+              </div>
+            </div>
+
+            <div class="p-3 bg-slate-800/70 border border-white/10 rounded-2xl flex items-start gap-3">
+              <div class="w-10 h-10 rounded-xl bg-sky-500/20 border border-sky-400/40 flex items-center justify-center text-sky-300 text-lg shrink-0">
+                2
+              </div>
+              <div>
+                <h3 class="text-xs sm:text-sm font-black text-sky-300 uppercase">The Cross Rule (+)</h3>
+                <p class="text-xs text-slate-300 mt-0.5">
+                  Each click toggles the state of the clicked bulb <strong>and its orthogonal neighbors</strong> (up, down, left, and right).
+                </p>
+              </div>
+            </div>
+
+            <div class="p-3 bg-slate-800/70 border border-white/10 rounded-2xl flex items-start gap-3">
+              <div class="w-10 h-10 rounded-xl bg-emerald-500/20 border border-emerald-400/40 flex items-center justify-center text-emerald-300 text-lg shrink-0">
+                3
+              </div>
+              <div>
+                <h3 class="text-xs sm:text-sm font-black text-emerald-300 uppercase">Victory Goal</h3>
+                <p class="text-xs text-slate-300 mt-0.5">
+                  Turn <strong>all lights ON</strong> in the matrix using as few moves as possible.
+                </p>
+              </div>
+            </div>
+
+          </div>
+
+          <button id="modal-btn-got-it" class="btn-tactile w-full py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-sm uppercase tracking-wider">
+            Got It, Let's Play!
+          </button>
+        </div>
+
+        <!-- 3. Rewarded Ad Modal (Section 6.B of universal manual) -->
+        <div id="modal-rewarded-ad" class="w-full max-w-sm bg-slate-900 border border-white/15 rounded-3xl p-4 sm:p-6 shadow-2xl flex flex-col items-center text-center gap-4 hidden">
+          <div class="w-12 h-12 rounded-2xl bg-amber-500/20 border border-amber-400/40 flex items-center justify-center text-2xl text-amber-300 shadow-[0_0_20px_rgba(251,191,36,0.3)]">
+            💡
+          </div>
+          
+          <div>
+            <h2 class="text-base sm:text-lg font-black text-white uppercase">Sponsored Hint</h2>
+            <p class="text-xs text-slate-300 mt-1">
+              Watch the sponsor demo to reveal the next mathematically optimal move!
+            </p>
+          </div>
+
+          <!-- Video Sponsor Simulation Container -->
+          <div class="w-full bg-slate-950/80 border border-white/10 rounded-2xl p-4 flex flex-col items-center gap-3">
+            <div class="flex items-center gap-2 text-xs text-slate-400">
+              <span class="w-2 h-2 rounded-full bg-rose-500 animate-ping"></span>
+              <span>Playing Video: <strong id="ad-countdown-text" class="text-amber-300">5s</strong></span>
+            </div>
+
+            <!-- Progress Bar -->
+            <div class="w-full bg-slate-800 h-2.5 rounded-full overflow-hidden border border-white/10">
+              <div id="ad-progress-bar" class="bg-gradient-to-r from-amber-500 to-yellow-300 h-full w-0 transition-all duration-100 ease-linear"></div>
+            </div>
+          </div>
+
+          <!-- Claim Reward Button -->
+          <button id="ad-claim-btn" class="btn-tactile w-full py-2.5 rounded-xl bg-slate-800 text-slate-400 font-black text-sm uppercase tracking-wider opacity-50 cursor-not-allowed">
+            Please Wait (5s)
+          </button>
+
+          <!-- Skip / Close Button -->
+          <button id="ad-skip-btn" class="text-xs text-slate-400 hover:text-slate-200 underline">
+            Skip without hint
+          </button>
+        </div>
+
+        <!-- 4. Victory Celebration Modal -->
+        <div id="modal-victory" class="w-full max-w-sm bg-slate-900 border border-amber-400/40 rounded-3xl p-5 sm:p-6 shadow-[0_0_50px_rgba(251,191,36,0.3)] flex flex-col items-center text-center gap-4 hidden">
+          <div class="w-16 h-16 rounded-full bg-gradient-to-b from-amber-300 to-amber-600 flex items-center justify-center text-3xl shadow-lg border-2 border-white">
+            🏆
+          </div>
+
+          <div>
+            <h2 class="text-xl sm:text-2xl font-black text-amber-300 uppercase tracking-wide">
+              Matrix Fully Lit!
+            </h2>
+            <p class="text-xs text-slate-300 mt-1">
+              All lights have been turned ON successfully!
+            </p>
+          </div>
+
+          <!-- Stars Rating -->
+          <div id="victory-stars" class="flex items-center gap-2 text-2xl text-amber-300 py-1">
+            <span>⭐</span><span>⭐</span><span>⭐</span>
+          </div>
+
+          <!-- Score Recap Card -->
+          <div class="w-full bg-slate-950/80 border border-white/10 rounded-2xl p-3 grid grid-cols-2 gap-2 text-center text-xs">
+            <div>
+              <span class="block text-[10px] text-slate-400 uppercase">Moves</span>
+              <span id="victory-moves" class="text-base font-black text-white">0</span>
+            </div>
+            <div>
+              <span class="block text-[10px] text-slate-400 uppercase">Time</span>
+              <span id="victory-time" class="text-base font-black text-amber-300">00:00</span>
+            </div>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="w-full flex flex-col gap-2 pt-1">
+            <button id="victory-next-btn" class="btn-tactile w-full py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-400 hover:from-amber-400 hover:to-yellow-300 text-slate-950 font-black text-sm uppercase tracking-wider shadow-lg">
+              Next Level ➔
+            </button>
+            <button id="victory-replay-btn" class="btn-tactile w-full py-2 rounded-xl bg-slate-800 hover:bg-slate-700 border border-white/10 text-slate-300 font-bold text-xs">
+              Play Again
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+    </main>
+
+    <!-- Vanilla JS Application Entry Point (Pure DOM & TS/JS) -->
+    <script type="module" src="/src/main.ts"></script>
+  
+  <!-- Fullscreen UI -->
+  <button id="fl-fullscreen-btn" aria-label="Fullscreen" title="Toggle Fullscreen" style="
+    position: fixed;
+    top: 14px;
+    right: 14px;
+    z-index: 99999;
+    background: rgba(15, 23, 42, 0.75);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #ffffff;
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 18px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    transition: transform 0.15s ease, background 0.2s ease;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+  " onmouseover="this.style.transform='scale(1.08)'" onmouseout="this.style.transform='scale(1)'">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/>
+    </svg>
+  </button>
+
+  <script>
+    (function() {
+      const fsBtn = document.getElementById('fl-fullscreen-btn');
+      if (fsBtn) {
+        fsBtn.addEventListener('click', function(e) {
+          e.stopPropagation();
+          if (!document.fullscreenElement && !document.webkitFullscreenElement && !document.mozFullScreenElement && !document.msFullscreenElement) {
+            const el = document.documentElement;
+            if (el.requestFullscreen) el.requestFullscreen().catch(()=>{});
+            else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+            else if (el.mozRequestFullScreen) el.mozRequestFullScreen();
+            else if (el.msRequestFullscreen) el.msRequestFullscreen();
+          } else {
+            if (document.exitFullscreen) document.exitFullscreen().catch(()=>{});
+            else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+            else if (document.mozCancelFullScreen) document.mozCancelFullScreen();
+            else if (document.msExitFullscreen) document.msExitFullscreen();
+          }
+        });
+      }
+    })();
+  </script>
+
+
+  <!-- PWA Service Worker Registration -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js').catch(() => {});
+      });
+    }
+  </script>
+
+
+  <!-- 5-Second Hint Ad Modal System -->
+  <div id="fl-hint-modal-overlay" style="
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 999999;
+    background: rgba(10, 15, 30, 0.85);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    align-items: center;
+    justify-content: center;
+    font-family: system-ui, -apple-system, sans-serif;
+    padding: 16px;
+    box-sizing: border-box;
+  ">
+    <div style="
+      background: linear-gradient(145deg, #1e293b, #0f172a);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.6), 0 0 30px rgba(245, 158, 11, 0.2);
+      border-radius: 20px;
+      max-width: 420px;
+      width: 100%;
+      padding: 24px;
+      text-align: center;
+      color: #f8fafc;
+      position: relative;
+    ">
+      <button id="fl-hint-close-btn" style="
+        position: absolute;
+        top: 14px;
+        right: 14px;
+        background: rgba(255,255,255,0.08);
+        border: none;
+        color: #94a3b8;
+        font-size: 18px;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      ">✕</button>
+
+      <div style="
+        width: 56px;
+        height: 56px;
+        margin: 0 auto 14px auto;
+        background: rgba(245, 158, 11, 0.15);
+        border: 1px solid rgba(245, 158, 11, 0.3);
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 28px;
+      ">💡</div>
+
+      <h3 style="margin: 0 0 6px 0; font-size: 19px; font-weight: 800; color: #fbbf24;">Unlocking Hint</h3>
+      <p style="margin: 0 0 18px 0; font-size: 13px; color: #94a3b8; line-height: 1.4;">
+        Sponsored Reward: Wait 5 seconds to reveal your clue assistance.
+      </p>
+
+      <div id="fl-hint-ad-box" style="
+        background: rgba(0, 0, 0, 0.35);
+        border: 1px dashed rgba(255, 255, 255, 0.15);
+        border-radius: 12px;
+        padding: 16px;
+        margin-bottom: 18px;
+      ">
+        <div style="font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: #64748b; margin-bottom: 4px;">Advertisement</div>
+        <div style="font-size: 14px; font-weight: 600; color: #e2e8f0;">Brain Booster Puzzles</div>
+        <div style="font-size: 11px; color: #38bdf8; margin-top: 2px;">play.funlogic.games</div>
+      </div>
+
+      <div style="margin-bottom: 16px;">
+        <div style="display: flex; justify-content: space-between; font-size: 12px; font-weight: 700; margin-bottom: 6px;">
+          <span style="color: #94a3b8;">Sponsor Video</span>
+          <span id="fl-hint-timer-txt" style="color: #f59e0b;">5s</span>
+        </div>
+        <div style="width: 100%; height: 8px; background: rgba(255,255,255,0.1); border-radius: 4px; overflow: hidden;">
+          <div id="fl-hint-progress-bar" style="width: 0%; height: 100%; background: linear-gradient(90deg, #f59e0b, #10b981); transition: width 0.1s linear;"></div>
+        </div>
+      </div>
+
+      <button id="fl-hint-claim-btn" disabled style="
+        width: 100%;
+        padding: 12px;
+        border-radius: 12px;
+        border: none;
+        background: #334155;
+        color: #64748b;
+        font-weight: 700;
+        font-size: 14px;
+        cursor: not-allowed;
+        transition: all 0.2s;
+      ">Please wait 5s...</button>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      let countdownTimer = null;
+      let originalHintCallback = null;
+
+      const overlay = document.getElementById('fl-hint-modal-overlay');
+      const timerTxt = document.getElementById('fl-hint-timer-txt');
+      const progressBar = document.getElementById('fl-hint-progress-bar');
+      const claimBtn = document.getElementById('fl-hint-claim-btn');
+      const closeBtn = document.getElementById('fl-hint-close-btn');
+
+      function showHintAdModal(callback) {
+        if (!overlay) return;
+        originalHintCallback = callback;
+        overlay.style.display = 'flex';
+        
+        let timeLeft = 50; // 5.0 seconds
+        claimBtn.disabled = true;
+        claimBtn.style.background = '#334155';
+        claimBtn.style.color = '#64748b';
+        claimBtn.style.cursor = 'not-allowed';
+        claimBtn.textContent = 'Please wait 5s...';
+        progressBar.style.width = '0%';
+        timerTxt.textContent = '5s';
+
+        try {
+          if (window.parent && window.parent !== window) {
+            window.parent.postMessage({ type: 'hint_ad_started', duration: 5 }, '*');
+          }
+        } catch(e) {}
+
+        clearInterval(countdownTimer);
+        countdownTimer = setInterval(() => {
+          timeLeft--;
+          const percent = ((50 - timeLeft) / 50) * 100;
+          progressBar.style.width = percent + '%';
+          const secondsRemaining = Math.ceil(timeLeft / 10);
+          timerTxt.textContent = secondsRemaining + 's';
+          claimBtn.textContent = 'Please wait ' + secondsRemaining + 's...';
+
+          if (timeLeft <= 0) {
+            clearInterval(countdownTimer);
+            timerTxt.textContent = 'Ready!';
+            timerTxt.style.color = '#10b981';
+            claimBtn.disabled = false;
+            claimBtn.style.background = 'linear-gradient(90deg, #f59e0b, #10b981)';
+            claimBtn.style.color = '#0f172a';
+            claimBtn.style.cursor = 'pointer';
+            claimBtn.textContent = '✨ Get Hint Now';
+
+            try {
+              if (window.parent && window.parent !== window) {
+                window.parent.postMessage({ type: 'hint_ad_completed' }, '*');
+              }
+            } catch(e) {}
+          }
+        }, 100);
+      }
+
+      function closeHintModal() {
+        clearInterval(countdownTimer);
+        if (overlay) overlay.style.display = 'none';
+      }
+
+      function claimHint() {
+        closeHintModal();
+        if (typeof originalHintCallback === 'function') {
+          originalHintCallback();
+        }
+      }
+
+      if (closeBtn) closeBtn.addEventListener('click', closeHintModal);
+      if (claimBtn) claimBtn.addEventListener('click', claimHint);
+
+      window.showHintWith5sAd = showHintAdModal;
+
+      window.addEventListener('DOMContentLoaded', () => {
+        setTimeout(() => {
+          const hintSelectors = [
+            '#btn-hint', '#hint-btn', '#button-hint', '#hint',
+            '.btn-hint', '.hint-btn', '[data-action="hint"]',
+            'button[title*="Hint" i]', 'button[aria-label*="Hint" i]'
+          ];
+
+          hintSelectors.forEach(selector => {
+            document.querySelectorAll(selector).forEach(btn => {
+              if (!btn.getAttribute('data-fl-hooked')) {
+                btn.setAttribute('data-fl-hooked', 'true');
+                btn.addEventListener('click', function(e) {
+                  if (!this.hasAttribute('data-hint-approved')) {
+                    e.stopImmediatePropagation();
+                    e.preventDefault();
+                    showHintAdModal(() => {
+                      this.setAttribute('data-hint-approved', 'true');
+                      this.click();
+                      setTimeout(() => this.removeAttribute('data-hint-approved'), 500);
+                    });
+                  }
+                }, true);
+              }
+            });
+          });
+        }, 300);
+      });
+    })();
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,18 @@
+{
+  "name": "The Arsenic Tea Party at Morrington",
+  "short_name": "The Arsenic ",
+  "description": "During a refined 5 o'clock afternoon tea in the Cotswolds, bitter almond scent drifted from the silver teapot. Sift through the polite conversation to expose the poisoned teacup.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0f172a",
+  "theme_color": "#0f172a",
+  "icons": [
+    {
+      "src": "./cover.svg",
+      "sizes": "800x600",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

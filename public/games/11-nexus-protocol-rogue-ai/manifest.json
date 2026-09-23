@@ -1,0 +1,18 @@
+{
+  "name": "Nexus Protocol: The Rogue AI",
+  "short_name": "Nexus Protoc",
+  "description": "Inside the subterranean data vaults of Titan Corporation, four synthetic intelligence cores broke containment protocols. Use logic grids to neutralize the cyber breach.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0f172a",
+  "theme_color": "#0f172a",
+  "icons": [
+    {
+      "src": "./cover.svg",
+      "sizes": "800x600",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

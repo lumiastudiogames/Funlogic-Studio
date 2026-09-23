@@ -1,0 +1,38 @@
+{
+  "title": "City Parking Jam",
+  "categoryId": "logic",
+  "icon": "🚗",
+  "instructions": "Tap cars to drive them out towards unobstructed streets. Avoid collisions with other vehicles, cones, barriers, and hydrants.",
+  "description": "City Parking Jam is a thrilling 2.5D traffic puzzle game. Untangle crowded parking lots filled with nimble sedans, sturdy SUVs, and long delivery vans across 30 progressively challenging levels with unlockable vehicle skins and custom exhaust trails.",
+  "keywords": [
+    "city parking jam",
+    "parking puzzle",
+    "car puzzle",
+    "traffic jam game",
+    "untangle cars",
+    "logic puzzle",
+    "brain teasers",
+    "car games",
+    "3d parking puzzle",
+    "free web game",
+    "unblock car"
+  ],
+  "faqs": [
+    {
+      "q": "How do I play City Parking Jam?",
+      "a": "Tap on any car to make it move forward in its facing direction. If the path to the exit is clear, it drives out. If blocked, it bumps and recoils."
+    },
+    {
+      "q": "What are the vehicle types?",
+      "a": "Sedans (1x2) are fast and nimble, SUVs (1x2) have standard speed, and Delivery Vans (1x3) are long and require wider lanes to exit."
+    },
+    {
+      "q": "How many levels are available?",
+      "a": "City Parking Jam features 30 distinct levels with increasing grid sizes and obstacles like traffic cones, barriers, and fire hydrants."
+    },
+    {
+      "q": "How do I unlock new skins and trails?",
+      "a": "Earn stars by completing levels within the par moves limit. Use earned stars in the Garage to unlock new liveries like Taxi, Police Patrol, and Cyberpunk Neon."
+    }
+  ]
+}

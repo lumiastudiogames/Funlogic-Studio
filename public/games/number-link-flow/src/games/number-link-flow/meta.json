@@ -1,0 +1,33 @@
+{
+  "title": "Number Link Flow",
+  "categoryId": "logic",
+  "icon": "🔢",
+  "instructions": "Connect pairs of matching numbers of the same color to fill the entire grid without crossing paths.",
+  "description": "Number Link Flow is a sleek and challenging logic puzzle game. Connect matching colored number nodes by drawing continuous pipes. Fill 100% of the grid to achieve flow without intersecting lines across 30+ handcrafted levels from 5x5 Beginner to 9x9 Master packs.",
+  "keywords": [
+    "number link",
+    "flow free",
+    "connect dots",
+    "number puzzle",
+    "logic game",
+    "flow puzzle",
+    "brain teaser",
+    "grid connect",
+    "online puzzle",
+    "color link"
+  ],
+  "faqs": [
+    {
+      "q": "How do you play Number Link Flow?",
+      "a": "Touch and drag from any numbered circle to connect it with its matching colored number. Fill all empty squares in the grid to win."
+    },
+    {
+      "q": "Can pipes cross each other?",
+      "a": "No, pipes cannot overlap or cross each other. Drawing over an existing pipe will disconnect or shorten it."
+    },
+    {
+      "q": "Does the game work on mobile devices?",
+      "a": "Yes, Number Link Flow is fully responsive and optimized for touch screens on smartphones, tablets, and computers."
+    }
+  ]
+}

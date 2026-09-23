@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>City Parking Jam</title>
+  <link rel="stylesheet" href="./style.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+  <div id="game-stage">
+    <!-- Header -->
+    <header id="game-hud" class="w-full h-14 bg-slate-900/95 px-3 border-b border-slate-800 flex items-center justify-between gap-1.5 shrink-0 z-20">
+      <div class="flex items-center gap-1.5 shrink-0">
+        <button id="btn-menu" class="btn-tactile w-9 h-9 rounded-xl bg-slate-800 border border-slate-700 text-slate-200 flex items-center justify-center font-bold">
+          ⏸️
+        </button>
+        <div id="level-badge" class="px-2.5 py-1 rounded-lg text-xs font-black bg-blue-500/10 text-blue-400 border border-blue-500/30">
+          LVL 1
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2 shrink-0">
+        <div class="bg-slate-800 border border-slate-700 rounded-lg px-2.5 py-0.5 text-center min-w-[55px]">
+          <span class="block text-[8px] font-bold text-slate-400 uppercase">MOVES</span>
+          <span id="moves-counter" class="font-black text-sm text-emerald-400">0</span>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-1.5 shrink-0">
+        <button id="btn-undo" class="btn-tactile px-2.5 py-1.5 rounded-lg bg-slate-800 border border-slate-700 text-slate-200 font-bold text-xs">
+          ↩️ <span class="hidden sm:inline">UNDO</span>
+        </button>
+        <button id="btn-restart" class="btn-tactile w-9 h-9 rounded-lg bg-slate-800 border border-slate-700 text-slate-200 flex items-center justify-center font-bold">
+          🔄
+        </button>
+        <button id="btn-sound" class="btn-tactile w-9 h-9 rounded-lg bg-slate-800 border border-slate-700 text-slate-200 flex items-center justify-center font-bold">
+          🔊
+        </button>
+      </div>
+    </header>
+
+    <!-- Canvas Container -->
+    <div id="canvas-container" class="flex-1 w-full h-full relative overflow-hidden bg-slate-950">
+      <canvas id="game-canvas" class="block w-full h-full"></canvas>
+    </div>
+
+    <!-- Main Menu Screen -->
+    <div id="screen-main-menu" class="absolute inset-0 z-30 bg-slate-950 flex flex-col items-center justify-between p-6 overflow-y-auto">
+      <div class="w-full flex justify-between text-xs font-bold text-slate-400">
+        <span id="menu-stars">⭐ 0 Stars</span>
+        <span>🚗 30 Levels</span>
+      </div>
+
+      <div class="text-center my-auto">
+        <div class="text-6xl mb-3 animate-bounce">🚗</div>
+        <h1 class="text-3xl font-black text-white">CITY PARKING <span class="text-blue-400">JAM</span></h1>
+        <p class="text-xs text-slate-400 mt-1 max-w-xs">Untangle crowded parking lots with fast sedans and long vans!</p>
+      </div>
+
+      <div class="w-full max-w-xs flex flex-col gap-2.5">
+        <button id="btn-play" class="btn-tactile w-full py-3.5 rounded-2xl bg-blue-600 text-white font-black text-base shadow-lg shadow-blue-500/30">
+          ▶️ PLAY GAME
+        </button>
+        <button id="btn-levels" class="btn-tactile w-full py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-slate-200 font-bold text-sm">
+          📊 LEVEL SELECT (30)
+        </button>
+      </div>
+    </div>
+
+    <!-- Level Select Modal -->
+    <div id="screen-levels" class="absolute inset-0 z-40 bg-slate-950/95 p-6 flex flex-col hidden">
+      <div class="flex justify-between items-center pb-3 border-b border-slate-800">
+        <h2 class="text-lg font-black text-white">SELECT LEVEL (1 - 30)</h2>
+        <button id="btn-close-levels" class="btn-tactile w-8 h-8 rounded-lg bg-slate-800 text-slate-300">✕</button>
+      </div>
+      <div id="levels-grid" class="flex-1 overflow-y-auto py-4 grid grid-cols-5 gap-2.5"></div>
+    </div>
+  </div>
+
+  <script src="./game.js"></script>
+</body>
+</html>

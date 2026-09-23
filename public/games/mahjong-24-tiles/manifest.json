@@ -1,0 +1,18 @@
+{
+  "name": "Mahjong 24 Tiles - Quick Play",
+  "short_name": "Mahjong 24 T",
+  "description": "Mahjong 24 Tiles is a quick-play mini version of classic Mahjong Solitaire designed for rapid 40-second rounds, seniors, and beginners. Features extra-large high-contrast tiles, instant replay, local best records, and zero eye strain.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0f172a",
+  "theme_color": "#0f172a",
+  "icons": [
+    {
+      "src": "./cover.svg",
+      "sizes": "800x600",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

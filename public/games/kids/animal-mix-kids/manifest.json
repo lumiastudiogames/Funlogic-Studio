@@ -1,0 +1,18 @@
+{
+  "name": "Animal Mix Kids",
+  "short_name": "Animal Mix K",
+  "description": "Animal Mix Kids is a delightful color-sorting puzzle designed for young kids. Sort cute puppies, kittens, and bunnies across 4 cozy test tubes until every animal has its own tube.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0f172a",
+  "theme_color": "#0f172a",
+  "icons": [
+    {
+      "src": "./cover.svg",
+      "sizes": "800x600",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

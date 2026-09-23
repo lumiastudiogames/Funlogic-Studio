@@ -1,0 +1,6 @@
+{
+  "name": "Matchstick Logic",
+  "description": "Move exactly 1 matchstick to fix the incorrect math equation. 20 progressive levels with 2.5D tactile drag-and-drop physics.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

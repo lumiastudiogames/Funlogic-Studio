@@ -1,0 +1,6 @@
+{
+  "name": "Number Sequence - The Vault",
+  "description": "Crack 10 antique mechanical vaults by discovering the hidden logical number sequence pattern.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

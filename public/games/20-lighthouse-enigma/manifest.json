@@ -1,0 +1,18 @@
+{
+  "name": "The Flannan Isle Lighthouse Enigma",
+  "short_name": "The Flannan ",
+  "description": "On a remote gale-swept Hebridean rock, the lighthouse light went dark. The relief crew arrived to find an untouched dinner, a stopped clock, and no living soul.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0f172a",
+  "theme_color": "#0f172a",
+  "icons": [
+    {
+      "src": "./cover.svg",
+      "sizes": "800x600",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

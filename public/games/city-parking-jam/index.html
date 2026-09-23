@@ -1,0 +1,715 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    <title>City Parking Jam</title>
+    
+    <meta property="og:title" content="City Parking Jam" />
+    <meta property="og:description" content="Untangle crowded parking lots with sedans, SUVs, and vans across 30 challenging levels with unlockables and realistic 2.5D graphics." />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/src/index.css" />
+  
+  
+  
+  
+  
+
+  
+  
+  
+  
+
+  <meta name="description" content="City Parking Jam is a challenging HTML5 puzzle game designed to sharpen your cognitive and problem-solving skills with intuitive controls and progressive level difficulties." />
+  <meta name="keywords" content="city parking jam, city parking jam, free online game, brain puzzle, html5 game, no install, logic puzzle, casual browser game" />
+  <meta name="game-tags" content="city parking jam, brain puzzle, brain game, brain logic, brain logic puzzle, brain teaser, brain teasers, brain teaser puzzle, brain teaser game, iq puzzle, iq game, iq test, iq test puzzle, iq test game, iq logic, iq logic puzzle, brain iq, brain iq puzzle, brain iq game, brain iq test, iq brain, iq brain puzzle, iq brain game, iq brain test, intelligence puzzle, intelligence game, intelligence test, intelligence logic, smart puzzle, smart game, smart logic, smart brain, clever puzzle, clever game, clever logic, clever brain, genius puzzle, genius game, genius logic, genius brain, genius test, brain test, brain test puzzle, brain test game, brain test logic, iq test logic, iq test brain, logic brain teaser, logic brain teaser puzzle, logic brain test, brain logic test, brain logic game, brain logic challenge, brain challenge, brain challenge puzzle, brain challenge game, iq challenge, iq challenge puzzle, iq challenge game, brain teaser free, brain teaser online, brain teaser best, brain teaser top, brain teaser new, brain teaser 2024, brain teaser 2025, brain puzzle free, brain puzzle online, brain puzzle best, brain puzzle top, brain puzzle new, brain game free, brain game online, brain game best, brain game top, iq puzzle free, iq puzzle online, iq puzzle best, iq puzzle top, iq game free, iq game online, iq game best, iq test free, iq test online, iq test best, brain training, brain training puzzle, brain training game, brain training free, brain training online, brain training best, mind puzzle, mind game, mind logic, mind logic puzzle, mind teaser, mind test, mind test puzzle, mind test game, mind brain, mind brain puzzle, puzzle brain iq, puzzle brain teaser, puzzle iq test, puzzle brain test, test brain puzzle, test iq puzzle, test brain iq, quiz brain, quiz iq, quiz brain puzzle, quiz iq puzzle, quiz brain teaser, quiz logic, quiz logic puzzle, riddles puzzle, riddles game, riddles logic, riddles brain, riddles brain teaser, riddles iq, logic riddles, logic riddles puzzle, logic riddles game, brain riddles, brain riddles puzzle, brain riddles game, iq riddles, iq riddles puzzle, logic puzzle brain, logic puzzle iq, logic puzzle brain teaser, logic puzzle genius, brain puzzle genius, brain puzzle smart, brain puzzle clever, iq puzzle genius, iq puzzle smart, brain teaser genius, brain teaser smart, brain teaser clever, brain teaser logic, brain teaser iq" />
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How do you play City Parking Jam?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Use touch or mouse controls to interact with elements on screen and complete each level target."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does this game work on mobile devices?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes, it is 100% responsive and playable on mobile phones, tablets, and desktop computers directly in your browser."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is it free to play?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes, you can play full levels for free without downloading or installing any software."
+      }
+    }
+  ]
+}
+  </script>
+
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#0f172a" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="City Parking Jam" />
+  <link rel="apple-touch-icon" href="cover.svg" />
+
+  <script>
+    function triggerPlatformWin(timeInSeconds) {
+      const elapsed = Math.round(timeInSeconds || 45);
+      try {
+        if (typeof window.onWin === 'function') {
+          window.onWin(elapsed);
+        }
+        if (window.parent && window.parent !== window) {
+          window.parent.postMessage({ type: 'win', time: elapsed }, '*');
+        }
+      } catch(e) { console.error('Platform win notify error:', e); }
+    }
+  </script>
+
+</head>
+  <body class="bg-slate-950 text-slate-100 font-['Plus_Jakarta_Sans',sans-serif] select-none touch-none overflow-hidden m-0 p-0 w-screen h-screen">
+    
+    <!-- MAIN GAME ROOT CONTAINER -->
+    <div id="app" class="relative w-full h-full flex flex-col bg-slate-950 overflow-hidden">
+      
+      <!-- TOP HUD BAR -->
+      <header id="hud-header" class="relative z-20 w-full bg-slate-900/90 border-b border-slate-800/80 backdrop-blur-md px-3 sm:px-5 py-2 sm:py-2.5 flex items-center justify-between shadow-lg">
+        <!-- Left: Menu & Level Info -->
+        <div class="flex items-center gap-2">
+          <button id="btn-hud-menu" class="btn-tactile p-2 rounded-xl bg-slate-800 border border-slate-700 text-slate-300 hover:text-white flex items-center justify-center">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+          </button>
+          
+          <div class="flex flex-col">
+            <div class="flex items-center gap-1.5">
+              <span id="hud-level-text" class="text-xs sm:text-sm font-black text-white tracking-wide">LVL 1</span>
+              <span id="hud-diff-pill" class="px-1.5 py-0.5 rounded text-[9px] font-extrabold bg-blue-500/20 text-blue-400 border border-blue-500/30 uppercase">EASY</span>
+            </div>
+            <span class="text-[9px] text-slate-400 font-semibold">City Parking Jam</span>
+          </div>
+        </div>
+
+        <!-- Center: Moves Counter -->
+        <div class="flex items-center gap-1 bg-slate-800/90 border border-slate-700/80 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-xl shadow-inner">
+          <span class="text-[9px] sm:text-[10px] font-bold text-slate-400 uppercase">MOVES</span>
+          <span id="hud-moves-count" class="text-xs sm:text-sm font-black text-white">0</span>
+          <span id="hud-par-count" class="text-[10px] sm:text-xs text-slate-400 font-medium">/ 2</span>
+        </div>
+
+        <!-- Right: Action Buttons -->
+        <div class="flex items-center gap-1 sm:gap-2">
+          <!-- Hint -->
+          <button id="btn-hud-hint" class="btn-tactile px-2.5 py-1.5 rounded-xl bg-amber-500/20 border border-amber-500/40 text-amber-400 font-extrabold text-xs flex items-center gap-1">
+            <svg class="w-4 h-4 fill-amber-400" viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 0-7 7c0 2.38 1.19 4.47 3 5.74V17a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2v-2.26c1.81-1.27 3-3.36 3-5.74a7 7 0 0 0-7-7M9 21a1 1 0 0 0 1 1h4a1 1 0 0 0 1-1v-1H9z"/></svg>
+            <span class="hidden sm:inline">HINT</span>
+          </button>
+
+          <!-- Undo -->
+          <button id="btn-hud-undo" class="btn-tactile p-2 rounded-xl bg-slate-800 border border-slate-700 text-slate-300 hover:text-white flex items-center justify-center">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M3 10h10a5 5 0 0 1 5 5v2m-15-7l4-4m-4 4l4 4"></path></svg>
+          </button>
+
+          <!-- Restart -->
+          <button id="btn-hud-restart" class="btn-tactile p-2 rounded-xl bg-slate-800 border border-slate-700 text-slate-300 hover:text-white flex items-center justify-center">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+          </button>
+
+          <!-- Sound Toggle -->
+          <button id="btn-hud-sound" class="btn-tactile p-2 rounded-xl bg-slate-800 border border-slate-700 text-slate-300 hover:text-white flex items-center justify-center">
+            <svg id="icon-sound-on" class="w-4 h-4 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"></path></svg>
+            <svg id="icon-sound-off" class="w-4 h-4 text-rose-400 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15zM17 14l4-4m0 4l-4-4"></path></svg>
+          </button>
+        </div>
+      </header>
+
+      <!-- CANVAS GAME CONTAINER -->
+      <main id="game-container" class="relative flex-1 w-full h-full flex items-center justify-center overflow-hidden">
+        <canvas id="game-canvas" class="w-full h-full block cursor-pointer"></canvas>
+      </main>
+
+      <!-- MODAL: MAIN MENU -->
+      <div id="modal-main-menu" class="absolute inset-0 z-40 bg-slate-950/90 backdrop-blur-md flex flex-col items-center justify-center p-3 sm:p-6 overflow-y-auto">
+        <div class="w-full max-w-sm bg-slate-900 border border-slate-800 rounded-3xl p-5 sm:p-7 flex flex-col items-center shadow-2xl my-auto">
+          <!-- Top Stats Row -->
+          <div class="w-full flex items-center justify-between mb-4">
+            <div class="flex items-center gap-1.5 bg-slate-800/90 px-3 py-1.5 rounded-full border border-slate-700/80">
+              <svg class="w-4 h-4 fill-amber-400 text-amber-400" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              <span id="menu-stars-count" class="text-xs font-black text-amber-400">0 / 90</span>
+            </div>
+
+            <div class="flex items-center gap-1.5 bg-slate-800/90 px-3 py-1.5 rounded-full border border-slate-700/80">
+              <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="8" cy="8" r="6" stroke-width="2"></circle><circle cx="16" cy="16" r="6" stroke-width="2"></circle></svg>
+              <span id="menu-coins-count" class="text-xs font-black text-emerald-400">0</span>
+            </div>
+          </div>
+
+          <!-- Game Icon & Title -->
+          <div class="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-tr from-blue-600 to-indigo-500 rounded-2xl flex items-center justify-center shadow-xl shadow-blue-500/20 mb-3 transform hover:rotate-3 transition-transform">
+            <span class="text-3xl sm:text-4xl">🚗</span>
+          </div>
+
+          <h1 class="text-2xl sm:text-3xl font-black text-white text-center tracking-tight mb-1">CITY PARKING JAM</h1>
+          <p class="text-xs text-slate-400 text-center font-medium mb-4">Untangle crowded lots & escape the traffic</p>
+
+          <!-- 30 Levels Badge -->
+          <div class="px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-[10px] font-black uppercase tracking-wider mb-5">
+            30 PUZZLE LEVELS
+          </div>
+
+          <!-- Main Actions -->
+          <div class="w-full flex flex-col gap-2.5">
+            <button id="btn-menu-play" class="btn-tactile w-full py-3 sm:py-3.5 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-black text-base flex items-center justify-center gap-2 shadow-xl shadow-blue-500/30">
+              <svg class="w-5 h-5 fill-white" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+              <span id="btn-menu-play-text">PLAY LEVEL 1</span>
+            </button>
+
+            <div class="grid grid-cols-2 gap-2.5">
+              <button id="btn-menu-levels" class="btn-tactile py-2.5 rounded-xl bg-slate-800 border border-slate-700 text-slate-200 font-bold text-xs flex items-center justify-center gap-1.5 hover:bg-slate-750">
+                <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" stroke-width="2" rx="1"></rect><rect x="14" y="3" width="7" height="7" stroke-width="2" rx="1"></rect><rect x="14" y="14" width="7" height="7" stroke-width="2" rx="1"></rect><rect x="3" y="14" width="7" height="7" stroke-width="2" rx="1"></rect></svg>
+                <span>LEVELS</span>
+              </button>
+
+              <button id="btn-menu-garage" class="btn-tactile py-2.5 rounded-xl bg-slate-800 border border-slate-700 text-slate-200 font-bold text-xs flex items-center justify-center gap-1.5 hover:bg-slate-750">
+                <span class="text-sm">🎨</span>
+                <span>GARAGE</span>
+              </button>
+            </div>
+
+            <div class="grid grid-cols-2 gap-2.5">
+              <button id="btn-menu-how" class="btn-tactile py-2 rounded-xl bg-slate-800/80 border border-slate-700/80 text-slate-400 font-bold text-xs flex items-center justify-center gap-1.5 hover:text-white">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke-width="2"></circle><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 16v-4m0-4h.01"></path></svg>
+                <span>HOW TO PLAY</span>
+              </button>
+
+              <button id="btn-menu-settings" class="btn-tactile py-2 rounded-xl bg-slate-800/80 border border-slate-700/80 text-slate-400 font-bold text-xs flex items-center justify-center gap-1.5 hover:text-white">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><circle cx="12" cy="12" r="3" stroke-width="2"></circle></svg>
+                <span>SETTINGS</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- MODAL: LEVEL SELECT -->
+      <div id="modal-level-select" class="absolute inset-0 z-40 bg-slate-950/90 backdrop-blur-md flex flex-col items-center justify-center p-3 sm:p-6 overflow-y-auto hidden">
+        <div class="w-full max-w-md bg-slate-900 border border-slate-800 rounded-3xl p-4 sm:p-6 flex flex-col max-h-[92dvh] shadow-2xl my-auto">
+          <!-- Header -->
+          <div class="flex items-center justify-between pb-3 border-b border-slate-800 mb-3">
+            <div>
+              <h2 class="text-lg font-black text-white">SELECT LEVEL</h2>
+              <span class="text-xs text-slate-400">30 Progression Stages</span>
+            </div>
+            <button id="btn-close-levels" class="p-1.5 rounded-lg bg-slate-800 text-slate-400 hover:text-white">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+          </div>
+
+          <!-- 30 Levels Grid -->
+          <div id="levels-grid" class="grid grid-cols-5 sm:grid-cols-6 gap-2 overflow-y-auto pr-1 flex-1 py-1">
+            <!-- Dynamically populated -->
+          </div>
+        </div>
+      </div>
+
+      <!-- MODAL: GARAGE -->
+      <div id="modal-garage" class="absolute inset-0 z-40 bg-slate-950/90 backdrop-blur-md flex flex-col items-center justify-center p-3 sm:p-6 overflow-y-auto hidden">
+        <div class="w-full max-w-md bg-slate-900 border border-slate-800 rounded-3xl p-4 sm:p-6 flex flex-col max-h-[92dvh] shadow-2xl my-auto">
+          <div class="flex items-center justify-between pb-3 border-b border-slate-800 mb-3">
+            <div>
+              <h2 class="text-lg font-black text-white">VEHICLE GARAGE</h2>
+              <span class="text-xs text-slate-400">Custom Skins & Speed Trails</span>
+            </div>
+            <button id="btn-close-garage" class="p-1.5 rounded-lg bg-slate-800 text-slate-400 hover:text-white">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+          </div>
+
+          <!-- Tabs -->
+          <div class="flex gap-2 mb-3 bg-slate-800/80 p-1 rounded-xl">
+            <button id="tab-garage-skins" class="flex-1 py-1.5 rounded-lg font-extrabold text-xs bg-blue-600 text-white">SKINS</button>
+            <button id="tab-garage-trails" class="flex-1 py-1.5 rounded-lg font-extrabold text-xs text-slate-400 hover:text-white">TRAILS</button>
+          </div>
+
+          <!-- Content List -->
+          <div id="garage-items-list" class="flex flex-col gap-2 overflow-y-auto pr-1 flex-1 py-1">
+            <!-- Dynamically populated -->
+          </div>
+        </div>
+      </div>
+
+      <!-- MODAL: HOW TO PLAY -->
+      <div id="modal-how-to-play" class="absolute inset-0 z-40 bg-slate-950/90 backdrop-blur-md flex flex-col items-center justify-center p-3 sm:p-6 overflow-y-auto hidden">
+        <div class="w-full max-w-sm bg-slate-900 border border-slate-800 rounded-3xl p-5 sm:p-6 flex flex-col max-h-[92dvh] shadow-2xl my-auto text-center">
+          <div class="flex items-center justify-between pb-3 border-b border-slate-800 mb-4 text-left">
+            <div>
+              <h2 class="text-lg font-black text-white">HOW TO PLAY</h2>
+              <span class="text-xs text-slate-400">Rules of the Lot</span>
+            </div>
+            <button id="btn-close-how" class="p-1.5 rounded-lg bg-slate-800 text-slate-400 hover:text-white">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+          </div>
+
+          <div class="flex flex-col gap-3 text-left overflow-y-auto pr-1">
+            <div class="p-3 bg-slate-800/60 rounded-2xl border border-slate-700/60 flex items-start gap-3">
+              <span class="text-2xl">💡</span>
+              <div>
+                <h3 class="text-xs font-black text-white mb-0.5">1. CAR HEADLIGHTS</h3>
+                <p class="text-[11px] text-slate-400 leading-relaxed">Bright light beams shine forward from each car. Tap any car to drive in the direction of its headlights!</p>
+              </div>
+            </div>
+
+            <div class="p-3 bg-slate-800/60 rounded-2xl border border-slate-700/60 flex items-start gap-3">
+              <span class="text-2xl">⚠️</span>
+              <div>
+                <h3 class="text-xs font-black text-white mb-0.5">2. AVOID BLOCKAGES</h3>
+                <p class="text-[11px] text-slate-400 leading-relaxed">If another car or obstacle blocks the exit lane, the car will bump and stop. Clear the path first!</p>
+              </div>
+            </div>
+
+            <div class="p-3 bg-slate-800/60 rounded-2xl border border-slate-700/60 flex items-start gap-3">
+              <span class="text-2xl">⭐</span>
+              <div>
+                <h3 class="text-xs font-black text-white mb-0.5">3. PAR MOVES & 3 STARS</h3>
+                <p class="text-[11px] text-slate-400 leading-relaxed">Solve the level within par moves to win 3 stars and earn coins to unlock new custom skins in the garage.</p>
+              </div>
+            </div>
+          </div>
+
+          <button id="btn-how-got-it" class="btn-tactile w-full py-2.5 rounded-xl bg-blue-600 text-white font-extrabold text-xs mt-4">GOT IT!</button>
+        </div>
+      </div>
+
+      <!-- MODAL: SETTINGS -->
+      <div id="modal-settings" class="absolute inset-0 z-40 bg-slate-950/90 backdrop-blur-md flex flex-col items-center justify-center p-3 sm:p-6 overflow-y-auto hidden">
+        <div class="w-full max-w-sm bg-slate-900 border border-slate-800 rounded-3xl p-5 sm:p-6 flex flex-col max-h-[92dvh] shadow-2xl my-auto">
+          <div class="flex items-center justify-between pb-3 border-b border-slate-800 mb-4">
+            <div>
+              <h2 class="text-lg font-black text-white">SETTINGS</h2>
+              <span class="text-xs text-slate-400">Audio & Preferences</span>
+            </div>
+            <button id="btn-close-settings" class="p-1.5 rounded-lg bg-slate-800 text-slate-400 hover:text-white">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+          </div>
+
+          <div class="flex flex-col gap-3">
+            <!-- Sound FX -->
+            <div class="flex items-center justify-between p-3 bg-slate-800/60 rounded-2xl border border-slate-700/60">
+              <div class="flex items-center gap-2.5">
+                <span class="text-xl">🔊</span>
+                <div>
+                  <h3 class="text-xs font-black text-white">SOUND EFFECTS</h3>
+                  <p class="text-[10px] text-slate-400">Taps, bumps, engines & stars</p>
+                </div>
+              </div>
+              <input type="checkbox" id="toggle-sfx" class="w-5 h-5 accent-blue-600 cursor-pointer" checked />
+            </div>
+
+            <!-- Looping Ambient Audio -->
+            <div class="flex items-center justify-between p-3 bg-slate-800/60 rounded-2xl border border-slate-700/60">
+              <div class="flex items-center gap-2.5">
+                <span class="text-xl">🐦</span>
+                <div>
+                  <h3 class="text-xs font-black text-white">AMBIENT CITY & BIRDS</h3>
+                  <p class="text-[10px] text-slate-400">Subtle background traffic & chirps</p>
+                </div>
+              </div>
+              <input type="checkbox" id="toggle-ambient" class="w-5 h-5 accent-blue-600 cursor-pointer" checked />
+            </div>
+
+            <!-- Reset Progress -->
+            <button id="btn-reset-data" class="w-full py-2.5 rounded-xl border border-rose-500/30 text-rose-400 bg-rose-500/10 font-bold text-xs hover:bg-rose-500/20 transition-colors mt-2">
+              RESET GAME DATA
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- MODAL: HINT REWARDED AD -->
+      <div id="modal-hint-ad" class="absolute inset-0 z-40 bg-slate-950/90 backdrop-blur-md flex flex-col items-center justify-center p-3 sm:p-6 overflow-y-auto hidden">
+        <div class="w-full max-w-xs bg-slate-900 border border-slate-800 rounded-3xl p-5 flex flex-col items-center text-center shadow-2xl my-auto">
+          <span class="text-3xl mb-2 animate-bounce">💡</span>
+          <h2 class="text-base font-black text-white mb-1">REWARDED HINT</h2>
+          <p class="text-xs text-slate-400 mb-4">Watch 5-second simulated sponsor to get a free unblock hint</p>
+          
+          <div class="w-full bg-slate-800 rounded-full h-3 mb-4 overflow-hidden border border-slate-700">
+            <div id="hint-ad-progress" class="bg-amber-400 h-full w-0 transition-all duration-1000"></div>
+          </div>
+          
+          <button id="btn-cancel-ad" class="text-xs text-slate-500 hover:text-slate-300 font-bold">Cancel</button>
+        </div>
+      </div>
+
+      <!-- OVERLAY: LEVEL WIN -->
+      <div id="modal-level-win" class="absolute inset-0 z-40 bg-slate-950/85 backdrop-blur-md flex flex-col items-center justify-center p-3 sm:p-6 overflow-y-auto hidden">
+        <div class="w-full max-w-xs bg-slate-900 border border-slate-800 rounded-3xl p-4 sm:p-5 flex flex-col items-center text-center shadow-2xl my-auto">
+          <span id="win-level-badge" class="px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-black uppercase tracking-wider mb-1.5">
+            LEVEL 1 CLEARED!
+          </span>
+
+          <h2 class="text-xl sm:text-2xl font-black text-white mb-2 sm:mb-3">CONGRATULATIONS!</h2>
+
+          <!-- 3 Stars -->
+          <div class="flex items-center gap-2 mb-3 sm:mb-4">
+            <div id="win-star-1" class="transform scale-110">
+              <svg class="w-7 h-7 sm:w-9 sm:h-9 fill-amber-400 text-amber-400" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            </div>
+            <div id="win-star-2" class="transform scale-110">
+              <svg class="w-7 h-7 sm:w-9 sm:h-9 fill-amber-400 text-amber-400" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            </div>
+            <div id="win-star-3" class="transform scale-110">
+              <svg class="w-7 h-7 sm:w-9 sm:h-9 fill-amber-400 text-amber-400" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            </div>
+          </div>
+
+          <!-- Stats Row -->
+          <div class="w-full grid grid-cols-2 gap-2 mb-4">
+            <div class="bg-slate-800/80 border border-slate-700 rounded-xl p-2 sm:p-2.5">
+              <span class="block text-[8px] sm:text-[9px] font-bold text-slate-400 uppercase">MOVES TAKEN</span>
+              <span id="win-moves-stat" class="text-sm sm:text-base font-black text-white">2 / 2</span>
+            </div>
+
+            <div class="bg-slate-800/80 border border-slate-700 rounded-xl p-2 sm:p-2.5">
+              <span class="block text-[8px] sm:text-[9px] font-bold text-slate-400 uppercase">COINS WON</span>
+              <div class="flex items-center justify-center gap-1">
+                <span class="text-sm sm:text-base font-black text-emerald-400" id="win-coins-stat">+45</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Actions -->
+          <div class="w-full flex flex-col gap-2">
+            <button id="btn-win-next" class="btn-tactile w-full py-2.5 sm:py-3 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-extrabold text-sm flex items-center justify-center gap-2 shadow-lg shadow-blue-500/25">
+              <span>NEXT LEVEL</span>
+              <svg class="w-4 h-4 fill-white" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+            </button>
+
+            <div class="grid grid-cols-2 gap-2">
+              <button id="btn-win-replay" class="btn-tactile py-2 sm:py-2.5 rounded-xl bg-slate-800 border border-slate-700 text-slate-300 font-bold text-xs flex items-center justify-center gap-1">
+                <span>REPLAY</span>
+              </button>
+
+              <button id="btn-win-levels" class="btn-tactile py-2 sm:py-2.5 rounded-xl bg-slate-800 border border-slate-700 text-slate-300 font-bold text-xs flex items-center justify-center gap-1">
+                <span>LEVELS</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- MAIN JAVASCRIPT ENTRY POINT -->
+    <script type="module" src="/src/main.js"></script>
+  
+  <!-- PWA & Initial Screen Fullscreen UI -->
+  <button id="fl-fullscreen-btn" aria-label="Fullscreen" title="Toggle Fullscreen" style="
+    position: fixed;
+    top: 14px;
+    right: 14px;
+    z-index: 99999;
+    background: rgba(15, 23, 42, 0.75);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #ffffff;
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 18px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    transition: transform 0.15s ease, background 0.2s ease;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+  " onmouseover="this.style.transform='scale(1.08)'" onmouseout="this.style.transform='scale(1)'">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/>
+    </svg>
+  </button>
+
+  <script>
+    (function() {
+      // Register PWA Service Worker
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('./sw.js').catch(() => {});
+        });
+      }
+
+      // Initial Screen Fullscreen Handler
+      const fsBtn = document.getElementById('fl-fullscreen-btn');
+      if (fsBtn) {
+        fsBtn.addEventListener('click', function(e) {
+          e.stopPropagation();
+          if (!document.fullscreenElement && !document.webkitFullscreenElement && !document.mozFullScreenElement && !document.msFullscreenElement) {
+            const el = document.documentElement;
+            if (el.requestFullscreen) el.requestFullscreen().catch(()=>{});
+            else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+            else if (el.mozRequestFullScreen) el.mozRequestFullScreen();
+            else if (el.msRequestFullscreen) el.msRequestFullscreen();
+          } else {
+            if (document.exitFullscreen) document.exitFullscreen().catch(()=>{});
+            else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+            else if (document.mozCancelFullScreen) document.mozCancelFullScreen();
+            else if (document.msExitFullscreen) document.msExitFullscreen();
+          }
+        });
+      }
+    })();
+  </script>
+
+  <!-- 5-Second Hint Ad Modal System -->
+  <div id="fl-hint-modal-overlay" style="
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 999999;
+    background: rgba(10, 15, 30, 0.85);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    align-items: center;
+    justify-content: center;
+    font-family: system-ui, -apple-system, sans-serif;
+    padding: 16px;
+    box-sizing: border-box;
+  ">
+    <div style="
+      background: linear-gradient(145deg, #1e293b, #0f172a);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.6), 0 0 30px rgba(245, 158, 11, 0.2);
+      border-radius: 20px;
+      max-width: 420px;
+      width: 100%;
+      padding: 24px;
+      text-align: center;
+      color: #f8fafc;
+      position: relative;
+      animation: flModalPop 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    ">
+      <!-- Close Button -->
+      <button id="fl-hint-close-btn" style="
+        position: absolute;
+        top: 14px;
+        right: 14px;
+        background: rgba(255,255,255,0.08);
+        border: none;
+        color: #94a3b8;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        cursor: pointer;
+        font-size: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s;
+      " onmouseover="this.style.color='#fff';this.style.background='rgba(255,255,255,0.15)'" onmouseout="this.style.color='#94a3b8';this.style.background='rgba(255,255,255,0.08)'">✕</button>
+
+      <!-- Icon -->
+      <div style="
+        width: 56px;
+        height: 56px;
+        background: rgba(245, 158, 11, 0.15);
+        border: 1px solid rgba(245, 158, 11, 0.3);
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 28px;
+        margin: 0 auto 14px auto;
+      ">💡</div>
+
+      <!-- Title & Subtitle -->
+      <h3 style="margin: 0 0 6px 0; font-size: 19px; font-weight: 800; color: #fbbf24;">Unlocking Hint</h3>
+      <p style="margin: 0 0 18px 0; font-size: 13px; color: #94a3b8; line-height: 1.4;">
+        Short sponsor break (max 5s) to support free puzzles!
+      </p>
+
+      <!-- Ad / Sponsor Banner Box -->
+      <div id="fl-hint-ad-box" style="
+        background: rgba(0, 0, 0, 0.35);
+        border: 1px dashed rgba(255, 255, 255, 0.12);
+        border-radius: 12px;
+        height: 100px;
+        margin-bottom: 18px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        color: #64748b;
+        font-size: 12px;
+      ">
+        <span style="font-weight: 700; color: #e2e8f0; font-size: 13px;">FunLogic Sponsor Ad</span>
+        <span>Ad space placeholder (300x100)</span>
+      </div>
+
+      <!-- Progress Bar & Countdown -->
+      <div style="margin-bottom: 16px;">
+        <div style="display: flex; justify-content: space-between; font-size: 12px; font-weight: 700; color: #cbd5e1; margin-bottom: 6px;">
+          <span>Hint ready in:</span>
+          <span id="fl-hint-timer-txt" style="color: #f59e0b;">5s</span>
+        </div>
+        <div style="width: 100%; height: 8px; background: rgba(255,255,255,0.1); border-radius: 4px; overflow: hidden;">
+          <div id="fl-hint-progress-bar" style="width: 0%; height: 100%; background: linear-gradient(90deg, #f59e0b, #10b981); border-radius: 4px; transition: width 0.1s linear;"></div>
+        </div>
+      </div>
+
+      <!-- Action Button -->
+      <button id="fl-hint-claim-btn" disabled style="
+        width: 100%;
+        padding: 12px;
+        border-radius: 12px;
+        border: none;
+        background: #334155;
+        color: #64748b;
+        font-size: 14px;
+        font-weight: 800;
+        cursor: not-allowed;
+        transition: all 0.2s;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      ">Please wait 5s...</button>
+    </div>
+  </div>
+
+  <style>
+    @keyframes flModalPop {
+      0% { transform: scale(0.85); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+  </style>
+
+  <script>
+    (function() {
+      let countdownTimer = null;
+      let originalHintCallback = null;
+
+      const overlay = document.getElementById('fl-hint-modal-overlay');
+      const timerTxt = document.getElementById('fl-hint-timer-txt');
+      const progressBar = document.getElementById('fl-hint-progress-bar');
+      const claimBtn = document.getElementById('fl-hint-claim-btn');
+      const closeBtn = document.getElementById('fl-hint-close-btn');
+
+      function showHintAdModal(callback) {
+        if (!overlay) return;
+        originalHintCallback = callback;
+        overlay.style.display = 'flex';
+        
+        let timeLeft = 50; // 5.0 seconds (50 x 100ms)
+        claimBtn.disabled = true;
+        claimBtn.style.background = '#334155';
+        claimBtn.style.color = '#64748b';
+        claimBtn.style.cursor = 'not-allowed';
+        claimBtn.textContent = 'Please wait 5s...';
+        progressBar.style.width = '0%';
+        timerTxt.textContent = '5s';
+
+        // Notify parent portal
+        try {
+          if (window.parent && window.parent !== window) {
+            window.parent.postMessage({ type: 'hint_ad_started', duration: 5 }, '*');
+          }
+        } catch(e) {}
+
+        clearInterval(countdownTimer);
+        countdownTimer = setInterval(() => {
+          timeLeft--;
+          const percent = ((50 - timeLeft) / 50) * 100;
+          progressBar.style.width = percent + '%';
+          const secondsRemaining = Math.ceil(timeLeft / 10);
+          timerTxt.textContent = secondsRemaining + 's';
+          claimBtn.textContent = 'Please wait ' + secondsRemaining + 's...';
+
+          if (timeLeft <= 0) {
+            clearInterval(countdownTimer);
+            timerTxt.textContent = 'Ready!';
+            timerTxt.style.color = '#10b981';
+            claimBtn.disabled = false;
+            claimBtn.style.background = 'linear-gradient(90deg, #f59e0b, #10b981)';
+            claimBtn.style.color = '#0f172a';
+            claimBtn.style.cursor = 'pointer';
+            claimBtn.textContent = '✨ Get Hint Now';
+
+            try {
+              if (window.parent && window.parent !== window) {
+                window.parent.postMessage({ type: 'hint_ad_completed' }, '*');
+              }
+            } catch(e) {}
+          }
+        }, 100);
+      }
+
+      function closeHintModal() {
+        clearInterval(countdownTimer);
+        if (overlay) overlay.style.display = 'none';
+      }
+
+      function claimHint() {
+        closeHintModal();
+        if (typeof originalHintCallback === 'function') {
+          originalHintCallback();
+        }
+      }
+
+      if (closeBtn) closeBtn.addEventListener('click', closeHintModal);
+      if (claimBtn) claimBtn.addEventListener('click', claimHint);
+
+      // Expose globally for game engines
+      window.showHintWith5sAd = showHintAdModal;
+
+      // Automatically hook into any existing hint button in the DOM
+      window.addEventListener('DOMContentLoaded', () => {
+        setTimeout(() => {
+          const hintSelectors = [
+            '#btn-hint', '#hint-btn', '#button-hint', '#hint',
+            '.btn-hint', '.hint-btn', '[data-action="hint"]',
+            'button[title*="Hint" i]', 'button[aria-label*="Hint" i]'
+          ];
+
+          hintSelectors.forEach(selector => {
+            document.querySelectorAll(selector).forEach(btn => {
+              if (!btn.getAttribute('data-fl-hooked')) {
+                btn.setAttribute('data-fl-hooked', 'true');
+                btn.addEventListener('click', function(e) {
+                  // If modal not already claimed in this click
+                  if (!this.hasAttribute('data-hint-approved')) {
+                    e.stopImmediatePropagation();
+                    e.preventDefault();
+                    showHintAdModal(() => {
+                      this.setAttribute('data-hint-approved', 'true');
+                      this.click();
+                      setTimeout(() => this.removeAttribute('data-hint-approved'), 500);
+                    });
+                  }
+                }, true); // Capture phase to intercept first
+              }
+            });
+          });
+        }, 300);
+      });
+    })();
+  </script>
+
+</body>
+</html>

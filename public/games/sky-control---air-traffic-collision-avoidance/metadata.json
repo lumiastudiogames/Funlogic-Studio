@@ -1,0 +1,6 @@
+{
+  "name": "Sky Control - Air Traffic Collision Avoidance",
+  "description": "Top-down 3D air traffic control game. Direct flight paths, manage altitudes, and prevent mid-air collisions in busy airspace sectors.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

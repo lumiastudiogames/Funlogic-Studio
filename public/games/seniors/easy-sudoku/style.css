@@ -1,0 +1,278 @@
+/* Easy Sudoku 60+ Stylesheet */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+body {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background-color: #f8fafc;
+  color: #000000;
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+#game-stage {
+  width: 100%;
+  max-width: 860px;
+  height: 100dvh;
+  max-height: 850px;
+  background: #ffffff;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.1);
+}
+
+@media (min-width: 640px) {
+  #game-stage {
+    height: 90vh;
+    border-radius: 24px;
+    border: 2px solid #000000;
+  }
+}
+
+.game-header {
+  height: 64px;
+  padding: 0 16px;
+  background: #ffffff;
+  border-bottom: 3px solid #000000;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.title-badge {
+  font-size: 20px;
+  font-weight: 900;
+  color: #000000;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.stats-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.stat-chip {
+  background: #ffffff;
+  border: 2px solid #000000;
+  border-radius: 12px;
+  padding: 4px 12px;
+  font-weight: 800;
+  font-size: 16px;
+  color: #000000;
+}
+
+.btn-tactile {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border: 2px solid #000000;
+  background: #ffffff;
+  color: #000000;
+  font-weight: 800;
+  font-size: 16px;
+  border-radius: 14px;
+  padding: 8px 14px;
+  cursor: pointer;
+  transition: all 0.12s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 1);
+  flex-shrink: 0;
+}
+
+.btn-tactile:hover {
+  transform: translateY(-1px);
+  background-color: #f1f5f9;
+}
+
+.btn-tactile:active {
+  transform: translateY(1px);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.btn-tactile.btn-primary {
+  background: #000000;
+  color: #ffffff;
+}
+
+.btn-tactile.btn-primary:hover {
+  background: #27272a;
+}
+
+.board-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  position: relative;
+  background: #ffffff;
+  overflow-y: auto;
+}
+
+.instructions-banner {
+  font-size: 17px;
+  font-weight: 700;
+  color: #000000;
+  text-align: center;
+  margin-bottom: 10px;
+  padding: 6px 16px;
+  background: #f4f4f5;
+  border-radius: 9999px;
+  border: 2px solid #000000;
+}
+
+/* Sudoku 9x9 Grid - 60px cell target */
+.sudoku-grid {
+  display: grid;
+  grid-template-columns: repeat(9, minmax(32px, 58px));
+  grid-template-rows: repeat(9, minmax(32px, 58px));
+  border: 4px solid #000000;
+  background: #000000;
+  gap: 1px;
+  margin: 0 auto;
+}
+
+.sudoku-cell {
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;
+  font-weight: 900;
+  color: #000000;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+@media (max-width: 480px) {
+  .sudoku-cell {
+    font-size: 20px;
+  }
+}
+
+/* High-contrast sub-box 3x3 borders */
+.sudoku-cell[data-col="2"],
+.sudoku-cell[data-col="5"] {
+  border-right: 3px solid #000000;
+}
+
+.sudoku-cell[data-row="2"],
+.sudoku-cell[data-row="5"] {
+  border-bottom: 3px solid #000000;
+}
+
+/* Cell States */
+.sudoku-cell.prefilled {
+  background: #ffffff;
+  color: #000000;
+  font-weight: 900;
+}
+
+.sudoku-cell.user-filled {
+  color: #2563eb;
+  font-weight: 900;
+}
+
+.sudoku-cell.selected {
+  background: #fef08a !important; /* High visibility yellow highlight */
+  outline: 3px solid #000000;
+  outline-offset: -3px;
+  z-index: 2;
+}
+
+.sudoku-cell.highlight-line {
+  background: #f8fafc;
+}
+
+.sudoku-cell.highlight-same {
+  background: #e0f2fe;
+}
+
+.sudoku-cell.error {
+  color: #dc2626 !important;
+  background: #fee2e2 !important;
+}
+
+/* Big Number Keypad (60px high buttons) */
+.keypad-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 12px;
+  flex-wrap: wrap;
+  max-width: 540px;
+}
+
+.keypad-btn {
+  width: 48px;
+  height: 52px;
+  font-size: 22px;
+  font-weight: 900;
+  background: #ffffff;
+  color: #000000;
+  border: 2px solid #000000;
+  border-radius: 12px;
+  cursor: pointer;
+  box-shadow: 0 3px 0 #000000;
+  transition: transform 0.1s ease;
+}
+
+@media (min-width: 600px) {
+  .keypad-btn {
+    width: 52px;
+    height: 56px;
+    font-size: 24px;
+  }
+}
+
+.keypad-btn:hover {
+  background: #f4f4f5;
+  transform: translateY(-2px);
+}
+
+.keypad-btn:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 #000000;
+}
+
+.keypad-btn.erase-btn {
+  width: 80px;
+  font-size: 15px;
+  background: #fee2e2;
+  color: #991b1b;
+  border-color: #991b1b;
+  box-shadow: 0 3px 0 #991b1b;
+}
+
+.game-footer {
+  height: 64px;
+  background: #ffffff;
+  border-top: 3px solid #000000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 0 16px;
+  flex-shrink: 0;
+}

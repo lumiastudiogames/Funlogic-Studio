@@ -1,0 +1,18 @@
+{
+  "name": "Daily Sudoku Challenge",
+  "short_name": "Daily Sudoku",
+  "description": "Daily Sudoku Challenge provides a brand-new, globally synchronized 9x9 Sudoku puzzle every single day based on the calendar date. Build consecutive daily win streaks, track completion times, and use pencil notes and smart hints.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0f172a",
+  "theme_color": "#0f172a",
+  "icons": [
+    {
+      "src": "./cover.svg",
+      "sizes": "800x600",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

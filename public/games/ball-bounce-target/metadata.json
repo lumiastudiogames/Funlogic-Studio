@@ -1,0 +1,6 @@
+{
+  "name": "Ball Bounce Target",
+  "description": "Physics puzzle game where you position and rotate deflector blocks to bounce the ball into the target basket across challenging levels and varied visual themes.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

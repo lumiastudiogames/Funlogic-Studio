@@ -1,0 +1,6 @@
+{
+  "name": "Pipe Flow Plumber",
+  "description": "Rotate pipe connections by 90° to create a closed path from the water valve to the target drain in 2.5D HTML5 Canvas.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

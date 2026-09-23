@@ -1,0 +1,18 @@
+{
+  "name": "Ball Sort Puzzle",
+  "short_name": "Ball Sort Pu",
+  "description": "Ball Sort Puzzle is a satisfying brain-teaser where you organize bouncing colored spheres into their respective test tubes. Tap the top ball to raise it, then drop it onto matching colored balls or into empty tubes until all tubes lock.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0f172a",
+  "theme_color": "#0f172a",
+  "icons": [
+    {
+      "src": "./cover.svg",
+      "sizes": "800x600",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

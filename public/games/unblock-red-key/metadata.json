@@ -1,0 +1,6 @@
+{
+  "name": "Unblock Red Key",
+  "description": "Deslize os blocos de madeira para abrir caminho e libertar a chave vermelha com física tátil e níveis progressivos.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

@@ -1,0 +1,18 @@
+{
+  "name": "Mahjong Connect - Link Puzzle",
+  "short_name": "Mahjong Conn",
+  "description": "Mahjong Connect (Onet Link) is a fast-paced pair-matching puzzle game played on a 12x8 flat board. Find matching tiles that can be linked by lines with no more than 2 turns. Features path drawing animations, hints, shuffle, and combo multipliers.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0f172a",
+  "theme_color": "#0f172a",
+  "icons": [
+    {
+      "src": "./cover.svg",
+      "sizes": "800x600",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

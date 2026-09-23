@@ -1,0 +1,18 @@
+{
+  "name": "Number Calm 60+",
+  "short_name": "Number Calm ",
+  "description": "Number Calm 60+ is a relaxed, gentle 4x4 sliding number puzzle for seniors. Features smooth 0.4s slow motion, large readable numbers, no score rush, and a gentle goal of 512.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0f172a",
+  "theme_color": "#0f172a",
+  "icons": [
+    {
+      "src": "./cover.svg",
+      "sizes": "800x600",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

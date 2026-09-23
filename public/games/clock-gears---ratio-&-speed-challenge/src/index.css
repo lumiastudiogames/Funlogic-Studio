@@ -1,0 +1,119 @@
+@import "tailwindcss";
+
+* {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
+  box-sizing: border-box;
+}
+
+body, html {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  min-height: 100vh;
+  min-height: 100dvh;
+  background: #0f0a07;
+  font-family: 'Cinzel', 'Georgia', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, serif;
+  color: #e6ca98;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Steampunk tactile buttons */
+.btn-tactile {
+  transition: all 0.12s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 
+    0 4px 8px -1px rgba(0, 0, 0, 0.5), 
+    0 2px 4px -2px rgba(0, 0, 0, 0.3), 
+    inset 0 1px 0 rgba(255, 255, 255, 0.35),
+    inset 0 -2px 0 rgba(0, 0, 0, 0.4);
+  border: 1px solid #78522e;
+}
+
+.btn-tactile:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 
+    0 6px 12px -2px rgba(0, 0, 0, 0.6), 
+    inset 0 1px 0 rgba(255, 255, 255, 0.5),
+    inset 0 -2px 0 rgba(0, 0, 0, 0.4);
+  filter: brightness(1.1);
+}
+
+.btn-tactile:active:not(:disabled) {
+  transform: translateY(1px);
+  box-shadow: 
+    0 1px 2px rgba(0, 0, 0, 0.5), 
+    inset 0 2px 5px rgba(0, 0, 0, 0.6);
+}
+
+.btn-gold {
+  background: linear-gradient(180deg, #d4a036 0%, #a1701e 50%, #68450d 100%);
+  color: #fff9e6;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+  border-color: #ffd276;
+}
+
+.btn-copper {
+  background: linear-gradient(180deg, #c86d43 0%, #8e4420 50%, #56250e 100%);
+  color: #fff2eb;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+  border-color: #f7a079;
+}
+
+.btn-dark {
+  background: linear-gradient(180deg, #382a20 0%, #221812 50%, #150e0a 100%);
+  color: #d1b58a;
+  border-color: #553e2a;
+}
+
+.btn-green {
+  background: linear-gradient(180deg, #2e7d32 0%, #1b5e20 50%, #0d3810 100%);
+  color: #e8f5e9;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+  border-color: #81c784;
+}
+
+/* Steampunk parchment look */
+.parchment {
+  background: #f4ecd8 linear-gradient(135deg, rgba(212, 160, 54, 0.08) 0%, rgba(138, 63, 27, 0.12) 100%);
+  color: #3b2814;
+  border: 2px solid #8e6837;
+  box-shadow: inset 0 0 15px rgba(110, 68, 20, 0.25), 0 6px 15px rgba(0, 0, 0, 0.4);
+  font-family: 'Georgia', 'Times New Roman', serif;
+}
+
+/* Metallic frame border */
+.metallic-frame {
+  border: 3px solid #634529;
+  box-shadow: 
+    inset 0 0 0 1px #a47c4a,
+    inset 0 0 20px rgba(0,0,0,0.8),
+    0 10px 30px rgba(0,0,0,0.8);
+}
+
+@keyframes spinSlow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes spinSlowReverse {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(-360deg); }
+}
+
+.animate-spin-slow {
+  animation: spinSlow 18s linear infinite;
+}
+
+.animate-spin-reverse {
+  animation: spinSlowReverse 12s linear infinite;
+}
+
+.animate-spin-medium {
+  animation: spinSlow 9s linear infinite;
+}

@@ -1,0 +1,18 @@
+{
+  "name": "15 Puzzle Classic",
+  "short_name": "15 Puzzle Cl",
+  "description": "The historic 15 Puzzle (Gem Puzzle / Boss Puzzle) on a 4x4 grid. Slide the tiles adjacent to the empty space to sort numbers 1 to 15 in ascending order with smooth tactile slides, move tracking, and solvable randomization.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0f172a",
+  "theme_color": "#0f172a",
+  "icons": [
+    {
+      "src": "./cover.svg",
+      "sizes": "800x600",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

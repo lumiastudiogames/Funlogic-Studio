@@ -1,0 +1,6 @@
+{
+  "name": "Memory Palace - The Mansion",
+  "description": "Explore 6 rooms of a mysterious mansion, memorize 3 relics per room, and restore the palace by placing items onto their rightful pedestals using the Method of Loci.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

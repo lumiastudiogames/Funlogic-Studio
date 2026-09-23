@@ -1,0 +1,7 @@
+{
+  "name": "Logic Pattern Series",
+  "description": "Discover hidden geometric and numeric patterns to solve spatial and mathematical sequence puzzles with daily challenges.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
+

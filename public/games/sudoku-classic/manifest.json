@@ -1,0 +1,18 @@
+{
+  "name": "Sudoku Classic 9x9",
+  "short_name": "Sudoku Class",
+  "description": "Sudoku Classic 9x9 is the quintessential number puzzle game with three curated difficulty tiers: Easy, Medium, and Hard. Features intelligent conflict highlighting, pencil notes mode, undo, hints, and precise touch controls.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0f172a",
+  "theme_color": "#0f172a",
+  "icons": [
+    {
+      "src": "./cover.svg",
+      "sizes": "800x600",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

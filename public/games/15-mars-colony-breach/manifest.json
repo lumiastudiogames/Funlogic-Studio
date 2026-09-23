@@ -1,0 +1,18 @@
+{
+  "name": "Mars Colony: Dome 7 Breach",
+  "short_name": "Mars Colony:",
+  "description": "In the red dust of Acidalia Planitia, Dome 7 suffered sudden pressure loss. Colonists must pinpoint who handled which maintenance gear and why.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0f172a",
+  "theme_color": "#0f172a",
+  "icons": [
+    {
+      "src": "./cover.svg",
+      "sizes": "800x600",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

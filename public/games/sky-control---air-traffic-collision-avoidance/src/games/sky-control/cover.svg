@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="100%" height="100%">
+  <defs>
+    <radialGradient id="radarBg" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#0f172a" />
+      <stop offset="100%" stop-color="#020617" />
+    </radialGradient>
+    <linearGradient id="planeBody" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#f8fafc" />
+      <stop offset="40%" stop-color="#38bdf8" />
+      <stop offset="100%" stop-color="#0284c7" />
+    </linearGradient>
+  </defs>
+  <!-- Background -->
+  <rect width="400" height="400" rx="32" fill="url(#radarBg)" stroke="#1e293b" stroke-width="4"/>
+  <!-- Radar Rings -->
+  <circle cx="200" cy="200" r="150" fill="none" stroke="#38bdf8" stroke-width="1" opacity="0.15" stroke-dasharray="6,6"/>
+  <circle cx="200" cy="200" r="100" fill="none" stroke="#38bdf8" stroke-width="1" opacity="0.2" stroke-dasharray="6,6"/>
+  <circle cx="200" cy="200" r="50" fill="none" stroke="#38bdf8" stroke-width="1" opacity="0.25"/>
+  <line x1="50" y1="200" x2="350" y2="200" stroke="#38bdf8" stroke-width="1" opacity="0.1"/>
+  <line x1="200" y1="50" x2="200" y2="350" stroke="#38bdf8" stroke-width="1" opacity="0.1"/>
+  <!-- Runway -->
+  <rect x="185" y="270" width="30" height="110" fill="#0f172a" stroke="#475569" stroke-width="2"/>
+  <line x1="200" y1="280" x2="200" y2="370" stroke="#f8fafc" stroke-width="2" stroke-dasharray="6,6"/>
+  <!-- Airplane 1 (Main Airliner) -->
+  <g transform="translate(190, 160) rotate(-35)">
+    <!-- Shadow -->
+    <ellipse cx="12" cy="18" rx="22" ry="18" fill="rgba(0,0,0,0.4)"/>
+    <!-- Wings -->
+    <path d="M 0,-5 L -35,15 L -35,22 L 0,8 L 35,22 L 35,15 Z" fill="#0284c7"/>
+    <!-- Stabilizers -->
+    <path d="M 0,22 L -14,32 L 0,28 L 14,32 Z" fill="#0369a1"/>
+    <!-- Fuselage -->
+    <ellipse cx="0" cy="8" rx="7" ry="28" fill="url(#planeBody)"/>
+    <!-- Cockpit -->
+    <circle cx="0" cy="-12" r="3" fill="#0f172a"/>
+    <!-- Nav Lights -->
+    <circle cx="-35" cy="18" r="2.5" fill="#ef4444"/>
+    <circle cx="35" cy="18" r="2.5" fill="#22c55e"/>
+  </g>
+  <!-- Airplane 2 (Intercepting Cessna) -->
+  <g transform="translate(290, 230) rotate(-110)">
+    <ellipse cx="6" cy="10" rx="14" ry="12" fill="rgba(0,0,0,0.3)"/>
+    <path d="M 0,-3 L -22,10 L 0,5 L 22,10 Z" fill="#059669"/>
+    <ellipse cx="0" cy="5" rx="4" ry="18" fill="#34d399"/>
+  </g>
+  <!-- Flight Vector Path -->
+  <path d="M 190,160 Q 220,220 200,270" fill="none" stroke="#38bdf8" stroke-width="3" stroke-dasharray="6,4"/>
+  <!-- Title Tag -->
+  <rect x="70" y="30" width="260" height="42" rx="12" fill="rgba(15,23,42,0.85)" stroke="#38bdf8" stroke-width="1.5"/>
+  <text x="200" y="56" fill="#f8fafc" font-family="sans-serif" font-weight="900" font-size="16" text-anchor="middle" letter-spacing="2">SKY CONTROL ✈️</text>
+</svg>

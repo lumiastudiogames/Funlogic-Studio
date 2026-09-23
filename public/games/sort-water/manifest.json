@@ -1,0 +1,18 @@
+{
+  "name": "Sort Water (Zen Mode)",
+  "short_name": "Sort Water (",
+  "description": "Escape the rush with Sort Water Zen. There are no timers, no penalties, and no stress. Features calming pastel water gradients, synthesized organic water droplet chimes, and unlimited undos so you can solve serene color harmony at your own peaceful pace.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0f172a",
+  "theme_color": "#0f172a",
+  "icons": [
+    {
+      "src": "./cover.svg",
+      "sizes": "800x600",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

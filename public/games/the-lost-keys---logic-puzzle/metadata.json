@@ -1,0 +1,6 @@
+{
+  "name": "The Lost Keys - Logic Puzzle",
+  "description": "Quebra-cabeça de lógica investigativo: descubra a ordem correta de 4 chaves para abrir a porta com base nas pistas do diário.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

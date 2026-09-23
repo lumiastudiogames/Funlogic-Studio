@@ -1,0 +1,18 @@
+{
+  "name": "Garden Flow 60+",
+  "short_name": "Garden Flow ",
+  "description": "Garden Flow 60+ is a peaceful 4x4 pipe connection puzzle for seniors. Features extra-thick high-visibility pipes, large easy-touch tiles, and gentle water sounds.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0f172a",
+  "theme_color": "#0f172a",
+  "icons": [
+    {
+      "src": "./cover.svg",
+      "sizes": "800x600",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

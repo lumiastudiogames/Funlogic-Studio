@@ -1,0 +1,18 @@
+{
+  "name": "Math 2048 Operations",
+  "short_name": "Math 2048 Op",
+  "description": "Math 2048 Operations is the educational math twist on classic 2048. Instead of standard doubling, the game cycles operations (+, -, ×) on every move, challenging players to perform mental arithmetic on the fly and build toward high scores.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0f172a",
+  "theme_color": "#0f172a",
+  "icons": [
+    {
+      "src": "./cover.svg",
+      "sizes": "800x600",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

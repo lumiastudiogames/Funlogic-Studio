@@ -1,0 +1,18 @@
+{
+  "name": "Sudoku X Diagonal",
+  "short_name": "Sudoku X Dia",
+  "description": "Sudoku X (Diagonal Sudoku) is a popular brain-twisting variation where both 9-cell main diagonals forming the giant X must also contain all numbers from 1 through 9 without duplication. Includes diagonal overlays, smart conflict alerts, and pencil notes.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0f172a",
+  "theme_color": "#0f172a",
+  "icons": [
+    {
+      "src": "./cover.svg",
+      "sizes": "800x600",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

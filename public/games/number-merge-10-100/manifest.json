@@ -1,0 +1,18 @@
+{
+  "name": "Number Merge 10 to 100",
+  "short_name": "Number Merge",
+  "description": "Number Merge 10 to 100 is an addictive ball-merging puzzle with glossy 3D spheres. Slide identical balls together to advance from 10 all the way to 100 with satisfying bubble sounds and haptic visual feedback.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0f172a",
+  "theme_color": "#0f172a",
+  "icons": [
+    {
+      "src": "./cover.svg",
+      "sizes": "800x600",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

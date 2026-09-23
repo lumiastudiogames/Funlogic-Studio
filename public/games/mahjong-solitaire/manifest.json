@@ -1,0 +1,18 @@
+{
+  "name": "Mahjong Solitaire Classic",
+  "short_name": "Mahjong Soli",
+  "description": "Play the quintessential 144-tile Mahjong Solitaire puzzle with authentic Chinese suits (Wan, Sou, Pin, Winds, Dragons, Flowers). Features tactile 3D tiles, undo, hint system, shuffle assistance, and realistic sound effects.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0f172a",
+  "theme_color": "#0f172a",
+  "icons": [
+    {
+      "src": "./cover.svg",
+      "sizes": "800x600",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

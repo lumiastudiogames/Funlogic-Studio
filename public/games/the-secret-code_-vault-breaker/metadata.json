@@ -1,0 +1,6 @@
+{
+  "name": "The Secret Code: Vault Breaker",
+  "description": "A 4-letter Mastermind-style word deduction vault cracking game built in pure vanilla JS with tactile keypad, audio synthesis, and responsive mobile layout.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

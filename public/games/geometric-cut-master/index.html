@@ -1,0 +1,3015 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    <title>Geometric Cut Master</title>
+    <meta name="description" content="Slice geometric shapes into exact 50/50 halves with a single swipe gesture across 20 challenging levels with particle physics and procedural audio." />
+    <meta property="og:title" content="Geometric Cut Master" />
+    <meta property="og:description" content="Slice geometric shapes into exact halves with a single swipe gesture across 20 levels." />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <style>
+      *, *::before, *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        user-select: none;
+        -webkit-user-select: none;
+        -webkit-touch-callout: none;
+      }
+
+      :root {
+        --bg-dark: #080c16;
+        --bg-surface: rgba(15, 23, 42, 0.88);
+        --accent-glow: #38bdf8;
+        --accent-gold: #fbbf24;
+        --accent-green: #10b981;
+        --accent-red: #f43f5e;
+        --accent-purple: #c084fc;
+        --text-main: #f8fafc;
+        --text-muted: #94a3b8;
+        --border-subtle: rgba(255, 255, 255, 0.12);
+      }
+
+      html, body {
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background-color: var(--bg-dark);
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        color: var(--text-main);
+        touch-action: none;
+        position: fixed;
+        inset: 0;
+      }
+
+      #game-container {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        background: radial-gradient(circle at 50% 40%, #111a2e 0%, #080c16 80%);
+      }
+
+      /* Responsive Fullscreen Canvas */
+      #canvas {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        display: block;
+        z-index: 1;
+        cursor: crosshair;
+      }
+
+      /* Top HUD */
+      #top-hud {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 10;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: max(12px, env(safe-area-inset-top)) max(12px, env(safe-area-inset-right)) 10px max(12px, env(safe-area-inset-left));
+        pointer-events: none;
+      }
+
+      .hud-group {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        pointer-events: auto;
+      }
+
+      .hud-btn {
+        min-width: 44px;
+        min-height: 44px;
+        padding: 0 14px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        background: var(--bg-surface);
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
+        border: 1px solid var(--border-subtle);
+        border-radius: 14px;
+        color: var(--text-main);
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: transform 0.12s ease, background 0.15s ease, border-color 0.15s ease;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+      }
+
+      .hud-btn:hover {
+        background: rgba(30, 41, 59, 0.98);
+        border-color: rgba(255, 255, 255, 0.25);
+      }
+
+      .hud-btn:active {
+        transform: scale(0.94);
+      }
+
+      .hud-btn-icon {
+        width: 44px;
+        padding: 0;
+      }
+
+      .hud-btn-sound {
+        min-width: 58px;
+        padding: 0 10px;
+        gap: 6px;
+      }
+
+      .eq-bars {
+        display: inline-flex;
+        align-items: flex-end;
+        gap: 2px;
+        height: 14px;
+        width: 14px;
+      }
+
+      .eq-bar {
+        width: 3px;
+        background: var(--accent-glow);
+        border-radius: 2px;
+        height: 4px;
+        transition: height 0.15s ease, background-color 0.2s ease;
+      }
+
+      .eq-bars.playing .bar-1 {
+        animation: eqAnim1 0.65s infinite alternate ease-in-out;
+      }
+
+      .eq-bars.playing .bar-2 {
+        animation: eqAnim2 0.48s infinite alternate ease-in-out 0.12s;
+      }
+
+      .eq-bars.playing .bar-3 {
+        animation: eqAnim3 0.78s infinite alternate ease-in-out 0.24s;
+      }
+
+      @keyframes eqAnim1 { 0% { height: 3px; } 100% { height: 13px; } }
+      @keyframes eqAnim2 { 0% { height: 14px; } 100% { height: 4px; } }
+      @keyframes eqAnim3 { 0% { height: 5px; } 100% { height: 12px; } }
+
+      .eq-bars.muted .eq-bar {
+        background: var(--text-muted);
+        height: 2px;
+        animation: none;
+      }
+
+      .hud-btn-tutorial {
+        background: linear-gradient(135deg, rgba(14, 165, 233, 0.25), rgba(59, 130, 246, 0.25));
+        border-color: rgba(56, 189, 248, 0.4);
+        color: #e0f2fe;
+      }
+
+      /* Center Level Info Badge */
+      .center-pill {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 6px 18px;
+        background: var(--bg-surface);
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
+        border: 1px solid var(--border-subtle);
+        border-radius: 14px;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+        pointer-events: auto;
+      }
+
+      .shape-title {
+        font-size: 15px;
+        font-weight: 700;
+        letter-spacing: 0.4px;
+        color: var(--text-main);
+      }
+
+      .goal-subtitle {
+        font-size: 11px;
+        font-weight: 600;
+        color: var(--accent-glow);
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+      }
+
+      /* Bottom HUD */
+      #bottom-hud {
+        position: absolute;
+        bottom: max(14px, env(safe-area-inset-bottom));
+        left: 0;
+        right: 0;
+        z-index: 10;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 12px;
+        padding: 0 16px;
+        pointer-events: none;
+      }
+
+      .instruction-pill {
+        padding: 10px 20px;
+        background: rgba(15, 23, 42, 0.92);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 30px;
+        font-size: 13px;
+        font-weight: 500;
+        color: #e2e8f0;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+        pointer-events: auto;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        transition: opacity 0.25s ease;
+      }
+
+      .action-fab {
+        width: 44px;
+        height: 44px;
+        border-radius: 14px;
+        background: var(--bg-surface);
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
+        border: 1px solid var(--border-subtle);
+        color: var(--text-main);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+        font-weight: 700;
+        cursor: pointer;
+        pointer-events: auto;
+        transition: transform 0.12s ease;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+      }
+
+      .action-fab:active {
+        transform: scale(0.92);
+      }
+
+      /* Floating Live Slice Banner */
+      #cut-banner {
+        position: absolute;
+        top: 36%;
+        left: 50%;
+        transform: translate(-50%, -50%) scale(0.9);
+        z-index: 15;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 4px;
+        padding: 14px 28px;
+        background: rgba(7, 11, 20, 0.96);
+        border: 1px solid rgba(56, 189, 248, 0.4);
+        border-radius: 20px;
+        box-shadow: 0 16px 40px rgba(0, 0, 0, 0.75);
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity 0.2s ease, transform 0.25s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+      }
+
+      #cut-banner.visible {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+      }
+
+      .banner-accuracy {
+        font-size: 32px;
+        font-weight: 800;
+        letter-spacing: -0.5px;
+      }
+
+      .banner-parts {
+        font-size: 15px;
+        font-weight: 600;
+        color: var(--text-muted);
+      }
+
+      /* Modals */
+      .modal-backdrop {
+        position: fixed;
+        inset: 0;
+        z-index: 50;
+        background: rgba(4, 7, 14, 0.85);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 16px;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.25s ease;
+      }
+
+      .modal-backdrop.active {
+        opacity: 1;
+        pointer-events: auto;
+      }
+
+      .modal-card {
+        width: 100%;
+        max-width: 400px;
+        max-height: 92vh;
+        overflow-y: auto;
+        background: #0f172a;
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        border-radius: 24px;
+        padding: 24px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        box-shadow: 0 24px 60px rgba(0, 0, 0, 0.8);
+        transform: translateY(20px) scale(0.96);
+        transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+
+      .modal-backdrop.active .modal-card {
+        transform: translateY(0) scale(1);
+      }
+
+      .modal-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 5px 14px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.8px;
+        text-transform: uppercase;
+        margin-bottom: 12px;
+      }
+
+      .badge-success {
+        background: rgba(16, 185, 129, 0.15);
+        color: var(--accent-green);
+        border: 1px solid rgba(16, 185, 129, 0.3);
+      }
+
+      .badge-fail {
+        background: rgba(244, 63, 94, 0.15);
+        color: var(--accent-red);
+        border: 1px solid rgba(244, 63, 94, 0.3);
+      }
+
+      .badge-info {
+        background: rgba(56, 189, 248, 0.15);
+        color: var(--accent-glow);
+        border: 1px solid rgba(56, 189, 248, 0.3);
+      }
+
+      .badge-gold {
+        background: rgba(251, 191, 36, 0.15);
+        color: var(--accent-gold);
+        border: 1px solid rgba(251, 191, 36, 0.35);
+      }
+
+      .modal-title {
+        font-size: 24px;
+        font-weight: 800;
+        color: #ffffff;
+        margin-bottom: 8px;
+      }
+
+      .modal-desc {
+        font-size: 14px;
+        color: var(--text-muted);
+        line-height: 1.5;
+        margin-bottom: 18px;
+      }
+
+      /* Star Ratings */
+      .stars-row {
+        display: flex;
+        justify-content: center;
+        gap: 12px;
+        font-size: 38px;
+        margin-bottom: 18px;
+      }
+
+      .star {
+        color: #334155;
+        transition: color 0.3s ease, transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+
+      .star.active {
+        color: var(--accent-gold);
+        transform: scale(1.15);
+        text-shadow: 0 0 16px rgba(251, 191, 36, 0.5);
+      }
+
+      /* Statistics Display */
+      .stat-box {
+        width: 100%;
+        background: #1e293b;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 16px;
+        padding: 16px;
+        margin-bottom: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .stat-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 14px;
+      }
+
+      .stat-label {
+        color: var(--text-muted);
+        font-weight: 500;
+      }
+
+      .stat-val {
+        font-weight: 700;
+        color: #f8fafc;
+      }
+
+      .stat-val.highlight {
+        color: var(--accent-green);
+        font-size: 16px;
+      }
+
+      .progress-track {
+        width: 100%;
+        height: 10px;
+        background: #334155;
+        border-radius: 8px;
+        overflow: hidden;
+        position: relative;
+      }
+
+      .progress-fill {
+        height: 100%;
+        background: linear-gradient(90deg, #0ea5e9, #10b981);
+        border-radius: 8px;
+        width: 0%;
+        transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+
+      .split-compare {
+        display: flex;
+        width: 100%;
+        height: 14px;
+        border-radius: 6px;
+        overflow: hidden;
+        margin-top: 4px;
+      }
+
+      .split-part-a {
+        background: #38bdf8;
+        height: 100%;
+        transition: width 0.5s ease;
+      }
+
+      .split-part-b {
+        background: #a855f7;
+        height: 100%;
+        transition: width 0.5s ease;
+      }
+
+      /* Modal Buttons */
+      .modal-actions {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        gap: 10px;
+      }
+
+      .btn-primary {
+        min-height: 48px;
+        width: 100%;
+        background: linear-gradient(135deg, #0284c7, #2563eb);
+        border: none;
+        border-radius: 14px;
+        color: #ffffff;
+        font-size: 16px;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        cursor: pointer;
+        box-shadow: 0 4px 20px rgba(37, 99, 235, 0.4);
+        transition: transform 0.12s ease, filter 0.15s ease;
+      }
+
+      .btn-primary:active {
+        transform: scale(0.96);
+      }
+
+      .btn-secondary {
+        min-height: 46px;
+        width: 100%;
+        background: #1e293b;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 14px;
+        color: #f1f5f9;
+        font-size: 15px;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        cursor: pointer;
+        transition: transform 0.12s ease, background 0.15s ease;
+      }
+
+      .btn-secondary:active {
+        transform: scale(0.96);
+      }
+
+      .btn-row {
+        display: flex;
+        gap: 10px;
+        width: 100%;
+      }
+
+      .btn-row > * {
+        flex: 1;
+      }
+
+      /* Level Select Grid */
+      .levels-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 10px;
+        width: 100%;
+        margin-bottom: 20px;
+        max-height: 50vh;
+        overflow-y: auto;
+        padding: 4px;
+      }
+
+      @media (min-width: 480px) {
+        .levels-grid {
+          grid-template-columns: repeat(5, 1fr);
+        }
+      }
+
+      .level-cell {
+        aspect-ratio: 1;
+        min-height: 56px;
+        background: #1e293b;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 14px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        position: relative;
+        transition: transform 0.12s ease, border-color 0.15s ease, background 0.15s ease;
+      }
+
+      .level-cell:hover:not(.locked) {
+        background: #334155;
+        border-color: rgba(255, 255, 255, 0.25);
+      }
+
+      .level-cell:active:not(.locked) {
+        transform: scale(0.92);
+      }
+
+      .level-cell.current {
+        border-color: var(--accent-glow);
+        box-shadow: 0 0 12px rgba(56, 189, 248, 0.4);
+      }
+
+      .level-cell.locked {
+        opacity: 0.4;
+        cursor: not-allowed;
+      }
+
+      .level-num {
+        font-size: 15px;
+        font-weight: 700;
+        color: #ffffff;
+      }
+
+      .level-stars {
+        font-size: 10px;
+        color: var(--accent-gold);
+        letter-spacing: 1px;
+        margin-top: 2px;
+      }
+
+      .level-lock-icon {
+        font-size: 16px;
+        color: #94a3b8;
+      }
+
+      .hint-box {
+        width: 100%;
+        background: rgba(251, 191, 36, 0.1);
+        border: 1px dashed rgba(251, 191, 36, 0.35);
+        border-radius: 14px;
+        padding: 14px;
+        font-size: 13px;
+        color: #fef08a;
+        line-height: 1.5;
+        text-align: left;
+        margin-bottom: 18px;
+      }
+
+      /* Tutorial Stage */
+      .tutorial-stage {
+        width: 100%;
+        height: 170px;
+        background: #090e1a;
+        border: 1px solid rgba(56, 189, 248, 0.25);
+        border-radius: 18px;
+        margin-bottom: 16px;
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      #tutorial-canvas {
+        width: 100%;
+        height: 100%;
+        display: block;
+      }
+
+      .tutorial-steps {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        width: 100%;
+        text-align: left;
+        margin-bottom: 18px;
+      }
+
+      .tutorial-step-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        font-size: 13px;
+        color: #cbd5e1;
+        line-height: 1.4;
+        background: rgba(30, 41, 59, 0.6);
+        padding: 8px 12px;
+        border-radius: 10px;
+        border: 1px solid rgba(255, 255, 255, 0.06);
+      }
+
+      .tutorial-step-num {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: #0284c7;
+        color: #ffffff;
+        font-size: 11px;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        margin-top: 1px;
+      }
+    </style>
+  
+  <script>
+    function triggerPlatformWin(timeInSeconds) {
+      const elapsed = Math.round(timeInSeconds || 45);
+      try {
+        if (typeof window.onWin === 'function') {
+          window.onWin(elapsed);
+        }
+        if (window.parent && window.parent !== window) {
+          window.parent.postMessage({ type: 'win', time: elapsed }, '*');
+        }
+      } catch(e) { console.error('Platform win notify error:', e); }
+    }
+  </script>
+
+</head>
+  <body>
+    <div id="game-container">
+      <canvas id="canvas"></canvas>
+
+      <!-- Top HUD -->
+      <header id="top-hud">
+        <div class="hud-group">
+          <button id="btn-levels" class="hud-btn" title="Select Level" aria-label="Select Level">
+            <span>☰</span>
+            <span id="level-display">01/20</span>
+          </button>
+          <button id="btn-tutorial" class="hud-btn hud-btn-tutorial" title="How to Play" aria-label="Interactive Tutorial">
+            <span>🎓</span>
+            <span>Tutorial</span>
+          </button>
+        </div>
+
+        <div class="center-pill">
+          <span id="shape-title" class="shape-title">Square</span>
+          <span class="goal-subtitle">Target: 50% / 50%</span>
+        </div>
+
+        <div class="hud-group">
+          <button id="btn-hint" class="hud-btn hud-btn-icon" title="Geometric Hint" aria-label="Geometric Hint">
+            <span>💡</span>
+          </button>
+          <button id="btn-sound" class="hud-btn hud-btn-sound" title="Toggle Music & Sound (ON/OFF)" aria-label="Toggle Sound">
+            <span id="sound-icon">🎵</span>
+            <div class="eq-bars playing" id="eq-bars">
+              <span class="eq-bar bar-1"></span>
+              <span class="eq-bar bar-2"></span>
+              <span class="eq-bar bar-3"></span>
+            </div>
+          </button>
+          <button id="btn-fullscreen" class="hud-btn hud-btn-icon" title="Fullscreen" aria-label="Toggle Fullscreen">
+            <span id="fs-icon">⛶</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- Bottom HUD -->
+      <footer id="bottom-hud">
+        <div class="instruction-pill" id="instruction-pill">
+          <span>👆 Swipe across the shape to slice</span>
+        </div>
+        <button id="btn-reset" class="action-fab" title="Reset Level" aria-label="Reset Level">
+          ↺
+        </button>
+      </footer>
+
+      <!-- Floating Cut Precision Banner -->
+      <div id="cut-banner">
+        <div class="banner-accuracy" id="banner-accuracy">98.4%</div>
+        <div class="banner-parts" id="banner-parts">49.2% / 50.8%</div>
+      </div>
+    </div>
+
+    <!-- MODAL: Animated Tutorial -->
+    <div class="modal-backdrop" id="modal-tutorial">
+      <div class="modal-card" style="max-width: 420px;">
+        <div class="modal-badge badge-gold">✨ Interactive Guide</div>
+        <h2 class="modal-title">How to Play</h2>
+        <p class="modal-desc">Master the geometry by slicing each polygon into equal halves.</p>
+
+        <!-- Live Tutorial Stage -->
+        <div class="tutorial-stage">
+          <canvas id="tutorial-canvas" width="360" height="170"></canvas>
+        </div>
+
+        <!-- 3-Step Guide -->
+        <div class="tutorial-steps">
+          <div class="tutorial-step-item">
+            <span class="tutorial-step-num">1</span>
+            <div><strong>Aim for Center:</strong> Spot the shape's center of mass or symmetry axis.</div>
+          </div>
+          <div class="tutorial-step-item">
+            <span class="tutorial-step-num">2</span>
+            <div><strong>Swipe Across:</strong> Drag your finger/mouse in a single continuous line.</div>
+          </div>
+          <div class="tutorial-step-item">
+            <span class="tutorial-step-num">3</span>
+            <div><strong>Split 50% / 50%:</strong> Score 86%+ accuracy to pass, and 97%+ for 3 stars!</div>
+          </div>
+        </div>
+
+        <div class="modal-actions">
+          <button class="btn-primary" id="btn-tutorial-start">
+            <span>Play Now!</span>
+            <span>➔</span>
+          </button>
+          <button class="btn-secondary" id="btn-tutorial-close">
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL: Success -->
+    <div class="modal-backdrop" id="modal-success">
+      <div class="modal-card">
+        <div class="modal-badge badge-success">✓ Surgical Slice</div>
+        <h2 class="modal-title" id="success-title">Perfect Cut!</h2>
+        <p class="modal-desc" id="success-desc">You sliced the geometric shape with pinpoint precision.</p>
+
+        <div class="stars-row">
+          <span class="star" id="star-1">★</span>
+          <span class="star" id="star-2">★</span>
+          <span class="star" id="star-3">★</span>
+        </div>
+
+        <div class="stat-box">
+          <div class="stat-row">
+            <span class="stat-label">Cut Accuracy</span>
+            <span class="stat-val highlight" id="success-accuracy">99.2%</span>
+          </div>
+          <div class="progress-track">
+            <div class="progress-fill" id="success-accuracy-bar"></div>
+          </div>
+          <div class="stat-row" style="margin-top: 6px;">
+            <span class="stat-label">Part A vs Part B</span>
+            <span class="stat-val" id="success-parts">49.6% / 50.4%</span>
+          </div>
+          <div class="split-compare">
+            <div class="split-part-a" id="success-split-a" style="width: 49.6%;"></div>
+            <div class="split-part-b" id="success-split-b" style="width: 50.4%;"></div>
+          </div>
+        </div>
+
+        <div class="modal-actions">
+          <button class="btn-primary" id="btn-next-level">
+            <span>Next Level</span>
+            <span>➔</span>
+          </button>
+          <div class="btn-row">
+            <button class="btn-secondary" id="btn-success-replay">Replay ↺</button>
+            <button class="btn-secondary" id="btn-success-menu">Levels ☰</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL: Fail (Unequal Parts) -->
+    <div class="modal-backdrop" id="modal-fail">
+      <div class="modal-card">
+        <div class="modal-badge badge-fail">✕ Unequal Parts</div>
+        <h2 class="modal-title">Almost There!</h2>
+        <p class="modal-desc">The two halves were not balanced enough. Minimum accuracy required is <span id="fail-min-acc">86%</span>.</p>
+
+        <div class="stat-box">
+          <div class="stat-row">
+            <span class="stat-label">Your Accuracy</span>
+            <span class="stat-val" style="color: var(--accent-red);" id="fail-accuracy">74.2%</span>
+          </div>
+          <div class="progress-track">
+            <div class="progress-fill" id="fail-accuracy-bar" style="background: var(--accent-red);"></div>
+          </div>
+          <div class="stat-row" style="margin-top: 6px;">
+            <span class="stat-label">Resulting Ratio</span>
+            <span class="stat-val" id="fail-parts">37.1% / 62.9%</span>
+          </div>
+          <div class="split-compare">
+            <div class="split-part-a" id="fail-split-a" style="width: 37.1%;"></div>
+            <div class="split-part-b" id="fail-split-b" style="width: 62.9%;"></div>
+          </div>
+        </div>
+
+        <div class="modal-actions">
+          <button class="btn-primary" id="btn-fail-retry">
+            <span>Try Again ↺</span>
+          </button>
+          <div class="btn-row">
+            <button class="btn-secondary" id="btn-fail-hint">View Hint 💡</button>
+            <button class="btn-secondary" id="btn-fail-menu">Levels ☰</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL: Level Selector -->
+    <div class="modal-backdrop" id="modal-levels">
+      <div class="modal-card" style="max-width: 440px;">
+        <div class="modal-badge badge-info">20 Levels</div>
+        <h2 class="modal-title">Select Level</h2>
+        <p class="modal-desc">Stars Collected: <strong id="total-stars-count" style="color: var(--accent-gold);">0 / 60</strong></p>
+
+        <div class="levels-grid" id="levels-grid"></div>
+
+        <button class="btn-secondary" id="btn-close-levels" style="margin-top: 8px;">
+          Close
+        </button>
+      </div>
+    </div>
+
+    <!-- MODAL: Geometric Hint -->
+    <div class="modal-backdrop" id="modal-hint">
+      <div class="modal-card">
+        <div class="modal-badge badge-info">💡 Geometric Hint</div>
+        <h2 class="modal-title" id="hint-shape-name">Square</h2>
+        <p class="modal-desc">Observe the center of mass and lines of symmetry.</p>
+
+        <div class="hint-box" id="hint-text">
+          Slicing vertically or horizontally straight through the exact center divides the square into two identical halves!
+        </div>
+
+        <button class="btn-primary" id="btn-apply-hint">
+          Got it! Show Guide Line
+        </button>
+      </div>
+    </div>
+
+    <!-- MODAL: Grand Master Victory -->
+    <div class="modal-backdrop" id="modal-victory">
+      <div class="modal-card">
+        <div class="modal-badge badge-success">🏆 Grand Master of Geometry</div>
+        <h2 class="modal-title">Congratulations!</h2>
+        <p class="modal-desc">You have conquered all 20 geometric challenges with flawless surgical precision!</p>
+
+        <div class="stars-row">
+          <span class="star active">★</span>
+          <span class="star active">★</span>
+          <span class="star active">★</span>
+        </div>
+
+        <div class="stat-box">
+          <div class="stat-row">
+            <span class="stat-label">Total Stars Earned</span>
+            <span class="stat-val highlight" id="victory-stars">60 / 60</span>
+          </div>
+        </div>
+
+        <div class="modal-actions">
+          <button class="btn-primary" id="btn-victory-replay">Play Again ↺</button>
+          <button class="btn-secondary" id="btn-victory-levels">Level Menu ☰</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- PURE VANILLA JS GAME ENGINE -->
+    <script>
+      (function() {
+        "use strict";
+
+        /* ==========================================================
+           1. PROCEDURAL AUDIO SYNTHESIZER & AMBIENT BGM (Web Audio API)
+           ========================================================== */
+        let audioCtx = null;
+        let soundEnabled = true;
+        let bgmGainNode = null;
+        let bgmStarted = false;
+        let bgmTimer = null;
+        let nextNoteTime = 0;
+        let currentStep = 0;
+
+        function getAudioContext() {
+          if (!audioCtx) {
+            const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+            if (AudioContextClass) {
+              audioCtx = new AudioContextClass();
+              bgmGainNode = audioCtx.createGain();
+              bgmGainNode.gain.setValueAtTime(soundEnabled ? 0.26 : 0, audioCtx.currentTime);
+              bgmGainNode.connect(audioCtx.destination);
+            }
+          }
+          if (audioCtx && audioCtx.state === "suspended") {
+            audioCtx.resume();
+          }
+          if (soundEnabled && !bgmStarted && audioCtx) {
+            startProceduralBGM();
+          }
+          return audioCtx;
+        }
+
+        // Cyber-Zen Polyphonic Synthwave Music Generator
+        const BGM_TEMPO = 104; // BPM
+        const STEP_TIME = 60 / BGM_TEMPO / 4; // 16th note step in seconds
+
+        // Chord progressions (root, third, fifth, seventh/ninth)
+        const BGM_PROGRESSION = [
+          // Chord 1: Dm9 (D2, D3, F3, A3, C4, E4)
+          { bass: 73.42, pad: [146.83, 174.61, 220.00, 261.63, 329.63], arp: [220.00, 261.63, 329.63, 440.00, 523.25, 659.25] },
+          // Chord 2: Bbmaj7 (Bb1, Bb2, D3, F3, A3, D4)
+          { bass: 58.27, pad: [116.54, 146.83, 174.61, 220.00, 293.66], arp: [174.61, 220.00, 293.66, 349.23, 440.00, 587.33] },
+          // Chord 3: Fmaj7 (F1, F2, A2, C3, E3, A3)
+          { bass: 43.65, pad: [87.31, 130.81, 174.61, 220.00, 261.63], arp: [174.61, 220.00, 261.63, 329.63, 440.00, 523.25] },
+          // Chord 4: C9 / Am7 (C2, G2, C3, E3, G3, D4)
+          { bass: 65.41, pad: [130.81, 164.81, 196.00, 246.94, 293.66], arp: [196.00, 246.94, 293.66, 392.00, 493.88, 587.33] }
+        ];
+
+        function playSynthBass(time, freq, dur = 0.28) {
+          if (!audioCtx || !bgmGainNode) return;
+          try {
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            const filter = audioCtx.createBiquadFilter();
+
+            osc.type = "sawtooth";
+            osc.frequency.setValueAtTime(freq, time);
+
+            filter.type = "lowpass";
+            filter.frequency.setValueAtTime(260, time);
+            filter.frequency.exponentialRampToValueAtTime(80, time + dur);
+
+            gain.gain.setValueAtTime(0.35, time);
+            gain.gain.exponentialRampToValueAtTime(0.001, time + dur);
+
+            osc.connect(filter);
+            filter.connect(gain);
+            gain.connect(bgmGainNode);
+
+            osc.start(time);
+            osc.stop(time + dur + 0.05);
+          } catch(e) {}
+        }
+
+        function playSynthPadChord(time, freqs, dur = 2.2) {
+          if (!audioCtx || !bgmGainNode) return;
+          freqs.forEach((freq, idx) => {
+            try {
+              const osc = audioCtx.createOscillator();
+              const gain = audioCtx.createGain();
+              const filter = audioCtx.createBiquadFilter();
+
+              osc.type = idx % 2 === 0 ? "sawtooth" : "triangle";
+              osc.frequency.setValueAtTime(freq * (1 + (idx - 1) * 0.003), time); // Detune for lush stereo width
+
+              filter.type = "lowpass";
+              filter.frequency.setValueAtTime(450 + idx * 80, time);
+              filter.frequency.linearRampToValueAtTime(800 + idx * 100, time + dur * 0.5);
+              filter.frequency.linearRampToValueAtTime(420, time + dur);
+
+              gain.gain.setValueAtTime(0.001, time);
+              gain.gain.linearRampToValueAtTime(0.09 / (idx + 1), time + 0.4);
+              gain.gain.linearRampToValueAtTime(0.001, time + dur);
+
+              osc.connect(filter);
+              filter.connect(gain);
+              gain.connect(bgmGainNode);
+
+              osc.start(time);
+              osc.stop(time + dur + 0.1);
+            } catch(e) {}
+          });
+        }
+
+        function playSynthArp(time, freq, dur = 0.35) {
+          if (!audioCtx || !bgmGainNode) return;
+          try {
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            const filter = audioCtx.createBiquadFilter();
+
+            osc.type = "sine";
+            osc.frequency.setValueAtTime(freq, time);
+
+            filter.type = "bandpass";
+            filter.frequency.setValueAtTime(freq * 1.5, time);
+            filter.Q.setValueAtTime(3, time);
+
+            gain.gain.setValueAtTime(0.001, time);
+            gain.gain.linearRampToValueAtTime(0.08, time + 0.02);
+            gain.gain.exponentialRampToValueAtTime(0.0001, time + dur);
+
+            osc.connect(filter);
+            filter.connect(gain);
+            gain.connect(bgmGainNode);
+
+            osc.start(time);
+            osc.stop(time + dur + 0.05);
+          } catch(e) {}
+        }
+
+        function playAmbientBeat(time, type) {
+          if (!audioCtx || !bgmGainNode) return;
+          try {
+            if (type === "kick") {
+              const osc = audioCtx.createOscillator();
+              const gain = audioCtx.createGain();
+              osc.type = "sine";
+              osc.frequency.setValueAtTime(110, time);
+              osc.frequency.exponentialRampToValueAtTime(35, time + 0.18);
+              gain.gain.setValueAtTime(0.28, time);
+              gain.gain.exponentialRampToValueAtTime(0.001, time + 0.2);
+              osc.connect(gain);
+              gain.connect(bgmGainNode);
+              osc.start(time);
+              osc.stop(time + 0.22);
+            } else if (type === "hat") {
+              const osc = audioCtx.createOscillator();
+              const gain = audioCtx.createGain();
+              const filter = audioCtx.createBiquadFilter();
+              osc.type = "triangle";
+              osc.frequency.setValueAtTime(6000 + Math.random() * 2000, time);
+              filter.type = "highpass";
+              filter.frequency.setValueAtTime(5000, time);
+              gain.gain.setValueAtTime(0.03, time);
+              gain.gain.exponentialRampToValueAtTime(0.0001, time + 0.06);
+              osc.connect(filter);
+              filter.connect(gain);
+              gain.connect(bgmGainNode);
+              osc.start(time);
+              osc.stop(time + 0.07);
+            }
+          } catch(e) {}
+        }
+
+        function scheduleBGM() {
+          if (!audioCtx || !soundEnabled) return;
+          const lookahead = 0.12;
+
+          while (nextNoteTime < audioCtx.currentTime + lookahead) {
+            const chordIdx = Math.floor(currentStep / 16) % BGM_PROGRESSION.length;
+            const stepInChord = currentStep % 16;
+            const currentChord = BGM_PROGRESSION[chordIdx];
+
+            // 1. Sustained Pad on bar start
+            if (stepInChord === 0) {
+              playSynthPadChord(nextNoteTime, currentChord.pad, STEP_TIME * 16 * 0.95);
+            }
+
+            // 2. Bassline Rhythm (Beats 0, 3, 6, 10, 12)
+            if ([0, 3, 6, 10, 12].includes(stepInChord)) {
+              const bassOctave = stepInChord === 6 ? currentChord.bass * 2 : currentChord.bass;
+              playSynthBass(nextNoteTime, bassOctave, STEP_TIME * 1.8);
+            }
+
+            // 3. Arpeggio / Melodic Pluck pattern
+            if (stepInChord % 2 === 0) {
+              const arpIdx = (Math.floor(stepInChord / 2) * 2 + chordIdx) % currentChord.arp.length;
+              playSynthArp(nextNoteTime, currentChord.arp[arpIdx], STEP_TIME * 2.2);
+            }
+
+            // 4. Soft relaxing rhythm groove
+            if (stepInChord === 0 || stepInChord === 8) {
+              playAmbientBeat(nextNoteTime, "kick");
+            }
+            if (stepInChord % 2 === 1) {
+              playAmbientBeat(nextNoteTime, "hat");
+            }
+
+            nextNoteTime += STEP_TIME;
+            currentStep++;
+          }
+        }
+
+        function startProceduralBGM() {
+          if (bgmStarted || !audioCtx) return;
+          bgmStarted = true;
+          nextNoteTime = audioCtx.currentTime + 0.05;
+          currentStep = 0;
+          if (bgmTimer) clearInterval(bgmTimer);
+          bgmTimer = setInterval(scheduleBGM, 30);
+          updateBgmUi();
+        }
+
+        function updateBgmUi() {
+          const eq = document.getElementById("eq-bars");
+          const soundIcon = document.getElementById("sound-icon");
+          if (eq) {
+            eq.className = soundEnabled ? "eq-bars playing" : "eq-bars muted";
+          }
+          if (soundIcon) {
+            soundIcon.textContent = soundEnabled ? "🎵" : "🔇";
+          }
+        }
+
+        function updateBgmVolume() {
+          if (!audioCtx) return;
+          if (!bgmGainNode) {
+            getAudioContext();
+          }
+          const now = audioCtx.currentTime;
+          if (bgmGainNode) {
+            bgmGainNode.gain.cancelScheduledValues(now);
+            if (soundEnabled) {
+              bgmGainNode.gain.linearRampToValueAtTime(0.26, now + 0.25);
+              if (!bgmStarted) startProceduralBGM();
+            } else {
+              bgmGainNode.gain.linearRampToValueAtTime(0.0001, now + 0.18);
+            }
+          }
+          updateBgmUi();
+        }
+
+        function playSoundClick() {
+          if (!soundEnabled) return;
+          const ctx = getAudioContext();
+          if (!ctx) return;
+          try {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = "sine";
+            osc.frequency.setValueAtTime(600, ctx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.04);
+            gain.gain.setValueAtTime(0.18, ctx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.05);
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start();
+            osc.stop(ctx.currentTime + 0.06);
+          } catch(e) {}
+        }
+
+        function playSoundSlice() {
+          if (!soundEnabled) return;
+          const ctx = getAudioContext();
+          if (!ctx) return;
+          try {
+            const now = ctx.currentTime;
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = "sawtooth";
+            osc.frequency.setValueAtTime(1200, now);
+            osc.frequency.exponentialRampToValueAtTime(160, now + 0.18);
+
+            const filter = ctx.createBiquadFilter();
+            filter.type = "lowpass";
+            filter.frequency.setValueAtTime(3200, now);
+            filter.frequency.exponentialRampToValueAtTime(400, now + 0.18);
+
+            gain.gain.setValueAtTime(0.35, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
+
+            osc.connect(filter);
+            filter.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start(now);
+            osc.stop(now + 0.2);
+
+            // Resonant laser ping
+            const ping = ctx.createOscillator();
+            const pingGain = ctx.createGain();
+            ping.type = "sine";
+            ping.frequency.setValueAtTime(1560, now);
+            pingGain.gain.setValueAtTime(0.2, now);
+            pingGain.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
+            ping.connect(pingGain);
+            pingGain.connect(ctx.destination);
+            ping.start(now);
+            ping.stop(now + 0.12);
+          } catch(e) {}
+        }
+
+        function playSoundSuccess(stars) {
+          if (!soundEnabled) return;
+          const ctx = getAudioContext();
+          if (!ctx) return;
+          try {
+            const now = ctx.currentTime;
+            const notes = stars >= 3 ? [523.25, 659.25, 783.99, 1046.50] : [523.25, 659.25, 783.99];
+            notes.forEach((freq, idx) => {
+              const osc = ctx.createOscillator();
+              const gain = ctx.createGain();
+              const noteStart = now + idx * 0.08;
+              osc.type = "triangle";
+              osc.frequency.setValueAtTime(freq, noteStart);
+              gain.gain.setValueAtTime(0.25, noteStart);
+              gain.gain.exponentialRampToValueAtTime(0.001, noteStart + 0.38);
+              osc.connect(gain);
+              gain.connect(ctx.destination);
+              osc.start(noteStart);
+              osc.stop(noteStart + 0.39);
+            });
+          } catch(e) {}
+        }
+
+        function playSoundFail() {
+          if (!soundEnabled) return;
+          const ctx = getAudioContext();
+          if (!ctx) return;
+          try {
+            const now = ctx.currentTime;
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = "sawtooth";
+            osc.frequency.setValueAtTime(260, now);
+            osc.frequency.exponentialRampToValueAtTime(110, now + 0.28);
+            gain.gain.setValueAtTime(0.25, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start(now);
+            osc.stop(now + 0.31);
+          } catch(e) {}
+        }
+
+        /* ==========================================================
+           2. GEOMETRIC DEFINITION OF 20 LEVELS
+           ========================================================== */
+        function createRegularPolygon(sides, radius = 0.85, rotation = -Math.PI / 2) {
+          const pts = [];
+          for (let i = 0; i < sides; i++) {
+            const a = rotation + (i * 2 * Math.PI) / sides;
+            pts.push({ x: radius * Math.cos(a), y: radius * Math.sin(a) });
+          }
+          return pts;
+        }
+
+        function createStar(points = 5, rOuter = 0.9, rInner = 0.38) {
+          const pts = [];
+          const total = points * 2;
+          for (let i = 0; i < total; i++) {
+            const a = -Math.PI / 2 + (i * Math.PI) / points;
+            const r = i % 2 === 0 ? rOuter : rInner;
+            pts.push({ x: r * Math.cos(a), y: r * Math.sin(a) });
+          }
+          return pts;
+        }
+
+        function createHeart(steps = 32) {
+          const pts = [];
+          for (let i = 0; i < steps; i++) {
+            const t = (i / steps) * 2 * Math.PI;
+            const x = 16 * Math.pow(Math.sin(t), 3);
+            const y = -(13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t));
+            pts.push({ x: (x / 18) * 0.95, y: (y / 18) * 0.95 + 0.05 });
+          }
+          return pts;
+        }
+
+        function createCrescent(steps = 22) {
+          const pts = [];
+          for (let i = 0; i <= steps; i++) {
+            const a = -Math.PI * 0.45 + (i / steps) * Math.PI * 0.9;
+            pts.push({ x: Math.cos(a) * 0.85 - 0.25, y: Math.sin(a) * 0.85 });
+          }
+          for (let i = steps; i >= 0; i--) {
+            const a = -Math.PI * 0.45 + (i / steps) * Math.PI * 0.9;
+            pts.push({ x: Math.cos(a) * 0.65 - 0.05, y: Math.sin(a) * 0.72 });
+          }
+          return pts;
+        }
+
+        const LEVELS = [
+          {
+            id: 1,
+            name: "Square",
+            color: "#10b981",
+            minAccuracy: 86,
+            hint: "Cut vertically or horizontally right through the center point.",
+            hintLine: { x1: 0, y1: -1, x2: 0, y2: 1 },
+            vertices: [
+              { x: -0.75, y: -0.75 },
+              { x: 0.75, y: -0.75 },
+              { x: 0.75, y: 0.75 },
+              { x: -0.75, y: 0.75 }
+            ]
+          },
+          {
+            id: 2,
+            name: "Equilateral Triangle",
+            color: "#06b6d4",
+            minAccuracy: 86,
+            hint: "Cut downward from the top vertex to the midpoint of the bottom edge.",
+            hintLine: { x1: 0, y1: -0.9, x2: 0, y2: 0.8 },
+            vertices: [
+              { x: 0, y: -0.85 },
+              { x: 0.85, y: 0.65 },
+              { x: -0.85, y: 0.65 }
+            ]
+          },
+          {
+            id: 3,
+            name: "Circle",
+            color: "#3b82f6",
+            minAccuracy: 87,
+            hint: "Any straight line passing through the center cuts a circle into exact halves.",
+            hintLine: { x1: -1, y1: 0, x2: 1, y2: 0 },
+            vertices: createRegularPolygon(36, 0.85)
+          },
+          {
+            id: 4,
+            name: "Rectangle",
+            color: "#8b5cf6",
+            minAccuracy: 87,
+            hint: "Cut vertically through the middle or horizontally across from side to side.",
+            hintLine: { x1: 0, y1: -1, x2: 0, y2: 1 },
+            vertices: [
+              { x: -0.9, y: -0.52 },
+              { x: 0.9, y: -0.52 },
+              { x: 0.9, y: 0.52 },
+              { x: -0.9, y: 0.52 }
+            ]
+          },
+          {
+            id: 5,
+            name: "Right Triangle",
+            color: "#ec4899",
+            minAccuracy: 88,
+            hint: "Cut from the 90° corner through the center to the hypotenuse.",
+            hintLine: { x1: -0.75, y1: 0.75, x2: 0.05, y2: -0.05 },
+            vertices: [
+              { x: -0.75, y: -0.75 },
+              { x: 0.85, y: 0.75 },
+              { x: -0.75, y: 0.75 }
+            ]
+          },
+          {
+            id: 6,
+            name: "Rhombus (Diamond)",
+            color: "#f59e0b",
+            minAccuracy: 88,
+            hint: "Connect opposing vertices vertically or horizontally.",
+            hintLine: { x1: 0, y1: -1, x2: 0, y2: 1 },
+            vertices: [
+              { x: 0, y: -0.95 },
+              { x: 0.75, y: 0 },
+              { x: 0, y: 0.95 },
+              { x: -0.75, y: 0 }
+            ]
+          },
+          {
+            id: 7,
+            name: "Pentagon",
+            color: "#f97316",
+            minAccuracy: 88,
+            hint: "Slice from the top tip straight down through the center of the base.",
+            hintLine: { x1: 0, y1: -0.9, x2: 0, y2: 0.85 },
+            vertices: createRegularPolygon(5, 0.85)
+          },
+          {
+            id: 8,
+            name: "Hexagon",
+            color: "#14b8a6",
+            minAccuracy: 88,
+            hint: "Slice through opposite vertices across the central origin.",
+            hintLine: { x1: -1, y1: 0, x2: 1, y2: 0 },
+            vertices: createRegularPolygon(6, 0.85, 0)
+          },
+          {
+            id: 9,
+            name: "Isosceles Trapezoid",
+            color: "#6366f1",
+            minAccuracy: 89,
+            hint: "A vertical line along the mirror symmetry axis splits both bases equally.",
+            hintLine: { x1: 0, y1: -0.9, x2: 0, y2: 0.9 },
+            vertices: [
+              { x: -0.42, y: -0.68 },
+              { x: 0.42, y: -0.68 },
+              { x: 0.85, y: 0.68 },
+              { x: -0.85, y: 0.68 }
+            ]
+          },
+          {
+            id: 10,
+            name: "Parallelogram",
+            color: "#84cc16",
+            minAccuracy: 89,
+            hint: "Cut diagonally through the center point connecting opposing corners.",
+            hintLine: { x1: -0.5, y1: -0.7, x2: 0.5, y2: 0.7 },
+            vertices: [
+              { x: -0.45, y: -0.65 },
+              { x: 0.85, y: -0.65 },
+              { x: 0.45, y: 0.65 },
+              { x: -0.85, y: 0.65 }
+            ]
+          },
+          {
+            id: 11,
+            name: "L-Shape",
+            color: "#ef4444",
+            minAccuracy: 90,
+            hint: "Cut diagonally through the inner vertex corner at a 45° angle.",
+            hintLine: { x1: -0.75, y1: 0.75, x2: 0.75, y2: -0.75 },
+            vertices: [
+              { x: -0.75, y: -0.75 },
+              { x: -0.15, y: -0.75 },
+              { x: -0.15, y: 0.15 },
+              { x: 0.75, y: 0.15 },
+              { x: 0.75, y: 0.75 },
+              { x: -0.75, y: 0.75 }
+            ]
+          },
+          {
+            id: 12,
+            name: "Octagon",
+            color: "#0ea5e9",
+            minAccuracy: 90,
+            hint: "Cut between opposing vertices through the center.",
+            hintLine: { x1: 0, y1: -1, x2: 0, y2: 1 },
+            vertices: createRegularPolygon(8, 0.85, Math.PI / 8)
+          },
+          {
+            id: 13,
+            name: "Symmetric Cross",
+            color: "#a855f7",
+            minAccuracy: 90,
+            hint: "Cut along either the vertical or horizontal central symmetry axis.",
+            hintLine: { x1: 0, y1: -1, x2: 0, y2: 1 },
+            vertices: [
+              { x: -0.28, y: -0.85 },
+              { x: 0.28, y: -0.85 },
+              { x: 0.28, y: -0.28 },
+              { x: 0.85, y: -0.28 },
+              { x: 0.85, y: 0.28 },
+              { x: 0.28, y: 0.28 },
+              { x: 0.28, y: 0.85 },
+              { x: -0.28, y: 0.85 },
+              { x: -0.28, y: 0.28 },
+              { x: -0.85, y: 0.28 },
+              { x: -0.85, y: -0.28 },
+              { x: -0.28, y: -0.28 }
+            ]
+          },
+          {
+            id: 14,
+            name: "5-Point Star",
+            color: "#eab308",
+            minAccuracy: 90,
+            hint: "Slice from the top star point straight down through the bottom valley.",
+            hintLine: { x1: 0, y1: -1, x2: 0, y2: 1 },
+            vertices: createStar(5, 0.88, 0.38)
+          },
+          {
+            id: 15,
+            name: "Arrowhead",
+            color: "#0d9488",
+            minAccuracy: 91,
+            hint: "Cut vertically right down the spine of the arrow.",
+            hintLine: { x1: 0, y1: -1, x2: 0, y2: 1 },
+            vertices: [
+              { x: 0, y: -0.88 },
+              { x: 0.78, y: -0.15 },
+              { x: 0.38, y: -0.15 },
+              { x: 0.38, y: 0.85 },
+              { x: -0.38, y: 0.85 },
+              { x: -0.38, y: -0.15 },
+              { x: -0.78, y: -0.15 }
+            ]
+          },
+          {
+            id: 16,
+            name: "Heart",
+            color: "#f43f5e",
+            minAccuracy: 91,
+            hint: "Slice vertically through the top indentation down to the bottom tip.",
+            hintLine: { x1: 0, y1: -1, x2: 0, y2: 1 },
+            vertices: createHeart(32)
+          },
+          {
+            id: 17,
+            name: "T-Block",
+            color: "#fb923c",
+            minAccuracy: 91,
+            hint: "Cut vertically through the exact middle of the upper bar and stem.",
+            hintLine: { x1: 0, y1: -1, x2: 0, y2: 1 },
+            vertices: [
+              { x: -0.85, y: -0.78 },
+              { x: 0.85, y: -0.78 },
+              { x: 0.85, y: -0.32 },
+              { x: 0.28, y: -0.32 },
+              { x: 0.28, y: 0.85 },
+              { x: -0.28, y: 0.85 },
+              { x: -0.28, y: -0.32 },
+              { x: -0.85, y: -0.32 }
+            ]
+          },
+          {
+            id: 18,
+            name: "Crescent Moon",
+            color: "#38bdf8",
+            minAccuracy: 92,
+            hint: "Cut horizontally across the widest point of the moon's curve.",
+            hintLine: { x1: -1, y1: 0, x2: 1, y2: 0 },
+            vertices: createCrescent(22)
+          },
+          {
+            id: 19,
+            name: "Royal Crown",
+            color: "#fbbf24",
+            minAccuracy: 92,
+            hint: "Cut straight down from the middle crown peak to the center base.",
+            hintLine: { x1: 0, y1: -1, x2: 0, y2: 1 },
+            vertices: [
+              { x: -0.85, y: 0.65 },
+              { x: -0.85, y: -0.45 },
+              { x: -0.45, y: 0.05 },
+              { x: 0, y: -0.85 },
+              { x: 0.45, y: 0.05 },
+              { x: 0.85, y: -0.45 },
+              { x: 0.85, y: 0.65 }
+            ]
+          },
+          {
+            id: 20,
+            name: "Gem Diamond",
+            color: "#c084fc",
+            minAccuracy: 92,
+            hint: "Cut vertically through the central symmetry axis of the faceted gem.",
+            hintLine: { x1: 0, y1: -1, x2: 0, y2: 1 },
+            vertices: [
+              { x: -0.48, y: -0.8 },
+              { x: 0.48, y: -0.8 },
+              { x: 0.88, y: -0.35 },
+              { x: 0.52, y: 0.35 },
+              { x: 0, y: 0.85 },
+              { x: -0.52, y: 0.35 },
+              { x: -0.88, y: -0.35 }
+            ]
+          }
+        ];
+
+        /* ==========================================================
+           3. 2D POLYGON SLICING & SHOELACE AREA ENGINE
+           ========================================================== */
+        function getPolygonArea(pts) {
+          let area = 0;
+          const n = pts.length;
+          for (let i = 0; i < n; i++) {
+            const j = (i + 1) % n;
+            area += pts[i].x * pts[j].y - pts[j].x * pts[i].y;
+          }
+          return Math.abs(area) * 0.5;
+        }
+
+        function getPolygonCentroid(pts) {
+          let cx = 0, cy = 0;
+          let signedArea = 0;
+          const n = pts.length;
+          for (let i = 0; i < n; i++) {
+            const j = (i + 1) % n;
+            const factor = pts[i].x * pts[j].y - pts[j].x * pts[i].y;
+            signedArea += factor;
+            cx += (pts[i].x + pts[j].x) * factor;
+            cy += (pts[i].y + pts[j].y) * factor;
+          }
+          signedArea *= 0.5;
+          if (Math.abs(signedArea) < 1e-6) {
+            let sx = 0, sy = 0;
+            for (const p of pts) { sx += p.x; sy += p.y; }
+            return { x: sx / n, y: sy / n };
+          }
+          cx = cx / (6 * signedArea);
+          cy = cy / (6 * signedArea);
+          return { x: cx, y: cy };
+        }
+
+        function slicePolygonWithLine(vertices, A, B, C) {
+          const n = vertices.length;
+          if (n < 3) return null;
+
+          const distances = vertices.map(p => A * p.x + B * p.y + C);
+          const eps = 1e-7;
+
+          const crossings = [];
+          for (let i = 0; i < n; i++) {
+            const next = (i + 1) % n;
+            const d1 = distances[i];
+            const d2 = distances[next];
+
+            if ((d1 > eps && d2 < -eps) || (d1 < -eps && d2 > eps)) {
+              const t = -d1 / (d2 - d1);
+              const ix = vertices[i].x + t * (vertices[next].x - vertices[i].x);
+              const iy = vertices[i].y + t * (vertices[next].y - vertices[i].y);
+              crossings.push({
+                edgeIndex: i,
+                point: { x: ix, y: iy }
+              });
+            }
+          }
+
+          if (crossings.length < 2) return null;
+
+          if (crossings.length === 2) {
+            const c1 = crossings[0];
+            const c2 = crossings[1];
+
+            const polyA = [c1.point];
+            for (let i = (c1.edgeIndex + 1) % n; ; i = (i + 1) % n) {
+              polyA.push(vertices[i]);
+              if (i === c2.edgeIndex) break;
+            }
+            polyA.push(c2.point);
+
+            const polyB = [c2.point];
+            for (let i = (c2.edgeIndex + 1) % n; ; i = (i + 1) % n) {
+              polyB.push(vertices[i]);
+              if (i === c1.edgeIndex) break;
+            }
+            polyB.push(c1.point);
+
+            return [
+              { vertices: polyA, area: getPolygonArea(polyA), centroid: getPolygonCentroid(polyA) },
+              { vertices: polyB, area: getPolygonArea(polyB), centroid: getPolygonCentroid(polyB) }
+            ];
+          }
+
+          // Multi-vertex generic split
+          const polyA = [];
+          const polyB = [];
+
+          for (let i = 0; i < n; i++) {
+            const p = vertices[i];
+            const d = distances[i];
+            if (d >= -eps) polyA.push(p);
+            if (d <= eps) polyB.push(p);
+
+            const next = (i + 1) % n;
+            const dNext = distances[next];
+            if ((d > eps && dNext < -eps) || (d < -eps && dNext > eps)) {
+              const t = -d / (dNext - d);
+              const ip = {
+                x: p.x + t * (vertices[next].x - p.x),
+                y: p.y + t * (vertices[next].y - p.y)
+              };
+              polyA.push(ip);
+              polyB.push(ip);
+            }
+          }
+
+          if (polyA.length >= 3 && polyB.length >= 3) {
+            return [
+              { vertices: polyA, area: getPolygonArea(polyA), centroid: getPolygonCentroid(polyA) },
+              { vertices: polyB, area: getPolygonArea(polyB), centroid: getPolygonCentroid(polyB) }
+            ];
+          }
+
+          return null;
+        }
+
+        /* ==========================================================
+           4. PERSISTENCE & LOCAL STORAGE
+           ========================================================== */
+        const STORAGE_KEY = "geometric_cut_master_save_v3";
+
+        function loadSavedProgress() {
+          try {
+            const data = localStorage.getItem(STORAGE_KEY);
+            if (data) {
+              const parsed = JSON.parse(data);
+              return {
+                unlockedLevel: parsed.unlockedLevel || 1,
+                stars: parsed.stars || {},
+                sound: parsed.sound !== undefined ? parsed.sound : true,
+                hasSeenTutorial: parsed.hasSeenTutorial || false
+              };
+            }
+          } catch (e) {}
+          return { unlockedLevel: 1, stars: {}, sound: true, hasSeenTutorial: false };
+        }
+
+        function saveProgress() {
+          try {
+            const data = {
+              unlockedLevel: gameState.unlockedLevel,
+              stars: gameState.stars,
+              sound: soundEnabled,
+              hasSeenTutorial: gameState.hasSeenTutorial
+            };
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+          } catch (e) {}
+        }
+
+        const savedData = loadSavedProgress();
+        soundEnabled = savedData.sound;
+
+        const gameState = {
+          currentLevelIndex: 0,
+          unlockedLevel: savedData.unlockedLevel || 1,
+          stars: savedData.stars || {},
+          hasSeenTutorial: savedData.hasSeenTutorial || false,
+          state: "READY",
+          showHint: false,
+          showGhostSwipe: true,
+          currentShape: null,
+          pieces: [],
+          cutLine: null,
+          swipeStart: null,
+          swipeCurrent: null,
+          swipeTrail: [],
+          particles: [],
+          shockwaves: [],
+          ambientParticles: [],
+          sliceProgress: 0,
+          lastCutResult: null
+        };
+
+        /* ==========================================================
+           5. CANVAS & RESPONSIVE SCALING
+           ========================================================== */
+        const canvas = document.getElementById("canvas");
+        const ctx = canvas.getContext("2d");
+        let width = window.innerWidth || 800;
+        let height = window.innerHeight || 600;
+        let dpr = window.devicePixelRatio || 1;
+        let shapeScale = 180;
+        let shapeCenter = { x: width * 0.5, y: height * 0.51 };
+
+        function initAmbientParticles() {
+          gameState.ambientParticles = [];
+          const count = 35;
+          for (let i = 0; i < count; i++) {
+            gameState.ambientParticles.push({
+              x: Math.random() * width,
+              y: Math.random() * height,
+              vx: (Math.random() - 0.5) * 0.4,
+              vy: (Math.random() - 0.5) * 0.4,
+              radius: 1 + Math.random() * 2,
+              alpha: 0.15 + Math.random() * 0.35,
+              pulseSpeed: 0.02 + Math.random() * 0.03
+            });
+          }
+        }
+
+        function resizeCanvas() {
+          dpr = window.devicePixelRatio || 1;
+          width = window.innerWidth || document.documentElement.clientWidth || 800;
+          height = window.innerHeight || document.documentElement.clientHeight || 600;
+
+          canvas.width = Math.floor(width * dpr);
+          canvas.height = Math.floor(height * dpr);
+          canvas.style.width = width + "px";
+          canvas.style.height = height + "px";
+
+          ctx.setTransform(1, 0, 0, 1, 0, 0);
+          ctx.scale(dpr, dpr);
+
+          shapeCenter.x = width * 0.5;
+          shapeCenter.y = height * 0.51;
+          const minDim = Math.min(width, height);
+          shapeScale = minDim * (width < 450 ? 0.38 : 0.34);
+
+          if (gameState.ambientParticles.length === 0) {
+            initAmbientParticles();
+          }
+        }
+
+        window.addEventListener("resize", resizeCanvas);
+        window.addEventListener("orientationchange", () => setTimeout(resizeCanvas, 100));
+
+        /* ==========================================================
+           6. LEVEL MANAGEMENT
+           ========================================================== */
+        function loadLevel(index) {
+          if (index < 0 || index >= LEVELS.length) index = 0;
+          gameState.currentLevelIndex = index;
+          gameState.state = "READY";
+          gameState.showHint = false;
+          gameState.pieces = [];
+          gameState.cutLine = null;
+          gameState.swipeStart = null;
+          gameState.swipeCurrent = null;
+          gameState.swipeTrail = [];
+          gameState.particles = [];
+          gameState.shockwaves = [];
+          gameState.sliceProgress = 0;
+          gameState.lastCutResult = null;
+
+          const lvl = LEVELS[index];
+          gameState.currentShape = {
+            vertices: JSON.parse(JSON.stringify(lvl.vertices)),
+            totalArea: getPolygonArea(lvl.vertices),
+            color: lvl.color,
+            name: lvl.name
+          };
+
+          // Update HUD
+          document.getElementById("level-display").textContent = `${String(lvl.id).padStart(2, '0')}/20`;
+          document.getElementById("shape-title").textContent = lvl.name;
+          document.getElementById("cut-banner").classList.remove("visible");
+
+          closeAllModals();
+        }
+
+        function countTotalStars() {
+          let count = 0;
+          for (let i = 1; i <= 20; i++) {
+            count += gameState.stars[i] || 0;
+          }
+          return count;
+        }
+
+        /* ==========================================================
+           7. CUT EVALUATION & PARTICLE JUICE
+           ========================================================== */
+        function createSparks(x, y, color, count = 28) {
+          for (let i = 0; i < count; i++) {
+            const angle = Math.random() * Math.PI * 2;
+            const speed = 2.5 + Math.random() * 6.5;
+            gameState.particles.push({
+              x: x,
+              y: y,
+              vx: Math.cos(angle) * speed,
+              vy: Math.sin(angle) * speed,
+              radius: 1.5 + Math.random() * 2.5,
+              alpha: 1,
+              life: 1,
+              decay: 0.02 + Math.random() * 0.03,
+              color: color || "#38bdf8"
+            });
+          }
+        }
+
+        function createShockwave(x, y, color) {
+          gameState.shockwaves.push({
+            x: x,
+            y: y,
+            radius: 8,
+            maxRadius: 75,
+            alpha: 1,
+            color: color || "#38bdf8"
+          });
+        }
+
+        function performCut(p1, p2) {
+          if (gameState.state !== "READY") return;
+
+          // Convert screen coordinates to normalized shape coordinates
+          const np1 = {
+            x: (p1.x - shapeCenter.x) / shapeScale,
+            y: (p1.y - shapeCenter.y) / shapeScale
+          };
+          const np2 = {
+            x: (p2.x - shapeCenter.x) / shapeScale,
+            y: (p2.y - shapeCenter.y) / shapeScale
+          };
+
+          // Line equation: A*x + B*y + C = 0
+          const A = np1.y - np2.y;
+          const B = np2.x - np1.x;
+          const C = np1.x * np2.y - np2.x * np1.y;
+
+          const len = Math.hypot(A, B);
+          if (len < 1e-6) return;
+
+          const normA = A / len;
+          const normB = B / len;
+          const normC = C / len;
+
+          const result = slicePolygonWithLine(gameState.currentShape.vertices, normA, normB, normC);
+
+          if (!result || result.length < 2) {
+            // Cut did not slice through the shape
+            return;
+          }
+
+          gameState.state = "SLICED";
+          gameState.showGhostSwipe = false;
+          playSoundSlice();
+
+          const totalArea = result[0].area + result[1].area;
+          const ratioA = (result[0].area / totalArea) * 100;
+          const ratioB = (result[1].area / totalArea) * 100;
+
+          // Calculate accuracy percentage
+          const diff = Math.abs(ratioA - 50);
+          const accuracy = Math.max(0, 100 - (diff * 2));
+
+          const currentLvl = LEVELS[gameState.currentLevelIndex];
+          const passed = accuracy >= currentLvl.minAccuracy;
+
+          let stars = 0;
+          if (passed) {
+            if (accuracy >= 97) stars = 3;
+            else if (accuracy >= 92) stars = 2;
+            else stars = 1;
+          }
+
+          // Calculate separation normal vectors for visual bounce
+          const dx = np2.x - np1.x;
+          const dy = np2.y - np1.y;
+          const normal = { x: -dy / len, y: dx / len };
+
+          gameState.pieces = [
+            {
+              vertices: result[0].vertices,
+              area: result[0].area,
+              ratio: ratioA,
+              centroid: result[0].centroid,
+              dir: { x: normal.x * 24, y: normal.y * 24 },
+              color: currentLvl.color
+            },
+            {
+              vertices: result[1].vertices,
+              area: result[1].area,
+              ratio: ratioB,
+              centroid: result[1].centroid,
+              dir: { x: -normal.x * 24, y: -normal.y * 24 },
+              color: currentLvl.color
+            }
+          ];
+
+          gameState.cutLine = { p1: { ...p1 }, p2: { ...p2 } };
+          gameState.sliceProgress = 0;
+
+          // Spawn particle blast along cut
+          const midX = (p1.x + p2.x) * 0.5;
+          const midY = (p1.y + p2.y) * 0.5;
+          createSparks(midX, midY, currentLvl.color, 36);
+          createShockwave(midX, midY, "#ffffff");
+
+          gameState.lastCutResult = {
+            accuracy: accuracy,
+            ratioA: ratioA,
+            ratioB: ratioB,
+            passed: passed,
+            stars: stars,
+            minAccuracy: currentLvl.minAccuracy
+          };
+
+          // Show floating center banner
+          const banner = document.getElementById("cut-banner");
+          const bannerAcc = document.getElementById("banner-accuracy");
+          const bannerParts = document.getElementById("banner-parts");
+
+          bannerAcc.textContent = `${accuracy.toFixed(1)}%`;
+          bannerAcc.style.color = passed ? "var(--accent-green)" : "var(--accent-red)";
+          bannerParts.textContent = `${ratioA.toFixed(1)}% / ${ratioB.toFixed(1)}%`;
+          banner.classList.add("visible");
+
+          // Trigger result modal after slice animation settles
+          setTimeout(() => {
+            banner.classList.remove("visible");
+            if (passed) {
+              const currentBest = gameState.stars[currentLvl.id] || 0;
+              if (stars > currentBest) {
+                gameState.stars[currentLvl.id] = stars;
+              }
+              if (currentLvl.id >= gameState.unlockedLevel && gameState.unlockedLevel < 20) {
+                gameState.unlockedLevel = currentLvl.id + 1;
+              }
+              saveProgress();
+              playSoundSuccess(stars);
+
+              if (currentLvl.id === 20 && stars > 0) {
+                showVictoryModal();
+              } else {
+                showSuccessModal(gameState.lastCutResult);
+              }
+            } else {
+              playSoundFail();
+              showFailModal(gameState.lastCutResult);
+            }
+          }, 1100);
+        }
+
+        /* ==========================================================
+           8. INPUT HANDLING (Mouse & Touch)
+           ========================================================== */
+        let isPointerDown = false;
+
+        function getEventPos(e) {
+          const rect = canvas.getBoundingClientRect();
+          if (e.touches && e.touches.length > 0) {
+            return {
+              x: e.touches[0].clientX - rect.left,
+              y: e.touches[0].clientY - rect.top
+            };
+          }
+          return {
+            x: e.clientX - rect.left,
+            y: e.clientY - rect.top
+          };
+        }
+
+        function onPointerStart(e) {
+          if (gameState.state !== "READY") return;
+          getAudioContext(); // Resume audio on first user gesture
+          isPointerDown = true;
+          const pos = getEventPos(e);
+          gameState.swipeStart = pos;
+          gameState.swipeCurrent = pos;
+          gameState.swipeTrail = [{ ...pos, time: performance.now() }];
+          gameState.showGhostSwipe = false;
+        }
+
+        function onPointerMove(e) {
+          if (!isPointerDown || gameState.state !== "READY") return;
+          const pos = getEventPos(e);
+          gameState.swipeCurrent = pos;
+          gameState.swipeTrail.push({ ...pos, time: performance.now() });
+
+          // Keep trail fresh
+          if (gameState.swipeTrail.length > 18) {
+            gameState.swipeTrail.shift();
+          }
+
+          // Subtle spark trail while slicing
+          if (Math.random() < 0.4) {
+            gameState.particles.push({
+              x: pos.x,
+              y: pos.y,
+              vx: (Math.random() - 0.5) * 2,
+              vy: (Math.random() - 0.5) * 2,
+              radius: 1 + Math.random() * 2,
+              alpha: 0.8,
+              life: 1,
+              decay: 0.05,
+              color: "#38bdf8"
+            });
+          }
+        }
+
+        function onPointerEnd(e) {
+          if (!isPointerDown) return;
+          isPointerDown = false;
+
+          if (gameState.swipeStart && gameState.swipeCurrent && gameState.state === "READY") {
+            const dist = Math.hypot(
+              gameState.swipeCurrent.x - gameState.swipeStart.x,
+              gameState.swipeCurrent.y - gameState.swipeStart.y
+            );
+            if (dist > 35) {
+              performCut(gameState.swipeStart, gameState.swipeCurrent);
+            }
+          }
+          gameState.swipeStart = null;
+          gameState.swipeCurrent = null;
+        }
+
+        canvas.addEventListener("mousedown", onPointerStart);
+        window.addEventListener("mousemove", onPointerMove);
+        window.addEventListener("mouseup", onPointerEnd);
+
+        canvas.addEventListener("touchstart", onPointerStart, { passive: false });
+        window.addEventListener("touchmove", onPointerMove, { passive: false });
+        window.addEventListener("touchend", onPointerEnd, { passive: false });
+
+        /* ==========================================================
+           9. GRAPHICS RENDER LOOP & JUICE
+           ========================================================== */
+        let ghostAnimTime = 0;
+
+        function drawCyberGrid(time) {
+          ctx.save();
+          ctx.strokeStyle = "rgba(56, 189, 248, 0.04)";
+          ctx.lineWidth = 1;
+
+          const gridSize = 48;
+          const offsetX = (time * 0.01) % gridSize;
+          const offsetY = (time * 0.01) % gridSize;
+
+          for (let x = offsetX; x < width; x += gridSize) {
+            ctx.beginPath();
+            ctx.moveTo(x, 0);
+            ctx.lineTo(x, height);
+            ctx.stroke();
+          }
+
+          for (let y = offsetY; y < height; y += gridSize) {
+            ctx.beginPath();
+            ctx.moveTo(0, y);
+            ctx.lineTo(width, y);
+            ctx.stroke();
+          }
+
+          // Central circular aura
+          const grad = ctx.createRadialGradient(
+            shapeCenter.x, shapeCenter.y, 10,
+            shapeCenter.x, shapeCenter.y, shapeScale * 1.8
+          );
+          grad.addColorStop(0, "rgba(56, 189, 248, 0.06)");
+          grad.addColorStop(0.6, "rgba(14, 165, 233, 0.02)");
+          grad.addColorStop(1, "rgba(0, 0, 0, 0)");
+
+          ctx.fillStyle = grad;
+          ctx.beginPath();
+          ctx.arc(shapeCenter.x, shapeCenter.y, shapeScale * 1.8, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.restore();
+        }
+
+        function drawAmbientParticles() {
+          ctx.save();
+          for (const p of gameState.ambientParticles) {
+            p.x += p.vx;
+            p.y += p.vy;
+            if (p.x < 0) p.x = width;
+            if (p.x > width) p.x = 0;
+            if (p.y < 0) p.y = height;
+            if (p.y > height) p.y = 0;
+
+            ctx.fillStyle = `rgba(56, 189, 248, ${p.alpha})`;
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+            ctx.fill();
+          }
+          ctx.restore();
+        }
+
+        function drawPolygon(vertices, color, offsetX = 0, offsetY = 0, strokeColor = "#ffffff") {
+          if (!vertices || vertices.length < 3) return;
+          ctx.save();
+          ctx.translate(shapeCenter.x + offsetX, shapeCenter.y + offsetY);
+
+          ctx.beginPath();
+          ctx.moveTo(vertices[0].x * shapeScale, vertices[0].y * shapeScale);
+          for (let i = 1; i < vertices.length; i++) {
+            ctx.lineTo(vertices[i].x * shapeScale, vertices[i].y * shapeScale);
+          }
+          ctx.closePath();
+
+          // Rich gradient fill
+          const fillGrad = ctx.createLinearGradient(0, -shapeScale, 0, shapeScale);
+          fillGrad.addColorStop(0, color);
+          fillGrad.addColorStop(1, shadeColor(color, -25));
+
+          ctx.fillStyle = fillGrad;
+          ctx.shadowColor = color;
+          ctx.shadowBlur = 18;
+          ctx.fill();
+
+          // Crisp glowing outline
+          ctx.shadowBlur = 0;
+          ctx.strokeStyle = strokeColor;
+          ctx.lineWidth = 2.5;
+          ctx.stroke();
+
+          // Subtle inner facet line for glass look
+          ctx.strokeStyle = "rgba(255, 255, 255, 0.25)";
+          ctx.lineWidth = 1;
+          ctx.stroke();
+
+          ctx.restore();
+        }
+
+        function shadeColor(color, percent) {
+          let num = parseInt(color.replace("#", ""), 16),
+              amt = Math.round(2.55 * percent),
+              R = (num >> 16) + amt,
+              G = (num >> 8 & 0x00FF) + amt,
+              B = (num & 0x0000FF) + amt;
+          return "#" + (
+            0x1000000 +
+            (R < 255 ? (R < 1 ? 0 : R) : 255) * 0x10000 +
+            (G < 255 ? (G < 1 ? 0 : G) : 255) * 0x100 +
+            (B < 255 ? (B < 1 ? 0 : B) : 255)
+          ).toString(16).slice(1);
+        }
+
+        function drawHintGuide() {
+          const lvl = LEVELS[gameState.currentLevelIndex];
+          if (!lvl.hintLine) return;
+
+          ctx.save();
+          ctx.strokeStyle = "rgba(251, 191, 36, 0.65)";
+          ctx.lineWidth = 2;
+          ctx.setLineDash([8, 6]);
+
+          const x1 = shapeCenter.x + lvl.hintLine.x1 * shapeScale * 1.35;
+          const y1 = shapeCenter.y + lvl.hintLine.y1 * shapeScale * 1.35;
+          const x2 = shapeCenter.x + lvl.hintLine.x2 * shapeScale * 1.35;
+          const y2 = shapeCenter.y + lvl.hintLine.y2 * shapeScale * 1.35;
+
+          ctx.beginPath();
+          ctx.moveTo(x1, y1);
+          ctx.lineTo(x2, y2);
+          ctx.stroke();
+
+          // Glowing hint indicators at ends
+          ctx.fillStyle = "#fbbf24";
+          ctx.beginPath();
+          ctx.arc(x1, y1, 4, 0, Math.PI * 2);
+          ctx.arc(x2, y2, 4, 0, Math.PI * 2);
+          ctx.fill();
+
+          ctx.restore();
+        }
+
+        function drawGhostSwipe(time) {
+          if (!gameState.showGhostSwipe || gameState.currentLevelIndex !== 0 || gameState.state !== "READY") return;
+
+          ctx.save();
+          const t = (Math.sin(time * 0.003) + 1) * 0.5; // 0 to 1 loop
+          const startY = shapeCenter.y - shapeScale * 1.1;
+          const endY = shapeCenter.y + shapeScale * 1.1;
+          const currentY = startY + t * (endY - startY);
+
+          // Glowing laser guide line
+          ctx.strokeStyle = "rgba(56, 189, 248, 0.35)";
+          ctx.lineWidth = 2;
+          ctx.setLineDash([6, 6]);
+          ctx.beginPath();
+          ctx.moveTo(shapeCenter.x, startY);
+          ctx.lineTo(shapeCenter.x, endY);
+          ctx.stroke();
+
+          // Animated pointer hand cursor
+          ctx.fillStyle = "#38bdf8";
+          ctx.shadowColor = "#38bdf8";
+          ctx.shadowBlur = 12;
+          ctx.beginPath();
+          ctx.arc(shapeCenter.x, currentY, 8, 0, Math.PI * 2);
+          ctx.fill();
+
+          // Ripple wave
+          ctx.strokeStyle = `rgba(56, 189, 248, ${1 - t})`;
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.arc(shapeCenter.x, currentY, 14 + t * 16, 0, Math.PI * 2);
+          ctx.stroke();
+
+          ctx.restore();
+        }
+
+        function drawLaserSwipe() {
+          if (!gameState.swipeStart || !gameState.swipeCurrent) return;
+
+          ctx.save();
+          const p1 = gameState.swipeStart;
+          const p2 = gameState.swipeCurrent;
+
+          // Outer Laser Glow
+          ctx.strokeStyle = "rgba(56, 189, 248, 0.4)";
+          ctx.lineWidth = 14;
+          ctx.lineCap = "round";
+          ctx.beginPath();
+          ctx.moveTo(p1.x, p1.y);
+          ctx.lineTo(p2.x, p2.y);
+          ctx.stroke();
+
+          // Mid Intense Beam
+          ctx.strokeStyle = "#38bdf8";
+          ctx.lineWidth = 6;
+          ctx.shadowColor = "#38bdf8";
+          ctx.shadowBlur = 20;
+          ctx.beginPath();
+          ctx.moveTo(p1.x, p1.y);
+          ctx.lineTo(p2.x, p2.y);
+          ctx.stroke();
+
+          // Core Hot White Core
+          ctx.strokeStyle = "#ffffff";
+          ctx.lineWidth = 2.5;
+          ctx.shadowBlur = 0;
+          ctx.beginPath();
+          ctx.moveTo(p1.x, p1.y);
+          ctx.lineTo(p2.x, p2.y);
+          ctx.stroke();
+
+          ctx.restore();
+        }
+
+        function drawParticles() {
+          ctx.save();
+          for (let i = gameState.particles.length - 1; i >= 0; i--) {
+            const p = gameState.particles[i];
+            p.x += p.vx;
+            p.y += p.vy;
+            p.vy += 0.08; // subtle gravity
+            p.alpha -= p.decay;
+
+            if (p.alpha <= 0) {
+              gameState.particles.splice(i, 1);
+              continue;
+            }
+
+            ctx.fillStyle = p.color;
+            ctx.globalAlpha = p.alpha;
+            ctx.shadowColor = p.color;
+            ctx.shadowBlur = 8;
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+            ctx.fill();
+          }
+
+          // Shockwaves
+          for (let i = gameState.shockwaves.length - 1; i >= 0; i--) {
+            const sw = gameState.shockwaves[i];
+            sw.radius += 3.2;
+            sw.alpha -= 0.045;
+
+            if (sw.alpha <= 0 || sw.radius >= sw.maxRadius) {
+              gameState.shockwaves.splice(i, 1);
+              continue;
+            }
+
+            ctx.strokeStyle = sw.color;
+            ctx.globalAlpha = sw.alpha;
+            ctx.lineWidth = 2.5;
+            ctx.shadowColor = sw.color;
+            ctx.shadowBlur = 12;
+            ctx.beginPath();
+            ctx.arc(sw.x, sw.y, sw.radius, 0, Math.PI * 2);
+            ctx.stroke();
+          }
+          ctx.restore();
+        }
+
+        function drawSlicedPieces() {
+          if (gameState.state !== "SLICED" || gameState.pieces.length < 2) return;
+
+          gameState.sliceProgress = Math.min(1, gameState.sliceProgress + 0.04);
+          const easeProgress = Math.sin(gameState.sliceProgress * Math.PI * 0.5);
+
+          gameState.pieces.forEach((piece, idx) => {
+            const offsetX = piece.dir.x * easeProgress;
+            const offsetY = piece.dir.y * easeProgress;
+
+            drawPolygon(piece.vertices, piece.color, offsetX, offsetY, "#ffffff");
+
+            // Render percentage tag floating over centroid
+            if (piece.centroid) {
+              ctx.save();
+              const tagX = shapeCenter.x + offsetX + piece.centroid.x * shapeScale;
+              const tagY = shapeCenter.y + offsetY + piece.centroid.y * shapeScale;
+
+              ctx.fillStyle = "rgba(15, 23, 42, 0.85)";
+              ctx.strokeStyle = "rgba(255, 255, 255, 0.2)";
+              ctx.lineWidth = 1;
+
+              const text = `${piece.ratio.toFixed(1)}%`;
+              ctx.font = "bold 13px -apple-system, BlinkMacSystemFont, Segoe UI, Roboto";
+              const metrics = ctx.measureText(text);
+              const pillW = metrics.width + 16;
+              const pillH = 24;
+
+              ctx.beginPath();
+              ctx.roundRect(tagX - pillW / 2, tagY - pillH / 2, pillW, pillH, 12);
+              ctx.fill();
+              ctx.stroke();
+
+              ctx.fillStyle = "#ffffff";
+              ctx.textAlign = "center";
+              ctx.textBaseline = "middle";
+              ctx.fillText(text, tagX, tagY);
+              ctx.restore();
+            }
+          });
+        }
+
+        function render(time) {
+          ctx.clearRect(0, 0, width, height);
+
+          drawCyberGrid(time);
+          drawAmbientParticles();
+
+          if (gameState.state === "READY") {
+            if (gameState.currentShape) {
+              drawPolygon(gameState.currentShape.vertices, gameState.currentShape.color);
+            }
+            if (gameState.showHint) {
+              drawHintGuide();
+            }
+            drawGhostSwipe(time);
+            drawLaserSwipe();
+          } else if (gameState.state === "SLICED") {
+            drawSlicedPieces();
+          }
+
+          drawParticles();
+
+          requestAnimationFrame(render);
+        }
+
+        /* ==========================================================
+           10. ANIMATED TUTORIAL CANVAS ENGINE
+           ========================================================== */
+        const tutCanvas = document.getElementById("tutorial-canvas");
+        const tutCtx = tutCanvas.getContext("2d");
+        let tutTime = 0;
+
+        function renderTutorial() {
+          tutTime += 0.025;
+          tutCtx.clearRect(0, 0, tutCanvas.width, tutCanvas.height);
+
+          const cx = tutCanvas.width * 0.5;
+          const cy = tutCanvas.height * 0.48;
+          const size = 50;
+
+          // Animation phase: 0 to 4 (Looping)
+          const phase = tutTime % 4.5;
+
+          tutCtx.save();
+          // Subtle background grid
+          tutCtx.strokeStyle = "rgba(56, 189, 248, 0.08)";
+          tutCtx.lineWidth = 1;
+          for (let x = 0; x < tutCanvas.width; x += 30) {
+            tutCtx.beginPath();
+            tutCtx.moveTo(x, 0);
+            tutCtx.lineTo(x, tutCanvas.height);
+            tutCtx.stroke();
+          }
+
+          if (phase < 1.4) {
+            // Stage 1: Whole Polygon + Sweeping Laser
+            const tSwipe = Math.min(1, phase / 1.2);
+
+            tutCtx.fillStyle = "#10b981";
+            tutCtx.strokeStyle = "#ffffff";
+            tutCtx.lineWidth = 2;
+            tutCtx.shadowColor = "#10b981";
+            tutCtx.shadowBlur = 12;
+            tutCtx.beginPath();
+            tutCtx.rect(cx - size, cy - size, size * 2, size * 2);
+            tutCtx.fill();
+            tutCtx.shadowBlur = 0;
+            tutCtx.stroke();
+
+            // Laser Blade Swipe
+            const bladeY = cy - size * 1.3 + tSwipe * (size * 2.6);
+            tutCtx.strokeStyle = "#38bdf8";
+            tutCtx.lineWidth = 4;
+            tutCtx.shadowColor = "#38bdf8";
+            tutCtx.shadowBlur = 16;
+            tutCtx.beginPath();
+            tutCtx.moveTo(cx, cy - size * 1.3);
+            tutCtx.lineTo(cx, bladeY);
+            tutCtx.stroke();
+
+            // Laser Pointer
+            tutCtx.fillStyle = "#ffffff";
+            tutCtx.beginPath();
+            tutCtx.arc(cx, bladeY, 6, 0, Math.PI * 2);
+            tutCtx.fill();
+          } else {
+            // Stage 2: Clean Split Pieces bouncing apart
+            const splitT = Math.min(1, (phase - 1.4) / 1.0);
+            const easeSplit = Math.sin(splitT * Math.PI * 0.5) * 22;
+
+            // Left Half (50.0%)
+            tutCtx.fillStyle = "#10b981";
+            tutCtx.strokeStyle = "#ffffff";
+            tutCtx.lineWidth = 2;
+            tutCtx.shadowColor = "#10b981";
+            tutCtx.shadowBlur = 12;
+            tutCtx.beginPath();
+            tutCtx.rect(cx - size - easeSplit, cy - size, size, size * 2);
+            tutCtx.fill();
+            tutCtx.shadowBlur = 0;
+            tutCtx.stroke();
+
+            // Right Half (50.0%)
+            tutCtx.beginPath();
+            tutCtx.rect(cx + easeSplit, cy - size, size, size * 2);
+            tutCtx.fill();
+            tutCtx.stroke();
+
+            // Floating 50% Pills
+            tutCtx.fillStyle = "rgba(15, 23, 42, 0.9)";
+            tutCtx.font = "bold 11px sans-serif";
+            tutCtx.textAlign = "center";
+            tutCtx.textBaseline = "middle";
+
+            tutCtx.fillRect(cx - size / 2 - easeSplit - 20, cy - 10, 40, 20);
+            tutCtx.fillRect(cx + size / 2 + easeSplit - 20, cy - 10, 40, 20);
+
+            tutCtx.fillStyle = "#38bdf8";
+            tutCtx.fillText("50.0%", cx - size / 2 - easeSplit, cy);
+            tutCtx.fillText("50.0%", cx + size / 2 + easeSplit, cy);
+
+            // Accuracy Crown
+            tutCtx.fillStyle = "#fbbf24";
+            tutCtx.font = "bold 12px sans-serif";
+            tutCtx.fillText("★ 100% ACCURACY ★", cx, cy + size + 20);
+          }
+
+          tutCtx.restore();
+
+          if (document.getElementById("modal-tutorial").classList.contains("active")) {
+            requestAnimationFrame(renderTutorial);
+          }
+        }
+
+        /* ==========================================================
+           11. MODAL DIALOGS & HUD INTERACTIONS
+           ========================================================== */
+        function openModal(modalId) {
+          closeAllModals();
+          const m = document.getElementById(modalId);
+          if (m) {
+            m.classList.add("active");
+            if (modalId === "modal-tutorial") {
+              requestAnimationFrame(renderTutorial);
+            }
+          }
+        }
+
+        function closeAllModals() {
+          document.querySelectorAll(".modal-backdrop").forEach(m => m.classList.remove("active"));
+        }
+
+        function showSuccessModal(data) {
+          const m = document.getElementById("modal-success");
+          document.getElementById("success-accuracy").textContent = `${data.accuracy.toFixed(1)}%`;
+          document.getElementById("success-accuracy-bar").style.width = `${data.accuracy}%`;
+          document.getElementById("success-parts").textContent = `${data.ratioA.toFixed(1)}% / ${data.ratioB.toFixed(1)}%`;
+          document.getElementById("success-split-a").style.width = `${data.ratioA}%`;
+          document.getElementById("success-split-b").style.width = `${data.ratioB}%`;
+
+          for (let i = 1; i <= 3; i++) {
+            const starEl = document.getElementById(`star-${i}`);
+            if (i <= data.stars) {
+              starEl.classList.add("active");
+            } else {
+              starEl.classList.remove("active");
+            }
+          }
+          openModal("modal-success");
+        }
+
+        function showFailModal(data) {
+          document.getElementById("fail-accuracy").textContent = `${data.accuracy.toFixed(1)}%`;
+          document.getElementById("fail-accuracy-bar").style.width = `${data.accuracy}%`;
+          document.getElementById("fail-parts").textContent = `${data.ratioA.toFixed(1)}% / ${data.ratioB.toFixed(1)}%`;
+          document.getElementById("fail-split-a").style.width = `${data.ratioA}%`;
+          document.getElementById("fail-split-b").style.width = `${data.ratioB}%`;
+          document.getElementById("fail-min-acc").textContent = `${data.minAccuracy}%`;
+          openModal("modal-fail");
+        }
+
+        function showVictoryModal() {
+          document.getElementById("victory-stars").textContent = `${countTotalStars()} / 60`;
+          openModal("modal-victory");
+        }
+
+        function renderLevelsGrid() {
+          const grid = document.getElementById("levels-grid");
+          grid.innerHTML = "";
+
+          document.getElementById("total-stars-count").textContent = `${countTotalStars()} / 60`;
+
+          LEVELS.forEach((lvl, idx) => {
+            const isUnlocked = lvl.id <= gameState.unlockedLevel;
+            const isCurrent = idx === gameState.currentLevelIndex;
+            const stars = gameState.stars[lvl.id] || 0;
+
+            const cell = document.createElement("div");
+            cell.className = `level-cell ${isCurrent ? 'current' : ''} ${!isUnlocked ? 'locked' : ''}`;
+
+            if (isUnlocked) {
+              cell.innerHTML = `
+                <span class="level-num">${lvl.id}</span>
+                <span class="level-stars">${"★".repeat(stars)}${"☆".repeat(3 - stars)}</span>
+              `;
+              cell.addEventListener("click", () => {
+                playSoundClick();
+                loadLevel(idx);
+              });
+            } else {
+              cell.innerHTML = `
+                <span class="level-lock-icon">🔒</span>
+                <span style="font-size: 11px; color: #64748b; font-weight: 600;">${lvl.id}</span>
+              `;
+            }
+            grid.appendChild(cell);
+          });
+        }
+
+        // HUD Button Listeners
+        document.getElementById("btn-tutorial").addEventListener("click", () => {
+          playSoundClick();
+          openModal("modal-tutorial");
+        });
+
+        document.getElementById("btn-levels").addEventListener("click", () => {
+          playSoundClick();
+          renderLevelsGrid();
+          openModal("modal-levels");
+        });
+
+        document.getElementById("btn-hint").addEventListener("click", () => {
+          playSoundClick();
+          const lvl = LEVELS[gameState.currentLevelIndex];
+          document.getElementById("hint-shape-name").textContent = lvl.name;
+          document.getElementById("hint-text").textContent = lvl.hint;
+          openModal("modal-hint");
+        });
+
+        document.getElementById("btn-apply-hint").addEventListener("click", () => {
+          playSoundClick();
+          gameState.showHint = true;
+          closeAllModals();
+        });
+
+        document.getElementById("btn-sound").addEventListener("click", () => {
+          soundEnabled = !soundEnabled;
+          document.getElementById("sound-icon").textContent = soundEnabled ? "🔊" : "🔇";
+          saveProgress();
+          updateBgmVolume();
+          playSoundClick();
+        });
+
+        document.getElementById("btn-fullscreen").addEventListener("click", () => {
+          playSoundClick();
+          if (!document.fullscreenElement) {
+            document.documentElement.requestFullscreen().catch(() => {});
+          } else {
+            document.exitFullscreen().catch(() => {});
+          }
+        });
+
+        document.getElementById("btn-reset").addEventListener("click", () => {
+          playSoundClick();
+          loadLevel(gameState.currentLevelIndex);
+        });
+
+        // Modal Action Handlers
+        document.getElementById("btn-tutorial-start").addEventListener("click", () => {
+          playSoundClick();
+          gameState.hasSeenTutorial = true;
+          saveProgress();
+          closeAllModals();
+        });
+
+        document.getElementById("btn-tutorial-close").addEventListener("click", () => {
+          playSoundClick();
+          gameState.hasSeenTutorial = true;
+          saveProgress();
+          closeAllModals();
+        });
+
+        document.getElementById("btn-next-level").addEventListener("click", () => {
+          playSoundClick();
+          if (gameState.currentLevelIndex + 1 < LEVELS.length) {
+            loadLevel(gameState.currentLevelIndex + 1);
+          } else {
+            loadLevel(0);
+          }
+        });
+
+        document.getElementById("btn-success-replay").addEventListener("click", () => {
+          playSoundClick();
+          loadLevel(gameState.currentLevelIndex);
+        });
+
+        document.getElementById("btn-success-menu").addEventListener("click", () => {
+          playSoundClick();
+          renderLevelsGrid();
+          openModal("modal-levels");
+        });
+
+        document.getElementById("btn-fail-retry").addEventListener("click", () => {
+          playSoundClick();
+          loadLevel(gameState.currentLevelIndex);
+        });
+
+        document.getElementById("btn-fail-hint").addEventListener("click", () => {
+          playSoundClick();
+          const lvl = LEVELS[gameState.currentLevelIndex];
+          document.getElementById("hint-shape-name").textContent = lvl.name;
+          document.getElementById("hint-text").textContent = lvl.hint;
+          openModal("modal-hint");
+        });
+
+        document.getElementById("btn-fail-menu").addEventListener("click", () => {
+          playSoundClick();
+          renderLevelsGrid();
+          openModal("modal-levels");
+        });
+
+        document.getElementById("btn-close-levels").addEventListener("click", () => {
+          playSoundClick();
+          closeAllModals();
+        });
+
+        document.getElementById("btn-victory-replay").addEventListener("click", () => {
+          playSoundClick();
+          loadLevel(0);
+        });
+
+        document.getElementById("btn-victory-levels").addEventListener("click", () => {
+          playSoundClick();
+          renderLevelsGrid();
+          openModal("modal-levels");
+        });
+
+        /* ==========================================================
+           12. INITIALIZATION
+           ========================================================== */
+        window.addEventListener("DOMContentLoaded", () => {
+          resizeCanvas();
+          loadLevel(0);
+
+          if (!gameState.hasSeenTutorial) {
+            setTimeout(() => {
+              openModal("modal-tutorial");
+            }, 350);
+          }
+
+          requestAnimationFrame(render);
+        });
+
+        // User gesture listener to unlock Web Audio & start background ambiance immediately
+        const unlockAudio = () => {
+          try {
+            getAudioContext();
+          } catch(e) {}
+        };
+        window.addEventListener("pointerdown", unlockAudio, { passive: true });
+        window.addEventListener("touchstart", unlockAudio, { passive: true });
+        window.addEventListener("mousedown", unlockAudio, { passive: true });
+        window.addEventListener("keydown", unlockAudio, { passive: true });
+
+        // Backup immediate invocation in case DOMContentLoaded already fired
+        resizeCanvas();
+        loadLevel(0);
+        requestAnimationFrame(render);
+
+      })();
+    </script>
+  
+  <!-- PWA Service Worker Registration -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js').catch(() => {});
+      });
+    }
+  </script>
+
+
+  <!-- 5-Second Hint Ad Modal System -->
+  <div id="fl-hint-modal-overlay" style="
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 999999;
+    background: rgba(10, 15, 30, 0.85);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    align-items: center;
+    justify-content: center;
+    font-family: system-ui, -apple-system, sans-serif;
+    padding: 16px;
+    box-sizing: border-box;
+  ">
+    <div style="
+      background: linear-gradient(145deg, #1e293b, #0f172a);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.6), 0 0 30px rgba(245, 158, 11, 0.2);
+      border-radius: 20px;
+      max-width: 420px;
+      width: 100%;
+      padding: 24px;
+      text-align: center;
+      color: #f8fafc;
+      position: relative;
+    ">
+      <button id="fl-hint-close-btn" style="
+        position: absolute;
+        top: 14px;
+        right: 14px;
+        background: rgba(255,255,255,0.08);
+        border: none;
+        color: #94a3b8;
+        font-size: 18px;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      ">✕</button>
+
+      <div style="
+        width: 56px;
+        height: 56px;
+        margin: 0 auto 14px auto;
+        background: rgba(245, 158, 11, 0.15);
+        border: 1px solid rgba(245, 158, 11, 0.3);
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 28px;
+      ">💡</div>
+
+      <h3 style="margin: 0 0 6px 0; font-size: 19px; font-weight: 800; color: #fbbf24;">Unlocking Hint</h3>
+      <p style="margin: 0 0 18px 0; font-size: 13px; color: #94a3b8; line-height: 1.4;">
+        Sponsored Reward: Wait 5 seconds to reveal your clue assistance.
+      </p>
+
+      <div id="fl-hint-ad-box" style="
+        background: rgba(0, 0, 0, 0.35);
+        border: 1px dashed rgba(255, 255, 255, 0.15);
+        border-radius: 12px;
+        padding: 16px;
+        margin-bottom: 18px;
+      ">
+        <div style="font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: #64748b; margin-bottom: 4px;">Advertisement</div>
+        <div style="font-size: 14px; font-weight: 600; color: #e2e8f0;">Brain Booster Puzzles</div>
+        <div style="font-size: 11px; color: #38bdf8; margin-top: 2px;">play.funlogic.games</div>
+      </div>
+
+      <div style="margin-bottom: 16px;">
+        <div style="display: flex; justify-content: space-between; font-size: 12px; font-weight: 700; margin-bottom: 6px;">
+          <span style="color: #94a3b8;">Sponsor Video</span>
+          <span id="fl-hint-timer-txt" style="color: #f59e0b;">5s</span>
+        </div>
+        <div style="width: 100%; height: 8px; background: rgba(255,255,255,0.1); border-radius: 4px; overflow: hidden;">
+          <div id="fl-hint-progress-bar" style="width: 0%; height: 100%; background: linear-gradient(90deg, #f59e0b, #10b981); transition: width 0.1s linear;"></div>
+        </div>
+      </div>
+
+      <button id="fl-hint-claim-btn" disabled style="
+        width: 100%;
+        padding: 12px;
+        border-radius: 12px;
+        border: none;
+        background: #334155;
+        color: #64748b;
+        font-weight: 700;
+        font-size: 14px;
+        cursor: not-allowed;
+        transition: all 0.2s;
+      ">Please wait 5s...</button>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      let countdownTimer = null;
+      let originalHintCallback = null;
+
+      const overlay = document.getElementById('fl-hint-modal-overlay');
+      const timerTxt = document.getElementById('fl-hint-timer-txt');
+      const progressBar = document.getElementById('fl-hint-progress-bar');
+      const claimBtn = document.getElementById('fl-hint-claim-btn');
+      const closeBtn = document.getElementById('fl-hint-close-btn');
+
+      function showHintAdModal(callback) {
+        if (!overlay) return;
+        originalHintCallback = callback;
+        overlay.style.display = 'flex';
+        
+        let timeLeft = 50; // 5.0 seconds
+        claimBtn.disabled = true;
+        claimBtn.style.background = '#334155';
+        claimBtn.style.color = '#64748b';
+        claimBtn.style.cursor = 'not-allowed';
+        claimBtn.textContent = 'Please wait 5s...';
+        progressBar.style.width = '0%';
+        timerTxt.textContent = '5s';
+
+        try {
+          if (window.parent && window.parent !== window) {
+            window.parent.postMessage({ type: 'hint_ad_started', duration: 5 }, '*');
+          }
+        } catch(e) {}
+
+        clearInterval(countdownTimer);
+        countdownTimer = setInterval(() => {
+          timeLeft--;
+          const percent = ((50 - timeLeft) / 50) * 100;
+          progressBar.style.width = percent + '%';
+          const secondsRemaining = Math.ceil(timeLeft / 10);
+          timerTxt.textContent = secondsRemaining + 's';
+          claimBtn.textContent = 'Please wait ' + secondsRemaining + 's...';
+
+          if (timeLeft <= 0) {
+            clearInterval(countdownTimer);
+            timerTxt.textContent = 'Ready!';
+            timerTxt.style.color = '#10b981';
+            claimBtn.disabled = false;
+            claimBtn.style.background = 'linear-gradient(90deg, #f59e0b, #10b981)';
+            claimBtn.style.color = '#0f172a';
+            claimBtn.style.cursor = 'pointer';
+            claimBtn.textContent = '✨ Get Hint Now';
+
+            try {
+              if (window.parent && window.parent !== window) {
+                window.parent.postMessage({ type: 'hint_ad_completed' }, '*');
+              }
+            } catch(e) {}
+          }
+        }, 100);
+      }
+
+      function closeHintModal() {
+        clearInterval(countdownTimer);
+        if (overlay) overlay.style.display = 'none';
+      }
+
+      function claimHint() {
+        closeHintModal();
+        if (typeof originalHintCallback === 'function') {
+          originalHintCallback();
+        }
+      }
+
+      if (closeBtn) closeBtn.addEventListener('click', closeHintModal);
+      if (claimBtn) claimBtn.addEventListener('click', claimHint);
+
+      window.showHintWith5sAd = showHintAdModal;
+
+      window.addEventListener('DOMContentLoaded', () => {
+        setTimeout(() => {
+          const hintSelectors = [
+            '#btn-hint', '#hint-btn', '#button-hint', '#hint',
+            '.btn-hint', '.hint-btn', '[data-action="hint"]',
+            'button[title*="Hint" i]', 'button[aria-label*="Hint" i]'
+          ];
+
+          hintSelectors.forEach(selector => {
+            document.querySelectorAll(selector).forEach(btn => {
+              if (!btn.getAttribute('data-fl-hooked')) {
+                btn.setAttribute('data-fl-hooked', 'true');
+                btn.addEventListener('click', function(e) {
+                  if (!this.hasAttribute('data-hint-approved')) {
+                    e.stopImmediatePropagation();
+                    e.preventDefault();
+                    showHintAdModal(() => {
+                      this.setAttribute('data-hint-approved', 'true');
+                      this.click();
+                      setTimeout(() => this.removeAttribute('data-hint-approved'), 500);
+                    });
+                  }
+                }, true);
+              }
+            });
+          });
+        }, 300);
+      });
+    })();
+  </script>
+
+</body>
+</html>

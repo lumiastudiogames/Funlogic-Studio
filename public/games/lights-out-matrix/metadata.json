@@ -1,0 +1,6 @@
+{
+  "name": "Lights Out Matrix",
+  "description": "Jogo de lógica e luzes em matriz. Toque nas lâmpadas para alternar o seu estado e dos vizinhos até acender todas as luzes. Construído em Vanilla JS, CSS 3D e Canvas.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

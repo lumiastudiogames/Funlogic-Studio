@@ -1,0 +1,18 @@
+{
+  "name": "The Hound of Dartmoor Moor",
+  "short_name": "The Hound of",
+  "description": "Step into Victorian England as Sherlock Holmes and Dr. Watson investigate supernatural sightings across Dartmoor. Use deductive reasoning to catalog footprints, phosphorescent chemicals, and abandoned walking canes.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0f172a",
+  "theme_color": "#0f172a",
+  "icons": [
+    {
+      "src": "./cover.svg",
+      "sizes": "800x600",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

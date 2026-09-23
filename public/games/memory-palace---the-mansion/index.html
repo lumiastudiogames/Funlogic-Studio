@@ -1,0 +1,2490 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    <title>Memory Palace - The Mansion</title>
+    <meta name="description" content="Master the Method of Loci by memorizing and restoring mystical relics to their rightful rooms in the grand mansion." />
+    <meta property="og:title" content="Memory Palace - The Mansion" />
+    <meta property="og:description" content="Master the Method of Loci by memorizing and restoring mystical relics to their rightful rooms in the grand mansion." />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <style>
+      :root {
+        --c-bg: #140a26;
+        --c-surface: #22123d;
+        --c-surface-card: #321957;
+        --c-accent: #f59e0b;
+        --c-accent-light: #fde047;
+        --c-accent-dark: #b45309;
+        --c-text: #f8fafc;
+        --c-text-muted: #cbd5e1;
+        --c-border: #0c041a;
+        --c-success: #10b981;
+        --c-error: #ef4444;
+        --font-main: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        user-select: none;
+        -webkit-user-select: none;
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      html, body {
+        width: 100vw;
+        height: 100vh;
+        height: 100dvh;
+        overflow: hidden;
+        background-color: var(--c-bg);
+        color: var(--c-text);
+        font-family: var(--font-main);
+        touch-action: none;
+      }
+
+      #game-app {
+        position: relative;
+        width: 100vw;
+        height: 100vh;
+        height: 100dvh;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        background: radial-gradient(circle at 50% 20%, #351759 0%, #120724 100%);
+      }
+
+      /* Top HUD Navigation */
+      .top-nav {
+        height: 44px;
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 3px 10px;
+        background: rgba(18, 8, 30, 0.96);
+        border-bottom: 2px solid var(--c-border);
+        z-index: 50;
+      }
+
+      .nav-left, .nav-right {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .nav-title {
+        font-weight: 900;
+        font-size: 0.88rem;
+        color: var(--c-accent-light);
+        text-shadow: 1px 1px 0 #000;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .icon-btn {
+        width: 34px;
+        height: 34px;
+        min-width: 34px;
+        min-height: 34px;
+        border-radius: 10px;
+        border: 2px solid var(--c-border);
+        background: #391d64;
+        color: #f8fafc;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1rem;
+        cursor: pointer;
+        box-shadow: 0 3px 0 var(--c-border);
+        transition: transform 0.1s ease, background 0.15s ease;
+      }
+
+      .icon-btn:active {
+        transform: translateY(2px);
+        box-shadow: 0 1px 0 var(--c-border);
+      }
+
+      .badge-info {
+        background: #4c1d95;
+        border: 2px solid var(--c-border);
+        padding: 2px 8px;
+        border-radius: 14px;
+        font-size: 0.7rem;
+        font-weight: 800;
+        color: #e9d5ff;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        box-shadow: 0 2px 0 var(--c-border);
+      }
+
+      /* Screen Manager */
+      .screen-view {
+        position: absolute;
+        top: 44px;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        width: 100%;
+        height: calc(100% - 44px);
+        display: none;
+        flex-direction: column;
+        padding: 6px;
+        overflow: hidden;
+      }
+
+      .screen-view.active {
+        display: flex;
+      }
+
+      /* ==================== SCREEN 1: INTRO ==================== */
+      #screen-intro {
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 10px;
+        overflow-y: auto;
+      }
+
+      .intro-card {
+        width: 100%;
+        max-width: 480px;
+        max-height: 95%;
+        overflow-y: auto;
+        background: #271345;
+        border: 3px solid var(--c-border);
+        border-radius: 20px;
+        padding: 14px;
+        box-shadow: 0 8px 0 var(--c-border), 0 16px 24px rgba(0,0,0,0.5);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .intro-badge {
+        background: var(--c-accent);
+        color: #1a0b2e;
+        font-size: 0.72rem;
+        font-weight: 900;
+        padding: 3px 10px;
+        border-radius: 10px;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+        box-shadow: 0 2px 0 var(--c-accent-dark);
+      }
+
+      .intro-title {
+        font-size: 1.4rem;
+        font-weight: 900;
+        color: #fff;
+        line-height: 1.15;
+      }
+
+      .intro-title span {
+        color: var(--c-accent-light);
+      }
+
+      .intro-desc {
+        font-size: 0.8rem;
+        color: #e2e8f0;
+        line-height: 1.4;
+        background: rgba(14, 6, 26, 0.6);
+        padding: 8px 10px;
+        border-radius: 12px;
+        border: 1px solid rgba(255,255,255,0.08);
+      }
+
+      /* Options Box */
+      .options-section {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        background: rgba(18, 8, 32, 0.7);
+        border: 2px solid var(--c-border);
+        border-radius: 14px;
+        padding: 8px;
+      }
+
+      .option-group-title {
+        font-size: 0.72rem;
+        font-weight: 900;
+        color: var(--c-accent-light);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        text-align: left;
+      }
+
+      .mode-pills {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 6px;
+        width: 100%;
+      }
+
+      .mode-btn {
+        background: #391d64;
+        border: 2px solid var(--c-border);
+        border-radius: 10px;
+        padding: 6px 3px;
+        color: #e2e8f0;
+        font-size: 0.72rem;
+        font-weight: 800;
+        cursor: pointer;
+        box-shadow: 0 3px 0 var(--c-border);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 2px;
+        transition: all 0.15s;
+      }
+
+      .mode-btn.active {
+        background: #f59e0b;
+        color: #1a0b2e;
+        border-color: #92400e;
+        box-shadow: 0 3px 0 #78350f, 0 0 10px rgba(245, 158, 11, 0.5);
+      }
+
+      .mode-btn .sub {
+        font-size: 0.6rem;
+        opacity: 0.85;
+      }
+
+      .time-pills {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 6px;
+        width: 100%;
+      }
+
+      .time-btn {
+        background: #391d64;
+        border: 2px solid var(--c-border);
+        border-radius: 10px;
+        padding: 6px 3px;
+        color: #e2e8f0;
+        font-size: 0.7rem;
+        font-weight: 800;
+        cursor: pointer;
+        box-shadow: 0 2px 0 var(--c-border);
+        transition: all 0.15s;
+      }
+
+      .time-btn.active {
+        background: #10b981;
+        color: #064e3b;
+        border-color: #047857;
+        box-shadow: 0 2px 0 #065f46;
+      }
+
+      .big-btn {
+        min-height: 44px;
+        width: 100%;
+        padding: 8px 20px;
+        border-radius: 14px;
+        border: 3px solid var(--c-border);
+        background: var(--c-accent);
+        color: #190930;
+        font-size: 1rem;
+        font-weight: 900;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        box-shadow: 0 4px 0 var(--c-accent-dark), 0 6px 14px rgba(0,0,0,0.4);
+        transition: transform 0.1s, box-shadow 0.1s;
+      }
+
+      .big-btn:active {
+        transform: translateY(2px);
+        box-shadow: 0 2px 0 var(--c-accent-dark);
+      }
+
+      /* ==================== SCREEN 2: MEMORIZATION ==================== */
+      #screen-memo {
+        align-items: center;
+        justify-content: space-between;
+        padding: 6px;
+        gap: 6px;
+      }
+
+      .memo-header {
+        width: 100%;
+        max-width: 650px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: rgba(26, 12, 44, 0.94);
+        border: 2px solid var(--c-border);
+        border-radius: 12px;
+        padding: 6px 10px;
+        box-shadow: 0 2px 0 var(--c-border);
+      }
+
+      .memo-room-title {
+        font-size: 0.9rem;
+        font-weight: 900;
+        color: var(--c-accent-light);
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .memo-timer-pill {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        background: #ef4444;
+        color: #fff;
+        padding: 3px 8px;
+        border-radius: 10px;
+        font-weight: 900;
+        font-size: 0.82rem;
+        border: 2px solid #7f1d1d;
+        box-shadow: 0 2px 0 #7f1d1d;
+      }
+
+      .memo-timer-pill.free {
+        background: #10b981;
+        border-color: #065f46;
+        box-shadow: 0 2px 0 #065f46;
+      }
+
+      .memo-progress-track {
+        width: 100%;
+        max-width: 650px;
+        height: 6px;
+        background: var(--c-border);
+        border-radius: 6px;
+        overflow: hidden;
+      }
+
+      .memo-progress-bar {
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, #f59e0b, #ef4444);
+        transition: width 0.1s linear;
+      }
+
+      .memo-stage {
+        flex: 1;
+        width: 100%;
+        max-width: 650px;
+        min-height: 0;
+        background: #2b144d;
+        border: 3px solid var(--c-border);
+        border-radius: 16px;
+        box-shadow: 0 5px 0 var(--c-border);
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        padding: 8px;
+        overflow: hidden;
+      }
+
+      .memo-items-grid {
+        position: relative;
+        z-index: 2;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        gap: clamp(6px, 2.5vw, 14px);
+      }
+
+      .memo-item-card {
+        flex: 1;
+        max-width: 180px;
+        height: 90%;
+        max-height: 250px;
+        background: #391d64;
+        border: 3px solid var(--c-border);
+        border-radius: 16px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 6px 4px;
+        gap: 6px;
+        box-shadow: 0 5px 0 var(--c-border);
+        animation: cardPop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+      }
+
+      @keyframes cardPop {
+        0% { transform: scale(0.6) translateY(20px); opacity: 0; }
+        100% { transform: scale(1) translateY(0); opacity: 1; }
+      }
+
+      .memo-item-icon {
+        width: clamp(52px, 15vw, 84px);
+        height: clamp(52px, 15vw, 84px);
+        border-radius: 16px;
+        background: #4c2288;
+        border: 2px solid var(--c-border);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: clamp(2rem, 6.5vw, 3.2rem);
+        box-shadow: 0 3px 0 var(--c-border);
+      }
+
+      .memo-item-name {
+        font-size: clamp(0.72rem, 2.2vw, 0.9rem);
+        font-weight: 800;
+        color: var(--c-accent-light);
+        text-align: center;
+        line-height: 1.15;
+        word-break: break-word;
+        padding: 0 2px;
+      }
+
+      .memo-skip-btn {
+        align-self: center;
+        min-height: 40px;
+        padding: 6px 20px;
+        background: #4c1d95;
+        border: 2px solid var(--c-border);
+        color: #f1f5f9;
+        font-weight: 800;
+        font-size: 0.9rem;
+        border-radius: 12px;
+        cursor: pointer;
+        box-shadow: 0 3px 0 var(--c-border);
+      }
+
+      .memo-skip-btn:active {
+        transform: translateY(2px);
+        box-shadow: 0 1px 0 var(--c-border);
+      }
+
+      /* ==================== SCREEN 3: RECALL & RESTORATION ==================== */
+      #screen-recall {
+        gap: 6px;
+        padding: 6px;
+      }
+
+      /* Unified Top Bar: Stats & Hints on One Line */
+      .recall-top-bar {
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 6px;
+        width: 100%;
+      }
+
+      .recall-stats {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        background: rgba(26, 12, 44, 0.94);
+        border: 2px solid var(--c-border);
+        border-radius: 12px;
+        padding: 3px 8px;
+        font-size: 0.75rem;
+        font-weight: 800;
+        box-shadow: 0 2px 0 var(--c-border);
+        white-space: nowrap;
+      }
+
+      .stat-tag {
+        background: #4c1d95;
+        border: 1px solid var(--c-border);
+        padding: 2px 6px;
+        border-radius: 6px;
+        color: var(--c-accent-light);
+        font-weight: 900;
+      }
+
+      .action-hint {
+        flex: 1;
+        min-width: 0;
+        background: #4c1d95;
+        border: 2px solid var(--c-border);
+        border-radius: 12px;
+        padding: 3px 8px;
+        font-size: 0.74rem;
+        font-weight: 800;
+        color: #fef08a;
+        text-align: center;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        box-shadow: 0 2px 0 var(--c-border);
+      }
+
+      .action-hint.has-selection {
+        background: #b45309;
+        color: #fff;
+        animation: pulseHint 1.2s infinite ease-in-out;
+      }
+
+      @keyframes pulseHint {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.02); }
+      }
+
+      /* Recall Workspace Container */
+      .recall-workspace {
+        flex: 1;
+        min-height: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        width: 100%;
+      }
+
+      /* Mansion Grid Container */
+      .mansion-grid {
+        flex: 1;
+        min-height: 0;
+        min-width: 0;
+        display: grid;
+        gap: 6px;
+        width: 100%;
+      }
+
+      /* Portrait: 6 Rooms (2x3) */
+      .mansion-grid.layout-6rooms {
+        grid-template-columns: repeat(2, 1fr);
+        grid-template-rows: repeat(3, 1fr);
+      }
+
+      /* Portrait: 3 Rooms (3 rows) */
+      .mansion-grid.layout-3rooms {
+        grid-template-columns: 1fr;
+        grid-template-rows: repeat(3, 1fr);
+      }
+
+      /* Portrait: Single Room (1 giant card) */
+      .mansion-grid.layout-single {
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr;
+      }
+
+      /* Room Card */
+      .room-card {
+        background: #271246;
+        border: 2px solid var(--c-border);
+        border-radius: 14px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 5px 6px;
+        position: relative;
+        box-shadow: 0 3px 0 var(--c-border);
+        transition: transform 0.15s, border-color 0.15s, background-color 0.15s;
+        cursor: pointer;
+        overflow: hidden;
+      }
+
+      .room-card.drop-hover {
+        background: #4a2185 !important;
+        border-color: #fde047 !important;
+        transform: scale(1.02);
+        box-shadow: 0 0 14px rgba(253, 224, 71, 0.7);
+      }
+
+      .room-card.completed {
+        background: #133a2e;
+        border-color: #10b981;
+      }
+
+      .room-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 4px;
+        z-index: 2;
+        flex-shrink: 0;
+      }
+
+      .room-name-wrap {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        min-width: 0;
+      }
+
+      .room-icon-mini {
+        font-size: 1.1rem;
+        flex-shrink: 0;
+      }
+
+      .room-label {
+        font-size: 0.78rem;
+        font-weight: 800;
+        color: #fff;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .room-counter {
+        font-size: 0.7rem;
+        font-weight: 800;
+        background: #0e051d;
+        color: var(--c-accent-light);
+        padding: 1px 5px;
+        border-radius: 6px;
+        flex-shrink: 0;
+      }
+
+      .room-slots {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        flex: 1;
+        z-index: 2;
+        width: 100%;
+        min-height: 0;
+      }
+
+      .room-slot {
+        width: clamp(38px, 10vw, 56px);
+        height: clamp(38px, 10vw, 56px);
+        border-radius: 10px;
+        border: 2px dashed rgba(255,255,255,0.3);
+        background: rgba(14, 5, 29, 0.55);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        font-size: clamp(1.3rem, 3.8vw, 1.8rem);
+        transition: all 0.2s;
+        position: relative;
+      }
+
+      .room-slot.filled {
+        border-style: solid;
+        border-color: var(--c-accent);
+        background: #4c1d95;
+        box-shadow: 0 2px 0 var(--c-border);
+        animation: popSlot 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+
+      @keyframes popSlot {
+        0% { transform: scale(0.4); }
+        100% { transform: scale(1); }
+      }
+
+      /* Special Large Single Room Layout */
+      .mansion-grid.layout-single .room-card {
+        padding: 10px;
+        border-radius: 18px;
+        border-width: 3px;
+        box-shadow: 0 5px 0 var(--c-border);
+      }
+
+      .mansion-grid.layout-single .room-icon-mini {
+        font-size: 1.4rem;
+      }
+
+      .mansion-grid.layout-single .room-label {
+        font-size: 1rem;
+      }
+
+      .mansion-grid.layout-single .room-counter {
+        font-size: 0.85rem;
+        padding: 3px 8px;
+      }
+
+      .mansion-grid.layout-single .room-slots {
+        gap: clamp(10px, 3.5vw, 20px);
+      }
+
+      .mansion-grid.layout-single .room-slot {
+        width: clamp(76px, 22vw, 120px);
+        height: clamp(86px, 24vw, 135px);
+        border-radius: 14px;
+        border-width: 3px;
+        font-size: clamp(2.2rem, 6.5vw, 3.2rem);
+        box-shadow: 0 4px 0 rgba(0,0,0,0.3);
+      }
+
+      .mansion-grid.layout-single .room-slot::after {
+        content: "Pedestal";
+        position: absolute;
+        bottom: 3px;
+        font-size: 0.6rem;
+        font-weight: 800;
+        color: rgba(255,255,255,0.4);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      .mansion-grid.layout-single .room-slot.filled::after {
+        display: none;
+      }
+
+      .room-complete-badge {
+        position: absolute;
+        inset: 0;
+        background: rgba(16, 185, 129, 0.92);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        font-size: 1rem;
+        font-weight: 900;
+        color: #fff;
+        z-index: 5;
+        letter-spacing: 0.5px;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.4);
+      }
+
+      .room-card.completed .room-complete-badge {
+        display: flex;
+      }
+
+      /* Items Dock / Tray Container */
+      .items-tray-container {
+        height: clamp(96px, 17vh, 120px);
+        flex-shrink: 0;
+        background: rgba(18, 8, 30, 0.98);
+        border: 2px solid var(--c-border);
+        border-radius: 14px;
+        padding: 4px 6px;
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+        box-shadow: 0 3px 0 var(--c-border);
+      }
+
+      .tray-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-size: 0.7rem;
+        font-weight: 800;
+        color: #cbd5e1;
+        padding: 0 4px;
+      }
+
+      .items-scroll {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        gap: 8px;
+        overflow-x: auto;
+        overflow-y: hidden;
+        padding: 2px 2px 4px 2px;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      .items-scroll::-webkit-scrollbar {
+        height: 4px;
+        width: 4px;
+      }
+
+      .items-scroll::-webkit-scrollbar-thumb {
+        background: #4c1d95;
+        border-radius: 4px;
+      }
+
+      /* Draggable Item Card */
+      .drag-item {
+        width: clamp(74px, 20vw, 92px);
+        height: 100%;
+        min-height: 60px;
+        background: #391c64;
+        border: 2px solid var(--c-border);
+        border-radius: 12px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 3px 4px;
+        gap: 2px;
+        cursor: grab;
+        box-shadow: 0 3px 0 var(--c-border);
+        transition: transform 0.1s, box-shadow 0.1s, border-color 0.1s;
+        touch-action: none;
+        flex-shrink: 0;
+      }
+
+      .drag-item:active {
+        cursor: grabbing;
+      }
+
+      .drag-item.selected {
+        border-color: #fde047;
+        background: #5b219f;
+        transform: translateY(-3px);
+        box-shadow: 0 4px 0 var(--c-border), 0 0 12px rgba(253, 224, 71, 0.85);
+      }
+
+      .drag-item .item-icon {
+        font-size: clamp(1.4rem, 4.5vw, 1.9rem);
+        pointer-events: none;
+        line-height: 1;
+      }
+
+      .drag-item .item-label {
+        font-size: 0.66rem;
+        font-weight: 800;
+        color: #f1f5f9;
+        text-align: center;
+        line-height: 1.1;
+        max-width: 100%;
+        pointer-events: none;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+
+      /* ==================== LANDSCAPE OPTIMIZATION ==================== */
+      @media (orientation: landscape) {
+        .top-nav {
+          height: 38px;
+          padding: 2px 8px;
+        }
+
+        .screen-view {
+          top: 38px;
+          height: calc(100% - 38px);
+          padding: 4px 8px;
+        }
+
+        /* Recall Screen Split: Mansion Left, Tray Right */
+        .recall-workspace {
+          flex-direction: row;
+          align-items: stretch;
+          gap: 8px;
+        }
+
+        .mansion-grid {
+          flex: 1;
+          height: 100%;
+        }
+
+        .mansion-grid.layout-6rooms {
+          grid-template-columns: repeat(3, 1fr);
+          grid-template-rows: repeat(2, 1fr);
+        }
+
+        .mansion-grid.layout-3rooms {
+          grid-template-columns: repeat(3, 1fr);
+          grid-template-rows: 1fr;
+        }
+
+        .mansion-grid.layout-single {
+          grid-template-columns: 1fr;
+          grid-template-rows: 1fr;
+        }
+
+        /* Tray in Landscape becomes a clean vertical sidebar */
+        .items-tray-container {
+          width: clamp(160px, 24vw, 210px);
+          height: 100%;
+          flex-shrink: 0;
+          padding: 6px;
+        }
+
+        .items-scroll {
+          flex-direction: column;
+          overflow-y: auto;
+          overflow-x: hidden;
+          align-items: stretch;
+          justify-content: flex-start;
+          gap: 6px;
+        }
+
+        .items-scroll .drag-item {
+          width: 100%;
+          height: clamp(48px, 12vh, 60px);
+          min-height: 48px;
+          flex-direction: row;
+          justify-content: flex-start;
+          padding: 4px 8px;
+          gap: 8px;
+        }
+
+        .items-scroll .drag-item .item-icon {
+          font-size: 1.5rem;
+          flex-shrink: 0;
+        }
+
+        .items-scroll .drag-item .item-label {
+          font-size: 0.72rem;
+          text-align: left;
+          -webkit-line-clamp: 2;
+        }
+
+        /* Memorization stage in landscape */
+        .memo-stage {
+          max-height: calc(100% - 75px);
+        }
+        .memo-item-card {
+          max-height: 160px;
+        }
+      }
+
+      /* Floating Drag Ghost */
+      #drag-ghost {
+        position: fixed;
+        width: 72px;
+        height: 72px;
+        background: #5b219f;
+        border: 3px solid #fde047;
+        border-radius: 14px;
+        display: none;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 2px;
+        box-shadow: 0 8px 22px rgba(0,0,0,0.8);
+        pointer-events: none;
+        z-index: 9999;
+        transform: translate(-50%, -50%) scale(1.1);
+      }
+
+      #drag-ghost .ghost-icon {
+        font-size: 1.8rem;
+      }
+
+      #drag-ghost .ghost-label {
+        font-size: 0.62rem;
+        font-weight: 900;
+        color: #fff;
+        max-width: 64px;
+        text-align: center;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      /* Point Toast Notification */
+      .point-toast {
+        position: fixed;
+        font-weight: 900;
+        font-size: 1.1rem;
+        pointer-events: none;
+        z-index: 9000;
+        animation: floatUp 0.8s ease-out forwards;
+      }
+
+      @keyframes floatUp {
+        0% { transform: translateY(0) scale(0.7); opacity: 0; }
+        30% { transform: translateY(-15px) scale(1.2); opacity: 1; }
+        100% { transform: translateY(-45px) scale(1); opacity: 0; }
+      }
+
+      /* Modal Dialogs */
+      .modal-overlay {
+        position: absolute;
+        inset: 0;
+        background: rgba(14, 6, 25, 0.88);
+        backdrop-filter: blur(4px);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 100;
+        padding: 12px;
+      }
+
+      .modal-overlay.active {
+        display: flex;
+      }
+
+      .modal-card {
+        width: 100%;
+        max-width: 420px;
+        max-height: 95vh;
+        overflow-y: auto;
+        background: #271246;
+        border: 3px solid var(--c-border);
+        border-radius: 18px;
+        padding: 16px 14px;
+        box-shadow: 0 8px 0 var(--c-border), 0 16px 26px rgba(0,0,0,0.6);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+        text-align: center;
+        animation: modalZoom 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+
+      @keyframes modalZoom {
+        0% { transform: scale(0.8); opacity: 0; }
+        100% { transform: scale(1); opacity: 1; }
+      }
+
+      .modal-title {
+        font-size: 1.25rem;
+        font-weight: 900;
+        color: var(--c-accent-light);
+      }
+
+      .modal-body {
+        font-size: 0.84rem;
+        color: #e2e8f0;
+        line-height: 1.45;
+        background: rgba(14, 5, 27, 0.6);
+        padding: 10px;
+        border-radius: 12px;
+        width: 100%;
+        text-align: left;
+      }
+
+      .star-rating {
+        display: flex;
+        gap: 4px;
+        font-size: 1.8rem;
+      }
+
+      .summary-stats {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 6px;
+        width: 100%;
+      }
+
+      .summary-box {
+        background: #391c64;
+        border: 2px solid var(--c-border);
+        border-radius: 10px;
+        padding: 6px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 2px;
+      }
+
+      .summary-box .val {
+        font-size: 1.1rem;
+        font-weight: 900;
+        color: var(--c-accent-light);
+      }
+
+      .summary-box .lbl {
+        font-size: 0.68rem;
+        color: #cbd5e1;
+        font-weight: 700;
+      }
+
+      @keyframes shakeX {
+        0%, 100% { transform: translateX(0); }
+        20%, 60% { transform: translateX(-6px); }
+        40%, 80% { transform: translateX(6px); }
+      }
+      .shake {
+        animation: shakeX 0.4s ease;
+      }
+    </style>
+  
+  <script>
+    function triggerPlatformWin(timeInSeconds) {
+      const elapsed = Math.round(timeInSeconds || 45);
+      try {
+        if (typeof window.onWin === 'function') {
+          window.onWin(elapsed);
+        }
+        if (window.parent && window.parent !== window) {
+          window.parent.postMessage({ type: 'win', time: elapsed }, '*');
+        }
+      } catch(e) { console.error('Platform win notify error:', e); }
+    }
+  </script>
+
+</head>
+  <body>
+    <div id="game-app">
+      <!-- Top Navigation HUD -->
+      <nav class="top-nav" id="top-nav">
+        <div class="nav-left">
+          <div class="nav-title" id="app-title">
+            <span>🏰</span> Memory Palace
+          </div>
+          <div class="badge-info" id="hud-phase-badge">Home</div>
+        </div>
+        <div class="nav-right">
+          <button class="icon-btn" id="btn-help" title="Rules & Tips" aria-label="Help">❓</button>
+          <button class="icon-btn" id="btn-sound" title="Toggle Sound & Music" aria-label="Audio">🔊</button>
+          <button class="icon-btn" id="btn-fullscreen" title="Fullscreen" aria-label="Fullscreen">⛶</button>
+        </div>
+      </nav>
+
+      <!-- SCREEN 1: INTRO & CONFIGURATION -->
+      <section class="screen-view active" id="screen-intro">
+        <div class="intro-card">
+          <div class="intro-badge">Method of Loci</div>
+          <h1 class="intro-title">The Grand <span>Mansion</span></h1>
+          <p class="intro-desc">
+            Train your spatial memory like ancient masters! Memorize the relics in each room, then restore each object back to its pedestal.
+          </p>
+
+          <!-- Mode & Time Selectors -->
+          <div class="options-section">
+            <div class="option-group-title">🎯 Choose Game Mode:</div>
+            <div class="mode-pills" id="mode-selector">
+              <button class="mode-btn active" data-mode="room_by_room">
+                <span>🟢 1 by 1</span>
+                <span class="sub">Room by Room</span>
+              </button>
+              <button class="mode-btn" data-mode="half_mansion">
+                <span>🟡 3 Rooms</span>
+                <span class="sub">9 Relics</span>
+              </button>
+              <button class="mode-btn" data-mode="full_mansion">
+                <span>🔴 6 Rooms</span>
+                <span class="sub">18 Relics</span>
+              </button>
+            </div>
+
+            <div class="option-group-title" style="margin-top: 4px;">⏱️ Memorization Time:</div>
+            <div class="time-pills" id="time-selector">
+              <button class="time-btn" data-time="5">⚡ 5 Seconds</button>
+              <button class="time-btn active" data-time="10">⏱️ 10 Seconds</button>
+              <button class="time-btn" data-time="0">🧘 Untimed</button>
+            </div>
+          </div>
+
+          <button class="big-btn" id="btn-start-game">
+            <span>START GAME</span> <span>✨</span>
+          </button>
+        </div>
+      </section>
+
+      <!-- SCREEN 2: MEMORIZATION STAGE -->
+      <section class="screen-view" id="screen-memo">
+        <div class="memo-header">
+          <div class="memo-room-title" id="memo-room-title">
+            <span>🚪</span> Room 1: Grand Foyer
+          </div>
+          <div class="memo-timer-pill" id="memo-timer-display">
+            <span>⏱️</span> <span id="memo-seconds">10</span>s
+          </div>
+        </div>
+
+        <div class="memo-progress-track">
+          <div class="memo-progress-bar" id="memo-progress-bar"></div>
+        </div>
+
+        <div class="memo-stage" id="memo-stage">
+          <div class="memo-items-grid" id="memo-items-grid">
+            <!-- 3 objects rendered here -->
+          </div>
+        </div>
+
+        <button class="memo-skip-btn" id="btn-skip-memo">
+          I've Memorized It! Continue ➔
+        </button>
+      </section>
+
+      <!-- SCREEN 3: RECALL & RESTORATION STAGE -->
+      <section class="screen-view" id="screen-recall">
+        <!-- Top Compact Bar -->
+        <div class="recall-top-bar">
+          <div class="recall-stats">
+            <span>Left: <strong class="stat-tag" id="recall-items-left">3</strong></span>
+            <span>Score: <strong class="stat-tag" id="recall-score">0</strong></span>
+          </div>
+          <div class="action-hint" id="action-hint">
+            💡 Tap an item, then tap its room
+          </div>
+        </div>
+
+        <!-- Recall Responsive Workspace (Mansion + Tray) -->
+        <div class="recall-workspace">
+          <!-- Mansion Rooms Grid -->
+          <div class="mansion-grid" id="mansion-grid">
+            <!-- Room Drop Zones rendered via JS -->
+          </div>
+
+          <!-- Items Tray Dock -->
+          <div class="items-tray-container">
+            <div class="tray-header">
+              <span>TRAY</span>
+              <span id="tray-counter">3 relics</span>
+            </div>
+            <div class="items-scroll" id="items-tray">
+              <!-- Draggable items rendered via JS -->
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Floating Drag Ghost -->
+      <div id="drag-ghost">
+        <span class="ghost-icon" id="ghost-icon">🎁</span>
+        <span class="ghost-label" id="ghost-label">Item</span>
+      </div>
+
+      <!-- Modal: Help / Instructions -->
+      <div class="modal-overlay" id="modal-help">
+        <div class="modal-card">
+          <h2 class="modal-title">🏰 How to Play</h2>
+          <div class="modal-body">
+            <p><strong>The Method of Loci:</strong></p>
+            <p style="margin-top: 6px;">
+              By anchoring each object to a specific location (e.g. <em>"The Ancient Spellbook is in the Royal Library"</em>), your brain creates vivid spatial memories that are easy to recall.
+            </p>
+            <p style="margin-top: 8px;">
+              • <strong>Phase 1 (Memorization):</strong> Carefully observe the 3 relics in each room.<br/>
+              • <strong>Phase 2 (Restoration):</strong> Drag each item or <strong>tap an item and then tap the matching room</strong>.<br/>
+              • <strong>Tip:</strong> If 6 rooms feels overwhelming, try <strong>Room by Room</strong> mode for a focused learning experience!
+            </p>
+          </div>
+          <button class="big-btn" id="btn-close-help" style="min-height: 40px; font-size: 0.95rem;">
+            GOT IT!
+          </button>
+        </div>
+      </div>
+
+      <!-- Modal: Round / Game Victory -->
+      <div class="modal-overlay" id="modal-victory">
+        <div class="modal-card">
+          <div class="star-rating" id="victory-stars">⭐⭐⭐</div>
+          <h2 class="modal-title" id="victory-title">Room Restored!</h2>
+          <div class="modal-body" id="victory-desc">
+            Outstanding memory!
+          </div>
+          <div class="summary-stats">
+            <div class="summary-box">
+              <span class="val" id="sum-score">300</span>
+              <span class="lbl">SCORE</span>
+            </div>
+            <div class="summary-box">
+              <span class="val" id="sum-accuracy">100%</span>
+              <span class="lbl">ACCURACY</span>
+            </div>
+            <div class="summary-box">
+              <span class="val" id="sum-mistakes">0</span>
+              <span class="lbl">MISTAKES</span>
+            </div>
+            <div class="summary-box">
+              <span class="val" id="sum-time">12s</span>
+              <span class="lbl">TIME</span>
+            </div>
+          </div>
+          <button class="big-btn" id="btn-victory-action">
+            <span id="btn-victory-label">NEXT ROOM</span> <span>➔</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        'use strict';
+
+        /* --- Audio Synthesizer with Ambient Music Engine --- */
+        class SoundFX {
+          constructor() {
+            this.ctx = null;
+            this.masterGain = null;
+            this.bgmGain = null;
+            this.sfxGain = null;
+            this.muted = false;
+            this.bgmPlaying = false;
+            this.bgmTimer = null;
+            this.bgmStep = 0;
+            this.filterNode = null;
+            this.delayNode = null;
+            this.delayFeedback = null;
+          }
+
+          init() {
+            if (!this.ctx) {
+              const AudioCtx = window.AudioContext || window.webkitAudioContext;
+              if (AudioCtx) {
+                this.ctx = new AudioCtx();
+
+                // Master Gain
+                this.masterGain = this.ctx.createGain();
+                this.masterGain.gain.setValueAtTime(this.muted ? 0 : 1, this.ctx.currentTime);
+                this.masterGain.connect(this.ctx.destination);
+
+                // SFX Gain
+                this.sfxGain = this.ctx.createGain();
+                this.sfxGain.gain.setValueAtTime(0.8, this.ctx.currentTime);
+                this.sfxGain.connect(this.masterGain);
+
+                // BGM Gain
+                this.bgmGain = this.ctx.createGain();
+                this.bgmGain.gain.setValueAtTime(0.25, this.ctx.currentTime);
+
+                // BGM Lowpass Filter for warm soothing atmosphere
+                this.filterNode = this.ctx.createBiquadFilter();
+                this.filterNode.type = 'lowpass';
+                this.filterNode.frequency.setValueAtTime(1100, this.ctx.currentTime);
+                this.filterNode.Q.setValueAtTime(1.5, this.ctx.currentTime);
+
+                // Ambient Delay Effect
+                this.delayNode = this.ctx.createDelay();
+                this.delayNode.delayTime.setValueAtTime(0.38, this.ctx.currentTime);
+                this.delayFeedback = this.ctx.createGain();
+                this.delayFeedback.gain.setValueAtTime(0.28, this.ctx.currentTime);
+
+                this.delayNode.connect(this.delayFeedback);
+                this.delayFeedback.connect(this.delayNode);
+                this.delayNode.connect(this.filterNode);
+
+                this.filterNode.connect(this.bgmGain);
+                this.bgmGain.connect(this.masterGain);
+              }
+            }
+            if (this.ctx && this.ctx.state === 'suspended') {
+              this.ctx.resume();
+            }
+            if (!this.bgmPlaying && !this.muted) {
+              this.startBGM();
+            }
+          }
+
+          toggleMute() {
+            this.muted = !this.muted;
+            if (this.masterGain && this.ctx) {
+              this.masterGain.gain.setValueAtTime(this.muted ? 0 : 1, this.ctx.currentTime);
+            }
+            if (!this.muted && !this.bgmPlaying) {
+              this.init();
+              this.startBGM();
+            }
+            return this.muted;
+          }
+
+          startBGM() {
+            if (this.bgmPlaying || !this.ctx) return;
+            this.bgmPlaying = true;
+            this.bgmStep = 0;
+
+            // Mystical Dream progression chords in C minor / Ab / Eb / G:
+            const chords = [
+              // C minor 9
+              [130.81, 196.00, 246.94, 311.13, 392.00], // C3, G3, B3, Eb4, G4
+              // Ab major 7
+              [103.83, 164.81, 207.65, 261.63, 329.63], // Ab2, E3, Ab3, C4, E4
+              // Eb major add9
+              [155.56, 233.08, 311.13, 349.23, 466.16], // Eb3, Bb3, Eb4, F4, Bb4
+              // G sus4 to G maj
+              [98.00, 146.83, 196.00, 261.63, 392.00]   // G2, D3, G3, C4, G4
+            ];
+
+            const arpeggioNotes = [
+              [523.25, 622.25, 783.99, 932.33, 1046.50, 783.99],
+              [415.30, 523.25, 659.25, 830.61, 987.77, 659.25],
+              [622.25, 698.46, 932.33, 1046.50, 1244.51, 932.33],
+              [392.00, 523.25, 587.33, 783.99, 987.77, 587.33]
+            ];
+
+            let chordIndex = 0;
+            let arpStep = 0;
+
+            const playAtmosphereLoop = () => {
+              if (!this.bgmPlaying || this.muted || !this.ctx) return;
+              const now = this.ctx.currentTime;
+
+              // Play soft sustained chord pad every 4 seconds
+              if (arpStep === 0) {
+                const currentChord = chords[chordIndex];
+                currentChord.forEach((freq, idx) => {
+                  try {
+                    const osc = this.ctx.createOscillator();
+                    const gain = this.ctx.createGain();
+                    osc.type = idx === 0 ? 'sine' : 'triangle';
+                    osc.frequency.setValueAtTime(freq, now);
+
+                    // Gentle swell and decay
+                    gain.gain.setValueAtTime(0.0001, now);
+                    gain.gain.linearRampToValueAtTime(0.045 / (idx + 1), now + 1.2);
+                    gain.gain.exponentialRampToValueAtTime(0.0001, now + 3.9);
+
+                    osc.connect(gain);
+                    gain.connect(this.filterNode);
+
+                    osc.start(now);
+                    osc.stop(now + 4.0);
+                  } catch (e) {}
+                });
+              }
+
+              // Play ethereal arpeggio bell/chime note
+              const arpPattern = arpeggioNotes[chordIndex];
+              const noteFreq = arpPattern[arpStep % arpPattern.length];
+              if (noteFreq) {
+                try {
+                  const osc = this.ctx.createOscillator();
+                  const gain = this.ctx.createGain();
+                  osc.type = 'sine';
+                  osc.frequency.setValueAtTime(noteFreq, now);
+
+                  gain.gain.setValueAtTime(0.0001, now);
+                  gain.gain.linearRampToValueAtTime(0.035, now + 0.04);
+                  gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.75);
+
+                  osc.connect(gain);
+                  gain.connect(this.delayNode);
+                  gain.connect(this.filterNode);
+
+                  osc.start(now);
+                  osc.stop(now + 0.8);
+                } catch (e) {}
+              }
+
+              arpStep++;
+              if (arpStep >= 8) {
+                arpStep = 0;
+                chordIndex = (chordIndex + 1) % chords.length;
+              }
+            };
+
+            this.bgmTimer = setInterval(playAtmosphereLoop, 500);
+            playAtmosphereLoop();
+          }
+
+          playTone(freq, type = 'sine', duration = 0.15, gainVal = 0.1) {
+            if (this.muted) return;
+            this.init();
+            if (!this.ctx || !this.sfxGain) return;
+            try {
+              const osc = this.ctx.createOscillator();
+              const gain = this.ctx.createGain();
+              osc.type = type;
+              osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
+              gain.gain.setValueAtTime(gainVal, this.ctx.currentTime);
+              gain.gain.exponentialRampToValueAtTime(0.0001, this.ctx.currentTime + duration);
+              osc.connect(gain);
+              gain.connect(this.sfxGain);
+              osc.start();
+              osc.stop(this.ctx.currentTime + duration);
+            } catch (e) {}
+          }
+
+          click() { this.playTone(600, 'triangle', 0.08, 0.08); }
+          tick() { this.playTone(880, 'sine', 0.05, 0.06); }
+
+          whoosh() {
+            if (this.muted) return;
+            this.init();
+            if (!this.ctx || !this.sfxGain) return;
+            try {
+              const now = this.ctx.currentTime;
+              const osc = this.ctx.createOscillator();
+              const gain = this.ctx.createGain();
+              osc.type = 'sine';
+              osc.frequency.setValueAtTime(220, now);
+              osc.frequency.exponentialRampToValueAtTime(660, now + 0.2);
+              gain.gain.setValueAtTime(0.08, now);
+              gain.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
+              osc.connect(gain);
+              gain.connect(this.sfxGain);
+              osc.start(now);
+              osc.stop(now + 0.25);
+            } catch (e) {}
+          }
+
+          correct() {
+            if (this.muted) return;
+            this.init();
+            if (!this.ctx || !this.sfxGain) return;
+            const now = this.ctx.currentTime;
+            const notes = [523.25, 659.25, 783.99, 1046.5];
+            notes.forEach((freq, idx) => {
+              const osc = this.ctx.createOscillator();
+              const gain = this.ctx.createGain();
+              osc.type = 'triangle';
+              osc.frequency.setValueAtTime(freq, now + idx * 0.06);
+              gain.gain.setValueAtTime(0.12, now + idx * 0.06);
+              gain.gain.exponentialRampToValueAtTime(0.0001, now + idx * 0.06 + 0.22);
+              osc.connect(gain);
+              gain.connect(this.sfxGain);
+              osc.start(now + idx * 0.06);
+              osc.stop(now + idx * 0.06 + 0.25);
+            });
+          }
+
+          wrong() {
+            if (this.muted) return;
+            this.init();
+            if (!this.ctx || !this.sfxGain) return;
+            const now = this.ctx.currentTime;
+            [220, 180].forEach((freq, idx) => {
+              const osc = this.ctx.createOscillator();
+              const gain = this.ctx.createGain();
+              osc.type = 'sawtooth';
+              osc.frequency.setValueAtTime(freq, now + idx * 0.1);
+              gain.gain.setValueAtTime(0.08, now + idx * 0.1);
+              gain.gain.exponentialRampToValueAtTime(0.0001, now + idx * 0.1 + 0.2);
+              osc.connect(gain);
+              gain.connect(this.sfxGain);
+              osc.start(now + idx * 0.1);
+              osc.stop(now + idx * 0.1 + 0.22);
+            });
+          }
+
+          fanfare() {
+            if (this.muted) return;
+            this.init();
+            if (!this.ctx || !this.sfxGain) return;
+            const notes = [
+              { f: 523.25, d: 0.15, t: 0 },
+              { f: 659.25, d: 0.15, t: 0.15 },
+              { f: 783.99, d: 0.15, t: 0.3 },
+              { f: 1046.5, d: 0.45, t: 0.45 }
+            ];
+            const now = this.ctx.currentTime;
+            notes.forEach(n => {
+              const osc = this.ctx.createOscillator();
+              const gain = this.ctx.createGain();
+              osc.type = 'triangle';
+              osc.frequency.setValueAtTime(n.f, now + n.t);
+              gain.gain.setValueAtTime(0.15, now + n.t);
+              gain.gain.exponentialRampToValueAtTime(0.001, now + n.t + n.d);
+              osc.connect(gain);
+              gain.connect(this.sfxGain);
+              osc.start(now + n.t);
+              osc.stop(now + n.t + n.d + 0.05);
+            });
+          }
+        }
+
+        const sound = new SoundFX();
+
+        /* --- Mansion Rooms Data in English --- */
+        const ALL_ROOMS = [
+          {
+            id: 'foyer',
+            name: 'Grand Foyer',
+            icon: '🕰️',
+            color: '#3d1b64',
+            items: [
+              { id: 'foyer_clock', name: 'Grandfather Clock', icon: '🕰️' },
+              { id: 'foyer_mirror', name: 'Baroque Mirror', icon: '🪞' },
+              { id: 'foyer_umbrella', name: 'Silk Umbrella', icon: '🌂' }
+            ]
+          },
+          {
+            id: 'library',
+            name: 'Royal Library',
+            icon: '📚',
+            color: '#261746',
+            items: [
+              { id: 'lib_spellbook', name: 'Ancient Spellbook', icon: '📖' },
+              { id: 'lib_globe', name: 'Brass Globe', icon: '🌍' },
+              { id: 'lib_owl', name: 'Stone Owl', icon: '🦉' }
+            ]
+          },
+          {
+            id: 'kitchen',
+            name: 'Gourmet Kitchen',
+            icon: '🍳',
+            color: '#381a32',
+            items: [
+              { id: 'kitch_honey', name: 'Jar of Honey', icon: '🍯' },
+              { id: 'kitch_pin', name: 'Rolling Pin', icon: '🥖' },
+              { id: 'kitch_cheese', name: 'Swiss Cheese', icon: '🧀' }
+            ]
+          },
+          {
+            id: 'bedroom',
+            name: 'Master Bedroom',
+            icon: '🛏️',
+            color: '#162846',
+            items: [
+              { id: 'bed_bear', name: 'Vintage Teddy', icon: '🧸' },
+              { id: 'bed_music', name: 'Music Box', icon: '🎶' },
+              { id: 'bed_crown', name: 'Imperial Crown', icon: '👑' }
+            ]
+          },
+          {
+            id: 'laboratory',
+            name: 'Alchemist Lab',
+            icon: '🧪',
+            color: '#123330',
+            items: [
+              { id: 'lab_flask', name: 'Emerald Potion', icon: '🧪' },
+              { id: 'lab_telescope', name: 'Brass Telescope', icon: '🔭' },
+              { id: 'lab_plasma', name: 'Plasma Orb', icon: '⚡' }
+            ]
+          },
+          {
+            id: 'conservatory',
+            name: 'Glass Conservatory',
+            icon: '🌿',
+            color: '#193925',
+            items: [
+              { id: 'con_orchid', name: 'Lunar Orchid', icon: '🌺' },
+              { id: 'con_can', name: 'Golden Watering Can', icon: '🚿' },
+              { id: 'con_cage', name: 'Gilded Birdcage', icon: '🦜' }
+            ]
+          }
+        ];
+
+        /* --- Game State --- */
+        let state = {
+          gameMode: 'room_by_room',
+          memoTimeSetting: 10,
+          activeRooms: [],
+          currentRoundRoomIndex: 0,
+          memoTimeRemaining: 10,
+          memoTimerInterval: null,
+          recallStartTime: 0,
+          placedItems: {},
+          roomPlacements: {},
+          mistakes: 0,
+          score: 0,
+          selectedItemId: null,
+          remainingItems: []
+        };
+
+        /* --- DOM Elements --- */
+        const els = {
+          hudPhaseBadge: document.getElementById('hud-phase-badge'),
+          btnHelp: document.getElementById('btn-help'),
+          btnSound: document.getElementById('btn-sound'),
+          btnFullscreen: document.getElementById('btn-fullscreen'),
+          btnCloseHelp: document.getElementById('btn-close-help'),
+          btnStartGame: document.getElementById('btn-start-game'),
+          btnSkipMemo: document.getElementById('btn-skip-memo'),
+          btnVictoryAction: document.getElementById('btn-victory-action'),
+          btnVictoryLabel: document.getElementById('btn-victory-label'),
+
+          screenIntro: document.getElementById('screen-intro'),
+          screenMemo: document.getElementById('screen-memo'),
+          screenRecall: document.getElementById('screen-recall'),
+
+          memoRoomTitle: document.getElementById('memo-room-title'),
+          memoTimerDisplay: document.getElementById('memo-timer-display'),
+          memoSeconds: document.getElementById('memo-seconds'),
+          memoProgressBar: document.getElementById('memo-progress-bar'),
+          memoStage: document.getElementById('memo-stage'),
+          memoItemsGrid: document.getElementById('memo-items-grid'),
+
+          recallItemsLeft: document.getElementById('recall-items-left'),
+          recallScore: document.getElementById('recall-score'),
+          actionHint: document.getElementById('action-hint'),
+          mansionGrid: document.getElementById('mansion-grid'),
+          itemsTray: document.getElementById('items-tray'),
+          trayCounter: document.getElementById('tray-counter'),
+
+          dragGhost: document.getElementById('drag-ghost'),
+          ghostIcon: document.getElementById('ghost-icon'),
+          ghostLabel: document.getElementById('ghost-label'),
+
+          modalHelp: document.getElementById('modal-help'),
+          modalVictory: document.getElementById('modal-victory'),
+          victoryStars: document.getElementById('victory-stars'),
+          victoryTitle: document.getElementById('victory-title'),
+          victoryDesc: document.getElementById('victory-desc'),
+          sumScore: document.getElementById('sum-score'),
+          sumAccuracy: document.getElementById('sum-accuracy'),
+          sumMistakes: document.getElementById('sum-mistakes'),
+          sumTime: document.getElementById('sum-time')
+        };
+
+        /* --- Fullscreen Handler --- */
+        function toggleFullscreen() {
+          sound.click();
+          const doc = window.document;
+          const docEl = doc.documentElement;
+          const req = docEl.requestFullscreen || docEl.webkitRequestFullScreen || docEl.msRequestFullscreen;
+          const exit = doc.exitFullscreen || doc.webkitExitFullscreen || doc.msExitFullscreen;
+          const isFs = doc.fullscreenElement || doc.webkitFullscreenElement;
+
+          if (!isFs) {
+            if (req) req.call(docEl).catch(() => {});
+          } else {
+            if (exit) exit.call(doc).catch(() => {});
+          }
+        }
+
+        /* --- Mode & Time Setup --- */
+        document.querySelectorAll('.mode-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            sound.click();
+            document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            state.gameMode = btn.dataset.mode;
+          });
+        });
+
+        document.querySelectorAll('.time-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            sound.click();
+            document.querySelectorAll('.time-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            state.memoTimeSetting = parseInt(btn.dataset.time, 10);
+          });
+        });
+
+        /* --- Switch Screens --- */
+        function switchScreen(name) {
+          els.screenIntro.classList.remove('active');
+          els.screenMemo.classList.remove('active');
+          els.screenRecall.classList.remove('active');
+
+          if (name === 'intro') {
+            els.screenIntro.classList.add('active');
+            els.hudPhaseBadge.textContent = 'Home';
+          } else if (name === 'memo') {
+            els.screenMemo.classList.add('active');
+            els.hudPhaseBadge.textContent = 'Memorization';
+          } else if (name === 'recall') {
+            els.screenRecall.classList.add('active');
+            els.hudPhaseBadge.textContent = 'Restoration';
+          }
+        }
+
+        /* --- Start Game --- */
+        function startGame() {
+          sound.init();
+          sound.whoosh();
+          state.score = 0;
+          state.mistakes = 0;
+          state.currentRoundRoomIndex = 0;
+
+          if (state.gameMode === 'room_by_room') {
+            state.activeRooms = ALL_ROOMS;
+            startRoomByRoomRound(0);
+          } else if (state.gameMode === 'half_mansion') {
+            state.activeRooms = ALL_ROOMS.slice(0, 3);
+            startBatchGame(state.activeRooms);
+          } else {
+            state.activeRooms = ALL_ROOMS;
+            startBatchGame(state.activeRooms);
+          }
+        }
+
+        /* --- Flow 1: Room By Room Mode (Progressive & Focused) --- */
+        function startRoomByRoomRound(roomIndex) {
+          state.currentRoundRoomIndex = roomIndex;
+          const room = state.activeRooms[roomIndex];
+
+          state.roomPlacements = {};
+          state.roomPlacements[room.id] = [];
+          state.remainingItems = shuffleArray([...room.items.map(it => ({ ...it, targetRoomId: room.id }))]);
+
+          switchScreen('memo');
+          runMemoRoomView([room], 0, () => {
+            startRecallPhase([room]);
+          });
+        }
+
+        /* --- Flow 2: Batch Mode (3 or 6 Rooms) --- */
+        function startBatchGame(rooms) {
+          state.roomPlacements = {};
+          rooms.forEach(r => state.roomPlacements[r.id] = []);
+
+          const allItems = [];
+          rooms.forEach(r => {
+            r.items.forEach(it => {
+              allItems.push({ ...it, targetRoomId: r.id });
+            });
+          });
+          state.remainingItems = shuffleArray(allItems);
+
+          switchScreen('memo');
+          runMemoTourBatch(rooms, 0);
+        }
+
+        function runMemoTourBatch(rooms, index) {
+          if (index >= rooms.length) {
+            startRecallPhase(rooms);
+            return;
+          }
+          runMemoRoomView(rooms, index, () => {
+            runMemoTourBatch(rooms, index + 1);
+          });
+        }
+
+        /* --- Memorization Stage Viewer --- */
+        function runMemoRoomView(rooms, roomIdx, onFinish) {
+          const room = rooms[roomIdx];
+          els.memoRoomTitle.innerHTML = `<span>${room.icon}</span> Room ${roomIdx + 1}: ${room.name} (${roomIdx + 1} of ${rooms.length})`;
+          els.memoStage.style.backgroundColor = room.color;
+
+          // Render 3 Objects
+          els.memoItemsGrid.innerHTML = '';
+          room.items.forEach(item => {
+            const card = document.createElement('div');
+            card.className = 'memo-item-card';
+            card.innerHTML = `
+              <div class="memo-item-icon">${item.icon}</div>
+              <div class="memo-item-name">${item.name}</div>
+            `;
+            els.memoItemsGrid.appendChild(card);
+          });
+
+          // Skip button action
+          els.btnSkipMemo.onclick = () => {
+            if (state.memoTimerInterval) clearInterval(state.memoTimerInterval);
+            sound.click();
+            onFinish();
+          };
+
+          // Timer logic
+          if (state.memoTimerInterval) clearInterval(state.memoTimerInterval);
+
+          if (state.memoTimeSetting === 0) {
+            els.memoTimerDisplay.classList.add('free');
+            els.memoTimerDisplay.innerHTML = '<span>🧘</span> Untimed';
+            els.memoProgressBar.style.width = '100%';
+          } else {
+            els.memoTimerDisplay.classList.remove('free');
+            state.memoTimeRemaining = state.memoTimeSetting;
+            els.memoSeconds.textContent = state.memoTimeRemaining;
+
+            const totalMs = state.memoTimeSetting * 1000;
+            const intervalMs = 100;
+            let elapsedMs = 0;
+
+            state.memoTimerInterval = setInterval(() => {
+              elapsedMs += intervalMs;
+              const remainingSec = Math.max(0, Math.ceil((totalMs - elapsedMs) / 1000));
+
+              if (remainingSec !== state.memoTimeRemaining) {
+                state.memoTimeRemaining = remainingSec;
+                sound.tick();
+                els.memoSeconds.textContent = state.memoTimeRemaining;
+              }
+
+              const pct = Math.max(0, (1 - elapsedMs / totalMs) * 100);
+              els.memoProgressBar.style.width = pct + '%';
+
+              if (elapsedMs >= totalMs) {
+                clearInterval(state.memoTimerInterval);
+                sound.whoosh();
+                onFinish();
+              }
+            }, intervalMs);
+          }
+        }
+
+        /* --- Recall & Restoration Phase --- */
+        let currentActiveRooms = [];
+
+        function startRecallPhase(rooms) {
+          currentActiveRooms = rooms;
+          state.recallStartTime = Date.now();
+          state.selectedItemId = null;
+          cleanupDrag();
+
+          switchScreen('recall');
+          sound.fanfare();
+
+          renderMansionRooms(rooms);
+          renderTrayItems();
+          updateRecallHUD();
+          updateActionHint();
+        }
+
+        function renderMansionRooms(rooms) {
+          els.mansionGrid.innerHTML = '';
+          els.mansionGrid.className = 'mansion-grid';
+
+          if (rooms.length === 1) {
+            els.mansionGrid.classList.add('layout-single');
+          } else if (rooms.length === 3) {
+            els.mansionGrid.classList.add('layout-3rooms');
+          } else {
+            els.mansionGrid.classList.add('layout-6rooms');
+          }
+
+          rooms.forEach(room => {
+            const placed = state.roomPlacements[room.id] || [];
+            const isComplete = placed.length === room.items.length;
+
+            const roomEl = document.createElement('div');
+            roomEl.className = `room-card ${isComplete ? 'completed' : ''}`;
+            roomEl.dataset.roomId = room.id;
+            roomEl.id = `room-card-${room.id}`;
+
+            let slotsHtml = '';
+            for (let i = 0; i < 3; i++) {
+              if (i < placed.length) {
+                const it = placed[i];
+                slotsHtml += `<div class="room-slot filled" title="${it.name}">${it.icon}</div>`;
+              } else {
+                slotsHtml += `<div class="room-slot"></div>`;
+              }
+            }
+
+            roomEl.innerHTML = `
+              <div class="room-header">
+                <div class="room-name-wrap">
+                  <span class="room-icon-mini">${room.icon}</span>
+                  <span class="room-label">${room.name}</span>
+                </div>
+                <span class="room-counter">${placed.length}/3</span>
+              </div>
+              <div class="room-slots">${slotsHtml}</div>
+              <div class="room-complete-badge">✨ RESTORED!</div>
+            `;
+
+            // Tap-to-place on room
+            roomEl.addEventListener('click', () => {
+              if (state.selectedItemId) {
+                attemptPlaceItem(state.selectedItemId, room.id);
+              }
+            });
+
+            els.mansionGrid.appendChild(roomEl);
+          });
+        }
+
+        function renderTrayItems() {
+          els.itemsTray.innerHTML = '';
+          els.trayCounter.textContent = `${state.remainingItems.length} items`;
+
+          state.remainingItems.forEach(item => {
+            const itemEl = document.createElement('div');
+            itemEl.className = `drag-item ${state.selectedItemId === item.id ? 'selected' : ''}`;
+            itemEl.dataset.itemId = item.id;
+            itemEl.id = `drag-item-${item.id}`;
+
+            itemEl.innerHTML = `
+              <span class="item-icon">${item.icon}</span>
+              <span class="item-label">${item.name}</span>
+            `;
+
+            // Setup bulletproof Drag & Drop
+            bindDragEvents(itemEl, item);
+
+            // Tap selection
+            itemEl.addEventListener('click', (e) => {
+              e.stopPropagation();
+              sound.click();
+              if (state.selectedItemId === item.id) {
+                state.selectedItemId = null;
+              } else {
+                state.selectedItemId = item.id;
+              }
+              updateSelectionVisuals();
+              updateActionHint();
+            });
+
+            els.itemsTray.appendChild(itemEl);
+          });
+        }
+
+        function updateSelectionVisuals() {
+          const cards = els.itemsTray.querySelectorAll('.drag-item');
+          cards.forEach(c => {
+            if (c.dataset.itemId === state.selectedItemId) {
+              c.classList.add('selected');
+            } else {
+              c.classList.remove('selected');
+            }
+          });
+        }
+
+        function updateActionHint() {
+          if (state.selectedItemId) {
+            const selItem = state.remainingItems.find(i => i.id === state.selectedItemId);
+            els.actionHint.classList.add('has-selection');
+            els.actionHint.innerHTML = `👉 <strong>${selItem ? selItem.name : 'Item'}</strong> selected! Tap the correct room.`;
+          } else {
+            els.actionHint.classList.remove('has-selection');
+            els.actionHint.innerHTML = `💡 Tap an item, then tap its room`;
+          }
+        }
+
+        function updateRecallHUD() {
+          els.recallItemsLeft.textContent = `${state.remainingItems.length}`;
+          els.recallScore.textContent = `${state.score}`;
+        }
+
+        /* --- Drag & Drop Engine --- */
+        let activeDrag = null;
+
+        function cleanupDrag() {
+          els.dragGhost.style.display = 'none';
+          clearRoomHighlights();
+          activeDrag = null;
+        }
+
+        function bindDragEvents(el, item) {
+          el.addEventListener('pointerdown', (e) => {
+            if (e.button && e.button !== 0) return;
+
+            sound.click();
+            activeDrag = {
+              item: item,
+              startX: e.clientX,
+              startY: e.clientY,
+              isDragging: false,
+              pointerId: e.pointerId
+            };
+
+            function onPointerMove(moveEvent) {
+              if (!activeDrag) return;
+
+              const dx = moveEvent.clientX - activeDrag.startX;
+              const dy = moveEvent.clientY - activeDrag.startY;
+
+              if (!activeDrag.isDragging && (Math.abs(dx) > 6 || Math.abs(dy) > 6)) {
+                activeDrag.isDragging = true;
+                els.dragGhost.style.display = 'flex';
+                els.ghostIcon.textContent = item.icon;
+                els.ghostLabel.textContent = item.name;
+              }
+
+              if (activeDrag.isDragging) {
+                els.dragGhost.style.left = `${moveEvent.clientX}px`;
+                els.dragGhost.style.top = `${moveEvent.clientY}px`;
+                highlightHoveredRoom(moveEvent.clientX, moveEvent.clientY);
+              }
+            }
+
+            function onPointerUp(upEvent) {
+              window.removeEventListener('pointermove', onPointerMove);
+              window.removeEventListener('pointerup', onPointerUp);
+              window.removeEventListener('pointercancel', onPointerUp);
+
+              if (activeDrag && activeDrag.isDragging) {
+                const targetRoomId = findRoomAtPoint(upEvent.clientX, upEvent.clientY);
+                cleanupDrag();
+
+                if (targetRoomId) {
+                  attemptPlaceItem(item.id, targetRoomId, upEvent.clientX, upEvent.clientY);
+                }
+              } else {
+                cleanupDrag();
+              }
+            }
+
+            window.addEventListener('pointermove', onPointerMove);
+            window.addEventListener('pointerup', onPointerUp);
+            window.addEventListener('pointercancel', onPointerUp);
+          });
+        }
+
+        function highlightHoveredRoom(x, y) {
+          const roomId = findRoomAtPoint(x, y);
+          const roomCards = els.mansionGrid.querySelectorAll('.room-card');
+          roomCards.forEach(c => {
+            if (roomId && c.dataset.roomId === roomId) {
+              c.classList.add('drop-hover');
+            } else {
+              c.classList.remove('drop-hover');
+            }
+          });
+        }
+
+        function clearRoomHighlights() {
+          const roomCards = els.mansionGrid.querySelectorAll('.room-card');
+          roomCards.forEach(c => c.classList.remove('drop-hover'));
+        }
+
+        function findRoomAtPoint(x, y) {
+          els.dragGhost.style.display = 'none';
+          const target = document.elementFromPoint(x, y);
+          if (activeDrag && activeDrag.isDragging) {
+            els.dragGhost.style.display = 'flex';
+          }
+          if (!target) return null;
+          const roomCard = target.closest('.room-card');
+          return roomCard ? roomCard.dataset.roomId : null;
+        }
+
+        /* --- Placement Validation --- */
+        function attemptPlaceItem(itemId, targetRoomId, toastX, toastY) {
+          const itemIdx = state.remainingItems.findIndex(i => i.id === itemId);
+          if (itemIdx === -1) return;
+
+          const item = state.remainingItems[itemIdx];
+          const isCorrect = item.targetRoomId === targetRoomId;
+
+          const roomEl = document.getElementById(`room-card-${targetRoomId}`);
+          const rect = roomEl ? roomEl.getBoundingClientRect() : null;
+          const posX = toastX || (rect ? rect.left + rect.width / 2 : window.innerWidth / 2);
+          const posY = toastY || (rect ? rect.top + rect.height / 2 : window.innerHeight / 2);
+
+          if (isCorrect) {
+            // SUCCESS
+            sound.correct();
+            state.score += 100;
+            state.roomPlacements[targetRoomId].push(item);
+            state.remainingItems.splice(itemIdx, 1);
+            state.selectedItemId = null;
+
+            showPointToast(posX, posY, `+100 Correct! ✨`, '#10b981');
+
+            renderMansionRooms(currentActiveRooms);
+            renderTrayItems();
+            updateRecallHUD();
+            updateActionHint();
+
+            // Check if Round / Game Finished
+            if (state.remainingItems.length === 0) {
+              setTimeout(handleRoundOrGameVictory, 500);
+            }
+          } else {
+            // MISTAKE
+            sound.wrong();
+            state.mistakes++;
+            state.score = Math.max(0, state.score - 20);
+            state.selectedItemId = null;
+            updateSelectionVisuals();
+            updateActionHint();
+
+            if (roomEl) {
+              roomEl.classList.add('shake');
+              setTimeout(() => roomEl.classList.remove('shake'), 450);
+            }
+
+            showPointToast(posX, posY, 'Belongs to another room! ❌', '#ef4444');
+            updateRecallHUD();
+          }
+        }
+
+        /* --- Floating Toast --- */
+        function showPointToast(x, y, text, color) {
+          const toast = document.createElement('div');
+          toast.className = 'point-toast';
+          toast.style.left = `${x}px`;
+          toast.style.top = `${y}px`;
+          toast.style.color = color;
+          toast.style.textShadow = '0 2px 4px #000';
+          toast.textContent = text;
+          document.body.appendChild(toast);
+          setTimeout(() => {
+            if (toast.parentNode) toast.parentNode.removeChild(toast);
+          }, 850);
+        }
+
+        /* --- Victory & Progression --- */
+        function handleRoundOrGameVictory() {
+          sound.fanfare();
+          const elapsedSec = Math.round((Date.now() - state.recallStartTime) / 1000);
+
+          if (state.gameMode === 'room_by_room' && state.currentRoundRoomIndex + 1 < state.activeRooms.length) {
+            // Next Room in progression
+            const nextIdx = state.currentRoundRoomIndex + 1;
+            const currentRoom = state.activeRooms[state.currentRoundRoomIndex];
+
+            els.victoryStars.textContent = '⭐⭐⭐';
+            els.victoryTitle.textContent = `${currentRoom.name} Restored!`;
+            els.victoryDesc.innerHTML = `You placed all relics in this room with precision. Ready for the next room?`;
+            els.btnVictoryLabel.textContent = `GO TO ROOM ${nextIdx + 1} OF ${state.activeRooms.length}`;
+
+            els.sumScore.textContent = state.score;
+            els.sumAccuracy.textContent = '100%';
+            els.sumMistakes.textContent = state.mistakes;
+            els.sumTime.textContent = `${elapsedSec}s`;
+
+            els.btnVictoryAction.onclick = () => {
+              els.modalVictory.classList.remove('active');
+              startRoomByRoomRound(nextIdx);
+            };
+
+            els.modalVictory.classList.add('active');
+          } else {
+            // FULL PALACE RESTORED
+            let stars = '⭐⭐⭐';
+            let title = 'Mansion Fully Restored!';
+            if (state.mistakes > 4) {
+              stars = '⭐';
+              title = 'Mansion Detective!';
+            } else if (state.mistakes > 1) {
+              stars = '⭐⭐';
+              title = 'Memory Champion!';
+            }
+
+            els.victoryStars.textContent = stars;
+            els.victoryTitle.textContent = title;
+            els.victoryDesc.innerHTML = `Congratulations! You have mastered the Memory Palace and restored all mystical relics!`;
+            els.btnVictoryLabel.textContent = 'PLAY AGAIN';
+
+            els.sumScore.textContent = state.score;
+            els.sumAccuracy.textContent = `${Math.max(0, Math.round(100 - state.mistakes * 5))}%`;
+            els.sumMistakes.textContent = state.mistakes;
+            els.sumTime.textContent = `${elapsedSec}s`;
+
+            els.btnVictoryAction.onclick = () => {
+              els.modalVictory.classList.remove('active');
+              switchScreen('intro');
+            };
+
+            els.modalVictory.classList.add('active');
+          }
+        }
+
+        /* --- Helper: Shuffle --- */
+        function shuffleArray(array) {
+          const arr = [...array];
+          for (let i = arr.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [arr[i], arr[j]] = [arr[j], arr[i]];
+          }
+          return arr;
+        }
+
+        /* --- Event Bindings --- */
+        if (els.btnStartGame) els.btnStartGame.addEventListener('click', startGame);
+
+        if (els.btnSound) {
+          els.btnSound.addEventListener('click', () => {
+            const isMuted = sound.toggleMute();
+            els.btnSound.textContent = isMuted ? '🔇' : '🔊';
+          });
+        }
+
+        if (els.btnFullscreen) els.btnFullscreen.addEventListener('click', toggleFullscreen);
+
+        if (els.btnHelp) {
+          els.btnHelp.addEventListener('click', () => {
+            sound.click();
+            els.modalHelp.classList.add('active');
+          });
+        }
+
+        if (els.btnCloseHelp) {
+          els.btnCloseHelp.addEventListener('click', () => {
+            sound.click();
+            els.modalHelp.classList.remove('active');
+          });
+        }
+
+        if (els.modalHelp) {
+          els.modalHelp.addEventListener('click', (e) => {
+            if (e.target === els.modalHelp) els.modalHelp.classList.remove('active');
+          });
+        }
+
+        // Start ambient music on user first interaction anywhere
+        window.addEventListener('pointerdown', () => {
+          sound.init();
+        }, { once: true });
+
+        // Prevent body touch scrolling
+        document.body.addEventListener('touchmove', (e) => {
+          if (!e.target.closest('.items-scroll') && !e.target.closest('#screen-intro') && !e.target.closest('.modal-card')) {
+            e.preventDefault();
+          }
+        }, { passive: false });
+
+      })();
+    </script>
+  
+  <!-- PWA Service Worker Registration -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js').catch(() => {});
+      });
+    }
+  </script>
+
+
+  <!-- 5-Second Hint Ad Modal System -->
+  <div id="fl-hint-modal-overlay" style="
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 999999;
+    background: rgba(10, 15, 30, 0.85);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    align-items: center;
+    justify-content: center;
+    font-family: system-ui, -apple-system, sans-serif;
+    padding: 16px;
+    box-sizing: border-box;
+  ">
+    <div style="
+      background: linear-gradient(145deg, #1e293b, #0f172a);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.6), 0 0 30px rgba(245, 158, 11, 0.2);
+      border-radius: 20px;
+      max-width: 420px;
+      width: 100%;
+      padding: 24px;
+      text-align: center;
+      color: #f8fafc;
+      position: relative;
+    ">
+      <button id="fl-hint-close-btn" style="
+        position: absolute;
+        top: 14px;
+        right: 14px;
+        background: rgba(255,255,255,0.08);
+        border: none;
+        color: #94a3b8;
+        font-size: 18px;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      ">✕</button>
+
+      <div style="
+        width: 56px;
+        height: 56px;
+        margin: 0 auto 14px auto;
+        background: rgba(245, 158, 11, 0.15);
+        border: 1px solid rgba(245, 158, 11, 0.3);
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 28px;
+      ">💡</div>
+
+      <h3 style="margin: 0 0 6px 0; font-size: 19px; font-weight: 800; color: #fbbf24;">Unlocking Hint</h3>
+      <p style="margin: 0 0 18px 0; font-size: 13px; color: #94a3b8; line-height: 1.4;">
+        Sponsored Reward: Wait 5 seconds to reveal your clue assistance.
+      </p>
+
+      <div id="fl-hint-ad-box" style="
+        background: rgba(0, 0, 0, 0.35);
+        border: 1px dashed rgba(255, 255, 255, 0.15);
+        border-radius: 12px;
+        padding: 16px;
+        margin-bottom: 18px;
+      ">
+        <div style="font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: #64748b; margin-bottom: 4px;">Advertisement</div>
+        <div style="font-size: 14px; font-weight: 600; color: #e2e8f0;">Brain Booster Puzzles</div>
+        <div style="font-size: 11px; color: #38bdf8; margin-top: 2px;">play.funlogic.games</div>
+      </div>
+
+      <div style="margin-bottom: 16px;">
+        <div style="display: flex; justify-content: space-between; font-size: 12px; font-weight: 700; margin-bottom: 6px;">
+          <span style="color: #94a3b8;">Sponsor Video</span>
+          <span id="fl-hint-timer-txt" style="color: #f59e0b;">5s</span>
+        </div>
+        <div style="width: 100%; height: 8px; background: rgba(255,255,255,0.1); border-radius: 4px; overflow: hidden;">
+          <div id="fl-hint-progress-bar" style="width: 0%; height: 100%; background: linear-gradient(90deg, #f59e0b, #10b981); transition: width 0.1s linear;"></div>
+        </div>
+      </div>
+
+      <button id="fl-hint-claim-btn" disabled style="
+        width: 100%;
+        padding: 12px;
+        border-radius: 12px;
+        border: none;
+        background: #334155;
+        color: #64748b;
+        font-weight: 700;
+        font-size: 14px;
+        cursor: not-allowed;
+        transition: all 0.2s;
+      ">Please wait 5s...</button>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      let countdownTimer = null;
+      let originalHintCallback = null;
+
+      const overlay = document.getElementById('fl-hint-modal-overlay');
+      const timerTxt = document.getElementById('fl-hint-timer-txt');
+      const progressBar = document.getElementById('fl-hint-progress-bar');
+      const claimBtn = document.getElementById('fl-hint-claim-btn');
+      const closeBtn = document.getElementById('fl-hint-close-btn');
+
+      function showHintAdModal(callback) {
+        if (!overlay) return;
+        originalHintCallback = callback;
+        overlay.style.display = 'flex';
+        
+        let timeLeft = 50; // 5.0 seconds
+        claimBtn.disabled = true;
+        claimBtn.style.background = '#334155';
+        claimBtn.style.color = '#64748b';
+        claimBtn.style.cursor = 'not-allowed';
+        claimBtn.textContent = 'Please wait 5s...';
+        progressBar.style.width = '0%';
+        timerTxt.textContent = '5s';
+
+        try {
+          if (window.parent && window.parent !== window) {
+            window.parent.postMessage({ type: 'hint_ad_started', duration: 5 }, '*');
+          }
+        } catch(e) {}
+
+        clearInterval(countdownTimer);
+        countdownTimer = setInterval(() => {
+          timeLeft--;
+          const percent = ((50 - timeLeft) / 50) * 100;
+          progressBar.style.width = percent + '%';
+          const secondsRemaining = Math.ceil(timeLeft / 10);
+          timerTxt.textContent = secondsRemaining + 's';
+          claimBtn.textContent = 'Please wait ' + secondsRemaining + 's...';
+
+          if (timeLeft <= 0) {
+            clearInterval(countdownTimer);
+            timerTxt.textContent = 'Ready!';
+            timerTxt.style.color = '#10b981';
+            claimBtn.disabled = false;
+            claimBtn.style.background = 'linear-gradient(90deg, #f59e0b, #10b981)';
+            claimBtn.style.color = '#0f172a';
+            claimBtn.style.cursor = 'pointer';
+            claimBtn.textContent = '✨ Get Hint Now';
+
+            try {
+              if (window.parent && window.parent !== window) {
+                window.parent.postMessage({ type: 'hint_ad_completed' }, '*');
+              }
+            } catch(e) {}
+          }
+        }, 100);
+      }
+
+      function closeHintModal() {
+        clearInterval(countdownTimer);
+        if (overlay) overlay.style.display = 'none';
+      }
+
+      function claimHint() {
+        closeHintModal();
+        if (typeof originalHintCallback === 'function') {
+          originalHintCallback();
+        }
+      }
+
+      if (closeBtn) closeBtn.addEventListener('click', closeHintModal);
+      if (claimBtn) claimBtn.addEventListener('click', claimHint);
+
+      window.showHintWith5sAd = showHintAdModal;
+
+      window.addEventListener('DOMContentLoaded', () => {
+        setTimeout(() => {
+          const hintSelectors = [
+            '#btn-hint', '#hint-btn', '#button-hint', '#hint',
+            '.btn-hint', '.hint-btn', '[data-action="hint"]',
+            'button[title*="Hint" i]', 'button[aria-label*="Hint" i]'
+          ];
+
+          hintSelectors.forEach(selector => {
+            document.querySelectorAll(selector).forEach(btn => {
+              if (!btn.getAttribute('data-fl-hooked')) {
+                btn.setAttribute('data-fl-hooked', 'true');
+                btn.addEventListener('click', function(e) {
+                  if (!this.hasAttribute('data-hint-approved')) {
+                    e.stopImmediatePropagation();
+                    e.preventDefault();
+                    showHintAdModal(() => {
+                      this.setAttribute('data-hint-approved', 'true');
+                      this.click();
+                      setTimeout(() => this.removeAttribute('data-hint-approved'), 500);
+                    });
+                  }
+                }, true);
+              }
+            });
+          });
+        }, 300);
+      });
+    })();
+  </script>
+
+</body>
+</html>

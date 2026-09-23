@@ -1,0 +1,18 @@
+{
+  "name": "Fruit Merge Kids",
+  "short_name": "Fruit Merge ",
+  "description": "Fruit Merge Kids is an adorable 3x3 fruit evolution puzzle for kids. Combine tasty apples, bananas, grapes, and oranges to discover the grand watermelon.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0f172a",
+  "theme_color": "#0f172a",
+  "icons": [
+    {
+      "src": "./cover.svg",
+      "sizes": "800x600",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

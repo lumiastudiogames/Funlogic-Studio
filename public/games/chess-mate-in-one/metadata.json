@@ -1,0 +1,6 @@
+{
+  "name": "Chess Mate in One",
+  "description": "Tactical chess puzzle game to find the single move by White that delivers immediate checkmate.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

@@ -1,0 +1,38 @@
+{
+  "title": "Matchstick Logic",
+  "categoryId": "logic",
+  "icon": "🪵",
+  "instructions": "Move exactly 1 matchstick to fix the mathematical equation and make the statement true.",
+  "description": "Matchstick Logic is a classic brain-teaser puzzle of mathematical reasoning and spatial logic. Move a single matchstick per level to turn incorrect equations into true mathematical statements across 20 progressive challenges.",
+  "keywords": [
+    "matchstick logic",
+    "matchstick puzzle",
+    "logic games",
+    "math puzzle",
+    "matchstick equation",
+    "brain teaser",
+    "logic puzzle",
+    "educational games",
+    "mental math",
+    "free online games",
+    "play without install"
+  ],
+  "faqs": [
+    {
+      "q": "How do I move matchsticks?",
+      "a": "Touch and drag the matchstick you wish to move, then drop it into any open dashed slot."
+    },
+    {
+      "q": "How many matchsticks can I move per level?",
+      "a": "Exactly 1 matchstick. If you want to try another move, tap Undo or Reset."
+    },
+    {
+      "q": "Are hints available?",
+      "a": "Yes! You can use smart hints that reveal which matchstick to move and where to position it."
+    },
+    {
+      "q": "Does the game work on mobile and tablet?",
+      "a": "Yes, Matchstick Logic is 100% responsive for touchscreen devices and desktop browsers."
+    }
+  ]
+}

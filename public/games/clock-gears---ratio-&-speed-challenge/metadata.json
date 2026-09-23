@@ -1,0 +1,6 @@
+{
+  "name": "Clock Gears - Ratio & Speed Challenge",
+  "description": "Drag and drop gears of different sizes to transmit rotation from the motor to the final gear, allowing intuitive speed, ratio, and torque adjustments.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

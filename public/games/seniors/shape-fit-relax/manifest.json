@@ -1,0 +1,18 @@
+{
+  "name": "Shape Fit Relax",
+  "short_name": "Shape Fit Re",
+  "description": "Shape Fit Relax is a soothing spatial puzzle for seniors. Features only 2 large shapes with soft prominent shadows, untimed play, and intuitive drag-and-drop or tap placement.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0f172a",
+  "theme_color": "#0f172a",
+  "icons": [
+    {
+      "src": "./cover.svg",
+      "sizes": "800x600",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

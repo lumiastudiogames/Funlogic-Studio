@@ -1,0 +1,18 @@
+{
+  "name": "2048 Fibonacci",
+  "short_name": "2048 Fibonac",
+  "description": "2048 Fibonacci introduces the mathematical beauty of the Fibonacci sequence to sliding tile puzzles. Instead of powers of two, combine consecutive Fibonacci numbers to reach 2584 with smooth slides, undo moves, and high score tracking.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0f172a",
+  "theme_color": "#0f172a",
+  "icons": [
+    {
+      "src": "./cover.svg",
+      "sizes": "800x600",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

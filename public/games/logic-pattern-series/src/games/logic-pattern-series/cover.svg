@@ -1,0 +1,101 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f172a" />
+      <stop offset="50%" stop-color="#1e293b" />
+      <stop offset="100%" stop-color="#0f172a" />
+    </linearGradient>
+    <linearGradient id="cardGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" />
+      <stop offset="100%" stop-color="#f8fafc" />
+    </linearGradient>
+    <linearGradient id="blueGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#60a5fa" />
+      <stop offset="50%" stop-color="#2563eb" />
+      <stop offset="100%" stop-color="#1d4ed8" />
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="8" stdDeviation="6" flood-color="#000000" flood-opacity="0.3" />
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="800" height="500" fill="url(#bgGrad)" />
+
+  <!-- Grid overlay lines -->
+  <g stroke="#334155" stroke-width="1" opacity="0.3">
+    <line x1="100" y1="0" x2="100" y2="500" />
+    <line x1="200" y1="0" x2="200" y2="500" />
+    <line x1="300" y1="0" x2="300" y2="500" />
+    <line x1="400" y1="0" x2="400" y2="500" />
+    <line x1="500" y1="0" x2="500" y2="500" />
+    <line x1="600" y1="0" x2="600" y2="500" />
+    <line x1="700" y1="0" x2="700" y2="500" />
+    <line x1="0" y1="100" x2="800" y2="100" />
+    <line x1="0" y1="200" x2="800" y2="200" />
+    <line x1="0" y1="300" x2="800" y2="300" />
+    <line x1="0" y1="400" x2="800" y2="400" />
+  </g>
+
+  <!-- Header Title -->
+  <text x="400" y="85" text-anchor="middle" font-family="'Outfit', 'Segoe UI', sans-serif" font-weight="900" font-size="38" fill="#ffffff" letter-spacing="1">
+    LOGIC PATTERN SERIES
+  </text>
+  <text x="400" y="115" text-anchor="middle" font-family="'Segoe UI', sans-serif" font-weight="600" font-size="16" fill="#94a3b8">
+    Geometric &amp; Numeric Spatial Puzzle Game
+  </text>
+
+  <!-- Cards Container -->
+  <g transform="translate(60, 160)">
+    <!-- Card 1: Triangle (3) -->
+    <g transform="translate(0, 0)" filter="url(#shadow)">
+      <rect width="115" height="125" rx="16" fill="url(#cardGrad)" stroke="#cbd5e1" stroke-width="2" />
+      <text x="14" y="24" font-family="sans-serif" font-weight="bold" font-size="14" fill="#94a3b8">1</text>
+      <polygon points="57,40 92,95 22,95" fill="url(#blueGrad)" stroke="#1e40af" stroke-width="2" stroke-linejoin="round" />
+    </g>
+
+    <!-- Card 2: Square (4) -->
+    <g transform="translate(140, 0)" filter="url(#shadow)">
+      <rect width="115" height="125" rx="16" fill="url(#cardGrad)" stroke="#cbd5e1" stroke-width="2" />
+      <text x="14" y="24" font-family="sans-serif" font-weight="bold" font-size="14" fill="#94a3b8">2</text>
+      <rect x="28" y="42" width="58" height="58" rx="8" fill="url(#blueGrad)" stroke="#1e40af" stroke-width="2" />
+    </g>
+
+    <!-- Card 3: Pentagon (5) -->
+    <g transform="translate(280, 0)" filter="url(#shadow)">
+      <rect width="115" height="125" rx="16" fill="url(#cardGrad)" stroke="#cbd5e1" stroke-width="2" />
+      <text x="14" y="24" font-family="sans-serif" font-weight="bold" font-size="14" fill="#94a3b8">3</text>
+      <polygon points="57,36 90,60 78,98 37,98 25,60" fill="url(#blueGrad)" stroke="#1e40af" stroke-width="2" stroke-linejoin="round" />
+    </g>
+
+    <!-- Card 4: Hexagon (6) -->
+    <g transform="translate(420, 0)" filter="url(#shadow)">
+      <rect width="115" height="125" rx="16" fill="url(#cardGrad)" stroke="#cbd5e1" stroke-width="2" />
+      <text x="14" y="24" font-family="sans-serif" font-weight="bold" font-size="14" fill="#94a3b8">4</text>
+      <polygon points="57,36 88,52 88,84 57,100 27,84 27,52" fill="url(#blueGrad)" stroke="#1e40af" stroke-width="2" stroke-linejoin="round" />
+    </g>
+
+    <!-- Card 5: Question Mark (?) -->
+    <g transform="translate(560, 0)" filter="url(#shadow)">
+      <rect width="115" height="125" rx="16" fill="#eff6ff" stroke="#3b82f6" stroke-width="2.5" stroke-dasharray="6,6" />
+      <text x="14" y="24" font-family="sans-serif" font-weight="bold" font-size="14" fill="#3b82f6">5</text>
+      <text x="57" y="86" text-anchor="middle" font-family="'Outfit', sans-serif" font-weight="900" font-size="52" fill="#3b82f6">?</text>
+    </g>
+  </g>
+
+  <!-- Clue / Question text -->
+  <text x="400" y="345" text-anchor="middle" font-family="'Segoe UI', sans-serif" font-weight="700" font-size="18" fill="#e2e8f0">
+    What comes next in the pattern?
+  </text>
+  <text x="400" y="375" text-anchor="middle" font-family="'Segoe UI', sans-serif" font-weight="500" font-size="14" fill="#38bdf8">
+    Each shape increases by one side. Choose the correct symbol:
+  </text>
+
+  <!-- Bottom Badges -->
+  <g transform="translate(260, 415)">
+    <rect width="280" height="42" rx="21" fill="#2563eb" />
+    <text x="140" y="26" text-anchor="middle" font-family="'Segoe UI', sans-serif" font-weight="800" font-size="14" fill="#ffffff" letter-spacing="1">
+      PLAY DAILY PUZZLES
+    </text>
+  </g>
+</svg>

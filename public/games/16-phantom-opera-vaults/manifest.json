@@ -1,0 +1,18 @@
+{
+  "name": "The Phantom of the Paris Opera",
+  "short_name": "The Phantom ",
+  "description": "Paris, 1890. Grand chandeliers rattle and music echoes from the underground subterranean lake beneath the Opera house. Follow the theatrical clues to locate the phantom's lair.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0f172a",
+  "theme_color": "#0f172a",
+  "icons": [
+    {
+      "src": "./cover.svg",
+      "sizes": "800x600",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

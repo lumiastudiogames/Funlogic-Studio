@@ -1,0 +1,18 @@
+{
+  "name": "Mahjong Triple - Match 3",
+  "short_name": "Mahjong Trip",
+  "description": "Mahjong Triple merges classic tile matching with modern Match-3 tray mechanics. Choose exposed tiles from the multilayer board and place them in your 7-slot collector bar. Form trios to clear room and survive to clear the entire board.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0f172a",
+  "theme_color": "#0f172a",
+  "icons": [
+    {
+      "src": "./cover.svg",
+      "sizes": "800x600",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

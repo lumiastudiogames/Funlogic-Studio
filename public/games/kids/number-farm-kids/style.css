@@ -1,0 +1,240 @@
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: #f0fdf4;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  color: #1e293b;
+}
+
+#game-stage {
+  width: 100%;
+  max-width: 560px;
+  height: 100dvh;
+  max-height: 840px;
+  background: #ffffff;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+@media (min-width: 640px) {
+  #game-stage {
+    height: 94vh;
+    border-radius: 28px;
+  }
+}
+
+.header {
+  height: 56px;
+  background: rgba(255, 255, 255, 0.95);
+  border-bottom: 2px solid #f1f5f9;
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+  z-index: 10;
+}
+
+.hud-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.badge {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: #059669;
+}
+
+.btn-tactile {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  background: #ffffff;
+  color: #475569;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  height: 38px;
+  padding: 0 12px;
+  flex-shrink: 0;
+  box-shadow: 0 3px 0 #cbd5e1, 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+}
+
+.btn-tactile:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 0 #cbd5e1;
+}
+
+.btn-tactile:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 #cbd5e1;
+}
+
+.btn-icon {
+  width: 38px;
+  padding: 0;
+}
+
+.btn-primary {
+  background: #059669;
+  border-color: #047857;
+  color: #ffffff;
+  box-shadow: 0 3px 0 #065f46;
+}
+
+.game-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
+  padding: 16px;
+  background: linear-gradient(180deg, #f0fdf4 0%, #ecfdf5 100%);
+}
+
+.sudoku-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  width: 320px;
+  height: 320px;
+  background: #047857;
+  border: 4px solid #047857;
+  border-radius: 20px;
+  gap: 2px;
+  overflow: hidden;
+  box-shadow: 0 12px 24px -4px rgba(5, 150, 105, 0.25);
+}
+
+.cell {
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 38px;
+  cursor: pointer;
+  position: relative;
+  transition: background-color 0.15s, transform 0.1s;
+}
+
+/* Thicker border between 2x2 blocks */
+.cell:nth-child(2n) {
+  border-right: 3px solid #047857;
+}
+.cell:nth-child(n+5):nth-child(-n+8) {
+  border-bottom: 3px solid #047857;
+}
+
+.cell.selected {
+  background: #fef08a !important;
+  transform: scale(0.96);
+}
+
+.cell.fixed {
+  background: #f8fafc;
+  cursor: not-allowed;
+}
+
+.cell.conflict {
+  background: #fee2e2 !important;
+}
+
+.selector-tray {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: #ffffff;
+  padding: 10px 16px;
+  border-radius: 24px;
+  border: 2px solid #e2e8f0;
+  box-shadow: 0 6px 12px -2px rgba(0, 0, 0, 0.05);
+}
+
+.tray-btn {
+  width: 54px;
+  height: 54px;
+  border-radius: 16px;
+  border: 2px solid #e2e8f0;
+  background: #f8fafc;
+  font-size: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.12s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow: 0 3px 0 #cbd5e1;
+}
+
+.tray-btn:hover {
+  transform: translateY(-2px);
+  border-color: #059669;
+}
+
+.tray-btn:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 #cbd5e1;
+}
+
+.status-text {
+  font-size: 14px;
+  font-weight: 700;
+  color: #047857;
+  text-align: center;
+}
+
+/* Modals */
+.modal-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  z-index: 50;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+
+.modal-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.modal-card {
+  width: 100%;
+  max-width: 360px;
+  background: #ffffff;
+  border-radius: 24px;
+  padding: 24px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  text-align: center;
+}

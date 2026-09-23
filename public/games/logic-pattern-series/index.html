@@ -1,0 +1,769 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    <title>Logic Pattern Series - Spatial & Number Puzzle Game</title>
+    
+    <meta property="og:title" content="Logic Pattern Series" />
+    <meta property="og:description" content="Discover hidden geometric and numeric patterns to solve spatial sequence puzzles." />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Outfit:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/src/index.css" />
+  
+  
+  
+  
+  
+
+  
+  
+  
+  
+
+  <meta name="description" content="Logic Pattern Series is a challenging HTML5 puzzle game designed to sharpen your cognitive and problem-solving skills with intuitive controls and progressive level difficulties." />
+  <meta name="keywords" content="logic pattern series, logic pattern series, free online game, brain puzzle, html5 game, no install, logic puzzle, casual browser game" />
+  <meta name="game-tags" content="logic pattern series, brain puzzle, brain game, brain logic, brain logic puzzle, brain teaser, brain teasers, brain teaser puzzle, brain teaser game, iq puzzle, iq game, iq test, iq test puzzle, iq test game, iq logic, iq logic puzzle, brain iq, brain iq puzzle, brain iq game, brain iq test, iq brain, iq brain puzzle, iq brain game, iq brain test, intelligence puzzle, intelligence game, intelligence test, intelligence logic, smart puzzle, smart game, smart logic, smart brain, clever puzzle, clever game, clever logic, clever brain, genius puzzle, genius game, genius logic, genius brain, genius test, brain test, brain test puzzle, brain test game, brain test logic, iq test logic, iq test brain, logic brain teaser, logic brain teaser puzzle, logic brain test, brain logic test, brain logic game, brain logic challenge, brain challenge, brain challenge puzzle, brain challenge game, iq challenge, iq challenge puzzle, iq challenge game, brain teaser free, brain teaser online, brain teaser best, brain teaser top, brain teaser new, brain teaser 2024, brain teaser 2025, brain puzzle free, brain puzzle online, brain puzzle best, brain puzzle top, brain puzzle new, brain game free, brain game online, brain game best, brain game top, iq puzzle free, iq puzzle online, iq puzzle best, iq puzzle top, iq game free, iq game online, iq game best, iq test free, iq test online, iq test best, brain training, brain training puzzle, brain training game, brain training free, brain training online, brain training best, mind puzzle, mind game, mind logic, mind logic puzzle, mind teaser, mind test, mind test puzzle, mind test game, mind brain, mind brain puzzle, puzzle brain iq, puzzle brain teaser, puzzle iq test, puzzle brain test, test brain puzzle, test iq puzzle, test brain iq, quiz brain, quiz iq, quiz brain puzzle, quiz iq puzzle, quiz brain teaser, quiz logic, quiz logic puzzle, riddles puzzle, riddles game, riddles logic, riddles brain, riddles brain teaser, riddles iq, logic riddles, logic riddles puzzle, logic riddles game, brain riddles, brain riddles puzzle, brain riddles game, iq riddles, iq riddles puzzle, logic puzzle brain, logic puzzle iq, logic puzzle brain teaser, logic puzzle genius, brain puzzle genius, brain puzzle smart, brain puzzle clever, iq puzzle genius, iq puzzle smart, brain teaser genius, brain teaser smart, brain teaser clever, brain teaser logic, brain teaser iq" />
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How do you play Logic Pattern Series?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Use touch or mouse controls to interact with elements on screen and complete each level target."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does this game work on mobile devices?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes, it is 100% responsive and playable on mobile phones, tablets, and desktop computers directly in your browser."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is it free to play?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes, you can play full levels for free without downloading or installing any software."
+      }
+    }
+  ]
+}
+  </script>
+
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#0f172a" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Logic Pattern Series" />
+  <link rel="apple-touch-icon" href="cover.svg" />
+
+  <script>
+    function triggerPlatformWin(timeInSeconds) {
+      const elapsed = Math.round(timeInSeconds || 45);
+      try {
+        if (typeof window.onWin === 'function') {
+          window.onWin(elapsed);
+        }
+        if (window.parent && window.parent !== window) {
+          window.parent.postMessage({ type: 'win', time: elapsed }, '*');
+        }
+      } catch(e) { console.error('Platform win notify error:', e); }
+    }
+  </script>
+
+</head>
+  <body class="bg-slate-900 text-slate-800 antialiased selection:bg-blue-500 selection:text-white flex items-center justify-center min-h-[100dvh] p-0 sm:p-4">
+    
+    <!-- MAIN GAME CONTAINER STAGE -->
+    <div id="game-stage" class="w-full max-w-5xl h-[100dvh] sm:h-[90vh] sm:max-h-[850px] mx-auto flex flex-col relative overflow-hidden bg-white sm:rounded-3xl shadow-2xl border border-slate-100">
+      
+      <!-- 60 FPS Particle FX Canvas Layer -->
+      <canvas id="fx-canvas" class="absolute inset-0 w-full h-full pointer-events-none z-20"></canvas>
+
+      <!-- TOP HEADER (HUD) -->
+      <header id="game-header" class="w-full h-14 bg-white/95 px-3 sm:px-5 border-b border-slate-200 flex items-center justify-between gap-2 shrink-0 z-10">
+        <!-- Left button & title -->
+        <div class="flex items-center gap-2 shrink-0">
+          <button id="btn-header-action" class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-slate-100 hover:bg-slate-200 flex items-center justify-center shrink-0 active:scale-95 transition-all text-slate-700 font-bold" title="Menu">
+            <span id="header-action-icon">⚙️</span>
+          </button>
+          <div class="flex flex-col">
+            <span id="header-badge" class="text-[10px] sm:text-xs font-black text-blue-700 uppercase tracking-tight">Pattern Series</span>
+            <span id="header-subtitle" class="text-[9px] sm:text-[10px] font-bold text-slate-400 truncate max-w-[130px] sm:max-w-[200px]">Spatial Puzzle Game</span>
+          </div>
+        </div>
+
+        <!-- Center/Right HUD counters & toggles -->
+        <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
+          <!-- Coins HUD -->
+          <div class="bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1 text-center min-w-[55px] shrink-0 flex items-center gap-1">
+            <span class="text-xs">🪙</span>
+            <span id="score-counter" class="font-extrabold text-xs sm:text-sm text-slate-800 leading-none">150</span>
+          </div>
+
+          <!-- Hint Rewarded Button (Playing Mode Only) -->
+          <button id="btn-hud-hint" class="btn-tactile px-2.5 sm:px-3 py-1.5 rounded-lg font-bold text-xs bg-amber-50 text-amber-800 border border-amber-200 flex items-center gap-1 shrink-0 hidden" title="Get Hint">
+            <span class="text-xs">💡</span>
+            <span class="hidden sm:inline">HINT</span>
+          </button>
+
+          <!-- Audio Sound Toggle -->
+          <button id="btn-sound-toggle" class="w-9 h-9 rounded-lg bg-slate-50 hover:bg-slate-100 border border-slate-200 flex items-center justify-center shrink-0 text-xs transition-colors" title="Toggle Sound">
+            <span id="sound-icon">🔊</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- Progress Bar (Playing mode) -->
+      <div id="game-progress-bar-container" class="w-full h-1 bg-slate-100 shrink-0 relative hidden">
+        <div id="game-progress-bar" class="h-full bg-blue-600 transition-all duration-300 ease-out" style="width: 0%;"></div>
+      </div>
+
+      <!-- VIEW 1: MAIN MENU -->
+      <div id="view-main-menu" class="flex-1 flex flex-col items-center justify-between p-4 sm:p-6 text-center max-w-lg mx-auto w-full overflow-y-auto custom-scrollbar">
+        <!-- Logo Brand & Title -->
+        <div class="flex flex-col items-center pt-2 sm:pt-4">
+          <div class="relative mb-3">
+            <div class="w-20 h-20 sm:w-24 sm:h-24 rounded-3xl bg-gradient-to-tr from-blue-600 to-indigo-500 flex items-center justify-center text-4xl sm:text-5xl shadow-xl border-2 border-white/80 ring-4 ring-blue-100">
+              🧩
+            </div>
+            <div class="absolute -top-2 -right-2 w-7 h-7 bg-amber-400 rounded-xl flex items-center justify-center text-xs font-bold text-slate-900 shadow-md transform rotate-12">
+              ▲
+            </div>
+            <div class="absolute -bottom-1 -left-2 w-6 h-6 bg-emerald-400 rounded-lg flex items-center justify-center text-xs font-bold text-slate-900 shadow-md transform -rotate-12">
+              ■
+            </div>
+          </div>
+          <h1 class="text-2xl sm:text-4xl font-black text-slate-900 font-heading tracking-tight">
+            Logic Pattern Series
+          </h1>
+          <p class="text-xs sm:text-sm text-slate-500 max-w-xs mt-1 leading-relaxed">
+            Decode geometric & numerical sequences, solve spatial puzzles, and sharpen daily logic.
+          </p>
+        </div>
+
+        <!-- User Stats Bar -->
+        <div class="w-full bg-slate-50 border border-slate-200/90 rounded-2xl p-3 my-4 grid grid-cols-3 gap-2 shadow-inner">
+          <div class="flex flex-col items-center">
+            <span class="text-[10px] font-bold text-slate-400 uppercase">UNLOCKED</span>
+            <span id="menu-unlocked-level" class="text-sm sm:text-base font-extrabold text-blue-600">1 / 8</span>
+          </div>
+          <div class="flex flex-col items-center border-x border-slate-200">
+            <span class="text-[10px] font-bold text-slate-400 uppercase">STARS</span>
+            <span class="text-sm sm:text-base font-extrabold text-amber-500 flex items-center gap-1">
+              <span>★</span>
+              <span id="menu-total-stars">0</span>
+            </span>
+          </div>
+          <div class="flex flex-col items-center">
+            <span class="text-[10px] font-bold text-slate-400 uppercase">COINS</span>
+            <span class="text-sm sm:text-base font-extrabold text-slate-800 flex items-center gap-1">
+              <span>🪙</span>
+              <span id="menu-coins">150</span>
+            </span>
+          </div>
+        </div>
+
+        <!-- Main Action Buttons -->
+        <div class="w-full flex flex-col gap-2.5 sm:gap-3">
+          <!-- Play Series Button -->
+          <button id="btn-menu-play" class="btn-tactile-primary w-full py-3.5 sm:py-4 rounded-2xl font-black text-base sm:text-lg flex items-center justify-center gap-2">
+            <span>▶️</span>
+            <span id="btn-menu-play-text">Play Series</span>
+          </button>
+
+          <!-- Daily Logic Challenge Button -->
+          <button id="btn-menu-daily" class="btn-tactile w-full py-3 rounded-2xl font-extrabold text-sm sm:text-base bg-gradient-to-r from-amber-500 to-orange-500 text-white border-b-3 border-amber-700 shadow-md flex items-center justify-between px-5">
+            <div class="flex items-center gap-2">
+              <span>📅</span>
+              <span>Daily Logic Challenge</span>
+            </div>
+            <span id="menu-daily-badge" class="text-xs bg-white/20 px-2 py-0.5 rounded-full font-bold">+50 Coins</span>
+          </button>
+
+          <!-- Secondary Grid Buttons -->
+          <div class="grid grid-cols-2 gap-2.5">
+            <button id="btn-menu-levelselect" class="btn-tactile py-2.5 sm:py-3 rounded-xl bg-white border border-slate-200 text-slate-700 font-bold text-xs sm:text-sm flex items-center justify-center gap-1.5">
+              <span>🗺️</span>
+              <span>Level Map</span>
+            </button>
+            <button id="btn-menu-howtoplay" class="btn-tactile py-2.5 sm:py-3 rounded-xl bg-white border border-slate-200 text-slate-700 font-bold text-xs sm:text-sm flex items-center justify-center gap-1.5">
+              <span>📖</span>
+              <span>How to Play</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Footer Menu Actions -->
+        <div class="w-full flex items-center justify-between pt-3 text-xs text-slate-400">
+          <button id="btn-menu-settings" class="flex items-center gap-1 hover:text-slate-600 transition-colors">
+            <span>⚙️</span>
+            <span>Settings</span>
+          </button>
+          <span>Streak: <strong id="menu-streak" class="text-slate-600">0</strong> 🔥</span>
+        </div>
+      </div>
+
+      <!-- VIEW 2: GAMEPLAY ACTIVE SCREEN -->
+      <div id="view-gameplay" class="flex-1 flex flex-col justify-between p-2.5 sm:p-4 md:p-6 overflow-y-auto custom-scrollbar relative z-10 hidden">
+        <!-- Question Prompt Banner -->
+        <div class="text-center mb-2 sm:mb-3">
+          <h2 id="puzzle-prompt" class="text-base sm:text-xl font-extrabold text-slate-800 font-heading tracking-tight">
+            Count the number of vertices and sides in the sequence.
+          </h2>
+          <div id="puzzle-hint-container" class="mt-1 min-h-[22px]">
+            <p id="puzzle-hint-text" class="text-[11px] sm:text-xs text-slate-400">
+              Analyze the sequence progression from left to right.
+            </p>
+          </div>
+        </div>
+
+        <!-- Pattern Cards Sequence Container -->
+        <div id="pattern-sequence-strip" class="flex items-center justify-center gap-1.5 sm:gap-3 md:gap-4 my-auto py-1 sm:py-2 overflow-x-auto custom-scrollbar">
+          <!-- Dynamic sequence cards injected via Vanilla JS -->
+        </div>
+
+        <!-- Subtitle Prompt -->
+        <div class="text-center my-1.5 sm:my-2">
+          <span class="text-xs sm:text-sm font-bold text-slate-600">Choose the correct symbol:</span>
+        </div>
+
+        <!-- Options Grid A, B, C, D -->
+        <div id="options-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3 max-w-2xl mx-auto w-full mb-3">
+          <!-- Dynamic options injected via Vanilla JS -->
+        </div>
+
+        <!-- Submit Button -->
+        <div class="max-w-md mx-auto w-full mb-1">
+          <button id="btn-submit-answer" disabled class="w-full py-3 sm:py-3.5 rounded-xl font-black text-xs sm:text-sm uppercase tracking-wider transition-all flex items-center justify-center gap-2 bg-slate-200 text-slate-400 cursor-not-allowed border border-slate-300">
+            <span id="btn-submit-text">SUBMIT ANSWER</span>
+          </button>
+        </div>
+
+        <!-- Feedback Alert Banner -->
+        <div id="feedback-alert" class="text-center text-xs font-bold py-1 px-3 rounded-lg max-w-md mx-auto mt-1 hidden"></div>
+      </div>
+
+      <!-- BOTTOM FOOTER STATUS BAR -->
+      <footer class="w-full h-8 bg-slate-50 px-3 border-t border-slate-200 flex items-center justify-between text-[10px] sm:text-xs font-semibold text-slate-400 shrink-0 z-10">
+        <span class="truncate">Logic Pattern Series</span>
+        <span class="hidden sm:inline">Tap to select symbol</span>
+        <div class="flex items-center gap-2">
+          <span>Streak: <strong id="footer-streak" class="text-slate-700">0</strong> 🔥</span>
+          <span>•</span>
+          <span>Hints: <strong id="footer-hints" class="text-slate-700">2</strong></span>
+        </div>
+      </footer>
+
+      <!-- MODAL 1: REWARDED AD HINT MODAL -->
+      <div id="modal-hint" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white rounded-2xl sm:rounded-3xl shadow-2xl max-w-sm w-full p-6 flex flex-col items-center text-center relative border border-slate-100 animate-pop-in">
+          <button id="btn-hint-modal-close" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-500 font-bold text-sm">
+            ✕
+          </button>
+          
+          <div class="w-16 h-16 rounded-2xl bg-amber-100 text-amber-600 flex items-center justify-center text-3xl mb-3 shadow-inner">
+            💡
+          </div>
+          
+          <h3 class="text-xl font-extrabold text-slate-900 font-heading">
+            Need a Clue?
+          </h3>
+          <p class="text-xs sm:text-sm text-slate-500 mt-1 mb-4 leading-relaxed">
+            Watch a short 5-second simulated sponsor spot to reveal the pattern rule and eliminate one wrong option.
+          </p>
+
+          <div class="w-full bg-slate-50 rounded-2xl p-4 border border-slate-200 mb-4 flex flex-col items-center">
+            <div id="hint-ad-timer-circle" class="w-16 h-16 rounded-full border-4 border-amber-500 border-t-transparent animate-spin flex items-center justify-center mb-2">
+              <span id="hint-ad-seconds" class="font-black text-slate-800 text-lg">5</span>
+            </div>
+            <span id="hint-ad-status" class="text-xs font-bold text-slate-600">Simulating sponsor message...</span>
+          </div>
+
+          <button id="btn-hint-claim" disabled class="btn-tactile w-full py-3 rounded-xl font-black text-xs sm:text-sm bg-slate-200 text-slate-400 cursor-not-allowed">
+            <span>CLAIM REWARD (5s)</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- MODAL 2: HOW TO PLAY MODAL -->
+      <div id="modal-howtoplay" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white rounded-2xl sm:rounded-3xl shadow-2xl max-w-md w-full p-6 flex flex-col relative border border-slate-100 animate-pop-in">
+          <div class="flex items-center justify-between pb-3 border-b border-slate-100 mb-4">
+            <div class="flex items-center gap-2">
+              <div class="w-8 h-8 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center font-bold">
+                📖
+              </div>
+              <h3 class="text-lg font-black text-slate-800 font-heading">How to Play</h3>
+            </div>
+            <button id="btn-howtoplay-close" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-500 font-bold text-sm">
+              ✕
+            </button>
+          </div>
+
+          <div class="flex flex-col gap-3 text-xs sm:text-sm text-slate-600 mb-5 leading-relaxed">
+            <div class="flex gap-3 items-start p-2.5 bg-blue-50/60 rounded-xl border border-blue-100">
+              <span class="w-6 h-6 rounded-full bg-blue-600 text-white font-extrabold text-xs flex items-center justify-center shrink-0">1</span>
+              <div>
+                <strong class="text-slate-800 block">Observe Progression</strong>
+                Analyze shapes, angles, dot quantities, colors, or matrix coordinates across cards 1 to 4.
+              </div>
+            </div>
+
+            <div class="flex gap-3 items-start p-2.5 bg-indigo-50/60 rounded-xl border border-indigo-100">
+              <span class="w-6 h-6 rounded-full bg-indigo-600 text-white font-extrabold text-xs flex items-center justify-center shrink-0">2</span>
+              <div>
+                <strong class="text-slate-800 block">Discover the Rule</strong>
+                Identify transformations such as +1 edge, 90° clockwise rotation, prime steps, or square powers.
+              </div>
+            </div>
+
+            <div class="flex gap-3 items-start p-2.5 bg-emerald-50/60 rounded-xl border border-emerald-100">
+              <span class="w-6 h-6 rounded-full bg-emerald-600 text-white font-extrabold text-xs flex items-center justify-center shrink-0">3</span>
+              <div>
+                <strong class="text-slate-800 block">Select & Submit</strong>
+                Tap the matching symbol card (A, B, C, or D) to complete the sequence and earn coins and streak stars.
+              </div>
+            </div>
+          </div>
+
+          <button id="btn-howtoplay-gotit" class="btn-tactile-primary w-full py-3 rounded-xl font-extrabold text-xs sm:text-sm">
+            Got It! Let's Play
+          </button>
+        </div>
+      </div>
+
+      <!-- MODAL 3: LEVEL SELECT MODAL -->
+      <div id="modal-levelselect" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-3 sm:p-4 hidden">
+        <div class="bg-white rounded-2xl sm:rounded-3xl shadow-2xl max-w-2xl w-full p-4 sm:p-6 flex flex-col relative border border-slate-100 max-h-[88vh] animate-pop-in">
+          <div class="flex items-center justify-between pb-3 border-b border-slate-100 mb-3">
+            <div class="flex items-center gap-2">
+              <div class="w-8 h-8 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center font-bold">
+                🗺️
+              </div>
+              <div>
+                <h3 class="text-base sm:text-lg font-black text-slate-800 font-heading">Level Select Map</h3>
+                <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">40 Cognitive Levels</span>
+              </div>
+            </div>
+            <button id="btn-levelselect-close" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-500 font-bold text-sm">
+              ✕
+            </button>
+          </div>
+
+          <div id="level-select-grid" class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-2 sm:gap-2.5 overflow-y-auto custom-scrollbar p-1 mb-3 flex-1 max-h-[60vh]">
+            <!-- Dynamic level tiles injected via Vanilla JS -->
+          </div>
+
+          <div class="text-center text-[10px] text-slate-400 border-t border-slate-100 pt-2">
+            Solve each pattern to unlock subsequent cognitive levels. Earn 3 stars by solving swiftly without hints!
+          </div>
+        </div>
+      </div>
+
+      <!-- MODAL 4: PAUSE MODAL -->
+      <div id="modal-pause" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white rounded-2xl sm:rounded-3xl shadow-2xl max-w-xs w-full p-6 flex flex-col text-center relative border border-slate-100 animate-pop-in">
+          <h3 class="text-xl font-black text-slate-800 font-heading mb-4">
+            Game Paused
+          </h3>
+
+          <div class="flex flex-col gap-2.5 mb-4">
+            <button id="btn-pause-resume" class="btn-tactile-primary w-full py-3 rounded-xl font-extrabold text-xs sm:text-sm">
+              ▶️ Resume
+            </button>
+            <button id="btn-pause-restart" class="btn-tactile w-full py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 font-bold text-xs sm:text-sm text-slate-700">
+              🔄 Restart Puzzle
+            </button>
+            <button id="btn-pause-levelselect" class="btn-tactile w-full py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 font-bold text-xs sm:text-sm text-slate-700">
+              🗺️ Level Map
+            </button>
+            <button id="btn-pause-mainmenu" class="btn-tactile w-full py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 font-bold text-xs sm:text-sm text-slate-700">
+              🏠 Main Menu
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- MODAL 5: EXPLANATION MODAL -->
+      <div id="modal-explanation" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white rounded-2xl sm:rounded-3xl shadow-2xl max-w-md w-full p-6 flex flex-col relative border border-slate-100 animate-pop-in">
+          <div class="flex items-center gap-3 mb-3">
+            <div id="explanation-badge-icon" class="w-12 h-12 rounded-2xl flex items-center justify-center text-2xl shrink-0 bg-emerald-100 text-emerald-600">
+              ✓
+            </div>
+            <div>
+              <h3 id="explanation-title" class="text-lg font-black text-slate-900 font-heading">
+                Correct Deduction!
+              </h3>
+              <span id="explanation-category" class="text-xs font-bold text-blue-600 uppercase tracking-tight">
+                Polygon Sides Series
+              </span>
+            </div>
+          </div>
+
+          <div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-200/90 text-xs sm:text-sm text-slate-600 mb-4 leading-relaxed">
+            <strong class="text-slate-800 block mb-1">Pattern Transformation Rule:</strong>
+            <p id="explanation-rule-text">
+              The series progresses by adding 1 side per step: Triangle (3) → Square (4) → Pentagon (5) → Hexagon (6) → Heptagon (7 sides).
+            </p>
+          </div>
+
+          <button id="btn-explanation-next" class="btn-tactile-primary w-full py-3.5 rounded-xl font-black text-xs sm:text-sm flex items-center justify-center gap-2">
+            <span>Next Challenge</span>
+            <span>➔</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- MODAL 6: SETTINGS MODAL -->
+      <div id="modal-settings" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white rounded-2xl sm:rounded-3xl shadow-2xl max-w-sm w-full p-6 flex flex-col relative border border-slate-100 animate-pop-in">
+          <div class="flex items-center justify-between pb-3 border-b border-slate-100 mb-4">
+            <div class="flex items-center gap-2">
+              <div class="w-8 h-8 rounded-xl bg-slate-100 text-slate-700 flex items-center justify-center font-bold">
+                ⚙️
+              </div>
+              <h3 class="text-lg font-black text-slate-800 font-heading">Settings</h3>
+            </div>
+            <button id="btn-settings-close" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-500 font-bold text-sm">
+              ✕
+            </button>
+          </div>
+
+          <div class="flex flex-col gap-3 mb-5">
+            <!-- Sound Toggle Row -->
+            <div class="flex items-center justify-between p-3 bg-slate-50 rounded-xl border border-slate-200">
+              <div class="flex items-center gap-2.5">
+                <span id="settings-sound-symbol" class="text-xl">🔊</span>
+                <div>
+                  <span class="font-extrabold text-xs sm:text-sm text-slate-800 block">Sound Effects</span>
+                  <span class="text-[10px] text-slate-400 block">Web Audio API synthesis</span>
+                </div>
+              </div>
+              <button id="btn-settings-sound-toggle" class="w-12 h-6 rounded-full transition-colors relative p-0.5 bg-blue-600">
+                <div id="settings-sound-knob" class="w-5 h-5 rounded-full bg-white shadow-md transform transition-transform translate-x-6"></div>
+              </button>
+            </div>
+
+            <!-- Reset Progress Button -->
+            <button id="btn-settings-reset" class="w-full py-2.5 px-3 rounded-xl border border-rose-200 bg-rose-50/50 hover:bg-rose-100/70 text-rose-700 font-bold text-xs flex items-center justify-center gap-2 transition-colors">
+              <span>🗑️</span>
+              <span>Reset Game Progress</span>
+            </button>
+          </div>
+
+          
+        </div>
+      </div>
+
+    </div>
+
+    <!-- PURE VANILLA JS SCRIPT ENTRY POINT -->
+    <script type="module" src="/src/main.js"></script>
+  
+  <!-- PWA & Initial Screen Fullscreen UI -->
+  <button id="fl-fullscreen-btn" aria-label="Fullscreen" title="Toggle Fullscreen" style="
+    position: fixed;
+    top: 14px;
+    right: 14px;
+    z-index: 99999;
+    background: rgba(15, 23, 42, 0.75);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #ffffff;
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 18px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    transition: transform 0.15s ease, background 0.2s ease;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+  " onmouseover="this.style.transform='scale(1.08)'" onmouseout="this.style.transform='scale(1)'">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/>
+    </svg>
+  </button>
+
+  <script>
+    (function() {
+      // Register PWA Service Worker
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('./sw.js').catch(() => {});
+        });
+      }
+
+      // Initial Screen Fullscreen Handler
+      const fsBtn = document.getElementById('fl-fullscreen-btn');
+      if (fsBtn) {
+        fsBtn.addEventListener('click', function(e) {
+          e.stopPropagation();
+          if (!document.fullscreenElement && !document.webkitFullscreenElement && !document.mozFullScreenElement && !document.msFullscreenElement) {
+            const el = document.documentElement;
+            if (el.requestFullscreen) el.requestFullscreen().catch(()=>{});
+            else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+            else if (el.mozRequestFullScreen) el.mozRequestFullScreen();
+            else if (el.msRequestFullscreen) el.msRequestFullscreen();
+          } else {
+            if (document.exitFullscreen) document.exitFullscreen().catch(()=>{});
+            else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+            else if (document.mozCancelFullScreen) document.mozCancelFullScreen();
+            else if (document.msExitFullscreen) document.msExitFullscreen();
+          }
+        });
+      }
+    })();
+  </script>
+
+  <!-- 5-Second Hint Ad Modal System -->
+  <div id="fl-hint-modal-overlay" style="
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 999999;
+    background: rgba(10, 15, 30, 0.85);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    align-items: center;
+    justify-content: center;
+    font-family: system-ui, -apple-system, sans-serif;
+    padding: 16px;
+    box-sizing: border-box;
+  ">
+    <div style="
+      background: linear-gradient(145deg, #1e293b, #0f172a);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.6), 0 0 30px rgba(245, 158, 11, 0.2);
+      border-radius: 20px;
+      max-width: 420px;
+      width: 100%;
+      padding: 24px;
+      text-align: center;
+      color: #f8fafc;
+      position: relative;
+      animation: flModalPop 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    ">
+      <!-- Close Button -->
+      <button id="fl-hint-close-btn" style="
+        position: absolute;
+        top: 14px;
+        right: 14px;
+        background: rgba(255,255,255,0.08);
+        border: none;
+        color: #94a3b8;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        cursor: pointer;
+        font-size: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s;
+      " onmouseover="this.style.color='#fff';this.style.background='rgba(255,255,255,0.15)'" onmouseout="this.style.color='#94a3b8';this.style.background='rgba(255,255,255,0.08)'">✕</button>
+
+      <!-- Icon -->
+      <div style="
+        width: 56px;
+        height: 56px;
+        background: rgba(245, 158, 11, 0.15);
+        border: 1px solid rgba(245, 158, 11, 0.3);
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 28px;
+        margin: 0 auto 14px auto;
+      ">💡</div>
+
+      <!-- Title & Subtitle -->
+      <h3 style="margin: 0 0 6px 0; font-size: 19px; font-weight: 800; color: #fbbf24;">Unlocking Hint</h3>
+      <p style="margin: 0 0 18px 0; font-size: 13px; color: #94a3b8; line-height: 1.4;">
+        Short sponsor break (max 5s) to support free puzzles!
+      </p>
+
+      <!-- Ad / Sponsor Banner Box -->
+      <div id="fl-hint-ad-box" style="
+        background: rgba(0, 0, 0, 0.35);
+        border: 1px dashed rgba(255, 255, 255, 0.12);
+        border-radius: 12px;
+        height: 100px;
+        margin-bottom: 18px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        color: #64748b;
+        font-size: 12px;
+      ">
+        <span style="font-weight: 700; color: #e2e8f0; font-size: 13px;">FunLogic Sponsor Ad</span>
+        <span>Ad space placeholder (300x100)</span>
+      </div>
+
+      <!-- Progress Bar & Countdown -->
+      <div style="margin-bottom: 16px;">
+        <div style="display: flex; justify-content: space-between; font-size: 12px; font-weight: 700; color: #cbd5e1; margin-bottom: 6px;">
+          <span>Hint ready in:</span>
+          <span id="fl-hint-timer-txt" style="color: #f59e0b;">5s</span>
+        </div>
+        <div style="width: 100%; height: 8px; background: rgba(255,255,255,0.1); border-radius: 4px; overflow: hidden;">
+          <div id="fl-hint-progress-bar" style="width: 0%; height: 100%; background: linear-gradient(90deg, #f59e0b, #10b981); border-radius: 4px; transition: width 0.1s linear;"></div>
+        </div>
+      </div>
+
+      <!-- Action Button -->
+      <button id="fl-hint-claim-btn" disabled style="
+        width: 100%;
+        padding: 12px;
+        border-radius: 12px;
+        border: none;
+        background: #334155;
+        color: #64748b;
+        font-size: 14px;
+        font-weight: 800;
+        cursor: not-allowed;
+        transition: all 0.2s;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      ">Please wait 5s...</button>
+    </div>
+  </div>
+
+  <style>
+    @keyframes flModalPop {
+      0% { transform: scale(0.85); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+  </style>
+
+  <script>
+    (function() {
+      let countdownTimer = null;
+      let originalHintCallback = null;
+
+      const overlay = document.getElementById('fl-hint-modal-overlay');
+      const timerTxt = document.getElementById('fl-hint-timer-txt');
+      const progressBar = document.getElementById('fl-hint-progress-bar');
+      const claimBtn = document.getElementById('fl-hint-claim-btn');
+      const closeBtn = document.getElementById('fl-hint-close-btn');
+
+      function showHintAdModal(callback) {
+        if (!overlay) return;
+        originalHintCallback = callback;
+        overlay.style.display = 'flex';
+        
+        let timeLeft = 50; // 5.0 seconds (50 x 100ms)
+        claimBtn.disabled = true;
+        claimBtn.style.background = '#334155';
+        claimBtn.style.color = '#64748b';
+        claimBtn.style.cursor = 'not-allowed';
+        claimBtn.textContent = 'Please wait 5s...';
+        progressBar.style.width = '0%';
+        timerTxt.textContent = '5s';
+
+        // Notify parent portal
+        try {
+          if (window.parent && window.parent !== window) {
+            window.parent.postMessage({ type: 'hint_ad_started', duration: 5 }, '*');
+          }
+        } catch(e) {}
+
+        clearInterval(countdownTimer);
+        countdownTimer = setInterval(() => {
+          timeLeft--;
+          const percent = ((50 - timeLeft) / 50) * 100;
+          progressBar.style.width = percent + '%';
+          const secondsRemaining = Math.ceil(timeLeft / 10);
+          timerTxt.textContent = secondsRemaining + 's';
+          claimBtn.textContent = 'Please wait ' + secondsRemaining + 's...';
+
+          if (timeLeft <= 0) {
+            clearInterval(countdownTimer);
+            timerTxt.textContent = 'Ready!';
+            timerTxt.style.color = '#10b981';
+            claimBtn.disabled = false;
+            claimBtn.style.background = 'linear-gradient(90deg, #f59e0b, #10b981)';
+            claimBtn.style.color = '#0f172a';
+            claimBtn.style.cursor = 'pointer';
+            claimBtn.textContent = '✨ Get Hint Now';
+
+            try {
+              if (window.parent && window.parent !== window) {
+                window.parent.postMessage({ type: 'hint_ad_completed' }, '*');
+              }
+            } catch(e) {}
+          }
+        }, 100);
+      }
+
+      function closeHintModal() {
+        clearInterval(countdownTimer);
+        if (overlay) overlay.style.display = 'none';
+      }
+
+      function claimHint() {
+        closeHintModal();
+        if (typeof originalHintCallback === 'function') {
+          originalHintCallback();
+        }
+      }
+
+      if (closeBtn) closeBtn.addEventListener('click', closeHintModal);
+      if (claimBtn) claimBtn.addEventListener('click', claimHint);
+
+      // Expose globally for game engines
+      window.showHintWith5sAd = showHintAdModal;
+
+      // Automatically hook into any existing hint button in the DOM
+      window.addEventListener('DOMContentLoaded', () => {
+        setTimeout(() => {
+          const hintSelectors = [
+            '#btn-hint', '#hint-btn', '#button-hint', '#hint',
+            '.btn-hint', '.hint-btn', '[data-action="hint"]',
+            'button[title*="Hint" i]', 'button[aria-label*="Hint" i]'
+          ];
+
+          hintSelectors.forEach(selector => {
+            document.querySelectorAll(selector).forEach(btn => {
+              if (!btn.getAttribute('data-fl-hooked')) {
+                btn.setAttribute('data-fl-hooked', 'true');
+                btn.addEventListener('click', function(e) {
+                  // If modal not already claimed in this click
+                  if (!this.hasAttribute('data-hint-approved')) {
+                    e.stopImmediatePropagation();
+                    e.preventDefault();
+                    showHintAdModal(() => {
+                      this.setAttribute('data-hint-approved', 'true');
+                      this.click();
+                      setTimeout(() => this.removeAttribute('data-hint-approved'), 500);
+                    });
+                  }
+                }, true); // Capture phase to intercept first
+              }
+            });
+          });
+        }, 300);
+      });
+    })();
+  </script>
+
+</body>
+</html>

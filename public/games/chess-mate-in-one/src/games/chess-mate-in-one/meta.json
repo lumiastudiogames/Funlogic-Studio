@@ -1,0 +1,34 @@
+{
+  "title": "Chess Mate in One",
+  "categoryId": "chess",
+  "icon": "♟️",
+  "instructions": "Find the single White move that delivers immediate checkmate. Touch or drag the White piece to the winning square before time runs out.",
+  "description": "Chess Mate in One is a tactical chess puzzle game featuring handcrafted checkmate puzzles for players of all skill levels. Train your tactical vision, recognize classic mating nets like Anastasia, Arabian, Smothered, and Back-Rank mates, and master instant checkmate calculations with responsive tactile controls.",
+  "keywords": [
+    "chess",
+    "mate in one",
+    "chess puzzles",
+    "tactics",
+    "checkmate",
+    "chess training",
+    "chess mate in 1",
+    "chess tactics online",
+    "tactical puzzles",
+    "chess puzzles free",
+    "grandmaster puzzles"
+  ],
+  "faqs": [
+    {
+      "q": "How do I play Chess Mate in One?",
+      "a": "Tap or drag any White piece. Dots appear on legal squares. Find the only move that puts Black in checkmate in exactly one move."
+    },
+    {
+      "q": "What happens if I make a move that isn't checkmate?",
+      "a": "The game gently notifies you that Black has an escape square or block, and automatically resets the board so you can try again."
+    },
+    {
+      "q": "How does the Hint system work?",
+      "a": "Tap the Hint button to watch a short sponsored video reward and unlock the piece and target square."
+    }
+  ]
+}

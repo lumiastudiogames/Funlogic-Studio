@@ -1,0 +1,18 @@
+{
+  "name": "Derelict Chimera: Alien Protocol",
+  "short_name": "Derelict Chi",
+  "description": "Drifting in the Orion nebula, the research ship Chimera went dark. Board the silent vessel, review log terminals, and deduce who quarantined which module.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0f172a",
+  "theme_color": "#0f172a",
+  "icons": [
+    {
+      "src": "./cover.svg",
+      "sizes": "800x600",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

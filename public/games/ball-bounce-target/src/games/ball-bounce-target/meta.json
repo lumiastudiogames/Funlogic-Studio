@@ -1,0 +1,33 @@
+{
+  "title": "Ball Bounce Target",
+  "categoryId": "physics",
+  "icon": "🏀",
+  "instructions": "Drag and rotate deflector blocks to bounce the ball across obstacles directly into the target basket.",
+  "description": "Ball Bounce Target is an engaging physics puzzle game where precision and angle calculation are key. Arrange deflector blocks on a blueprint grid, preview the parabolic trajectory, and launch the bouncy ball to achieve ricochet shots into the basket across varied visual themes and challenging levels.",
+  "keywords": [
+    "ball bounce target",
+    "physics puzzle",
+    "ricochet game",
+    "deflector puzzle",
+    "basket target",
+    "bounce angle",
+    "trajectory game",
+    "casual physics",
+    "brain teaser",
+    "online free game"
+  ],
+  "faqs": [
+    {
+      "q": "How do I play Ball Bounce Target?",
+      "a": "Drag deflector planks into position and rotate them by their handles to guide the ball's ricochet bounce toward the target basket."
+    },
+    {
+      "q": "Can I rotate the deflector blocks?",
+      "a": "Yes! Drag the circular rotation handle on selected blocks or use the rotation buttons to adjust angles in fine steps."
+    },
+    {
+      "q": "Does this game work on mobile and tablet?",
+      "a": "Yes, it is fully responsive with intuitive touch controls, high-DPR rendering, and adaptive mobile HUD."
+    }
+  ]
+}

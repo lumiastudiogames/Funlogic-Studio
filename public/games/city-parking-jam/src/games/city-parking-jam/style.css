@@ -1,0 +1,60 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+body {
+  min-height: 100vh;
+  min-height: 100dvh;
+  background-color: #090d16;
+  color: #f8fafc;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+#game-stage {
+  width: 100%;
+  max-width: 900px;
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  background-color: #0f172a;
+  overflow: hidden;
+}
+
+@media (min-width: 640px) {
+  #game-stage {
+    height: 90vh;
+    max-height: 850px;
+    border-radius: 24px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+    border: 1px solid #1e293b;
+  }
+}
+
+.btn-tactile {
+  transition: all 0.12s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  cursor: pointer;
+}
+
+.btn-tactile:hover {
+  transform: translateY(-1px);
+}
+
+.btn-tactile:active {
+  transform: translateY(1px);
+}
+
+.hidden {
+  display: none !important;
+}

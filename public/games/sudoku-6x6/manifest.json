@@ -1,0 +1,18 @@
+{
+  "name": "Sudoku 6x6 Quick",
+  "short_name": "Sudoku 6x6 Q",
+  "description": "Sudoku 6x6 is the fast-paced, mobile-friendly sibling of traditional Sudoku. Featuring a compact 6x6 grid with 2x3 sub-quadrants, it offers quick bite-sized mental workouts with multiple difficulty levels, hint rewards, and pencil notes.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0f172a",
+  "theme_color": "#0f172a",
+  "icons": [
+    {
+      "src": "./cover.svg",
+      "sizes": "800x600",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

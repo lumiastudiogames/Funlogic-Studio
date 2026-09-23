@@ -1,0 +1,6 @@
+{
+  "name": "Math Bridge Builder",
+  "description": "A mobile-first mathematical puzzle game where you build bridges plank by plank across scenic chasms by solving arithmetic equations across 10 progressive levels.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

@@ -1,0 +1,6 @@
+{
+  "name": "The Poisoned Coffee - Liar's Logic",
+  "description": "A cartoon brain logic mystery where 5 suspects have statements, but only 1 tells the truth. Deduce the liar and uncover the poisoner!",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

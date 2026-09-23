@@ -1,0 +1,18 @@
+{
+  "name": "Shadow Logic",
+  "short_name": "Shadow Logic",
+  "description": "Shadow Logic is an intriguing spatial perception and 3D geometric puzzle. Observe dynamic light angles, predict silhouette projections of complex solid shapes in real-time, and match the correct cast shadows across 12 challenging stages.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0f172a",
+  "theme_color": "#0f172a",
+  "icons": [
+    {
+      "src": "./cover.svg",
+      "sizes": "800x600",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

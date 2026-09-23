@@ -1,0 +1,6 @@
+{
+  "name": "Physical Balance - The Scale",
+  "description": "A mobile-first scale balance puzzle game. Place weights to reach 10kg equilibrium using logic across 15 progressive levels.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

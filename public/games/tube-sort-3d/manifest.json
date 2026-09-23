@@ -1,0 +1,18 @@
+{
+  "name": "Tube Sort 3D",
+  "short_name": "Tube Sort 3D",
+  "description": "Experience liquid sorting in complete 3D space. Drag horizontally to rotate the laboratory turntable, allowing you to examine lower color layers hidden behind perspective angles. Tap to select and pour matching liquids until all colors are segregated.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0f172a",
+  "theme_color": "#0f172a",
+  "icons": [
+    {
+      "src": "./cover.svg",
+      "sizes": "800x600",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

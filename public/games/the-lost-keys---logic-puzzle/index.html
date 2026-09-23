@@ -1,0 +1,2897 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>The Lost Keys - Logic Puzzle</title>
+    <meta name="description" content="Quebra-cabeça de lógica com história de detetive: deduza a ordem correta das 4 chaves para destrancar a porta secreta usando as pistas do diário." />
+    <meta property="og:title" content="The Lost Keys - Logic Puzzle" />
+    <meta property="og:description" content="Quebra-cabeça de lógica com história de detetive: deduza a ordem correta das 4 chaves para destrancar a porta secreta usando as pistas do diário." />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <style>
+      :root {
+        --bg-dark: #0f1117;
+        --bg-panel: #181b24;
+        --bg-card: #202532;
+        --brass-light: #f5cf7b;
+        --brass-primary: #d4a34b;
+        --brass-dark: #8f6522;
+        --copper: #c86d41;
+        --steel: #7d8b9d;
+        --wood-dark: #1e130c;
+        --wood-panel: #2e1c12;
+        --wood-border: #442a1a;
+        --parchment: #f4ebd0;
+        --parchment-dark: #e6d5aa;
+        --ink: #2b1f16;
+        --accent-emerald: #10b981;
+        --accent-ruby: #ef4444;
+        --accent-sapphire: #3b82f6;
+        --accent-gold: #f59e0b;
+        --text-muted: #94a3b8;
+        --text-light: #f1f5f9;
+        --shadow-elevation: 0 10px 25px -5px rgba(0, 0, 0, 0.6), 0 8px 10px -6px rgba(0, 0, 0, 0.5);
+      }
+
+      html, body {
+        height: 100% !important;
+        max-height: 100% !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        overflow: hidden !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        background: #0d0704 !important;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        user-select: none;
+        -webkit-user-select: none;
+        -webkit-touch-callout: none;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        background: radial-gradient(circle at 50% 30%, #1e130c 0%, #120a06 65%, #080402 100%);
+        color: var(--text-light);
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        justify-content: flex-start;
+        touch-action: manipulation;
+        width: 100%;
+        height: 100%;
+      }
+
+      /* Top Navigation Bar - Ultra-compact, single row 36px */
+      header {
+        width: 100%;
+        max-width: 100%;
+        height: 36px;
+        min-height: 36px;
+        max-height: 36px;
+        padding: 0 8px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: linear-gradient(180deg, #2a180e 0%, #1a0f09 100%);
+        backdrop-filter: blur(8px);
+        border-bottom: 1.5px solid #4a2c17;
+        flex-shrink: 0;
+        z-index: 40;
+      }
+
+      .header-left {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        min-width: 0;
+      }
+
+      .detective-badge-icon {
+        width: 24px;
+        height: 24px;
+        background: linear-gradient(135deg, var(--brass-light), var(--brass-dark));
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 0 6px rgba(212, 163, 75, 0.4);
+        border: 1px solid #fff3c4;
+        flex-shrink: 0;
+      }
+
+      .title-group {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        min-width: 0;
+      }
+
+      .title-group h1 {
+        font-size: clamp(0.72rem, 2.4vw, 0.85rem);
+        font-weight: 700;
+        letter-spacing: 0.2px;
+        color: var(--brass-light);
+        text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .case-tag-chip {
+        font-size: 0.62rem;
+        font-weight: 700;
+        background: rgba(212, 163, 75, 0.18);
+        border: 1px solid rgba(212, 163, 75, 0.4);
+        color: #fef08a;
+        padding: 1px 6px;
+        border-radius: 4px;
+        white-space: nowrap;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      /* Inlined Quick Stats */
+      .header-stats-pills {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        flex-shrink: 0;
+      }
+
+      .stat-mini-pill {
+        display: flex;
+        align-items: center;
+        gap: 3px;
+        background: rgba(26, 31, 44, 0.9);
+        border: 1px solid rgba(212, 163, 75, 0.25);
+        border-radius: 6px;
+        padding: 2px 6px;
+        font-size: 0.7rem;
+        box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+      }
+
+      .stat-mini-icon {
+        font-size: 0.68rem;
+      }
+
+      .stat-mini-val {
+        font-weight: 700;
+        font-variant-numeric: tabular-nums;
+        color: #fff;
+      }
+
+      .stat-mini-val.gold {
+        color: var(--brass-light);
+      }
+
+      .header-controls {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        flex-shrink: 0;
+      }
+
+      .clue-hint-btn {
+        background: linear-gradient(135deg, #d4a34b, #966723);
+        color: #1e130c;
+        font-weight: 700;
+        font-size: 0.72rem;
+        padding: 3px 8px;
+        height: 26px;
+        border-radius: 6px;
+        border: 1px solid #ffecb3;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        cursor: pointer;
+        box-shadow: 0 2px 6px rgba(212, 163, 75, 0.35);
+        white-space: nowrap;
+        transition: transform 0.15s ease, filter 0.15s ease;
+      }
+
+      .clue-hint-btn:hover {
+        filter: brightness(1.1);
+        transform: translateY(-1px);
+      }
+
+      .clue-hint-btn:active {
+        transform: scale(0.96);
+      }
+
+      .icon-btn {
+        background: #222938;
+        border: 1px solid rgba(212, 163, 75, 0.3);
+        color: var(--brass-light);
+        width: 26px;
+        height: 26px;
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        flex-shrink: 0;
+      }
+
+      .icon-btn:hover {
+        background: #2a3346;
+        border-color: var(--brass-light);
+      }
+
+      .icon-btn:active {
+        transform: scale(0.95);
+      }
+
+      /* Main Game Console: Fills 100% of remaining screen, zero scroll */
+      main {
+        width: 100%;
+        max-width: 100%;
+        flex: 1 1 0;
+        min-height: 0;
+        height: calc(100% - 36px);
+        max-height: calc(100% - 36px);
+        padding: 0;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: stretch;
+        align-items: stretch;
+        overflow: hidden;
+        box-sizing: border-box;
+      }
+
+      .vault-chamber {
+        width: 100%;
+        max-width: 100%;
+        height: 100%;
+        max-height: 100%;
+        min-height: 0;
+        flex: 1 1 0;
+        margin: 0;
+        background: linear-gradient(180deg, #22140b 0%, #170d07 50%, #0d0704 100%);
+        border: none;
+        border-radius: 0;
+        box-shadow: none;
+        padding: 4px 6px 6px;
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: stretch;
+        gap: 4px;
+        box-sizing: border-box;
+      }
+
+      .vault-chamber::before {
+        display: none;
+      }
+
+      .chamber-center-console {
+        width: 100%;
+        max-width: 520px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 3px;
+        margin: 1px auto;
+        flex-shrink: 0;
+      }
+
+      /* Chamber Sub-panels: Expand and fill available vertical space */
+      .chamber-subpanel {
+        width: 100%;
+        max-width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 2px;
+        flex: 1 1 0;
+        min-height: 0;
+      }
+
+      .vault-sub-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        max-width: 100%;
+        padding: 0 4px 1px;
+        line-height: 1.1;
+        flex-shrink: 0;
+      }
+
+      .vault-sub-label {
+        font-family: Georgia, serif;
+        font-size: 0.62rem;
+        letter-spacing: 0.5px;
+        color: var(--brass-light);
+        text-transform: uppercase;
+        opacity: 0.95;
+      }
+
+      .vault-sub-hint {
+        font-size: 0.55rem;
+        color: var(--text-muted);
+      }
+
+      /* 4 Key Slots (Tumblers) */
+      .slots-grid, .keys-rack {
+        width: 100%;
+        max-width: 100%;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 6px;
+        flex: 1 1 0;
+        min-height: 0;
+        height: 100%;
+        align-items: stretch;
+        box-sizing: border-box;
+      }
+
+      .slot-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 2px;
+        height: 100%;
+        min-height: 0;
+        flex: 1 1 0;
+      }
+
+      .slot-roman {
+        font-family: Georgia, serif;
+        font-size: 0.60rem;
+        font-weight: 700;
+        color: var(--brass-light);
+        opacity: 0.9;
+        line-height: 1;
+        flex-shrink: 0;
+      }
+
+      .key-slot {
+        width: 100%;
+        height: 100%;
+        min-height: 0;
+        flex: 1 1 0;
+        background: radial-gradient(circle at 50% 30%, #15100c 0%, #0c0805 100%);
+        border: 1.5px dashed rgba(212, 163, 75, 0.4);
+        border-radius: 7px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        cursor: pointer;
+        transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+        box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.7);
+        padding: 3px;
+        box-sizing: border-box;
+      }
+
+      .key-slot.drag-over {
+        border-color: #ffd166;
+        background: radial-gradient(circle at 50% 30%, #2e2014 0%, #140d07 100%);
+        transform: scale(1.02);
+        box-shadow: 0 0 10px rgba(245, 207, 123, 0.5);
+      }
+
+      .key-slot.has-key {
+        border: 1.5px solid rgba(212, 163, 75, 0.8);
+        background: radial-gradient(circle at 50% 30%, #25170d 0%, #100a06 100%);
+        box-shadow: inset 0 2px 5px rgba(0,0,0,0.5), 0 2px 6px rgba(0,0,0,0.4);
+        padding: 2px;
+      }
+
+      .slot-placeholder {
+        width: 100%;
+        height: 100%;
+        flex: 1 1 0;
+        min-height: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .slot-empty-icon {
+        width: clamp(22px, 5vw, 36px);
+        height: clamp(22px, 5vw, 36px);
+        opacity: 0.25;
+        color: var(--brass-light);
+      }
+
+      /* Middle Control Strip */
+      .middle-control-strip {
+        width: 100%;
+        max-width: 440px;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        flex-shrink: 0;
+        height: 28px;
+      }
+
+      .vault-center-wheel {
+        width: 28px;
+        height: 28px;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+
+      .lock-gears {
+        width: 100%;
+        height: 100%;
+        transition: transform 1.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+
+      .vault-status-indicator {
+        position: absolute;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: radial-gradient(circle, #3d1b16 0%, #170705 100%);
+        border: 1.5px solid #5a2820;
+        box-shadow: inset 0 0 5px rgba(0,0,0,0.8);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.5s ease;
+      }
+
+      .vault-status-indicator.unlocked {
+        background: radial-gradient(circle, #10b981 0%, #044e34 100%);
+        border-color: #6ee7b7;
+        box-shadow: 0 0 16px #10b981;
+      }
+
+      .vault-status-indicator svg {
+        width: 11px;
+        height: 11px;
+        fill: none;
+        stroke: #ff7b6b;
+        stroke-width: 2;
+        transition: stroke 0.3s ease;
+      }
+
+      .vault-status-indicator.unlocked svg {
+        stroke: #fff;
+      }
+
+      .action-buttons-group {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        flex: 1;
+      }
+
+      .btn-primary {
+        flex: 2;
+        height: 28px;
+        padding: 2px 10px;
+        background: linear-gradient(180deg, #d4a34b 0%, #946922 100%);
+        border: 1px solid #ffe89e;
+        color: #1a1006;
+        font-weight: 800;
+        font-size: 0.74rem;
+        letter-spacing: 0.3px;
+        border-radius: 5px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+        cursor: pointer;
+        box-shadow: 0 2px 6px rgba(212, 163, 75, 0.35);
+        transition: all 0.2s ease;
+      }
+
+      .btn-primary:hover:not(:disabled) {
+        transform: translateY(-1px);
+        filter: brightness(1.1);
+      }
+
+      .btn-primary:active:not(:disabled) {
+        transform: translateY(1px);
+      }
+
+      .btn-primary:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        filter: grayscale(0.5);
+      }
+
+      .btn-secondary {
+        flex: 1;
+        height: 28px;
+        padding: 2px 6px;
+        background: #241912;
+        border: 1px solid rgba(212, 163, 75, 0.3);
+        color: var(--text-light);
+        font-weight: 600;
+        font-size: 0.68rem;
+        border-radius: 5px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+      }
+
+      .btn-secondary:hover {
+        background: #332319;
+        border-color: var(--brass-light);
+      }
+
+      /* Keys Rack */
+      .keys-rack {
+        min-height: 0;
+        padding: 3px;
+        background: rgba(16, 10, 6, 0.7);
+        border-radius: 8px;
+        border: 1px solid rgba(212, 163, 75, 0.15);
+      }
+
+      /* Key Item Card */
+      .key-card {
+        width: 100%;
+        height: 100%;
+        min-height: 0;
+        flex: 1 1 0;
+        background: linear-gradient(160deg, #2a1e15 0%, #17100b 100%);
+        border: 1.5px solid rgba(212, 163, 75, 0.4);
+        border-radius: 7px;
+        padding: 4px 3px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+        cursor: grab;
+        position: relative;
+        box-sizing: border-box;
+        transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease, border-color 0.2s ease;
+        box-shadow: 0 3px 6px rgba(0,0,0,0.5);
+        touch-action: none;
+      }
+
+      .key-card:hover {
+        transform: translateY(-2px);
+        border-color: var(--brass-light);
+        box-shadow: 0 4px 10px rgba(0,0,0,0.6), 0 0 6px rgba(212, 163, 75, 0.3);
+      }
+
+      .key-card:active {
+        cursor: grabbing;
+      }
+
+      .key-card.selected {
+        border-color: #ffd166;
+        box-shadow: 0 0 0 2px rgba(255, 209, 102, 0.4), 0 4px 12px rgba(0,0,0,0.7);
+        transform: scale(1.02);
+      }
+
+      .key-card.in-slot {
+        background: transparent;
+        border: none;
+        box-shadow: none;
+        cursor: pointer;
+        padding: 1px;
+        width: 100%;
+        height: 100%;
+      }
+
+      .key-card.in-slot:hover {
+        transform: scale(1.02);
+      }
+
+      .key-svg-container {
+        width: 100%;
+        height: auto;
+        flex: 1 1 0;
+        min-height: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        padding: 2px 0;
+        box-sizing: border-box;
+      }
+
+      .key-svg-container svg {
+        height: 100%;
+        width: auto;
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+        filter: drop-shadow(0 2px 4px rgba(0,0,0,0.6));
+        transition: transform 0.3s ease;
+      }
+
+      .key-name-tag {
+        font-size: clamp(0.56rem, 2vw, 0.68rem);
+        font-weight: 700;
+        text-align: center;
+        color: #e2e8f0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        width: 100%;
+        padding: 0 1px;
+        line-height: 1.1;
+        flex-shrink: 0;
+        margin-top: 2px;
+      }
+
+      /* Status Message Box */
+      .message-box {
+        width: 100%;
+        max-width: 520px;
+        margin: 0 auto;
+        height: 19px;
+        min-height: 19px;
+        max-height: 19px;
+        background: rgba(18, 12, 8, 0.9);
+        border: 1px solid rgba(212, 163, 75, 0.15);
+        border-radius: 4px;
+        padding: 1px 6px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        font-size: 0.65rem;
+        color: var(--brass-light);
+        opacity: 0.9;
+        transition: all 0.3s ease;
+        flex-shrink: 0;
+        line-height: 1;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .message-box.error {
+        border-color: var(--accent-ruby);
+        background: rgba(239, 68, 68, 0.15);
+        color: #fca5a5;
+        animation: lockJolt 0.45s ease;
+      }
+
+      .message-box.success {
+        border-color: var(--accent-emerald);
+        background: rgba(16, 185, 129, 0.15);
+        color: #6ee7b7;
+      }
+
+      /* Modal Base (CSS Only Modal) */
+      .modal-backdrop {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(6, 8, 12, 0.85);
+        backdrop-filter: blur(6px);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 16px;
+        z-index: 100;
+        opacity: 0;
+        transition: opacity 0.25s ease;
+      }
+
+      .modal-backdrop.open {
+        display: flex;
+        opacity: 1;
+      }
+
+      .clue-journal-book {
+        width: 100%;
+        max-width: 520px;
+        max-height: 90vh;
+        max-height: 90dvh;
+        background: var(--parchment);
+        color: var(--ink);
+        border-radius: 16px;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.9), 0 0 0 6px #3b281b;
+        border: 2px solid #5a3c26;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        position: relative;
+        transform: scale(0.95);
+        transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+
+      .modal-backdrop.open .clue-journal-book {
+        transform: scale(1);
+      }
+
+      /* Journal Header */
+      .journal-header {
+        background: linear-gradient(180deg, #3f2719 0%, #29180e 100%);
+        color: var(--brass-light);
+        padding: 12px 18px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 2px solid #5a3c26;
+      }
+
+      .journal-title-box {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .journal-title-box h3 {
+        font-family: Georgia, serif;
+        font-size: 1.05rem;
+        letter-spacing: 1px;
+      }
+
+      .modal-close-btn {
+        background: rgba(0, 0, 0, 0.3);
+        border: 1px solid rgba(212, 163, 75, 0.4);
+        color: var(--brass-light);
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        font-size: 1.1rem;
+        line-height: 1;
+        transition: all 0.2s ease;
+      }
+
+      .modal-close-btn:hover {
+        background: #5a2820;
+        color: #fff;
+      }
+
+      /* Journal Content Body */
+      .journal-body {
+        padding: 18px 20px;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+        background-image: 
+          repeating-linear-gradient(transparent, transparent 27px, #e3d2ab 28px);
+        line-height: 28px;
+      }
+
+      .journal-story-quote {
+        font-style: italic;
+        font-size: 0.85rem;
+        color: #5c432d;
+        border-left: 3px solid #b8863b;
+        padding-left: 10px;
+        line-height: 1.4;
+      }
+
+      .clues-list {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .clue-item {
+        background: rgba(255, 255, 255, 0.45);
+        border: 1px solid rgba(90, 60, 38, 0.2);
+        border-radius: 8px;
+        padding: 10px 12px;
+        font-size: 0.88rem;
+        font-weight: 500;
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+      }
+
+      .clue-num {
+        background: #3f2719;
+        color: var(--brass-light);
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.72rem;
+        font-weight: 700;
+        flex-shrink: 0;
+        margin-top: 2px;
+      }
+
+      /* Deduction Scratchpad Table */
+      .scratchpad-area {
+        background: rgba(255, 255, 255, 0.7);
+        border: 1px solid #cbb68e;
+        border-radius: 8px;
+        padding: 10px;
+        margin-top: 4px;
+      }
+
+      .scratchpad-title {
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        color: #5a3c26;
+        letter-spacing: 0.5px;
+        margin-bottom: 6px;
+      }
+
+      .scratchpad-grid {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.75rem;
+      }
+
+      .scratchpad-grid th, .scratchpad-grid td {
+        border: 1px solid #c4af85;
+        padding: 4px 6px;
+        text-align: center;
+      }
+
+      .scratchpad-grid th {
+        background: #e6d5aa;
+        color: #3b281b;
+        font-weight: 700;
+      }
+
+      .matrix-cell {
+        cursor: pointer;
+        user-select: none;
+        font-weight: 700;
+        width: 28px;
+        height: 24px;
+      }
+
+      .matrix-cell.check {
+        color: #059669;
+        background: #d1fae5;
+      }
+
+      .matrix-cell.cross {
+        color: #dc2626;
+        background: #fee2e2;
+      }
+
+      /* Victory Celebration Modal */
+      .victory-card {
+        width: 100%;
+        max-width: 480px;
+        background: radial-gradient(circle at 50% 20%, #2a1f14 0%, #150f09 100%);
+        border: 2px solid var(--brass-light);
+        border-radius: 20px;
+        box-shadow: 0 0 40px rgba(212, 163, 75, 0.4), 0 25px 50px rgba(0,0,0,0.9);
+        padding: 28px 22px;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 16px;
+        color: #fff;
+        position: relative;
+        transform: scale(0.9);
+        transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+
+      .modal-backdrop.open .victory-card {
+        transform: scale(1);
+      }
+
+      .victory-seal {
+        width: 72px;
+        height: 72px;
+        background: linear-gradient(135deg, #ffd166, #d4a34b, #966723);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 0 25px rgba(255, 209, 102, 0.6);
+        border: 2px solid #fff3c4;
+      }
+
+      .victory-title {
+        font-family: Georgia, serif;
+        font-size: 1.45rem;
+        color: var(--brass-light);
+        text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+      }
+
+      .victory-rank {
+        font-size: 0.85rem;
+        color: #ffd166;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        font-weight: 700;
+        background: rgba(212, 163, 75, 0.15);
+        padding: 4px 14px;
+        border-radius: 20px;
+        border: 1px solid rgba(212, 163, 75, 0.3);
+      }
+
+      .victory-stats-grid {
+        width: 100%;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+        margin: 6px 0;
+      }
+
+      .v-stat {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(212, 163, 75, 0.2);
+        border-radius: 10px;
+        padding: 8px 6px;
+      }
+
+      .v-stat-num {
+        font-size: 1.15rem;
+        font-weight: 700;
+        color: var(--brass-light);
+      }
+
+      .v-stat-sub {
+        font-size: 0.65rem;
+        color: var(--text-muted);
+        text-transform: uppercase;
+      }
+
+      /* Particle Canvas */
+      #fx-canvas {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 95;
+      }
+
+      /* Animations */
+      @keyframes lockJolt {
+        0%, 100% { transform: translateX(0); }
+        20% { transform: translateX(-8px) rotate(-1deg); }
+        40% { transform: translateX(8px) rotate(1deg); }
+        60% { transform: translateX(-5px); }
+        80% { transform: translateX(5px); }
+      }
+
+      @keyframes doorGlow {
+        0% { box-shadow: 0 0 10px rgba(16, 185, 129, 0.4); }
+        50% { box-shadow: 0 0 35px rgba(16, 185, 129, 0.9), inset 0 0 30px rgba(16, 185, 129, 0.4); }
+        100% { box-shadow: 0 0 10px rgba(16, 185, 129, 0.4); }
+      }
+
+      .door-success-anim {
+        animation: doorGlow 1.5s infinite;
+        border-color: #34d399 !important;
+      }
+
+      .turn-key-anim {
+        transform: rotate(90deg) scale(0.95);
+        transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+
+      /* Dragging Ghost Element for Touch */
+      .drag-ghost {
+        position: fixed;
+        pointer-events: none;
+        z-index: 1000;
+        opacity: 0.95;
+        transform: translate(-50%, -50%) scale(1.06);
+        width: 70px;
+        height: 84px;
+        filter: drop-shadow(0 12px 20px rgba(0,0,0,0.8));
+      }
+
+      /* Precision Constraints - Fullscreen Edge-to-Edge, Zero Dead Spaces */
+      @media (max-width: 900px), (orientation: landscape) {
+        header {
+          width: 100% !important;
+          max-width: 100% !important;
+          padding: 0 8px;
+          gap: 4px;
+        }
+        main {
+          width: 100% !important;
+          max-width: 100% !important;
+          padding: 0;
+          margin: 0;
+          flex: 1 1 0;
+          min-height: 0;
+          height: calc(100% - 36px);
+          max-height: calc(100% - 36px);
+        }
+        .vault-chamber {
+          width: 100% !important;
+          max-width: 100% !important;
+          height: 100%;
+          max-height: 100%;
+          min-height: 0;
+          border: none !important;
+          border-radius: 0 !important;
+          box-shadow: none !important;
+          padding: 3px 6px;
+          justify-content: space-between !important;
+          align-items: stretch !important;
+          gap: 3px;
+        }
+        .vault-chamber::before {
+          display: none !important;
+        }
+        .slots-grid, .keys-rack, .vault-sub-header, .chamber-subpanel {
+          width: 100% !important;
+          max-width: 100% !important;
+        }
+        .slots-grid, .keys-rack {
+          gap: 6px;
+          flex: 1 1 0;
+          min-height: 0;
+          height: 100%;
+        }
+        .key-slot, .key-card {
+          height: 100%;
+          max-height: 100%;
+          min-height: 0;
+          flex: 1 1 0;
+        }
+        .detective-badge-icon {
+          width: 20px;
+          height: 20px;
+        }
+        .header-stats-pills {
+          gap: 3px;
+        }
+        .stat-mini-pill {
+          padding: 1px 5px;
+          font-size: 0.66rem;
+        }
+        .clue-hint-btn {
+          padding: 2px 6px;
+          font-size: 0.65rem;
+        }
+        .icon-btn {
+          width: 24px;
+          height: 24px;
+        }
+      }
+
+      /* Landscape & Short Screen Optimization (Moto G4, Phones in Landscape, Viewports <= 560px height) */
+      @media (orientation: landscape), (max-height: 560px) {
+        body {
+          align-items: stretch !important;
+          width: 100vw !important;
+          height: 100vh !important;
+          height: 100dvh !important;
+          margin: 0 !important;
+          padding: 0 !important;
+        }
+        header {
+          width: 100% !important;
+          max-width: 100% !important;
+          height: 28px !important;
+          min-height: 28px !important;
+          max-height: 28px !important;
+          padding: 0 8px !important;
+        }
+        main {
+          width: 100% !important;
+          max-width: 100% !important;
+          height: calc(100% - 28px) !important;
+          max-height: calc(100% - 28px) !important;
+          padding: 0 !important;
+          margin: 0 !important;
+        }
+        .vault-chamber {
+          width: 100% !important;
+          max-width: 100% !important;
+          border: none !important;
+          border-radius: 0 !important;
+          box-shadow: none !important;
+          padding: 2px 8px 3px !important;
+          gap: 2px !important;
+          justify-content: space-between !important;
+          align-items: stretch !important;
+        }
+        .chamber-subpanel {
+          width: 100% !important;
+          max-width: 100% !important;
+        }
+        .slots-grid, .keys-rack {
+          width: 100% !important;
+          max-width: 100% !important;
+        }
+        .vault-sub-header {
+          width: 100% !important;
+          max-width: 100% !important;
+          padding: 0 2px !important;
+          line-height: 1 !important;
+        }
+        .vault-sub-label {
+          font-size: 0.58rem !important;
+        }
+        .vault-sub-hint {
+          font-size: 0.52rem !important;
+        }
+        .chamber-center-console {
+          width: 100% !important;
+          max-width: 520px !important;
+          gap: 2px !important;
+          margin: 0 auto !important;
+        }
+        .middle-control-strip {
+          height: 24px !important;
+          max-width: 520px !important;
+          margin: 0 auto !important;
+        }
+        .btn-primary, .btn-secondary {
+          height: 24px !important;
+          font-size: 0.68rem !important;
+          padding: 0 8px !important;
+        }
+        .turn-wheel-btn {
+          width: 24px !important;
+          height: 24px !important;
+        }
+        .message-box {
+          height: 16px !important;
+          line-height: 16px !important;
+          font-size: 0.56rem !important;
+          max-width: 520px !important;
+          margin: 0 auto !important;
+        }
+        .key-slot, .key-card {
+          height: 100% !important;
+          max-height: 100% !important;
+          min-height: 0 !important;
+          flex: 1 1 0 !important;
+        }
+        .key-name-tag {
+          font-size: 0.54rem !important;
+        }
+      }
+    </style>
+  
+  <script>
+    function triggerPlatformWin(timeInSeconds) {
+      const elapsed = Math.round(timeInSeconds || 45);
+      try {
+        if (typeof window.onWin === 'function') {
+          window.onWin(elapsed);
+        }
+        if (window.parent && window.parent !== window) {
+          window.parent.postMessage({ type: 'win', time: elapsed }, '*');
+        }
+      } catch(e) { console.error('Platform win notify error:', e); }
+    }
+  </script>
+
+</head>
+  <body class="safe-app-body">
+    <!-- Top Bar - Ultra Compact Single Row (38px) -->
+    <header id="app-header">
+      <div class="header-left">
+        <div class="detective-badge-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2a1a08" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            <circle cx="11" cy="11" r="3" fill="#2a1a08"></circle>
+          </svg>
+        </div>
+        <div class="title-group">
+          <h1 id="main-title">The Lost Keys</h1>
+          <span class="case-tag-chip" id="case-name-label">Caso I</span>
+        </div>
+      </div>
+
+      <!-- Compact Inlined Stats -->
+      <div class="header-stats-pills" id="stats-section">
+        <div class="stat-mini-pill" title="Tempo">
+          <span class="stat-mini-icon">⏱</span>
+          <span class="stat-mini-val gold" id="timer-display">00:00</span>
+        </div>
+        <div class="stat-mini-pill" title="Pontos">
+          <span class="stat-mini-icon">⭐</span>
+          <span class="stat-mini-val" id="score-display">10.000</span>
+        </div>
+        <div class="stat-mini-pill" title="Tentativas">
+          <span class="stat-mini-icon">🎯</span>
+          <span class="stat-mini-val" id="attempts-display">0</span>
+        </div>
+      </div>
+
+      <!-- Header Controls & Clues Button -->
+      <div class="header-controls">
+        <button class="clue-hint-btn" id="btn-open-diary" title="Diário com Pistas">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+            <line x1="8" y1="6" x2="16" y2="6"></line>
+            <line x1="8" y1="10" x2="14" y2="10"></line>
+          </svg>
+          <span>Pistas</span>
+        </button>
+        <button id="btn-sound" class="icon-btn" title="Alternar Som" aria-label="Som">
+          <svg id="icon-sound-on" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+            <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+          </svg>
+        </button>
+        <button id="btn-fullscreen" class="icon-btn" title="Tela Cheia" aria-label="Tela Cheia">
+          <svg id="icon-fullscreen-enter" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Hidden compatibility elements for JS references -->
+    <p id="case-short-desc" style="display: none;"></p>
+
+    <!-- Main Game Console: Fills 100% of remaining screen with zero scrolling -->
+    <main id="game-main">
+      <section class="vault-chamber" id="vault-chamber">
+        <!-- Chamber Subpanel: 4 Safe Tumbler Slots -->
+        <div class="chamber-subpanel">
+          <div class="vault-sub-header">
+            <span class="vault-sub-label">Fechaduras do Mecanismo</span>
+            <span class="vault-sub-hint">Ordem: I &rarr; IV</span>
+          </div>
+
+          <div class="slots-grid" id="slots-container">
+            <!-- Slot 1 -->
+            <div class="slot-wrapper">
+              <span class="slot-roman">I</span>
+              <div class="key-slot" id="slot-0" data-slot-index="0" aria-label="Fechadura I">
+                <div class="slot-placeholder">
+                  <svg class="slot-empty-icon" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2a5 5 0 0 0-5 5c0 1.96 1.13 3.65 2.78 4.47L9 15v2h2v2h2v-2h1v-2h-1v-1.53c1.65-.82 2.78-2.51 2.78-4.47a5 5 0 0 0-5-5zm0 3a2 2 0 1 1 0 4 2 2 0 0 1 0-4z"/>
+                  </svg>
+                </div>
+              </div>
+            </div>
+
+            <!-- Slot 2 -->
+            <div class="slot-wrapper">
+              <span class="slot-roman">II</span>
+              <div class="key-slot" id="slot-1" data-slot-index="1" aria-label="Fechadura II">
+                <div class="slot-placeholder">
+                  <svg class="slot-empty-icon" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2a5 5 0 0 0-5 5c0 1.96 1.13 3.65 2.78 4.47L9 15v2h2v2h2v-2h1v-2h-1v-1.53c1.65-.82 2.78-2.51 2.78-4.47a5 5 0 0 0-5-5zm0 3a2 2 0 1 1 0 4 2 2 0 0 1 0-4z"/>
+                  </svg>
+                </div>
+              </div>
+            </div>
+
+            <!-- Slot 3 -->
+            <div class="slot-wrapper">
+              <span class="slot-roman">III</span>
+              <div class="key-slot" id="slot-2" data-slot-index="2" aria-label="Fechadura III">
+                <div class="slot-placeholder">
+                  <svg class="slot-empty-icon" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2a5 5 0 0 0-5 5c0 1.96 1.13 3.65 2.78 4.47L9 15v2h2v2h2v-2h1v-2h-1v-1.53c1.65-.82 2.78-2.51 2.78-4.47a5 5 0 0 0-5-5zm0 3a2 2 0 1 1 0 4 2 2 0 0 1 0-4z"/>
+                  </svg>
+                </div>
+              </div>
+            </div>
+
+            <!-- Slot 4 -->
+            <div class="slot-wrapper">
+              <span class="slot-roman">IV</span>
+              <div class="key-slot" id="slot-3" data-slot-index="3" aria-label="Fechadura IV">
+                <div class="slot-placeholder">
+                  <svg class="slot-empty-icon" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2a5 5 0 0 0-5 5c0 1.96 1.13 3.65 2.78 4.47L9 15v2h2v2h2v-2h1v-2h-1v-1.53c1.65-.82 2.78-2.51 2.78-4.47a5 5 0 0 0-5-5zm0 3a2 2 0 1 1 0 4 2 2 0 0 1 0-4z"/>
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Middle Controls & Status Console -->
+        <div class="chamber-center-console">
+          <div class="middle-control-strip">
+            <div class="vault-center-wheel">
+              <svg class="lock-gears" id="lock-gears-svg" viewBox="0 0 100 100">
+                <circle cx="50" cy="50" r="46" fill="#1b120c" stroke="#5a3c26" stroke-width="4"/>
+                <circle cx="50" cy="50" r="38" fill="none" stroke="#d4a34b" stroke-width="1.5" stroke-dasharray="4 3"/>
+                <rect x="47" y="5" width="6" height="90" rx="3" fill="#8f6522"/>
+                <rect x="5" y="47" width="90" height="6" rx="3" fill="#8f6522"/>
+                <rect x="48" y="10" width="4" height="80" rx="2" fill="#d4a34b"/>
+                <rect x="10" y="48" width="80" height="4" rx="2" fill="#d4a34b"/>
+              </svg>
+              <div class="vault-status-indicator" id="vault-indicator">
+                <svg id="lock-icon-locked" viewBox="0 0 24 24">
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                </svg>
+              </div>
+            </div>
+
+            <div class="action-buttons-group">
+              <button class="btn-primary" id="btn-unlock">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 2l-2 2m-1.5 1.5L14 9"></path>
+                  <circle cx="7.5" cy="15.5" r="5.5"></circle>
+                  <path d="m11.5 11.5 3 3"></path>
+                  <path d="m14.5 8.5 2 2"></path>
+                </svg>
+                <span>Girar Chaves</span>
+              </button>
+              <button class="btn-secondary" id="btn-clear-slots">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+                  <path d="M3 3v5h5"></path>
+                </svg>
+                <span>Recolher</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Compact Message Status Box -->
+          <div class="message-box" id="feedback-msg">
+            Arraste ou toque nas chaves para posicioná-las nas 4 fechaduras.
+          </div>
+        </div>
+
+        <!-- Keys Inventory Tray -->
+        <div class="chamber-subpanel" id="inventory-section">
+          <div class="vault-sub-header">
+            <span class="vault-sub-label">Porta-Chaves do Investigador</span>
+            <span class="vault-sub-hint">Toque ou arraste</span>
+          </div>
+          <div class="keys-rack" id="keys-rack" aria-label="Chaves disponíveis">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- CSS / DOM Modal for Diary Clues -->
+    <div class="modal-backdrop" id="diary-modal" role="dialog" aria-modal="true" aria-labelledby="diary-modal-title">
+      <div class="clue-journal-book">
+        <div class="journal-header">
+          <div class="journal-title-box">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+              <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+            </svg>
+            <h3 id="diary-modal-title">Diário do Investigador</h3>
+          </div>
+          <button class="modal-close-btn" id="btn-close-diary" aria-label="Fechar diário">&times;</button>
+        </div>
+
+        <div class="journal-body">
+          <div class="journal-story-quote" id="diary-story-quote">
+            "Encontrei estas quatro chaves antigas espalhadas pelo escritório de lorde Alistair. 
+            Suas notas pessoais revelam a única sequência capaz de girar os cilindros sem ativar a armadilha..."
+          </div>
+
+          <div class="clues-list" id="clues-container">
+            <!-- Injected via JavaScript -->
+          </div>
+
+          <!-- Deduction Scratchpad Matrix (Deduction Aid) -->
+          <div class="scratchpad-area">
+            <div class="scratchpad-title">Tabela de Dedução do Detetive (Toque para marcar ✓ ou ✗):</div>
+            <table class="scratchpad-grid" id="deduction-matrix">
+              <thead>
+                <tr>
+                  <th>Chave</th>
+                  <th>Pos. I</th>
+                  <th>Pos. II</th>
+                  <th>Pos. III</th>
+                  <th>Pos. IV</th>
+                </tr>
+              </thead>
+              <tbody id="matrix-body">
+                <!-- Injected via JavaScript -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Victory Modal -->
+    <div class="modal-backdrop" id="victory-modal" role="dialog" aria-modal="true">
+      <div class="victory-card">
+        <div class="victory-seal">
+          <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="#2a1a08" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+          </svg>
+        </div>
+        <h2 class="victory-title">Cofre Destrancado!</h2>
+        <div class="victory-rank" id="victory-rank-badge">Mestre da Dedução</div>
+        <p style="font-size: 0.85rem; color: #cbd5e1; line-height: 1.4;">
+          O mecanismo cedeu com um clique solene. As quatro chaves giraram em perfeita harmonia lógica. O segredo foi revelado!
+        </p>
+
+        <div class="victory-stats-grid">
+          <div class="v-stat">
+            <div class="v-stat-num" id="v-stat-time">00:45</div>
+            <div class="v-stat-sub">Tempo</div>
+          </div>
+          <div class="v-stat">
+            <div class="v-stat-num" id="v-stat-score">9.450</div>
+            <div class="v-stat-sub">Pontos</div>
+          </div>
+          <div class="v-stat">
+            <div class="v-stat-num" id="v-stat-attempts">1ª Tentativa</div>
+            <div class="v-stat-sub">Precisão</div>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 10px; width: 100%; margin-top: 6px;">
+          <button class="btn-primary" id="btn-next-case" style="flex: 1;">
+            Próximo Caso
+          </button>
+          <button class="btn-secondary" id="btn-replay-case" style="flex: 1;">
+            Jogar Novamente
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Particle Canvas -->
+    <canvas id="fx-canvas"></canvas>
+
+    <script>
+      (function() {
+        "use strict";
+
+        /* ==========================================================
+           1. GAME DATA & LOGIC ENGINE
+           ========================================================== */
+        
+        // The 4 Distinct Keys Definition with rich handcrafted SVGs
+        const KEYS_DATA = {
+          sun: {
+            id: 'sun',
+            name: 'Chave Solar',
+            color: '#f59e0b',
+            accent: '#fbbf24',
+            gem: '#fef08a',
+            lore: 'Ouro Forjado & Citrino',
+            svg: `<svg viewBox="0 0 100 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <linearGradient id="gold-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#fffbeb"/>
+                  <stop offset="25%" stop-color="#f59e0b"/>
+                  <stop offset="70%" stop-color="#b45309"/>
+                  <stop offset="100%" stop-color="#78350f"/>
+                </linearGradient>
+                <radialGradient id="sun-gem">
+                  <stop offset="0%" stop-color="#fff"/>
+                  <stop offset="40%" stop-color="#fef08a"/>
+                  <stop offset="100%" stop-color="#d97706"/>
+                </radialGradient>
+              </defs>
+              <!-- Sun Rays Bow -->
+              <circle cx="50" cy="38" r="28" fill="none" stroke="url(#gold-grad)" stroke-width="4" stroke-dasharray="3 3"/>
+              <circle cx="50" cy="38" r="22" fill="url(#gold-grad)"/>
+              <circle cx="50" cy="38" r="14" fill="#2d1703"/>
+              <circle cx="50" cy="38" r="10" fill="url(#sun-gem)"/>
+              <!-- Shaft -->
+              <rect x="47" y="58" width="6" height="66" rx="2" fill="url(#gold-grad)"/>
+              <!-- Collar -->
+              <rect x="44" y="66" width="12" height="4" rx="1.5" fill="#fef08a"/>
+              <!-- Bit / Ward (Teeth) -->
+              <path d="M53 100h15v8h-7v6h7v8h-15z" fill="url(#gold-grad)"/>
+              <circle cx="60" cy="118" r="2" fill="#fff"/>
+            </svg>`
+          },
+          moon: {
+            id: 'moon',
+            name: 'Chave Lunar',
+            color: '#38bdf8',
+            accent: '#93c5fd',
+            gem: '#e0f2fe',
+            lore: 'Prata Mística & Safira',
+            svg: `<svg viewBox="0 0 100 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <linearGradient id="silver-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#ffffff"/>
+                  <stop offset="30%" stop-color="#cbd5e1"/>
+                  <stop offset="70%" stop-color="#64748b"/>
+                  <stop offset="100%" stop-color="#334155"/>
+                </linearGradient>
+                <radialGradient id="moon-gem">
+                  <stop offset="0%" stop-color="#ffffff"/>
+                  <stop offset="50%" stop-color="#38bdf8"/>
+                  <stop offset="100%" stop-color="#0284c7"/>
+                </radialGradient>
+              </defs>
+              <!-- Crescent Moon Bow -->
+              <path d="M50 12C36 12 25 23 25 37c0 14 11 25 25 25 4 0 7-1 10-2-9-5-14-14-14-23 0-10 6-18 15-23-2-1-4-2-6-2z" fill="url(#silver-grad)"/>
+              <circle cx="42" cy="37" r="7" fill="url(#moon-gem)"/>
+              <!-- Shaft -->
+              <rect x="47" y="60" width="6" height="64" rx="2" fill="url(#silver-grad)"/>
+              <!-- Ornate rings -->
+              <circle cx="50" cy="74" r="5" fill="none" stroke="#93c5fd" stroke-width="2"/>
+              <!-- Bit / Ward (Teeth) -->
+              <path d="M53 96h14v6h-6v6h8v8h-16z" fill="url(#silver-grad)"/>
+              <circle cx="59" cy="106" r="1.5" fill="#38bdf8"/>
+            </svg>`
+          },
+          serpent: {
+            id: 'serpent',
+            name: 'Chave Esmeralda',
+            color: '#10b981',
+            accent: '#34d399',
+            gem: '#a7f3d0',
+            lore: 'Bronze Antigo & Esmeralda',
+            svg: `<svg viewBox="0 0 100 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <linearGradient id="bronze-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#d97706"/>
+                  <stop offset="35%" stop-color="#b45309"/>
+                  <stop offset="70%" stop-color="#78350f"/>
+                  <stop offset="100%" stop-color="#451a03"/>
+                </linearGradient>
+                <radialGradient id="emerald-gem">
+                  <stop offset="0%" stop-color="#ecfdf5"/>
+                  <stop offset="40%" stop-color="#10b981"/>
+                  <stop offset="100%" stop-color="#064e3b"/>
+                </radialGradient>
+              </defs>
+              <!-- Serpent Bow -->
+              <circle cx="50" cy="38" r="22" fill="none" stroke="url(#bronze-grad)" stroke-width="6"/>
+              <!-- Emerald Diamond in Center -->
+              <polygon points="50,26 60,38 50,50 40,38" fill="url(#emerald-gem)" stroke="#34d399" stroke-width="1.5"/>
+              <!-- Shaft -->
+              <rect x="47" y="58" width="6" height="66" rx="2" fill="url(#bronze-grad)"/>
+              <!-- Serpent coils -->
+              <path d="M44 68c4-4 8 4 12 0" stroke="#34d399" stroke-width="2" fill="none"/>
+              <path d="M44 80c4-4 8 4 12 0" stroke="#34d399" stroke-width="2" fill="none"/>
+              <!-- Bit / Ward (Teeth) -->
+              <path d="M47 98h-15v7h7v5h-7v10h15z" fill="url(#bronze-grad)"/>
+              <circle cx="40" cy="112" r="2" fill="#10b981"/>
+            </svg>`
+          },
+          skull: {
+            id: 'skull',
+            name: 'Chave Sombria',
+            color: '#c084fc',
+            accent: '#e879f9',
+            gem: '#f3e8ff',
+            lore: 'Ferro Negro & Ametista',
+            svg: `<svg viewBox="0 0 100 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <linearGradient id="iron-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#94a3b8"/>
+                  <stop offset="35%" stop-color="#475569"/>
+                  <stop offset="70%" stop-color="#1e293b"/>
+                  <stop offset="100%" stop-color="#0f172a"/>
+                </linearGradient>
+                <radialGradient id="amethyst-gem">
+                  <stop offset="0%" stop-color="#faf5ff"/>
+                  <stop offset="45%" stop-color="#c084fc"/>
+                  <stop offset="100%" stop-color="#581c87"/>
+                </radialGradient>
+              </defs>
+              <!-- Arcane Gothic Bow -->
+              <polygon points="50,14 74,38 50,60 26,38" fill="url(#iron-grad)" stroke="#c084fc" stroke-width="2"/>
+              <circle cx="50" cy="37" r="10" fill="url(#amethyst-gem)"/>
+              <!-- Shaft -->
+              <rect x="47" y="58" width="6" height="66" rx="2" fill="url(#iron-grad)"/>
+              <!-- Crossbar -->
+              <rect x="40" y="70" width="20" height="4" rx="2" fill="#71717a"/>
+              <!-- Bit / Ward (Teeth) -->
+              <path d="M53 96h16v6h-8v6h8v12h-16z" fill="url(#iron-grad)"/>
+              <circle cx="62" cy="110" r="1.5" fill="#e879f9"/>
+            </svg>`
+          }
+        };
+
+        // Curated Mystery Cases with strictly solvable logic clues
+        const PRESET_CASES = [
+          {
+            id: 1,
+            title: "Caso I: O Segredo de Blackwood",
+            subtitle: "Dedução Básica",
+            lore: "O testamento do Lorde Blackwood repousa atrás deste aço temperado. Suas anotações no diário revelam a ordem precisa das quatro chaves herdadas.",
+            solution: ['moon', 'sun', 'serpent', 'skull'],
+            clues: [
+              "A Chave Solar deve ser inserida imediatamente depois da Chave Lunar.",
+              "A Chave Sombria é a última da sequência, ocupando a 4ª fechadura.",
+              "A Chave Esmeralda deve ser colocada em uma fechadura ímpar.",
+              "A Chave Lunar ocupa a primeira fechadura da esquerda (Posição I)."
+            ]
+          },
+          {
+            id: 2,
+            title: "Caso II: A Cripta do Relojoeiro",
+            subtitle: "Dedução Relativa",
+            lore: "O mestre relojoeiro usava engrenagens astronômicas. Quem tentar a ordem errada travará a fechadura perpetuamente.",
+            solution: ['serpent', 'skull', 'sun', 'moon'],
+            clues: [
+              "A Chave Esmeralda abre a primeira fechadura (Posição I).",
+              "A Chave Lunar não pode estar em nenhuma das três primeiras posições.",
+              "A Chave Solar fica exatamente à direita da Chave Sombria.",
+              "A Chave Sombria precede a Chave Solar."
+            ]
+          },
+          {
+            id: 3,
+            title: "Caso III: O Gabinete Proibido",
+            subtitle: "Dedução Complexa",
+            lore: "Nas profundezas da biblioteca oculta, um enigma de alquimia liga o Sol, a Lua, a Serpente e a Sombra.",
+            solution: ['skull', 'serpent', 'moon', 'sun'],
+            clues: [
+              "A Chave Solar encerra o mecanismo (Posição IV).",
+              "A Chave Lunar está em uma posição imediatamente anterior à Chave Solar.",
+              "A Chave Esmeralda fica entre a Chave Sombria e a Chave Lunar.",
+              "A Chave Sombria não pode estar nos cilindros pares (II ou IV)."
+            ]
+          },
+          {
+            id: 4,
+            title: "Caso IV: O Mistério da Rosa de Ouro",
+            subtitle: "Dedução Avançada",
+            lore: "Um cofre ancestral cujo mecanismo requer calma e estrita lógica dedutiva.",
+            solution: ['sun', 'skull', 'serpent', 'moon'],
+            clues: [
+              "A Chave Solar inicia o mecanismo na Posição I.",
+              "A Chave Lunar fica no extremo oposto da Chave Solar (Posição IV).",
+              "A Chave Esmeralda fica imediatamente à direita da Chave Sombria.",
+              "A Chave Sombria ocupa a segunda fechadura (Posição II)."
+            ]
+          }
+        ];
+
+        /* ==========================================================
+           2. PROCEDURAL CASE GENERATOR (Infinite Replayability)
+           ========================================================== */
+        function generateRandomCase(caseNumber) {
+          const keyKeys = ['sun', 'moon', 'serpent', 'skull'];
+          // Shuffle
+          const solution = [...keyKeys];
+          for (let i = solution.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [solution[i], solution[j]] = [solution[j], solution[i]];
+          }
+
+          const posName = ['1ª (Posição I)', '2ª (Posição II)', '3ª (Posição III)', '4ª (Posição IV)'];
+          const clues = [];
+
+          // Generate clear, unambiguous clues
+          // Clue 1: Absolute position of one key
+          const pick1 = solution[0];
+          clues.push(`${KEYS_DATA[pick1].name} deve ser colocada na ${posName[0]}.`);
+
+          // Clue 2: Last key
+          const pickLast = solution[3];
+          clues.push(`${KEYS_DATA[pickLast].name} é a chave final da sequência (Posição IV).`);
+
+          // Clue 3: Relative relation between position 1 & 2
+          const pickMid1 = solution[1];
+          const pickMid2 = solution[2];
+          clues.push(`${KEYS_DATA[pickMid1].name} deve ser posicionada imediatamente antes da ${KEYS_DATA[pickMid2].name}.`);
+
+          // Clue 4: Confirmation rule
+          clues.push(`A ${KEYS_DATA[pickMid2].name} ocupa uma fechadura ímpar (Posição III).`);
+
+          return {
+            id: caseNumber,
+            title: `Caso #${caseNumber}: O Enigma Desconhecido`,
+            subtitle: "Mistério Procedural",
+            lore: "Um novo cofre foi descoberto no porão da mansão. As anotações recém-encontradas revelam um padrão único.",
+            solution: solution,
+            clues: clues
+          };
+        }
+
+        /* ==========================================================
+           3. WEB AUDIO SYNTHESIZER (Pure Vanilla, Zero Dependencies)
+           ========================================================== */
+        let audioCtx = null;
+        let isMuted = localStorage.getItem('the_lost_keys_muted') === 'true';
+
+        function initAudio() {
+          if (!audioCtx) {
+            const AudioContext = window.AudioContext || window.webkitAudioContext;
+            if (AudioContext) {
+              audioCtx = new AudioContext();
+            }
+          }
+          if (audioCtx && audioCtx.state === 'suspended') {
+            audioCtx.resume();
+          }
+        }
+
+        function playKeyPickupSound() {
+          if (isMuted) return;
+          initAudio();
+          if (!audioCtx) return;
+          try {
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(800, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(1200, audioCtx.currentTime + 0.08);
+            gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.08);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.08);
+          } catch(e) {}
+        }
+
+        function playKeyDropSound() {
+          if (isMuted) return;
+          initAudio();
+          if (!audioCtx) return;
+          try {
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(500, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(320, audioCtx.currentTime + 0.12);
+            gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.12);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.12);
+          } catch(e) {}
+        }
+
+        function playLockTurnSound() {
+          if (isMuted) return;
+          initAudio();
+          if (!audioCtx) return;
+          try {
+            // Mechanical click ratchet sequence
+            const now = audioCtx.currentTime;
+            [0, 0.07, 0.15, 0.22, 0.30].forEach((delay, idx) => {
+              const osc = audioCtx.createOscillator();
+              const gain = audioCtx.createGain();
+              osc.type = 'square';
+              osc.frequency.setValueAtTime(280 + idx * 70, now + delay);
+              gain.gain.setValueAtTime(0.15, now + delay);
+              gain.gain.exponentialRampToValueAtTime(0.01, now + delay + 0.04);
+              osc.connect(gain);
+              gain.connect(audioCtx.destination);
+              osc.start(now + delay);
+              osc.stop(now + delay + 0.05);
+            });
+          } catch(e) {}
+        }
+
+        function playErrorSound() {
+          if (isMuted) return;
+          initAudio();
+          if (!audioCtx) return;
+          try {
+            const now = audioCtx.currentTime;
+            const osc1 = audioCtx.createOscillator();
+            const osc2 = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc1.type = 'sawtooth';
+            osc2.type = 'sawtooth';
+            osc1.frequency.setValueAtTime(140, now);
+            osc2.frequency.setValueAtTime(147, now); // dissonance
+            gain.gain.setValueAtTime(0.35, now);
+            gain.gain.exponentialRampToValueAtTime(0.01, now + 0.35);
+            osc1.connect(gain);
+            osc2.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc1.start(now);
+            osc2.start(now);
+            osc1.stop(now + 0.35);
+            osc2.stop(now + 0.35);
+          } catch(e) {}
+        }
+
+        function playSuccessFanfare() {
+          if (isMuted) return;
+          initAudio();
+          if (!audioCtx) return;
+          try {
+            const now = audioCtx.currentTime;
+            // Majestic major chord sequence: C4, E4, G4, C5, E5, G5
+            const notes = [261.63, 329.63, 392.00, 523.25, 659.25, 783.99];
+            notes.forEach((freq, idx) => {
+              const osc = audioCtx.createOscillator();
+              const gain = audioCtx.createGain();
+              osc.type = 'triangle';
+              osc.frequency.setValueAtTime(freq, now + idx * 0.1);
+              gain.gain.setValueAtTime(0.3, now + idx * 0.1);
+              gain.gain.exponentialRampToValueAtTime(0.01, now + idx * 0.1 + 0.6);
+              osc.connect(gain);
+              gain.connect(audioCtx.destination);
+              osc.start(now + idx * 0.1);
+              osc.stop(now + idx * 0.1 + 0.65);
+            });
+          } catch(e) {}
+        }
+
+        function playParchmentSound() {
+          if (isMuted) return;
+          initAudio();
+          if (!audioCtx) return;
+          try {
+            // White noise burst for paper rustle
+            const bufferSize = audioCtx.sampleRate * 0.1;
+            const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+            const data = buffer.getChannelData(0);
+            for (let i = 0; i < bufferSize; i++) {
+              data[i] = Math.random() * 2 - 1;
+            }
+            const noise = audioCtx.createBufferSource();
+            noise.buffer = buffer;
+            const filter = audioCtx.createBiquadFilter();
+            filter.type = 'bandpass';
+            filter.frequency.value = 1000;
+            const gain = audioCtx.createGain();
+            gain.gain.setValueAtTime(0.12, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+            noise.connect(filter);
+            filter.connect(gain);
+            gain.connect(audioCtx.destination);
+            noise.start();
+          } catch(e) {}
+        }
+
+        /* ==========================================================
+           4. GAME STATE MANAGEMENT
+           ========================================================== */
+        let currentCaseIndex = 0;
+        let currentCase = PRESET_CASES[0];
+        let slots = [null, null, null, null]; // holds key ids in slots 0, 1, 2, 3
+        let selectedKeyId = null; // For tap-to-select mobile interaction
+        let attemptsCount = 0;
+        let currentScore = 10000;
+        let timerSeconds = 0;
+        let timerInterval = null;
+        let gameFinished = false;
+        let deductionMatrixState = {}; // { 'sun-0': 'check' | 'cross' | null }
+
+        // DOM Element References
+        const timerDisplay = document.getElementById('timer-display');
+        const scoreDisplay = document.getElementById('score-display');
+        const attemptsDisplay = document.getElementById('attempts-display');
+        const keysRack = document.getElementById('keys-rack');
+        const slotsContainer = document.getElementById('slots-container');
+        const slotElements = [
+          document.getElementById('slot-0'),
+          document.getElementById('slot-1'),
+          document.getElementById('slot-2'),
+          document.getElementById('slot-3')
+        ];
+        const feedbackMsg = document.getElementById('feedback-msg');
+        const btnUnlock = document.getElementById('btn-unlock');
+        const btnClearSlots = document.getElementById('btn-clear-slots');
+        const btnOpenDiary = document.getElementById('btn-open-diary');
+        const btnCloseDiary = document.getElementById('btn-close-diary');
+        const diaryModal = document.getElementById('diary-modal');
+        const victoryModal = document.getElementById('victory-modal');
+        const btnNextCase = document.getElementById('btn-next-case');
+        const btnReplayCase = document.getElementById('btn-replay-case');
+        const btnSound = document.getElementById('btn-sound');
+        const btnFullscreen = document.getElementById('btn-fullscreen');
+        const caseNameLabel = document.getElementById('case-name-label');
+        const caseShortDesc = document.getElementById('case-short-desc');
+        const cluesContainer = document.getElementById('clues-container');
+        const matrixBody = document.getElementById('matrix-body');
+        const diaryStoryQuote = document.getElementById('diary-story-quote');
+        const lockGearsSvg = document.getElementById('lock-gears-svg');
+        const vaultIndicator = document.getElementById('vault-indicator');
+        const vaultChamber = document.getElementById('vault-chamber');
+
+        /* ==========================================================
+           5. TIMER & SCORING LOGIC
+           ========================================================== */
+        function startTimer() {
+          stopTimer();
+          timerSeconds = 0;
+          updateTimerUI();
+          timerInterval = setInterval(() => {
+            if (!gameFinished) {
+              timerSeconds++;
+              updateTimerUI();
+              // Gradual score decay over time (speed incentive: 5 pts per second)
+              if (currentScore > 500) {
+                currentScore = Math.max(500, currentScore - 5);
+                updateScoreUI();
+              }
+            }
+          }, 1000);
+        }
+
+        function stopTimer() {
+          if (timerInterval) {
+            clearInterval(timerInterval);
+            timerInterval = null;
+          }
+        }
+
+        function updateTimerUI() {
+          const m = Math.floor(timerSeconds / 60);
+          const s = timerSeconds % 60;
+          timerDisplay.textContent = `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+        }
+
+        function updateScoreUI() {
+          scoreDisplay.textContent = currentScore.toLocaleString('pt-BR');
+        }
+
+        function updateAttemptsUI() {
+          attemptsDisplay.textContent = attemptsCount;
+        }
+
+        /* ==========================================================
+           6. CASE LOADING & INITIALIZATION
+           ========================================================== */
+        function loadCase(index) {
+          gameFinished = false;
+          slots = [null, null, null, null];
+          selectedKeyId = null;
+          attemptsCount = 0;
+          currentScore = 10000;
+          deductionMatrixState = {};
+
+          if (index < PRESET_CASES.length) {
+            currentCase = PRESET_CASES[index];
+          } else {
+            currentCase = generateRandomCase(index + 1);
+          }
+
+          // Reset vault chamber visuals
+          vaultChamber.classList.remove('door-success-anim');
+          vaultIndicator.classList.remove('unlocked');
+          lockGearsSvg.style.transform = 'rotate(0deg)';
+          vaultIndicator.innerHTML = `
+            <svg id="lock-icon-locked" viewBox="0 0 24 24">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+            </svg>
+          `;
+
+          // Update Banner
+          caseNameLabel.textContent = currentCase.title;
+          caseShortDesc.textContent = currentCase.lore;
+          diaryStoryQuote.textContent = `"${currentCase.lore}"`;
+
+          // Populate Clues Modal
+          renderClues();
+          renderDeductionMatrix();
+
+          // Render Keys and Slots
+          renderInventory();
+          renderSlots();
+
+          updateAttemptsUI();
+          updateScoreUI();
+          setFeedback("Arraste ou toque nas chaves para posicioná-las nas 4 fechaduras.", "normal");
+
+          startTimer();
+        }
+
+        function renderClues() {
+          cluesContainer.innerHTML = '';
+          currentCase.clues.forEach((clueText, i) => {
+            const item = document.createElement('div');
+            item.className = 'clue-item';
+            item.innerHTML = `
+              <span class="clue-num">${i + 1}</span>
+              <span>${clueText}</span>
+            `;
+            cluesContainer.appendChild(item);
+          });
+        }
+
+        function renderDeductionMatrix() {
+          matrixBody.innerHTML = '';
+          const keyKeys = ['sun', 'moon', 'serpent', 'skull'];
+          keyKeys.forEach(kId => {
+            const keyInfo = KEYS_DATA[kId];
+            const row = document.createElement('tr');
+            
+            let cellsHtml = `<td style="font-weight: 700; color: #3f2719; text-align: left;">${keyInfo.name}</td>`;
+            for (let slot = 0; slot < 4; slot++) {
+              const cellKey = `${kId}-${slot}`;
+              const state = deductionMatrixState[cellKey] || '';
+              let symbol = '';
+              if (state === 'check') symbol = '✓';
+              if (state === 'cross') symbol = '✗';
+              cellsHtml += `<td class="matrix-cell ${state}" data-cell-key="${cellKey}">${symbol}</td>`;
+            }
+            row.innerHTML = cellsHtml;
+            matrixBody.appendChild(row);
+          });
+
+          // Attach toggle clicks to matrix cells
+          matrixBody.querySelectorAll('.matrix-cell').forEach(cell => {
+            cell.addEventListener('click', (e) => {
+              const key = e.currentTarget.getAttribute('data-cell-key');
+              const current = deductionMatrixState[key];
+              if (!current) {
+                deductionMatrixState[key] = 'check';
+              } else if (current === 'check') {
+                deductionMatrixState[key] = 'cross';
+              } else {
+                delete deductionMatrixState[key];
+              }
+              playKeyPickupSound();
+              renderDeductionMatrix();
+            });
+          });
+        }
+
+        /* ==========================================================
+           7. RENDER SLOTS & INVENTORY
+           ========================================================== */
+        function renderSlots() {
+          slotElements.forEach((slotEl, idx) => {
+            const keyId = slots[idx];
+            slotEl.innerHTML = '';
+            if (keyId) {
+              slotEl.classList.add('has-key');
+              const keyData = KEYS_DATA[keyId];
+              const card = createKeyCardElement(keyData, true, idx);
+              slotEl.appendChild(card);
+            } else {
+              slotEl.classList.remove('has-key');
+              slotEl.innerHTML = `
+                <div class="slot-placeholder">
+                  <svg class="slot-empty-icon" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2a5 5 0 0 0-5 5c0 1.96 1.13 3.65 2.78 4.47L9 15v2h2v2h2v-2h1v-2h-1v-1.53c1.65-.82 2.78-2.51 2.78-4.47a5 5 0 0 0-5-5zm0 3a2 2 0 1 1 0 4 2 2 0 0 1 0-4z"/>
+                  </svg>
+                </div>
+              `;
+            }
+          });
+        }
+
+        function renderInventory() {
+          keysRack.innerHTML = '';
+          const allKeys = ['sun', 'moon', 'serpent', 'skull'];
+          const availableKeys = allKeys.filter(kId => !slots.includes(kId));
+
+          availableKeys.forEach(kId => {
+            const keyData = KEYS_DATA[kId];
+            const card = createKeyCardElement(keyData, false, null);
+            keysRack.appendChild(card);
+          });
+        }
+
+        function createKeyCardElement(keyData, isInSlot, slotIndex) {
+          const card = document.createElement('div');
+          card.className = `key-card ${isInSlot ? 'in-slot' : ''} ${selectedKeyId === keyData.id ? 'selected' : ''}`;
+          card.id = `key-card-${keyData.id}`;
+          card.setAttribute('draggable', 'true');
+          card.setAttribute('data-key-id', keyData.id);
+          card.setAttribute('role', 'button');
+          card.setAttribute('tabindex', '0');
+          card.setAttribute('aria-label', `${keyData.name}: ${keyData.lore}`);
+
+          card.innerHTML = `
+            <div class="key-svg-container" id="svg-wrap-${keyData.id}">
+              ${keyData.svg}
+            </div>
+            <div class="key-name-tag" style="color: ${keyData.accent};">${keyData.name}</div>
+          `;
+
+          // HTML5 Drag & Drop Listeners
+          card.addEventListener('dragstart', (e) => {
+            initAudio();
+            e.dataTransfer.setData('text/plain', keyData.id);
+            if (isInSlot) {
+              e.dataTransfer.setData('source-slot', slotIndex.toString());
+            }
+            playKeyPickupSound();
+            card.style.opacity = '0.4';
+          });
+
+          card.addEventListener('dragend', () => {
+            card.style.opacity = '1';
+          });
+
+          // Touch Drag & Drop handling (Mobile-First touch events)
+          setupTouchDrag(card, keyData.id, isInSlot, slotIndex);
+
+          // Click / Tap-to-Select Fallback
+          card.addEventListener('click', (e) => {
+            e.stopPropagation();
+            handleKeyCardClick(keyData.id, isInSlot, slotIndex);
+          });
+
+          return card;
+        }
+
+        /* ==========================================================
+           8. TOUCH DRAG & DROP IMPLEMENTATION
+           ========================================================== */
+        let activeTouchGhost = null;
+        let activeTouchKeyId = null;
+
+        function setupTouchDrag(element, keyId, isInSlot, slotIndex) {
+          let startX = 0;
+          let startY = 0;
+          let isDragging = false;
+
+          element.addEventListener('touchstart', (e) => {
+            if (e.touches.length !== 1) return;
+            initAudio();
+            const touch = e.touches[0];
+            startX = touch.clientX;
+            startY = touch.clientY;
+            isDragging = false;
+            activeTouchKeyId = keyId;
+          }, { passive: true });
+
+          element.addEventListener('touchmove', (e) => {
+            if (!activeTouchKeyId) return;
+            const touch = e.touches[0];
+            const dist = Math.hypot(touch.clientX - startX, touch.clientY - startY);
+
+            // Trigger drag threshold (8px)
+            if (!isDragging && dist > 8) {
+              isDragging = true;
+              playKeyPickupSound();
+
+              // Create floating ghost
+              const rect = element.getBoundingClientRect();
+              activeTouchGhost = element.cloneNode(true);
+              activeTouchGhost.className = 'key-card drag-ghost';
+              activeTouchGhost.style.width = (rect.width || 70) + 'px';
+              activeTouchGhost.style.height = (rect.height || 84) + 'px';
+              activeTouchGhost.style.left = touch.clientX + 'px';
+              activeTouchGhost.style.top = touch.clientY + 'px';
+              document.body.appendChild(activeTouchGhost);
+
+              element.style.opacity = '0.3';
+            }
+
+            if (isDragging && activeTouchGhost) {
+              activeTouchGhost.style.left = touch.clientX + 'px';
+              activeTouchGhost.style.top = touch.clientY + 'px';
+
+              // Visual highlight over slots
+              highlightSlotUnderPoint(touch.clientX, touch.clientY);
+            }
+          }, { passive: false });
+
+          element.addEventListener('touchend', (e) => {
+            if (isDragging && activeTouchGhost) {
+              const touch = e.changedTouches[0];
+              const targetSlot = getSlotUnderPoint(touch.clientX, touch.clientY);
+
+              if (targetSlot !== null) {
+                placeKeyInSlot(keyId, targetSlot);
+              } else {
+                // If dropped back onto inventory or outside
+                const rackRect = keysRack.getBoundingClientRect();
+                if (touch.clientY >= rackRect.top && touch.clientY <= rackRect.bottom) {
+                  returnKeyToInventory(keyId);
+                } else if (isInSlot) {
+                  // Keep in slot or reset
+                  renderSlots();
+                }
+              }
+
+              // Cleanup ghost
+              if (activeTouchGhost && activeTouchGhost.parentNode) {
+                activeTouchGhost.parentNode.removeChild(activeTouchGhost);
+              }
+              activeTouchGhost = null;
+              clearSlotHighlights();
+            }
+
+            element.style.opacity = '1';
+            activeTouchKeyId = null;
+          });
+
+          element.addEventListener('touchcancel', () => {
+            if (activeTouchGhost && activeTouchGhost.parentNode) {
+              activeTouchGhost.parentNode.removeChild(activeTouchGhost);
+            }
+            activeTouchGhost = null;
+            element.style.opacity = '1';
+            clearSlotHighlights();
+            activeTouchKeyId = null;
+          });
+        }
+
+        function getSlotUnderPoint(x, y) {
+          for (let i = 0; i < slotElements.length; i++) {
+            const rect = slotElements[i].getBoundingClientRect();
+            if (x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom) {
+              return i;
+            }
+          }
+          return null;
+        }
+
+        function highlightSlotUnderPoint(x, y) {
+          slotElements.forEach((el, idx) => {
+            const rect = el.getBoundingClientRect();
+            if (x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom) {
+              el.classList.add('drag-over');
+            } else {
+              el.classList.remove('drag-over');
+            }
+          });
+        }
+
+        function clearSlotHighlights() {
+          slotElements.forEach(el => el.classList.remove('drag-over'));
+        }
+
+        /* ==========================================================
+           9. HTML5 DRAG & DROP FOR SLOTS
+           ========================================================== */
+        slotElements.forEach((slotEl, slotIndex) => {
+          slotEl.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+            slotEl.classList.add('drag-over');
+          });
+
+          slotEl.addEventListener('dragleave', () => {
+            slotEl.classList.remove('drag-over');
+          });
+
+          slotEl.addEventListener('drop', (e) => {
+            e.preventDefault();
+            slotEl.classList.remove('drag-over');
+            const keyId = e.dataTransfer.getData('text/plain');
+            if (keyId) {
+              placeKeyInSlot(keyId, slotIndex);
+            }
+          });
+
+          // Click / Tap on slot
+          slotEl.addEventListener('click', () => {
+            if (selectedKeyId) {
+              // Place selected key into this slot
+              placeKeyInSlot(selectedKeyId, slotIndex);
+              selectedKeyId = null;
+            } else if (slots[slotIndex]) {
+              // Click on filled slot sends key back to inventory
+              returnKeyToInventory(slots[slotIndex]);
+            }
+          });
+        });
+
+        // Drop zone on Key Rack to send keys back
+        keysRack.addEventListener('dragover', (e) => {
+          e.preventDefault();
+          e.dataTransfer.dropEffect = 'move';
+        });
+
+        keysRack.addEventListener('drop', (e) => {
+          e.preventDefault();
+          const keyId = e.dataTransfer.getData('text/plain');
+          if (keyId) {
+            returnKeyToInventory(keyId);
+          }
+        });
+
+        /* ==========================================================
+           10. TAP-TO-SELECT / PLACEMENT LOGIC
+           ========================================================== */
+        function handleKeyCardClick(keyId, isInSlot, slotIndex) {
+          if (isInSlot) {
+            // Tapping a placed key removes it back to inventory
+            returnKeyToInventory(keyId);
+            selectedKeyId = null;
+            setFeedback(`${KEYS_DATA[keyId].name} recolhida para o porta-chaves.`, 'normal');
+          } else {
+            // Tapping a key in the inventory
+            if (selectedKeyId === keyId) {
+              // Deselect
+              selectedKeyId = null;
+              renderInventory();
+              setFeedback("Seleção desfeita.", "normal");
+            } else {
+              selectedKeyId = keyId;
+              playKeyPickupSound();
+              renderInventory();
+              // Find first empty slot
+              const firstEmpty = slots.indexOf(null);
+              if (firstEmpty !== -1) {
+                setFeedback(`${KEYS_DATA[keyId].name} selecionada. Toque na fechadura desejada (ex: Pos. ${firstEmpty + 1}).`, 'normal');
+              } else {
+                setFeedback(`${KEYS_DATA[keyId].name} selecionada. Toque em uma fechadura para substituir.`, 'normal');
+              }
+            }
+          }
+        }
+
+        function placeKeyInSlot(keyId, targetSlotIndex) {
+          initAudio();
+          // Check if key is already in another slot -> swap or move
+          const existingSlot = slots.indexOf(keyId);
+          const currentOccupant = slots[targetSlotIndex];
+
+          if (existingSlot !== -1) {
+            // Key was already in a slot
+            slots[existingSlot] = currentOccupant; // swap
+          } else if (currentOccupant) {
+            // Key was in inventory, target slot had a key -> return currentOccupant to inventory
+            // or swap
+          }
+
+          slots[targetSlotIndex] = keyId;
+          selectedKeyId = null;
+          playKeyDropSound();
+
+          renderSlots();
+          renderInventory();
+
+          const allFilled = slots.every(k => k !== null);
+          if (allFilled) {
+            setFeedback("Todas as 4 fechaduras estão preenchidas! Pressione 'Girar Chaves' para testar.", "normal");
+          } else {
+            setFeedback(`${KEYS_DATA[keyId].name} inserida na Fechadura ${targetSlotIndex + 1}.`, "normal");
+          }
+        }
+
+        function returnKeyToInventory(keyId) {
+          const slotIndex = slots.indexOf(keyId);
+          if (slotIndex !== -1) {
+            slots[slotIndex] = null;
+            playKeyDropSound();
+            renderSlots();
+            renderInventory();
+          }
+        }
+
+        function clearAllSlots() {
+          if (slots.some(k => k !== null)) {
+            slots = [null, null, null, null];
+            selectedKeyId = null;
+            playKeyDropSound();
+            renderSlots();
+            renderInventory();
+            setFeedback("Todas as chaves foram recolhidas para o porta-chaves.", "normal");
+          }
+        }
+
+        /* ==========================================================
+           11. CHECK SEQUENCE & UNLOCK MECHANISM
+           ========================================================== */
+        function checkSolution() {
+          initAudio();
+
+          // Ensure all 4 slots are occupied
+          const missingIndex = slots.indexOf(null);
+          if (missingIndex !== -1) {
+            setFeedback(`Atenção: A Fechadura ${missingIndex + 1} ainda está vazia! Coloque todas as 4 chaves.`, "error");
+            playErrorSound();
+            return;
+          }
+
+          attemptsCount++;
+          updateAttemptsUI();
+
+          // Disable button during animation
+          btnUnlock.disabled = true;
+          playLockTurnSound();
+
+          // Turn all keys in slots visually
+          slotElements.forEach((el, idx) => {
+            const card = el.querySelector('.key-card');
+            if (card) {
+              card.classList.add('turn-key-anim');
+            }
+          });
+
+          // Rotate central gear
+          lockGearsSvg.style.transform = `rotate(${attemptsCount * 90}deg)`;
+
+          setTimeout(() => {
+            // Verify if sequence matches solution
+            const isCorrect = slots.every((keyId, idx) => keyId === currentCase.solution[idx]);
+
+            if (isCorrect) {
+              handleSuccess();
+            } else {
+              handleFailure();
+            }
+
+            btnUnlock.disabled = false;
+          }, 700);
+        }
+
+        function handleSuccess() {
+          gameFinished = true;
+          stopTimer();
+          playSuccessFanfare();
+
+          vaultChamber.classList.add('door-success-anim');
+          vaultIndicator.classList.add('unlocked');
+          vaultIndicator.innerHTML = `
+            <svg viewBox="0 0 24 24" style="stroke: #fff;">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+              <path d="M7 11V7a5 5 0 0 1 9.9-1"></path>
+            </svg>
+          `;
+
+          // Score calculation bonuses
+          let speedBonus = Math.max(0, 180 - timerSeconds) * 20;
+          let attemptBonus = attemptsCount === 1 ? 2000 : Math.max(0, 1500 - (attemptsCount - 1) * 300);
+          currentScore += attemptBonus + speedBonus;
+          updateScoreUI();
+
+          // Trigger Confetti / Spark Particles
+          startVictoryParticles();
+
+          // Determine Detective Rank
+          let rank = "Mestre da Dedução ⭐⭐⭐";
+          if (attemptsCount > 3 || timerSeconds > 180) {
+            rank = "Investigador Persistente ⭐";
+          } else if (attemptsCount > 1 || timerSeconds > 90) {
+            rank = "Detetive Perito ⭐⭐";
+          }
+
+          // Update Victory Modal
+          document.getElementById('victory-rank-badge').textContent = rank;
+          document.getElementById('v-stat-time').textContent = timerDisplay.textContent;
+          document.getElementById('v-stat-score').textContent = currentScore.toLocaleString('pt-BR');
+          document.getElementById('v-stat-attempts').textContent = attemptsCount === 1 ? "1ª Tentativa (Perfeito!)" : `${attemptsCount} Tentativas`;
+
+          setFeedback("SEGREDO REVELADO! A porta do cofre foi destrancada com sucesso!", "success");
+
+          setTimeout(() => {
+            openVictoryModal();
+          }, 900);
+        }
+
+        function handleFailure() {
+          playErrorSound();
+          currentScore = Math.max(200, currentScore - 250);
+          updateScoreUI();
+
+          // Count how many keys are in correct slot without spoiling exact ones
+          let correctCount = 0;
+          slots.forEach((keyId, idx) => {
+            if (keyId === currentCase.solution[idx]) correctCount++;
+          });
+
+          // Reset key rotation
+          slotElements.forEach(el => {
+            const card = el.querySelector('.key-card');
+            if (card) card.classList.remove('turn-key-anim');
+          });
+
+          let feedbackText = "O mecanismo travou! As chaves não acionaram os pinos na ordem correta.";
+          if (correctCount === 2) {
+            feedbackText = "O mecanismo rangeu: Exatamente 2 chaves estão certas, mas 2 estão trocadas!";
+          } else if (correctCount === 0) {
+            feedbackText = "Nenhuma das chaves está na posição correta. Releia as pistas no diário!";
+          }
+
+          setFeedback(feedbackText, "error");
+        }
+
+        function setFeedback(msg, type) {
+          feedbackMsg.textContent = msg;
+          feedbackMsg.className = `message-box ${type}`;
+        }
+
+        /* ==========================================================
+           12. MODALS & FULLSCREEN CONTROLS
+           ========================================================== */
+        function openDiaryModal() {
+          initAudio();
+          playParchmentSound();
+          diaryModal.classList.add('open');
+        }
+
+        function closeDiaryModal() {
+          playParchmentSound();
+          diaryModal.classList.remove('open');
+        }
+
+        function openVictoryModal() {
+          victoryModal.classList.add('open');
+        }
+
+        function closeVictoryModal() {
+          victoryModal.classList.remove('open');
+        }
+
+        // Close on backdrop click
+        diaryModal.addEventListener('click', (e) => {
+          if (e.target === diaryModal) closeDiaryModal();
+        });
+
+        victoryModal.addEventListener('click', (e) => {
+          if (e.target === victoryModal) closeVictoryModal();
+        });
+
+        btnOpenDiary.addEventListener('click', openDiaryModal);
+        btnCloseDiary.addEventListener('click', closeDiaryModal);
+
+        btnUnlock.addEventListener('click', checkSolution);
+        btnClearSlots.addEventListener('click', clearAllSlots);
+
+        btnNextCase.addEventListener('click', () => {
+          closeVictoryModal();
+          currentCaseIndex++;
+          loadCase(currentCaseIndex);
+        });
+
+        btnReplayCase.addEventListener('click', () => {
+          closeVictoryModal();
+          loadCase(currentCaseIndex);
+        });
+
+        // Sound Toggle
+        btnSound.addEventListener('click', () => {
+          isMuted = !isMuted;
+          localStorage.setItem('the_lost_keys_muted', isMuted);
+          updateSoundIcon();
+          if (!isMuted) {
+            initAudio();
+            playKeyPickupSound();
+          }
+        });
+
+        function updateSoundIcon() {
+          if (isMuted) {
+            btnSound.innerHTML = `
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="1" y1="1" x2="23" y2="23"></line>
+                <path d="M9 9v3a3 3 0 0 0 5.12 2.12M15 9.34V4a3 3 0 0 0-5.94-.6"></path>
+                <path d="M17 16.95A7 7 0 0 1 5 12v-2m14 0v2a7 7 0 0 1-.11 1.23"></path>
+                <line x1="12" y1="19" x2="12" y2="23"></line>
+                <line x1="8" y1="23" x2="16" y2="23"></line>
+              </svg>
+            `;
+            btnSound.title = "Ativar Som";
+          } else {
+            btnSound.innerHTML = `
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+              </svg>
+            `;
+            btnSound.title = "Desativar Som";
+          }
+        }
+        updateSoundIcon();
+
+        // Fullscreen API toggle
+        btnFullscreen.addEventListener('click', () => {
+          if (!document.fullscreenElement) {
+            document.documentElement.requestFullscreen().catch(() => {});
+          } else {
+            if (document.exitFullscreen) {
+              document.exitFullscreen().catch(() => {});
+            }
+          }
+        });
+
+        document.addEventListener('fullscreenchange', () => {
+          if (document.fullscreenElement) {
+            btnFullscreen.innerHTML = `
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3"></path>
+              </svg>
+            `;
+          } else {
+            btnFullscreen.innerHTML = `
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
+              </svg>
+            `;
+          }
+        });
+
+        /* ==========================================================
+           13. VICTORY CANVAS PARTICLES
+           ========================================================== */
+        const canvas = document.getElementById('fx-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        let animFrameId = null;
+
+        function resizeCanvas() {
+          canvas.width = window.innerWidth;
+          canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        function startVictoryParticles() {
+          particles = [];
+          const colors = ['#f59e0b', '#ffd166', '#10b981', '#38bdf8', '#c084fc', '#ffffff'];
+          for (let i = 0; i < 120; i++) {
+            particles.push({
+              x: canvas.width / 2,
+              y: canvas.height / 2,
+              vx: (Math.random() - 0.5) * 16,
+              vy: (Math.random() - 0.8) * 18,
+              size: Math.random() * 8 + 3,
+              color: colors[Math.floor(Math.random() * colors.length)],
+              alpha: 1,
+              decay: Math.random() * 0.012 + 0.008,
+              spin: Math.random() * 0.2 - 0.1,
+              angle: Math.random() * Math.PI * 2
+            });
+          }
+
+          if (animFrameId) cancelAnimationFrame(animFrameId);
+          renderParticles();
+        }
+
+        function renderParticles() {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          let alive = 0;
+
+          particles.forEach(p => {
+            p.x += p.vx;
+            p.y += p.vy;
+            p.vy += 0.35; // gravity
+            p.vx *= 0.98;
+            p.angle += p.spin;
+            p.alpha -= p.decay;
+
+            if (p.alpha > 0) {
+              alive++;
+              ctx.save();
+              ctx.globalAlpha = Math.max(0, p.alpha);
+              ctx.translate(p.x, p.y);
+              ctx.rotate(p.angle);
+              ctx.fillStyle = p.color;
+              ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size * 0.7);
+              ctx.restore();
+            }
+          });
+
+          if (alive > 0) {
+            animFrameId = requestAnimationFrame(renderParticles);
+          } else {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+          }
+        }
+
+        // Initialize First Mystery Case
+        loadCase(0);
+      })();
+    </script>
+  
+  <!-- PWA Service Worker Registration -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js').catch(() => {});
+      });
+    }
+  </script>
+
+
+  <!-- 5-Second Hint Ad Modal System -->
+  <div id="fl-hint-modal-overlay" style="
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 999999;
+    background: rgba(10, 15, 30, 0.85);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    align-items: center;
+    justify-content: center;
+    font-family: system-ui, -apple-system, sans-serif;
+    padding: 16px;
+    box-sizing: border-box;
+  ">
+    <div style="
+      background: linear-gradient(145deg, #1e293b, #0f172a);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.6), 0 0 30px rgba(245, 158, 11, 0.2);
+      border-radius: 20px;
+      max-width: 420px;
+      width: 100%;
+      padding: 24px;
+      text-align: center;
+      color: #f8fafc;
+      position: relative;
+    ">
+      <button id="fl-hint-close-btn" style="
+        position: absolute;
+        top: 14px;
+        right: 14px;
+        background: rgba(255,255,255,0.08);
+        border: none;
+        color: #94a3b8;
+        font-size: 18px;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      ">✕</button>
+
+      <div style="
+        width: 56px;
+        height: 56px;
+        margin: 0 auto 14px auto;
+        background: rgba(245, 158, 11, 0.15);
+        border: 1px solid rgba(245, 158, 11, 0.3);
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 28px;
+      ">💡</div>
+
+      <h3 style="margin: 0 0 6px 0; font-size: 19px; font-weight: 800; color: #fbbf24;">Unlocking Hint</h3>
+      <p style="margin: 0 0 18px 0; font-size: 13px; color: #94a3b8; line-height: 1.4;">
+        Sponsored Reward: Wait 5 seconds to reveal your clue assistance.
+      </p>
+
+      <div id="fl-hint-ad-box" style="
+        background: rgba(0, 0, 0, 0.35);
+        border: 1px dashed rgba(255, 255, 255, 0.15);
+        border-radius: 12px;
+        padding: 16px;
+        margin-bottom: 18px;
+      ">
+        <div style="font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: #64748b; margin-bottom: 4px;">Advertisement</div>
+        <div style="font-size: 14px; font-weight: 600; color: #e2e8f0;">Brain Booster Puzzles</div>
+        <div style="font-size: 11px; color: #38bdf8; margin-top: 2px;">play.funlogic.games</div>
+      </div>
+
+      <div style="margin-bottom: 16px;">
+        <div style="display: flex; justify-content: space-between; font-size: 12px; font-weight: 700; margin-bottom: 6px;">
+          <span style="color: #94a3b8;">Sponsor Video</span>
+          <span id="fl-hint-timer-txt" style="color: #f59e0b;">5s</span>
+        </div>
+        <div style="width: 100%; height: 8px; background: rgba(255,255,255,0.1); border-radius: 4px; overflow: hidden;">
+          <div id="fl-hint-progress-bar" style="width: 0%; height: 100%; background: linear-gradient(90deg, #f59e0b, #10b981); transition: width 0.1s linear;"></div>
+        </div>
+      </div>
+
+      <button id="fl-hint-claim-btn" disabled style="
+        width: 100%;
+        padding: 12px;
+        border-radius: 12px;
+        border: none;
+        background: #334155;
+        color: #64748b;
+        font-weight: 700;
+        font-size: 14px;
+        cursor: not-allowed;
+        transition: all 0.2s;
+      ">Please wait 5s...</button>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      let countdownTimer = null;
+      let originalHintCallback = null;
+
+      const overlay = document.getElementById('fl-hint-modal-overlay');
+      const timerTxt = document.getElementById('fl-hint-timer-txt');
+      const progressBar = document.getElementById('fl-hint-progress-bar');
+      const claimBtn = document.getElementById('fl-hint-claim-btn');
+      const closeBtn = document.getElementById('fl-hint-close-btn');
+
+      function showHintAdModal(callback) {
+        if (!overlay) return;
+        originalHintCallback = callback;
+        overlay.style.display = 'flex';
+        
+        let timeLeft = 50; // 5.0 seconds
+        claimBtn.disabled = true;
+        claimBtn.style.background = '#334155';
+        claimBtn.style.color = '#64748b';
+        claimBtn.style.cursor = 'not-allowed';
+        claimBtn.textContent = 'Please wait 5s...';
+        progressBar.style.width = '0%';
+        timerTxt.textContent = '5s';
+
+        try {
+          if (window.parent && window.parent !== window) {
+            window.parent.postMessage({ type: 'hint_ad_started', duration: 5 }, '*');
+          }
+        } catch(e) {}
+
+        clearInterval(countdownTimer);
+        countdownTimer = setInterval(() => {
+          timeLeft--;
+          const percent = ((50 - timeLeft) / 50) * 100;
+          progressBar.style.width = percent + '%';
+          const secondsRemaining = Math.ceil(timeLeft / 10);
+          timerTxt.textContent = secondsRemaining + 's';
+          claimBtn.textContent = 'Please wait ' + secondsRemaining + 's...';
+
+          if (timeLeft <= 0) {
+            clearInterval(countdownTimer);
+            timerTxt.textContent = 'Ready!';
+            timerTxt.style.color = '#10b981';
+            claimBtn.disabled = false;
+            claimBtn.style.background = 'linear-gradient(90deg, #f59e0b, #10b981)';
+            claimBtn.style.color = '#0f172a';
+            claimBtn.style.cursor = 'pointer';
+            claimBtn.textContent = '✨ Get Hint Now';
+
+            try {
+              if (window.parent && window.parent !== window) {
+                window.parent.postMessage({ type: 'hint_ad_completed' }, '*');
+              }
+            } catch(e) {}
+          }
+        }, 100);
+      }
+
+      function closeHintModal() {
+        clearInterval(countdownTimer);
+        if (overlay) overlay.style.display = 'none';
+      }
+
+      function claimHint() {
+        closeHintModal();
+        if (typeof originalHintCallback === 'function') {
+          originalHintCallback();
+        }
+      }
+
+      if (closeBtn) closeBtn.addEventListener('click', closeHintModal);
+      if (claimBtn) claimBtn.addEventListener('click', claimHint);
+
+      window.showHintWith5sAd = showHintAdModal;
+
+      window.addEventListener('DOMContentLoaded', () => {
+        setTimeout(() => {
+          const hintSelectors = [
+            '#btn-hint', '#hint-btn', '#button-hint', '#hint',
+            '.btn-hint', '.hint-btn', '[data-action="hint"]',
+            'button[title*="Hint" i]', 'button[aria-label*="Hint" i]'
+          ];
+
+          hintSelectors.forEach(selector => {
+            document.querySelectorAll(selector).forEach(btn => {
+              if (!btn.getAttribute('data-fl-hooked')) {
+                btn.setAttribute('data-fl-hooked', 'true');
+                btn.addEventListener('click', function(e) {
+                  if (!this.hasAttribute('data-hint-approved')) {
+                    e.stopImmediatePropagation();
+                    e.preventDefault();
+                    showHintAdModal(() => {
+                      this.setAttribute('data-hint-approved', 'true');
+                      this.click();
+                      setTimeout(() => this.removeAttribute('data-hint-approved'), 500);
+                    });
+                  }
+                }, true);
+              }
+            });
+          });
+        }, 300);
+      });
+    })();
+  </script>
+
+</body>
+</html>

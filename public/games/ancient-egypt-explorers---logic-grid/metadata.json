@@ -1,0 +1,6 @@
+{
+  "name": "Ancient Egypt Explorers - Logic Grid",
+  "description": "Jogo de dedução e matriz lógica no Antigo Egito. Descubra qual arqueólogo explorou cada tumba faraônica e qual relíquia sagrada encontrou.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

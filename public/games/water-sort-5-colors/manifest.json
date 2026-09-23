@@ -1,0 +1,18 @@
+{
+  "name": "Water Sort 5 Layers (Hard)",
+  "short_name": "Water Sort 5",
+  "description": "A high-difficulty challenge featuring deep test tubes with 5 liquid layers each. With 35 total layers to organize, foresight is critical. Crucial tip: never carelessly fill an empty tube early in the game or you will get hopelessly stuck.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0f172a",
+  "theme_color": "#0f172a",
+  "icons": [
+    {
+      "src": "./cover.svg",
+      "sizes": "800x600",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

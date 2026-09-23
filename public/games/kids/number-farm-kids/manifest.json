@@ -1,0 +1,18 @@
+{
+  "name": "Number Farm Kids",
+  "short_name": "Number Farm ",
+  "description": "Number Farm Kids transforms classic Sudoku into an intuitive 4x4 animal puzzle for young learners. Develop logic and spatial thinking with lovely barnyard friends.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0f172a",
+  "theme_color": "#0f172a",
+  "icons": [
+    {
+      "src": "./cover.svg",
+      "sizes": "800x600",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

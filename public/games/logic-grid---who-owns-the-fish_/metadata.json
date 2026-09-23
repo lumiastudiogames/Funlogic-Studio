@@ -1,0 +1,6 @@
+{
+  "name": "Logic Grid - Who Owns the Fish?",
+  "description": "An Einstein-style 4x4 logic grid puzzle game with multi-stage progression. Deduce house colors, residents, and pets using clues to discover who owns the fish.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

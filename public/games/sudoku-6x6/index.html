@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <title>Sudoku 6x6 Quick</title>
+  <link rel="stylesheet" href="./style.css" />
+
+  
+  
+  
+  
+
+  
+  
+  
+  
+
+  <meta name="description" content="Sudoku 6x6 is the fast-paced, mobile-friendly sibling of traditional Sudoku. Featuring a compact 6x6 grid with 2x3 sub-quadrants, it offers quick bite-sized mental workouts with multiple difficulty levels, hint rewards, and pencil notes." />
+  <meta name="keywords" content="sudoku 6x6, mini sudoku, quick sudoku, easy sudoku, kids sudoku, sudoku for beginners, mobile sudoku, fast logic puzzle" />
+  <meta name="game-tags" content="sudoku 6x6, sudoku 6x6 quick, numbers puzzle, numbers game, numbers logic, numbers brain, 2048 puzzle, 2048 game, 2048 online, 2048 free, 2048 classic, 2048 logic, 2048 brain, 2048 puzzle game, 2048 game free, 2048 game online, 2048 numbers, 2048 number puzzle, sudoku, sudoku puzzle, sudoku game, sudoku online, sudoku free, sudoku classic, sudoku easy, sudoku hard, sudoku medium, sudoku expert, sudoku brain, sudoku logic, sudoku challenge, sudoku levels, sudoku kids, sudoku adults, sudoku seniors, sudoku daily, sudoku master, sudoku pro, sudoku deluxe, sudoku mania, sudoku 3d, sudoku 2d, math puzzle, math game, math logic, math brain, math challenge, math puzzle game, math puzzle online, math puzzle free, math puzzle logic, math puzzle brain, math puzzle kids, math puzzle adults, calculation puzzle, calculation game, calculation logic, numbers and math, numbers math puzzle, math numbers puzzle, math numbers game, arithmetic puzzle, arithmetic game, arithmetic logic, arithmetic brain, number puzzle, number game, number logic, number brain, number challenge, number grid puzzle, number sorting, number sorting puzzle, math sorting, math grid, math grid puzzle, sudoku grid, sudoku grid puzzle, 2048 grid, 2048 grid puzzle, 2048 merge, 2048 merge puzzle, merge numbers, merge numbers puzzle, merge numbers game, merge 2048, merge 2048 puzzle, math merge, math merge puzzle, math merge game, number merge, number merge puzzle, number merge game, sudoku numbers, sudoku math, sudoku brain teaser, sudoku logic puzzle, 2048 brain teaser, 2048 logic puzzle, math brain teaser, math logic puzzle, math quiz, math quiz puzzle, math quiz game, number quiz, number quiz game, math riddles, math riddles puzzle, math riddles game, calculation brain, calculation challenge, calculation quiz, numbers puzzle free, numbers puzzle online, numbers game free, numbers game online, math puzzle best, math puzzle top, math puzzle new, math puzzle 2024, math puzzle 2025, math puzzle html5, math puzzle mobile, math puzzle unblocked, play math puzzle, play numbers puzzle, play sudoku, play 2048, 2048 best, 2048 top, 2048 new, sudoku best, sudoku top, sudoku new, number puzzle best, number puzzle top, math game best, math game top, number logic game, number logic puzzle, sudoku logic game, 2048 logic game" />
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What are the rules of Sudoku 6x6?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Place numbers 1 to 6 such that every row, column, and each of the six 2x3 blocks contains all digits 1 through 6 without repeats."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why play Sudoku 6x6 over 9x9?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "It takes just 2 minutes per match, making it the ideal quick brain warmup and great for casual play on mobile phones."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do subgrids work in 6x6?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Each subgrid is 2 rows high by 3 columns wide, forming 6 balanced quadrants."
+      }
+    }
+  ]
+}
+  </script>
+
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#0f172a" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Sudoku 6x6 Quick" />
+  <link rel="apple-touch-icon" href="cover.svg" />
+</head>
+<body>
+  <main class="game-stage">
+    <header class="hud-header">
+      <div class="hud-group">
+        <button id="btn-howto" class="btn-tactile btn-icon-only" title="How to play">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+        </button>
+        <span class="badge-tag">6x6 Quick</span>
+      </div>
+      <div class="hud-group">
+        <div class="stat-box">
+          <span class="stat-label">Timer</span>
+          <span id="timer-display" class="stat-val">00:00</span>
+        </div>
+        <div class="stat-box">
+          <span class="stat-label">Errors</span>
+          <span id="errors-display" class="stat-val">0</span>
+        </div>
+        <button id="btn-sound-toggle" class="btn-tactile btn-icon-only" title="Sound Mute/Unmute">
+          <span id="sound-icon">🔊</span>
+        </button>
+      </div>
+    </header>
+
+    <nav class="difficulty-bar" aria-label="Difficulty Selection">
+      <button class="diff-pill active" data-diff="easy">Easy (18)</button>
+      <button class="diff-pill" data-diff="medium">Medium (14)</button>
+      <button class="diff-pill" data-diff="hard">Hard (10)</button>
+    </nav>
+
+    <section class="board-container">
+      <div id="sudoku-6x6-grid" class="sudoku-6x6-grid" role="grid" aria-label="Sudoku 6x6 Grid"></div>
+    </section>
+
+    <footer class="controls-bottom">
+      <div class="action-row">
+        <button id="btn-undo" class="btn-tactile" style="padding: 8px 14px;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="1 4 1 10 7 10"></polyline><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path></svg>
+          <span>Undo</span>
+        </button>
+        <button id="btn-erase" class="btn-tactile" style="padding: 8px 14px;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m7 21-4.3-4.3c-1-1-1-2.5 0-3.4l9.6-9.6c1-1 2.5-1 3.4 0l5.6 5.6c1 1 1 2.5 0 3.4L13 21"></path><path d="M22 21H7"></path><path d="m5 11 9 9"></path></svg>
+          <span>Erase</span>
+        </button>
+        <button id="btn-notes" class="btn-tactile" style="padding: 8px 14px;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 20h9"></path><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"></path></svg>
+          <span>Notes</span>
+        </button>
+        <button id="btn-hint" class="btn-tactile" style="padding: 8px 14px; background: #ecfdf5; color: #065f46; border-color: #a7f3d0;">
+          <span>💡 Hint</span>
+        </button>
+      </div>
+
+      <div class="digit-pad-6">
+        <button class="digit-btn" data-digit="1">1</button>
+        <button class="digit-btn" data-digit="2">2</button>
+        <button class="digit-btn" data-digit="3">3</button>
+        <button class="digit-btn" data-digit="4">4</button>
+        <button class="digit-btn" data-digit="5">5</button>
+        <button class="digit-btn" data-digit="6">6</button>
+      </div>
+    </footer>
+
+    <!-- Modals -->
+    <aside id="modal-ad" class="modal-overlay" aria-hidden="true">
+      <div class="modal-card">
+        <h3 style="font-size: 18px; font-weight: 800; color: #064e3b;">Sponsor Message</h3>
+        <p style="font-size: 13px; color: #4b5563;">Enjoy this quick 5-second sponsor message to claim your free hint.</p>
+        <div style="background: #064e3b; color: white; padding: 14px; border-radius: 12px; display: flex; flex-direction: column; gap: 8px;">
+          <div style="font-size: 11px; font-weight: 700;">PROMOTED AD</div>
+          <div style="width: 100%; height: 6px; background: #047857; border-radius: 999px; overflow: hidden;">
+            <div id="ad-progress" style="height: 100%; width: 0%; background: #34d399; transition: width 1s linear;"></div>
+          </div>
+          <div style="font-size: 12px; font-weight: 800;">Ad closes in: <span id="ad-countdown">5</span>s</div>
+        </div>
+        <div style="display: flex; gap: 8px; justify-content: flex-end;">
+          <button id="btn-skip-ad" class="btn-tactile" style="padding: 8px 14px;">Cancel</button>
+          <button id="btn-claim-hint" class="btn-tactile" style="padding: 8px 14px; background: #059669; color: white;" disabled>Wait for ad...</button>
+        </div>
+      </div>
+    </aside>
+
+    <aside id="modal-howto" class="modal-overlay" aria-hidden="true">
+      <div class="modal-card">
+        <h3 style="font-size: 20px; font-weight: 800; color: #064e3b;">How to Play 6x6 Sudoku</h3>
+        <div style="display: flex; gap: 10px; text-align: left; background: #f0fdf4; padding: 10px; border-radius: 10px;">
+          <div style="width: 22px; height: 22px; border-radius: 50%; background: #059669; color: white; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 11px; flex-shrink: 0;">1</div>
+          <div style="font-size: 12px; color: #374151;">Select any empty square on the 6x6 grid.</div>
+        </div>
+        <div style="display: flex; gap: 10px; text-align: left; background: #f0fdf4; padding: 10px; border-radius: 10px;">
+          <div style="width: 22px; height: 22px; border-radius: 50%; background: #059669; color: white; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 11px; flex-shrink: 0;">2</div>
+          <div style="font-size: 12px; color: #374151;">Use numbers 1 through 6 without repeating in any row, column, or 2x3 box.</div>
+        </div>
+        <div style="display: flex; gap: 10px; text-align: left; background: #f0fdf4; padding: 10px; border-radius: 10px;">
+          <div style="width: 22px; height: 22px; border-radius: 50%; background: #059669; color: white; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 11px; flex-shrink: 0;">3</div>
+          <div style="font-size: 12px; color: #374151;">Complete the board under 2 minutes for maximum brain power!</div>
+        </div>
+        <button id="btn-close-howto" class="btn-tactile" style="width: 100%; background: #064e3b; color: white; padding: 10px;">Got it!</button>
+      </div>
+    </aside>
+
+    <aside id="modal-win" class="modal-overlay" aria-hidden="true">
+      <div class="modal-card">
+        <div style="font-size: 40px;">⚡</div>
+        <h3 style="font-size: 22px; font-weight: 900; color: #065f46;">Solved in Record Time!</h3>
+        <div style="display: flex; justify-content: space-around; background: #f0fdf4; padding: 12px; border-radius: 12px;">
+          <div>
+            <span style="font-size: 10px; color: #059669; font-weight: 700; display: block;">TIME</span>
+            <span id="win-time" style="font-size: 18px; font-weight: 800; color: #064e3b;">00:00</span>
+          </div>
+          <div>
+            <span style="font-size: 10px; color: #059669; font-weight: 700; display: block;">ERRORS</span>
+            <span id="win-errors" style="font-size: 18px; font-weight: 800; color: #064e3b;">0</span>
+          </div>
+        </div>
+        <button id="btn-play-again" class="btn-tactile" style="width: 100%; padding: 12px; background: #059669; color: white; font-size: 15px;">Next 6x6 Puzzle</button>
+      </div>
+    </aside>
+  </main>
+
+  <script src="./game.js"></script>
+
+  <!-- PWA & Initial Screen Fullscreen UI -->
+  <button id="fl-fullscreen-btn" aria-label="Fullscreen" title="Toggle Fullscreen" style="
+    position: fixed;
+    top: 14px;
+    right: 14px;
+    z-index: 99999;
+    background: rgba(15, 23, 42, 0.75);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #ffffff;
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 18px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    transition: transform 0.15s ease, background 0.2s ease;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+  " onmouseover="this.style.transform='scale(1.08)'" onmouseout="this.style.transform='scale(1)'">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/>
+    </svg>
+  </button>
+
+  <script>
+    (function() {
+      // Register PWA Service Worker
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('./sw.js').catch(() => {});
+        });
+      }
+
+      // Initial Screen Fullscreen Handler
+      const fsBtn = document.getElementById('fl-fullscreen-btn');
+      if (fsBtn) {
+        fsBtn.addEventListener('click', function(e) {
+          e.stopPropagation();
+          if (!document.fullscreenElement && !document.webkitFullscreenElement && !document.mozFullScreenElement && !document.msFullscreenElement) {
+            const el = document.documentElement;
+            if (el.requestFullscreen) el.requestFullscreen().catch(()=>{});
+            else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+            else if (el.mozRequestFullScreen) el.mozRequestFullScreen();
+            else if (el.msRequestFullscreen) el.msRequestFullscreen();
+          } else {
+            if (document.exitFullscreen) document.exitFullscreen().catch(()=>{});
+            else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+            else if (document.mozCancelFullScreen) document.mozCancelFullScreen();
+            else if (document.msExitFullscreen) document.msExitFullscreen();
+          }
+        });
+      }
+    })();
+  </script>
+
+  <!-- 5-Second Hint Ad Modal System -->
+  <div id="fl-hint-modal-overlay" style="
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 999999;
+    background: rgba(10, 15, 30, 0.85);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    align-items: center;
+    justify-content: center;
+    font-family: system-ui, -apple-system, sans-serif;
+    padding: 16px;
+    box-sizing: border-box;
+  ">
+    <div style="
+      background: linear-gradient(145deg, #1e293b, #0f172a);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.6), 0 0 30px rgba(245, 158, 11, 0.2);
+      border-radius: 20px;
+      max-width: 420px;
+      width: 100%;
+      padding: 24px;
+      text-align: center;
+      color: #f8fafc;
+      position: relative;
+      animation: flModalPop 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    ">
+      <!-- Close Button -->
+      <button id="fl-hint-close-btn" style="
+        position: absolute;
+        top: 14px;
+        right: 14px;
+        background: rgba(255,255,255,0.08);
+        border: none;
+        color: #94a3b8;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        cursor: pointer;
+        font-size: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s;
+      " onmouseover="this.style.color='#fff';this.style.background='rgba(255,255,255,0.15)'" onmouseout="this.style.color='#94a3b8';this.style.background='rgba(255,255,255,0.08)'">✕</button>
+
+      <!-- Icon -->
+      <div style="
+        width: 56px;
+        height: 56px;
+        background: rgba(245, 158, 11, 0.15);
+        border: 1px solid rgba(245, 158, 11, 0.3);
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 28px;
+        margin: 0 auto 14px auto;
+      ">💡</div>
+
+      <!-- Title & Subtitle -->
+      <h3 style="margin: 0 0 6px 0; font-size: 19px; font-weight: 800; color: #fbbf24;">Unlocking Hint</h3>
+      <p style="margin: 0 0 18px 0; font-size: 13px; color: #94a3b8; line-height: 1.4;">
+        Short sponsor break (max 5s) to support free puzzles!
+      </p>
+
+      <!-- Ad / Sponsor Banner Box -->
+      <div id="fl-hint-ad-box" style="
+        background: rgba(0, 0, 0, 0.35);
+        border: 1px dashed rgba(255, 255, 255, 0.12);
+        border-radius: 12px;
+        height: 100px;
+        margin-bottom: 18px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        color: #64748b;
+        font-size: 12px;
+      ">
+        <span style="font-weight: 700; color: #e2e8f0; font-size: 13px;">FunLogic Sponsor Ad</span>
+        <span>Ad space placeholder (300x100)</span>
+      </div>
+
+      <!-- Progress Bar & Countdown -->
+      <div style="margin-bottom: 16px;">
+        <div style="display: flex; justify-content: space-between; font-size: 12px; font-weight: 700; color: #cbd5e1; margin-bottom: 6px;">
+          <span>Hint ready in:</span>
+          <span id="fl-hint-timer-txt" style="color: #f59e0b;">5s</span>
+        </div>
+        <div style="width: 100%; height: 8px; background: rgba(255,255,255,0.1); border-radius: 4px; overflow: hidden;">
+          <div id="fl-hint-progress-bar" style="width: 0%; height: 100%; background: linear-gradient(90deg, #f59e0b, #10b981); border-radius: 4px; transition: width 0.1s linear;"></div>
+        </div>
+      </div>
+
+      <!-- Action Button -->
+      <button id="fl-hint-claim-btn" disabled style="
+        width: 100%;
+        padding: 12px;
+        border-radius: 12px;
+        border: none;
+        background: #334155;
+        color: #64748b;
+        font-size: 14px;
+        font-weight: 800;
+        cursor: not-allowed;
+        transition: all 0.2s;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      ">Please wait 5s...</button>
+    </div>
+  </div>
+
+  <style>
+    @keyframes flModalPop {
+      0% { transform: scale(0.85); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+  </style>
+
+  <script>
+    (function() {
+      let countdownTimer = null;
+      let originalHintCallback = null;
+
+      const overlay = document.getElementById('fl-hint-modal-overlay');
+      const timerTxt = document.getElementById('fl-hint-timer-txt');
+      const progressBar = document.getElementById('fl-hint-progress-bar');
+      const claimBtn = document.getElementById('fl-hint-claim-btn');
+      const closeBtn = document.getElementById('fl-hint-close-btn');
+
+      function showHintAdModal(callback) {
+        if (!overlay) return;
+        originalHintCallback = callback;
+        overlay.style.display = 'flex';
+        
+        let timeLeft = 50; // 5.0 seconds (50 x 100ms)
+        claimBtn.disabled = true;
+        claimBtn.style.background = '#334155';
+        claimBtn.style.color = '#64748b';
+        claimBtn.style.cursor = 'not-allowed';
+        claimBtn.textContent = 'Please wait 5s...';
+        progressBar.style.width = '0%';
+        timerTxt.textContent = '5s';
+
+        // Notify parent portal
+        try {
+          if (window.parent && window.parent !== window) {
+            window.parent.postMessage({ type: 'hint_ad_started', duration: 5 }, '*');
+          }
+        } catch(e) {}
+
+        clearInterval(countdownTimer);
+        countdownTimer = setInterval(() => {
+          timeLeft--;
+          const percent = ((50 - timeLeft) / 50) * 100;
+          progressBar.style.width = percent + '%';
+          const secondsRemaining = Math.ceil(timeLeft / 10);
+          timerTxt.textContent = secondsRemaining + 's';
+          claimBtn.textContent = 'Please wait ' + secondsRemaining + 's...';
+
+          if (timeLeft <= 0) {
+            clearInterval(countdownTimer);
+            timerTxt.textContent = 'Ready!';
+            timerTxt.style.color = '#10b981';
+            claimBtn.disabled = false;
+            claimBtn.style.background = 'linear-gradient(90deg, #f59e0b, #10b981)';
+            claimBtn.style.color = '#0f172a';
+            claimBtn.style.cursor = 'pointer';
+            claimBtn.textContent = '✨ Get Hint Now';
+
+            try {
+              if (window.parent && window.parent !== window) {
+                window.parent.postMessage({ type: 'hint_ad_completed' }, '*');
+              }
+            } catch(e) {}
+          }
+        }, 100);
+      }
+
+      function closeHintModal() {
+        clearInterval(countdownTimer);
+        if (overlay) overlay.style.display = 'none';
+      }
+
+      function claimHint() {
+        closeHintModal();
+        if (typeof originalHintCallback === 'function') {
+          originalHintCallback();
+        }
+      }
+
+      if (closeBtn) closeBtn.addEventListener('click', closeHintModal);
+      if (claimBtn) claimBtn.addEventListener('click', claimHint);
+
+      // Expose globally for game engines
+      window.showHintWith5sAd = showHintAdModal;
+
+      // Automatically hook into any existing hint button in the DOM
+      window.addEventListener('DOMContentLoaded', () => {
+        setTimeout(() => {
+          const hintSelectors = [
+            '#btn-hint', '#hint-btn', '#button-hint', '#hint',
+            '.btn-hint', '.hint-btn', '[data-action="hint"]',
+            'button[title*="Hint" i]', 'button[aria-label*="Hint" i]'
+          ];
+
+          hintSelectors.forEach(selector => {
+            document.querySelectorAll(selector).forEach(btn => {
+              if (!btn.getAttribute('data-fl-hooked')) {
+                btn.setAttribute('data-fl-hooked', 'true');
+                btn.addEventListener('click', function(e) {
+                  // If modal not already claimed in this click
+                  if (!this.hasAttribute('data-hint-approved')) {
+                    e.stopImmediatePropagation();
+                    e.preventDefault();
+                    showHintAdModal(() => {
+                      this.setAttribute('data-hint-approved', 'true');
+                      this.click();
+                      setTimeout(() => this.removeAttribute('data-hint-approved'), 500);
+                    });
+                  }
+                }, true); // Capture phase to intercept first
+              }
+            });
+          });
+        }, 300);
+      });
+    })();
+  </script>
+
+</body>
+</html>

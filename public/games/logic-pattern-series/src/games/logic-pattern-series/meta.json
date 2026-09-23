@@ -1,0 +1,33 @@
+{
+  "title": "Logic Pattern Series",
+  "categoryId": "logic",
+  "icon": "🧩",
+  "instructions": "Discover the hidden geometric or numerical pattern in each sequence and choose the correct symbol that replaces the question mark.",
+  "description": "Logic Pattern Series is an engaging spatial and mathematical puzzle game. Test your deductive reasoning, geometric intuition, and pattern recognition across multiple sequence challenges and daily logic brain teasers.",
+  "keywords": [
+    "logic pattern series",
+    "pattern recognition",
+    "spatial logic",
+    "geometric puzzle",
+    "number sequence",
+    "brain teaser",
+    "daily puzzle",
+    "math logic",
+    "iq test puzzle",
+    "shape sequence"
+  ],
+  "faqs": [
+    {
+      "q": "How do I play Logic Pattern Series?",
+      "a": "Observe the progression of shapes, numbers, or matrices across cards 1 to 4. Find the transformation rule (such as adding sides, rotating 90°, multiplying by 2) and tap the option (A, B, C, or D) that logically fills the question mark."
+    },
+    {
+      "q": "Does the game work on mobile devices?",
+      "a": "Yes! Logic Pattern Series is fully responsive and optimized for touch interactions on mobile phones, tablets, and desktop computers."
+    },
+    {
+      "q": "What are Daily Challenges?",
+      "a": "Each day features a unique logic sequence with bonus coins and daily streak tracking to sharpen your mind every day."
+    }
+  ]
+}

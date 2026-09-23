@@ -1,0 +1,2854 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    <title>Math Bridge Builder</title>
+    <meta name="description" content="A mobile-first mathematical puzzle game where you build bridges plank by plank across scenic chasms by solving arithmetic equations across 10 progressive levels." />
+    <meta property="og:title" content="Math Bridge Builder" />
+    <meta property="og:description" content="A mobile-first mathematical puzzle game where you build bridges plank by plank across scenic chasms by solving arithmetic equations across 10 progressive levels." />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <style>
+      /* RESET & FULL VIEWPORT NO-BORDER STYLING */
+      *, *::before, *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        -webkit-tap-highlight-color: transparent;
+        touch-action: manipulation;
+      }
+
+      :root {
+        --color-bg-dark: #0b1120;
+        --color-panel: #1e293b;
+        --color-panel-border: #334155;
+        --color-primary: #f59e0b;
+        --color-primary-hover: #d97706;
+        --color-success: #10b981;
+        --color-danger: #ef4444;
+        --color-text-main: #f8fafc;
+        --color-text-muted: #94a3b8;
+        --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      }
+
+      html, body {
+        width: 100vw;
+        height: 100vh;
+        width: 100dvw;
+        height: 100dvh;
+        overflow: hidden;
+        background-color: #0b1120;
+        font-family: var(--font-sans);
+        color: var(--color-text-main);
+        user-select: none;
+        -webkit-user-select: none;
+      }
+
+      #game-container {
+        position: relative;
+        width: 100vw;
+        height: 100vh;
+        width: 100dvw;
+        height: 100dvh;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+      }
+
+      /* TOP BAR */
+      #header-bar {
+        height: 52px;
+        min-height: 52px;
+        background: rgba(11, 17, 32, 0.95);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 12px;
+        z-index: 20;
+        gap: 8px;
+      }
+
+      .header-left, .header-right {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .icon-btn {
+        width: 44px;
+        height: 44px;
+        min-width: 44px;
+        min-height: 44px;
+        background: rgba(255, 255, 255, 0.07);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 10px;
+        color: #f8fafc;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: transform 0.12s, background-color 0.15s;
+      }
+
+      .icon-btn:hover {
+        background: rgba(255, 255, 255, 0.14);
+      }
+
+      .icon-btn:active {
+        transform: scale(0.92);
+        background: rgba(245, 158, 11, 0.25);
+      }
+
+      .badge {
+        background: rgba(30, 41, 59, 0.85);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 8px;
+        padding: 4px 10px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 13px;
+        font-weight: 600;
+        letter-spacing: 0.02em;
+        white-space: nowrap;
+      }
+
+      .badge-level {
+        color: #fbbf24;
+      }
+
+      .badge-score {
+        color: #38bdf8;
+      }
+
+      .badge-hearts {
+        color: #f43f5e;
+        letter-spacing: 2px;
+      }
+
+      /* MAIN PLAY AREA: SPLIT LAYOUT */
+      #play-zone {
+        flex: 1;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        position: relative;
+        min-height: 0;
+      }
+
+      /* CANVAS CONTAINER */
+      #canvas-wrapper {
+        flex: 1 1 52%;
+        min-height: 140px;
+        position: relative;
+        background: #0b1120;
+        overflow: hidden;
+      }
+
+      #game-canvas {
+        display: block;
+        width: 100%;
+        height: 100%;
+      }
+
+      /* PROGRESS OVERLAY ON CANVAS */
+      #plank-progress-box {
+        position: absolute;
+        top: 8px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: rgba(11, 17, 32, 0.88);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        padding: 5px 12px;
+        border-radius: 20px;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 12px;
+        font-weight: 700;
+        color: #f1f5f9;
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+        pointer-events: none;
+        z-index: 5;
+        white-space: nowrap;
+      }
+
+      .progress-segments {
+        display: flex;
+        gap: 5px;
+      }
+
+      .plank-pip {
+        width: 20px;
+        height: 9px;
+        border-radius: 3px;
+        background: rgba(255, 255, 255, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.25);
+        transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+
+      .plank-pip.active {
+        background: #10b981;
+        border-color: #34d399;
+        box-shadow: 0 0 10px rgba(16, 185, 129, 0.8);
+      }
+
+      .plank-pip.broken {
+        background: #ef4444;
+        border-color: #f87171;
+        box-shadow: 0 0 10px rgba(239, 68, 68, 0.8);
+      }
+
+      /* SPLASH WARNING OVERLAY WHEN FALLING INTO RIVER */
+      #danger-warning-banner {
+        position: absolute;
+        bottom: 10px;
+        left: 50%;
+        transform: translateX(-50%) translateY(40px);
+        background: rgba(239, 68, 68, 0.95);
+        color: #ffffff;
+        font-size: 12px;
+        font-weight: 800;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        padding: 5px 14px;
+        border-radius: 20px;
+        box-shadow: 0 4px 14px rgba(239, 68, 68, 0.6);
+        pointer-events: none;
+        opacity: 0;
+        z-index: 6;
+        transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+        white-space: nowrap;
+      }
+
+      #danger-warning-banner.show {
+        transform: translateX(-50%) translateY(0);
+        opacity: 1;
+      }
+
+      /* CONTROL CONSOLE (MATH CONTROLS) */
+      #math-console {
+        flex: 1 1 48%;
+        background: linear-gradient(180deg, #111827 0%, #080d1a 100%);
+        border-top: 2px solid rgba(245, 158, 11, 0.25);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 8px 14px 10px;
+        position: relative;
+        z-index: 10;
+        box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.5);
+        min-height: 0;
+        overflow-y: auto;
+      }
+
+      /* EQUATION DISPLAY */
+      #equation-box {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 2px 0;
+      }
+
+      .equation-header {
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: #94a3b8;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        margin-bottom: 2px;
+      }
+
+      .equation-text {
+        font-size: clamp(22px, 5vw, 36px);
+        font-weight: 800;
+        color: #ffffff;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+        letter-spacing: 0.05em;
+        text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+
+      .equation-unknown {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 40px;
+        height: 40px;
+        padding: 0 6px;
+        background: rgba(245, 158, 11, 0.15);
+        border: 2px dashed #f59e0b;
+        border-radius: 10px;
+        color: #fbbf24;
+        font-size: clamp(20px, 4.5vw, 28px);
+        animation: pulseBorder 1.5s infinite ease-in-out;
+      }
+
+      @keyframes pulseBorder {
+        0%, 100% { border-color: #f59e0b; box-shadow: 0 0 0 rgba(245, 158, 11, 0); }
+        50% { border-color: #fbbf24; box-shadow: 0 0 14px rgba(245, 158, 11, 0.4); }
+      }
+
+      .equation-hint {
+        font-size: 12px;
+        color: #cbd5e1;
+        margin-top: 2px;
+        font-weight: 500;
+        opacity: 0.9;
+      }
+
+      /* OPTIONS GRID (4 TILES) */
+      #options-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+        width: 100%;
+        max-width: 540px;
+        margin: 4px auto;
+      }
+
+      .choice-btn {
+        min-height: 44px;
+        height: clamp(44px, 7.5vh, 58px);
+        background: #1e293b;
+        border: 2px solid #334155;
+        border-radius: 12px;
+        color: #ffffff;
+        font-size: clamp(18px, 4vw, 26px);
+        font-weight: 700;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 14px;
+        position: relative;
+        overflow: hidden;
+        transition: transform 0.1s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.15s, border-color 0.15s, box-shadow 0.15s;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+      }
+
+      .choice-btn .choice-label {
+        font-size: 11px;
+        font-weight: 800;
+        color: #64748b;
+        background: rgba(255, 255, 255, 0.05);
+        padding: 2px 6px;
+        border-radius: 5px;
+      }
+
+      .choice-btn:hover {
+        background: #273549;
+        border-color: #64748b;
+      }
+
+      .choice-btn:active {
+        transform: scale(0.96);
+      }
+
+      .choice-btn.correct {
+        background: #065f46 !important;
+        border-color: #10b981 !important;
+        color: #ecfdf5 !important;
+        box-shadow: 0 0 18px rgba(16, 185, 129, 0.6) !important;
+        animation: popGreen 0.4s ease;
+      }
+
+      .choice-btn.wrong {
+        background: #7f1d1d !important;
+        border-color: #ef4444 !important;
+        color: #fef2f2 !important;
+        animation: shakeWrong 0.4s ease;
+      }
+
+      @keyframes popGreen {
+        0% { transform: scale(0.95); }
+        50% { transform: scale(1.04); }
+        100% { transform: scale(1); }
+      }
+
+      @keyframes shakeWrong {
+        0%, 100% { transform: translateX(0); }
+        20%, 60% { transform: translateX(-8px); }
+        40%, 80% { transform: translateX(8px); }
+      }
+
+      /* FOOTER INFO BAR */
+      #console-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 2px;
+        font-size: 11px;
+        color: #64748b;
+        font-weight: 500;
+      }
+
+      .streak-badge {
+        color: #f59e0b;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
+
+      /* FULLY OPTIMIZED LANDSCAPE LAYOUT FOR PHONES & DESKTOPS */
+      @media (orientation: landscape) {
+        #header-bar {
+          height: 40px;
+          min-height: 40px;
+          padding: 0 8px;
+          gap: 4px;
+        }
+
+        .icon-btn {
+          width: 34px;
+          height: 34px;
+          min-width: 34px;
+          min-height: 34px;
+          border-radius: 8px;
+        }
+
+        .badge {
+          padding: 2px 8px;
+          font-size: 11.5px;
+          gap: 4px;
+        }
+
+        #play-zone {
+          flex-direction: row;
+          height: calc(100vh - 40px);
+          height: calc(100dvh - 40px);
+        }
+
+        #canvas-wrapper {
+          flex: 1 1 54%;
+          height: 100%;
+          min-height: unset;
+        }
+
+        #math-console {
+          flex: 1 1 46%;
+          height: 100%;
+          border-top: none;
+          border-left: 2px solid rgba(245, 158, 11, 0.25);
+          padding: 6px 12px 8px;
+          justify-content: space-evenly;
+          gap: 4px;
+          overflow-y: auto;
+        }
+
+        #equation-box {
+          padding: 0;
+          margin: 0;
+        }
+
+        .equation-header {
+          font-size: 10px;
+          margin-bottom: 0;
+        }
+
+        .equation-text {
+          font-size: clamp(18px, 4.5vh, 28px);
+          gap: 6px;
+        }
+
+        .equation-unknown {
+          min-width: 34px;
+          height: 34px;
+          font-size: 18px;
+          padding: 0 4px;
+        }
+
+        .equation-hint {
+          font-size: 11px;
+          margin-top: 0;
+        }
+
+        #options-grid {
+          gap: 6px;
+          margin: 2px auto;
+          max-width: 480px;
+        }
+
+        .choice-btn {
+          min-height: 36px;
+          height: clamp(36px, 8.5vh, 48px);
+          font-size: clamp(15px, 3.5vh, 22px);
+          padding: 0 10px;
+          border-radius: 10px;
+        }
+
+        .choice-btn .choice-label {
+          font-size: 10px;
+          padding: 1px 5px;
+        }
+
+        #console-footer {
+          margin-top: 0;
+          font-size: 10px;
+        }
+      }
+
+      /* CUSTOM MODALS */
+      .modal-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(5, 10, 20, 0.88);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 16px;
+        z-index: 100;
+        opacity: 0;
+        transition: opacity 0.25s ease;
+      }
+
+      .modal-overlay.active {
+        display: flex;
+        opacity: 1;
+      }
+
+      .modal-card {
+        background: linear-gradient(160deg, #1e293b 0%, #0f172a 100%);
+        border: 2px solid #334155;
+        border-radius: 20px;
+        max-width: 440px;
+        width: 100%;
+        padding: 24px;
+        text-align: center;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.7);
+        transform: scale(0.9);
+        transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+
+      .modal-overlay.active .modal-card {
+        transform: scale(1);
+      }
+
+      .modal-icon {
+        font-size: 48px;
+        margin-bottom: 8px;
+      }
+
+      .modal-title {
+        font-size: 24px;
+        font-weight: 800;
+        color: #f8fafc;
+        margin-bottom: 8px;
+      }
+
+      .modal-desc {
+        font-size: 14px;
+        color: #94a3b8;
+        line-height: 1.5;
+        margin-bottom: 20px;
+      }
+
+      .modal-stats {
+        background: rgba(0, 0, 0, 0.3);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 12px;
+        padding: 12px;
+        display: flex;
+        justify-content: space-around;
+        margin-bottom: 20px;
+      }
+
+      .stat-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .stat-label {
+        font-size: 11px;
+        text-transform: uppercase;
+        color: #64748b;
+        font-weight: 700;
+      }
+
+      .stat-val {
+        font-size: 20px;
+        font-weight: 800;
+        color: #f8fafc;
+        margin-top: 2px;
+      }
+
+      .stars-row {
+        font-size: 28px;
+        color: #fbbf24;
+        margin-bottom: 12px;
+        letter-spacing: 4px;
+      }
+
+      .modal-actions {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .primary-btn {
+        min-height: 50px;
+        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        border: none;
+        border-radius: 12px;
+        color: #ffffff;
+        font-size: 16px;
+        font-weight: 700;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        box-shadow: 0 4px 14px rgba(245, 158, 11, 0.4);
+        transition: transform 0.1s, box-shadow 0.15s;
+      }
+
+      .primary-btn:hover {
+        background: linear-gradient(135deg, #fbbf24 0%, #d97706 100%);
+      }
+
+      .primary-btn:active {
+        transform: scale(0.97);
+      }
+
+      .secondary-btn {
+        min-height: 46px;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 12px;
+        color: #e2e8f0;
+        font-size: 15px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background-color 0.15s;
+      }
+
+      .secondary-btn:hover {
+        background: rgba(255, 255, 255, 0.14);
+      }
+
+      /* LEVEL SELECTOR GRID */
+      .level-grid {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 8px;
+        margin-bottom: 16px;
+      }
+
+      .level-cell {
+        aspect-ratio: 1;
+        background: #1e293b;
+        border: 2px solid #334155;
+        border-radius: 10px;
+        color: #f8fafc;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        font-size: 16px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: transform 0.1s, border-color 0.15s;
+      }
+
+      .level-cell:hover:not(.locked) {
+        border-color: #f59e0b;
+        transform: scale(1.05);
+      }
+
+      .level-cell.current {
+        border-color: #f59e0b;
+        background: rgba(245, 158, 11, 0.2);
+      }
+
+      .level-cell.locked {
+        opacity: 0.4;
+        cursor: not-allowed;
+        border-color: #1e293b;
+      }
+
+      .level-stars {
+        font-size: 9px;
+        color: #fbbf24;
+        margin-top: 2px;
+      }
+
+      /* TOAST MESSAGE */
+      #toast-message {
+        position: fixed;
+        bottom: 24px;
+        left: 50%;
+        transform: translateX(-50%) translateY(100px);
+        background: rgba(11, 17, 32, 0.95);
+        color: #ffffff;
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        padding: 10px 20px;
+        border-radius: 30px;
+        font-size: 14px;
+        font-weight: 600;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+        pointer-events: none;
+        z-index: 120;
+        transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+
+      #toast-message.show {
+        transform: translateX(-50%) translateY(0);
+      }
+    </style>
+  
+  <script>
+    function triggerPlatformWin(timeInSeconds) {
+      const elapsed = Math.round(timeInSeconds || 45);
+      try {
+        if (typeof window.onWin === 'function') {
+          window.onWin(elapsed);
+        }
+        if (window.parent && window.parent !== window) {
+          window.parent.postMessage({ type: 'win', time: elapsed }, '*');
+        }
+      } catch(e) { console.error('Platform win notify error:', e); }
+    }
+  </script>
+
+</head>
+  <body>
+    <div id="game-container">
+      <!-- HEADER -->
+      <header id="header-bar">
+        <div class="header-left">
+          <button id="btn-levels" class="icon-btn" title="Level Map" aria-label="Level Map">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect width="7" height="7" x="3" y="3" rx="1"/>
+              <rect width="7" height="7" x="14" y="3" rx="1"/>
+              <rect width="7" height="7" x="14" y="14" rx="1"/>
+              <rect width="7" height="7" x="3" y="14" rx="1"/>
+            </svg>
+          </button>
+          <div class="badge badge-level" id="level-display">Level 1</div>
+          <div class="badge badge-score" id="score-display">0 pts</div>
+        </div>
+
+        <div class="header-right">
+          <div class="badge badge-hearts" id="hearts-display" title="Structural Integrity">❤️❤️❤️</div>
+          <button id="btn-sound" class="icon-btn" title="Toggle Sound" aria-label="Toggle Sound">
+            <svg id="sound-icon-on" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+              <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+              <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
+            </svg>
+            <svg id="sound-icon-off" style="display:none" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+              <line x1="23" x2="1" y1="1" y2="23"/>
+            </svg>
+          </button>
+          <button id="btn-help" class="icon-btn" title="How to Play" aria-label="How to Play">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/>
+              <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+              <path d="M12 17h.01"/>
+            </svg>
+          </button>
+          <button id="btn-fullscreen" class="icon-btn" title="Toggle Fullscreen" aria-label="Toggle Fullscreen">
+            <svg id="fs-enter-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/>
+            </svg>
+            <svg id="fs-exit-icon" style="display:none" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3"/>
+            </svg>
+          </button>
+        </div>
+      </header>
+
+      <!-- MAIN PLAY ZONE -->
+      <main id="play-zone">
+        <!-- CANVAS SECTION -->
+        <div id="canvas-wrapper">
+          <canvas id="game-canvas"></canvas>
+          <div id="plank-progress-box">
+            <span>Bridge Planks:</span>
+            <div class="progress-segments" id="progress-segments"></div>
+          </div>
+          <div id="danger-warning-banner">⚠️ Structural Failure! Plank Broke!</div>
+        </div>
+
+        <!-- MATH CONSOLE SECTION -->
+        <section id="math-console">
+          <div id="equation-box">
+            <div class="equation-header" id="equation-category">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <circle cx="12" cy="12" r="10"/>
+                <line x1="12" y1="8" x2="12" y2="12"/>
+                <line x1="12" y1="16" x2="12.01" y2="16"/>
+              </svg>
+              <span id="equation-topic">Morning Addition</span>
+            </div>
+            <div class="equation-text" id="equation-display">
+              <span>7 + 8 =</span>
+              <span class="equation-unknown">?</span>
+            </div>
+            <div class="equation-hint" id="equation-subhint">Select the plank value to secure the bridge</div>
+          </div>
+
+          <div id="options-grid">
+            <button class="choice-btn" id="opt-0" data-index="0">
+              <span class="choice-label">1</span>
+              <span class="choice-val" id="opt-val-0">--</span>
+            </button>
+            <button class="choice-btn" id="opt-1" data-index="1">
+              <span class="choice-label">2</span>
+              <span class="choice-val" id="opt-val-1">--</span>
+            </button>
+            <button class="choice-btn" id="opt-2" data-index="2">
+              <span class="choice-label">3</span>
+              <span class="choice-val" id="opt-val-2">--</span>
+            </button>
+            <button class="choice-btn" id="opt-3" data-index="3">
+              <span class="choice-label">4</span>
+              <span class="choice-val" id="opt-val-3">--</span>
+            </button>
+          </div>
+
+          <div id="console-footer">
+            <span id="speed-bonus-label">⏱️ Speed Bonus Ready</span>
+            <span class="streak-badge" id="streak-label">⚡ Combo: 0x</span>
+          </div>
+        </section>
+      </main>
+
+      <!-- MODAL: LEVEL CLEAR -->
+      <div id="modal-clear" class="modal-overlay">
+        <div class="modal-card">
+          <div class="modal-icon">🎉</div>
+          <h2 class="modal-title">Bridge Built!</h2>
+          <div class="stars-row" id="clear-stars">★★★</div>
+          <p class="modal-desc" id="clear-desc">The bridge held firm and the builder crossed safely to the other side!</p>
+          <div class="modal-stats">
+            <div class="stat-item">
+              <span class="stat-label">Level</span>
+              <span class="stat-val" id="clear-stat-lvl">1</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">Planks</span>
+              <span class="stat-val" id="clear-stat-planks">3/3</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">Points</span>
+              <span class="stat-val" id="clear-stat-score">+350</span>
+            </div>
+          </div>
+          <div class="modal-actions">
+            <button class="primary-btn" id="btn-next-level">
+              Next Level
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M5 12h14m-7-7 7 7-7 7"/>
+              </svg>
+            </button>
+            <button class="secondary-btn" id="btn-replay-level">Replay Level</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- MODAL: LEVEL FAILED (FALL INTO RIVER) -->
+      <div id="modal-fail" class="modal-overlay">
+        <div class="modal-card">
+          <div class="modal-icon">🌊</div>
+          <h2 class="modal-title" style="color: #38bdf8;">Fell into the River!</h2>
+          <p class="modal-desc" id="fail-desc">The timber plank snapped under incorrect calculations and the builder plunged into the river rapids!</p>
+          <div class="modal-stats">
+            <div class="stat-item">
+              <span class="stat-label">Correct Solution</span>
+              <span class="stat-val" id="fail-stat-ans" style="color: #fbbf24;">--</span>
+            </div>
+          </div>
+          <div class="modal-actions">
+            <button class="primary-btn" id="btn-retry-level">
+              Try Again
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+                <path d="M3 3v5h5"/>
+                <path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/>
+                <path d="M16 21h5v-5"/>
+              </svg>
+            </button>
+            <button class="secondary-btn" id="btn-fail-levels">Level Select</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- MODAL: ALL 10 LEVELS GRAND WINNER -->
+      <div id="modal-victory" class="modal-overlay">
+        <div class="modal-card">
+          <div class="modal-icon">🏆</div>
+          <h2 class="modal-title" style="color: #fbbf24;">Master Bridge Architect!</h2>
+          <div class="stars-row">★★★★★</div>
+          <p class="modal-desc">Incredible engineering! You conquered all 10 mathematical ravines and constructed every suspension span without tumbling into the rapids!</p>
+          <div class="modal-stats">
+            <div class="stat-item">
+              <span class="stat-label">Total Score</span>
+              <span class="stat-val" id="vic-total-score">0</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">Bridges Built</span>
+              <span class="stat-val">10 / 10</span>
+            </div>
+          </div>
+          <div class="modal-actions">
+            <button class="primary-btn" id="btn-restart-game">Play Again from Level 1</button>
+            <button class="secondary-btn" id="btn-vic-map">Select Level</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- MODAL: LEVEL SELECT -->
+      <div id="modal-level-select" class="modal-overlay">
+        <div class="modal-card">
+          <h2 class="modal-title">Select Bridge Project</h2>
+          <p class="modal-desc">Pick any unlocked suspension span to replay or improve your score.</p>
+          <div class="level-grid" id="level-select-grid"></div>
+          <button class="secondary-btn" id="btn-close-level-select" style="width: 100%;">Close</button>
+        </div>
+      </div>
+
+      <!-- MODAL: HOW TO PLAY / BLUEPRINT -->
+      <div id="modal-guide" class="modal-overlay">
+        <div class="modal-card">
+          <div class="modal-icon">📐</div>
+          <h2 class="modal-title">Architect Blueprint</h2>
+          <div style="text-align: left; font-size: 13.5px; color: #cbd5e1; line-height: 1.6; margin-bottom: 20px;">
+            <p>🌉 <strong>The Goal:</strong> Span each chasm by laying down structural planks until the bridge is complete.</p>
+            <p style="margin-top: 8px;">🧮 <strong>Math Equations:</strong> Each plank requires calculating the correct missing value.</p>
+            <p style="margin-top: 8px;">🔨 <strong>Correct Choice:</strong> Instantly drops and rivets a solid wooden plank into place.</p>
+            <p style="margin-top: 8px;">⚠️ <strong>Watch Your Step:</strong> An incorrect answer breaks the plank and sends the builder plummeting straight into the raging river rapids below!</p>
+            <p style="margin-top: 8px;">🚶‍♂️ <strong>The Crossing:</strong> When all planks are securely laid, your builder crosses safely to the goal flag!</p>
+          </div>
+          <button class="primary-btn" id="btn-close-guide" style="width: 100%;">Got It, Let's Build!</button>
+        </div>
+      </div>
+
+      <!-- TOAST MESSAGE -->
+      <div id="toast-message">Speed Bonus +100!</div>
+    </div>
+
+    <!-- PURE VANILLA JAVASCRIPT GAME ENGINE -->
+    <script>
+      (function() {
+        'use strict';
+
+        /* ==========================================================================
+           1. WEB AUDIO API SYNTHESIZER (NO EXTERNAL AUDIO FILES)
+           ========================================================================== */
+        class SoundEngine {
+          constructor() {
+            this.ctx = null;
+            this.muted = false;
+            this.bgmPlaying = false;
+            this.bgmTimer = null;
+            this.musicGain = null;
+            this.currentChord = 0;
+          }
+
+          init() {
+            if (!this.ctx) {
+              const AudioContext = window.AudioContext || window.webkitAudioContext;
+              if (AudioContext) {
+                this.ctx = new AudioContext();
+              }
+            }
+            if (this.ctx && this.ctx.state === 'suspended') {
+              this.ctx.resume();
+            }
+            if (!this.bgmPlaying && !this.muted && this.ctx) {
+              this.startBGM();
+            }
+          }
+
+          startBGM() {
+            if (this.bgmPlaying || this.muted || !this.ctx) return;
+            this.bgmPlaying = true;
+
+            // Master BGM gain
+            this.musicGain = this.ctx.createGain();
+            this.musicGain.gain.setValueAtTime(0.08, this.ctx.currentTime);
+            this.musicGain.connect(this.ctx.destination);
+
+            // Pleasant, cheerful and relaxing pentatonic chord progression (C - G - Am - F)
+            const chords = [
+              { bass: 130.81, melody: [261.63, 329.63, 392.00, 523.25] }, // C major
+              { bass: 98.00,  melody: [246.94, 293.66, 392.00, 493.88] }, // G major
+              { bass: 110.00, melody: [220.00, 261.63, 329.63, 440.00] }, // A minor
+              { bass: 87.31,  melody: [261.63, 349.23, 392.00, 523.25] }  // F major
+            ];
+
+            let step = 0;
+            const tempo = 280; // ms per beat
+
+            const playNote = (freq, duration, vol, type = 'sine') => {
+              if (!this.ctx || this.muted || !this.bgmPlaying) return;
+              const osc = this.ctx.createOscillator();
+              const gain = this.ctx.createGain();
+              const now = this.ctx.currentTime;
+              osc.type = type;
+              osc.frequency.setValueAtTime(freq, now);
+              gain.gain.setValueAtTime(vol, now);
+              gain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
+              osc.connect(gain);
+              gain.connect(this.musicGain);
+              osc.start(now);
+              osc.stop(now + duration);
+            };
+
+            const stepMusic = () => {
+              if (!this.bgmPlaying || this.muted) return;
+              const chordIndex = Math.floor(step / 8) % chords.length;
+              const currentChord = chords[chordIndex];
+              const beat = step % 8;
+
+              // Soft Bass Pulse
+              if (beat === 0 || beat === 4) {
+                playNote(currentChord.bass, 0.45, 0.12, 'triangle');
+              }
+
+              // Playful arpeggio marimba/xylophone notes
+              if (beat % 2 === 0) {
+                const noteIndex = (beat / 2 + chordIndex) % currentChord.melody.length;
+                playNote(currentChord.melody[noteIndex], 0.35, 0.09, 'sine');
+              } else if (beat === 3 || beat === 7) {
+                // Secondary upbeat sparkle
+                const note = currentChord.melody[Math.floor(Math.random() * currentChord.melody.length)];
+                playNote(note * 1.5, 0.25, 0.05, 'sine');
+              }
+
+              step++;
+              this.bgmTimer = setTimeout(stepMusic, tempo);
+            };
+
+            stepMusic();
+          }
+
+          stopBGM() {
+            this.bgmPlaying = false;
+            if (this.bgmTimer) {
+              clearTimeout(this.bgmTimer);
+              this.bgmTimer = null;
+            }
+          }
+
+          playClick() {
+            if (this.muted) return;
+            this.init();
+            if (!this.ctx) return;
+            const osc = this.ctx.createOscillator();
+            const gain = this.ctx.createGain();
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(600, this.ctx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(150, this.ctx.currentTime + 0.04);
+            gain.gain.setValueAtTime(0.2, this.ctx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.04);
+            osc.connect(gain);
+            gain.connect(this.ctx.destination);
+            osc.start();
+            osc.stop(this.ctx.currentTime + 0.04);
+          }
+
+          playPlankSnap() {
+            if (this.muted) return;
+            this.init();
+            if (!this.ctx) return;
+            const now = this.ctx.currentTime;
+            // Wood thunk
+            const osc = this.ctx.createOscillator();
+            const gain = this.ctx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(280, now);
+            osc.frequency.exponentialRampToValueAtTime(80, now + 0.12);
+            gain.gain.setValueAtTime(0.4, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
+            osc.connect(gain);
+            gain.connect(this.ctx.destination);
+            osc.start();
+            osc.stop(now + 0.12);
+
+            // Pleasant chime
+            const chime = this.ctx.createOscillator();
+            const chimeGain = this.ctx.createGain();
+            chime.type = 'triangle';
+            chime.frequency.setValueAtTime(523.25, now + 0.03); // C5
+            chime.frequency.setValueAtTime(659.25, now + 0.09); // E5
+            chimeGain.gain.setValueAtTime(0.01, now);
+            chimeGain.gain.setValueAtTime(0.2, now + 0.03);
+            chimeGain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+            chime.connect(chimeGain);
+            chimeGain.connect(this.ctx.destination);
+            chime.start(now + 0.03);
+            chime.stop(now + 0.35);
+          }
+
+          playPlankBreak() {
+            if (this.muted) return;
+            this.init();
+            if (!this.ctx) return;
+            const now = this.ctx.currentTime;
+            // Wood snapping crack
+            const osc = this.ctx.createOscillator();
+            const gain = this.ctx.createGain();
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(450, now);
+            osc.frequency.exponentialRampToValueAtTime(60, now + 0.18);
+            gain.gain.setValueAtTime(0.5, now);
+            gain.gain.exponentialRampToValueAtTime(0.01, now + 0.18);
+            osc.connect(gain);
+            gain.connect(this.ctx.destination);
+            osc.start();
+            osc.stop(now + 0.18);
+          }
+
+          playWaterSplash() {
+            if (this.muted) return;
+            this.init();
+            if (!this.ctx) return;
+            const now = this.ctx.currentTime;
+            // Low water whoosh
+            const osc = this.ctx.createOscillator();
+            const gain = this.ctx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(140, now);
+            osc.frequency.exponentialRampToValueAtTime(40, now + 0.4);
+            gain.gain.setValueAtTime(0.4, now);
+            gain.gain.exponentialRampToValueAtTime(0.01, now + 0.4);
+            osc.connect(gain);
+            gain.connect(this.ctx.destination);
+            osc.start();
+            osc.stop(now + 0.4);
+
+            // High bubble gurgle
+            const gurgle = this.ctx.createOscillator();
+            const gurgleGain = this.ctx.createGain();
+            gurgle.type = 'triangle';
+            gurgle.frequency.setValueAtTime(320, now + 0.05);
+            gurgle.frequency.linearRampToValueAtTime(180, now + 0.35);
+            gurgleGain.gain.setValueAtTime(0.2, now + 0.05);
+            gurgleGain.gain.exponentialRampToValueAtTime(0.01, now + 0.35);
+            gurgle.connect(gurgleGain);
+            gurgleGain.connect(this.ctx.destination);
+            gurgle.start(now + 0.05);
+            gurgle.stop(now + 0.35);
+          }
+
+          playFanfare() {
+            if (this.muted) return;
+            this.init();
+            if (!this.ctx) return;
+            const notes = [523.25, 659.25, 783.99, 1046.5]; // C5, E5, G5, C6
+            notes.forEach((freq, idx) => {
+              const now = this.ctx.currentTime + idx * 0.12;
+              const osc = this.ctx.createOscillator();
+              const gain = this.ctx.createGain();
+              osc.type = 'triangle';
+              osc.frequency.setValueAtTime(freq, now);
+              gain.gain.setValueAtTime(0.25, now);
+              gain.gain.exponentialRampToValueAtTime(0.001, now + 0.4);
+              osc.connect(gain);
+              gain.connect(this.ctx.destination);
+              osc.start(now);
+              osc.stop(now + 0.4);
+            });
+          }
+        }
+
+        const sound = new SoundEngine();
+
+        /* ==========================================================================
+           2. GAME DATA & 10 PROGRESSIVE LEVELS DEFINITION (3 PLANKS PER LEVEL)
+           ========================================================================== */
+        const LEVELS = [
+          {
+            id: 1,
+            title: "Morning Meadow",
+            category: "Basic Addition",
+            theme: "morning",
+            requiredPlanks: 3,
+            generator: () => {
+              const a = Math.floor(Math.random() * 9) + 1;
+              const b = Math.floor(Math.random() * 9) + 1;
+              return {
+                text: `${a} + ${b} =`,
+                subhint: "Add both plank lengths together",
+                answer: a + b
+              };
+            }
+          },
+          {
+            id: 2,
+            title: "Cedar Canyon",
+            category: "Subtraction Basics",
+            theme: "canyon",
+            requiredPlanks: 3,
+            generator: () => {
+              const b = Math.floor(Math.random() * 12) + 2;
+              const ans = Math.floor(Math.random() * 12) + 1;
+              const a = b + ans;
+              return {
+                text: `${a} - ${b} =`,
+                subhint: "Deduct the gap to find the plank width",
+                answer: ans
+              };
+            }
+          },
+          {
+            id: 3,
+            title: "Granite Gorge",
+            category: "Sum & Difference",
+            theme: "granite",
+            requiredPlanks: 3,
+            generator: () => {
+              if (Math.random() > 0.5) {
+                const a = Math.floor(Math.random() * 25) + 10;
+                const b = Math.floor(Math.random() * 20) + 5;
+                return {
+                  text: `${a} + ${b} =`,
+                  subhint: "Reinforce with addition",
+                  answer: a + b
+                };
+              } else {
+                const b = Math.floor(Math.random() * 20) + 5;
+                const ans = Math.floor(Math.random() * 25) + 5;
+                const a = b + ans;
+                return {
+                  text: `${a} - ${b} =`,
+                  subhint: "Trim excess timber length",
+                  answer: ans
+                };
+              }
+            }
+          },
+          {
+            id: 4,
+            title: "Sunset Ravine",
+            category: "Multiplication Starter",
+            theme: "sunset",
+            requiredPlanks: 3,
+            generator: () => {
+              const a = Math.floor(Math.random() * 8) + 2;
+              const b = Math.floor(Math.random() * 8) + 2;
+              return {
+                text: `${a} × ${b} =`,
+                subhint: "Multiply timber beams into position",
+                answer: a * b
+              };
+            }
+          },
+          {
+            id: 5,
+            title: "Emerald Valley",
+            category: "Clean Division",
+            theme: "emerald",
+            requiredPlanks: 3,
+            generator: () => {
+              const divisor = Math.floor(Math.random() * 7) + 2;
+              const ans = Math.floor(Math.random() * 9) + 2;
+              const dividend = divisor * ans;
+              return {
+                text: `${dividend} ÷ ${divisor} =`,
+                subhint: "Divide total load evenly across cables",
+                answer: ans
+              };
+            }
+          },
+          {
+            id: 6,
+            title: "Twilight Pass",
+            category: "Unknown Quantity (?)",
+            theme: "twilight",
+            requiredPlanks: 3,
+            generator: () => {
+              const type = Math.floor(Math.random() * 3);
+              if (type === 0) {
+                const b = Math.floor(Math.random() * 15) + 5;
+                const ans = Math.floor(Math.random() * 20) + 5;
+                const total = ans + b;
+                return {
+                  text: `? + ${b} = ${total}`,
+                  subhint: "Solve for the missing beam length (?)",
+                  answer: ans
+                };
+              } else if (type === 1) {
+                const a = Math.floor(Math.random() * 8) + 2;
+                const ans = Math.floor(Math.random() * 8) + 2;
+                const product = a * ans;
+                return {
+                  text: `${a} × ? = ${product}`,
+                  subhint: "Find the factor that locks the truss",
+                  answer: ans
+                };
+              } else {
+                const ans = Math.floor(Math.random() * 20) + 10;
+                const b = Math.floor(Math.random() * 15) + 5;
+                const diff = ans - b;
+                return {
+                  text: `? - ${b} = ${diff}`,
+                  subhint: "Calculate initial span length before deduction",
+                  answer: ans
+                };
+              }
+            }
+          },
+          {
+            id: 7,
+            title: "Thunder Gulch",
+            category: "Order of Operations",
+            theme: "thunder",
+            requiredPlanks: 3,
+            generator: () => {
+              const a = Math.floor(Math.random() * 6) + 2;
+              const b = Math.floor(Math.random() * 6) + 2;
+              const c = Math.floor(Math.random() * 15) + 3;
+              if (Math.random() > 0.5) {
+                return {
+                  text: `${a} × ${b} + ${c} =`,
+                  subhint: "Multiplication takes precedence first",
+                  answer: a * b + c
+                };
+              } else {
+                return {
+                  text: `${c} + ${a} × ${b} =`,
+                  subhint: "Multiply first, then add the baseline",
+                  answer: c + a * b
+                };
+              }
+            }
+          },
+          {
+            id: 8,
+            title: "Frozen Chasm",
+            category: "Brackets & Groups",
+            theme: "frozen",
+            requiredPlanks: 3,
+            generator: () => {
+              const m = Math.floor(Math.random() * 5) + 2;
+              const a = Math.floor(Math.random() * 8) + 2;
+              const b = Math.floor(Math.random() * 7) + 1;
+              if (Math.random() > 0.5) {
+                return {
+                  text: `${m} × (${a} + ${b}) =`,
+                  subhint: "Calculate inside parentheses first!",
+                  answer: m * (a + b)
+                };
+              } else {
+                const totalInside = a + b;
+                return {
+                  text: `(${totalInside} - ${b}) × ${m} =`,
+                  subhint: "Solve parentheses before multiplying",
+                  answer: a * m
+                };
+              }
+            }
+          },
+          {
+            id: 9,
+            title: "Obsidian Abyss",
+            category: "Linear Equations",
+            theme: "obsidian",
+            requiredPlanks: 3,
+            generator: () => {
+              const coeff = Math.floor(Math.random() * 4) + 2;
+              const ans = Math.floor(Math.random() * 9) + 2;
+              const constant = Math.floor(Math.random() * 15) + 2;
+              const result = coeff * ans + constant;
+              return {
+                text: `${coeff}x + ${constant} = ${result}`,
+                subhint: `Find x to calibrate structural tension`,
+                answer: ans
+              };
+            }
+          },
+          {
+            id: 10,
+            title: "Architect's Pinnacle",
+            category: "Grand Master Engineering",
+            theme: "pinnacle",
+            requiredPlanks: 3,
+            generator: () => {
+              const type = Math.floor(Math.random() * 3);
+              if (type === 0) {
+                const bases = [2, 3, 4, 5];
+                const base = bases[Math.floor(Math.random() * bases.length)];
+                const exp = base === 2 ? 3 : 2;
+                const baseVal = Math.pow(base, exp);
+                const add = Math.floor(Math.random() * 15) + 5;
+                return {
+                  text: `${base}² + ${add} =`.replace('2²', exp === 3 ? '2³' : '2²'),
+                  subhint: `Calculate power then add supporting strut`,
+                  answer: baseVal + add
+                };
+              } else if (type === 1) {
+                const a = Math.floor(Math.random() * 4) + 2;
+                const b = Math.floor(Math.random() * 8) + 4;
+                const c = Math.floor(Math.random() * 3) + 2;
+                return {
+                  text: `${a} × (${b} - ${c}) + 5 =`,
+                  subhint: "Carefully resolve brackets, then multiply, then add",
+                  answer: a * (b - c) + 5
+                };
+              } else {
+                const a = Math.floor(Math.random() * 5) + 3;
+                const ans = Math.floor(Math.random() * 8) + 2;
+                const constant = Math.floor(Math.random() * 10) + 1;
+                const result = a * ans - constant;
+                return {
+                  text: `${a}x - ${constant} = ${result}`,
+                  subhint: "Solve for variable x to lock the final suspension keystone",
+                  answer: ans
+                };
+              }
+            }
+          }
+        ];
+
+        /* ==========================================================================
+           3. GAME STATE MANAGEMENT
+           ========================================================================== */
+        const state = {
+          currentLevelIndex: 0,
+          unlockedLevelIndex: 0,
+          score: 0,
+          hearts: 3,
+          combo: 0,
+          questionIndex: 0, // 0, 1, 2 (3 questions per level)
+          plankStates: [null, null, null], // null = unbuilt, true = solid, false = broken
+          currentQuestion: null,
+          options: [],
+          isTransitioning: false,
+          levelStartTime: Date.now(),
+          
+          // CHARACTER WALKING & CROSSING SEQUENCE
+          charCurrentX: 0,
+          charCurrentY: 0,
+          isWalking: false,
+          celebrating: false,
+
+          // FALL INTO RIVER PHYSICS STATE
+          isFalling: false,
+          charFallX: 0,
+          charFallY: 0,
+          charFallVx: 0,
+          charFallVy: 0,
+          charFallAngle: 0,
+          charInWater: false
+        };
+
+        // Load saved progress
+        try {
+          const saved = localStorage.getItem('math_bridge_save');
+          if (saved) {
+            const parsed = JSON.parse(saved);
+            if (parsed.unlockedLevelIndex !== undefined) {
+              state.unlockedLevelIndex = Math.min(parsed.unlockedLevelIndex, 9);
+              state.score = parsed.score || 0;
+            }
+          }
+        } catch (e) {}
+
+        function saveGame() {
+          try {
+            localStorage.setItem('math_bridge_save', JSON.stringify({
+              unlockedLevelIndex: state.unlockedLevelIndex,
+              score: state.score
+            }));
+          } catch (e) {}
+        }
+
+        /* ==========================================================================
+           4. VISUAL CANVAS RENDERER & HIGH-FIDELITY SCENIC GRAPHICS
+           ========================================================================== */
+        const canvas = document.getElementById('game-canvas');
+        const ctx = canvas.getContext('2d');
+        const canvasWrapper = document.getElementById('canvas-wrapper');
+
+        let dpr = window.devicePixelRatio || 1;
+        let viewWidth = 600;
+        let viewHeight = 300;
+
+        function resizeCanvas() {
+          const rect = canvasWrapper.getBoundingClientRect();
+          viewWidth = rect.width;
+          viewHeight = rect.height;
+          dpr = window.devicePixelRatio || 1;
+          canvas.width = Math.round(viewWidth * dpr);
+          canvas.height = Math.round(viewHeight * dpr);
+          ctx.resetTransform?.();
+          ctx.scale(dpr, dpr);
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+        window.addEventListener('orientationchange', () => setTimeout(resizeCanvas, 100));
+
+        // Visual Particles (Dust, Confetti, Water Splashes & Broken Wood)
+        const particles = [];
+
+        function createPlankDust(x, y) {
+          for (let i = 0; i < 18; i++) {
+            particles.push({
+              x: x + (Math.random() - 0.5) * 32,
+              y: y + (Math.random() - 0.5) * 8,
+              vx: (Math.random() - 0.5) * 3,
+              vy: -Math.random() * 2.5 - 0.5,
+              size: Math.random() * 4 + 2,
+              alpha: 1,
+              decay: Math.random() * 0.03 + 0.02,
+              color: Math.random() > 0.5 ? '#d97706' : '#f59e0b'
+            });
+          }
+        }
+
+        function createWoodSplinters(x, y) {
+          for (let i = 0; i < 28; i++) {
+            const angle = Math.random() * Math.PI * 2;
+            const spd = Math.random() * 8 + 3;
+            particles.push({
+              x: x,
+              y: y,
+              vx: Math.cos(angle) * spd,
+              vy: Math.sin(angle) * spd - 3,
+              size: Math.random() * 6 + 3,
+              alpha: 1,
+              decay: 0.022,
+              color: Math.random() > 0.5 ? '#b45309' : '#78350f',
+              rotation: Math.random() * Math.PI,
+              rotSpeed: (Math.random() - 0.5) * 0.4
+            });
+          }
+        }
+
+        function createWaterSplash(x, y) {
+          for (let i = 0; i < 40; i++) {
+            const angle = -Math.PI / 2 + (Math.random() - 0.5) * 1.5;
+            const spd = Math.random() * 9 + 3;
+            particles.push({
+              x: x + (Math.random() - 0.5) * 24,
+              y: y,
+              vx: Math.cos(angle) * spd,
+              vy: Math.sin(angle) * spd,
+              size: Math.random() * 6 + 2,
+              alpha: 1,
+              decay: 0.02,
+              color: Math.random() > 0.4 ? '#38bdf8' : '#e0f2fe'
+            });
+          }
+        }
+
+        function createConfettiBurst(cx, cy) {
+          const colors = ['#f59e0b', '#10b981', '#38bdf8', '#ec4899', '#fbbf24', '#a855f7'];
+          for (let i = 0; i < 80; i++) {
+            const angle = Math.random() * Math.PI * 2;
+            const speed = Math.random() * 7 + 2;
+            particles.push({
+              x: cx,
+              y: cy,
+              vx: Math.cos(angle) * speed,
+              vy: Math.sin(angle) * speed - 3,
+              size: Math.random() * 6 + 3,
+              alpha: 1,
+              decay: Math.random() * 0.015 + 0.01,
+              color: colors[Math.floor(Math.random() * colors.length)],
+              rotation: Math.random() * Math.PI,
+              rotSpeed: (Math.random() - 0.5) * 0.2
+            });
+          }
+        }
+
+        // Falling plank animation states
+        const animatedPlanks = [];
+
+        // Dynamic clouds
+        const clouds = [
+          { x: 30, y: 28, scale: 0.95, speed: 0.15 },
+          { x: 190, y: 18, scale: 0.75, speed: 0.1 },
+          { x: 360, y: 38, scale: 1.15, speed: 0.2 },
+          { x: 530, y: 24, scale: 0.85, speed: 0.12 }
+        ];
+
+        /* RENDER LOOP */
+        let lastTimestamp = 0;
+        let walkTimer = 0;
+
+        function renderScene(timestamp) {
+          const dt = Math.min((timestamp - lastTimestamp) / 1000, 0.1) || 0.016;
+          lastTimestamp = timestamp;
+
+          ctx.clearRect(0, 0, viewWidth, viewHeight);
+
+          const lvl = LEVELS[state.currentLevelIndex];
+          const totalPlanks = 3;
+
+          // 1. SKY GRADIENT (HIGH QUALITY SKYBOX)
+          let skyGrad = ctx.createLinearGradient(0, 0, 0, viewHeight);
+          if (lvl.theme === 'morning') {
+            skyGrad.addColorStop(0, '#0284c7');
+            skyGrad.addColorStop(0.45, '#38bdf8');
+            skyGrad.addColorStop(0.75, '#bae6fd');
+            skyGrad.addColorStop(1, '#fef08a');
+          } else if (lvl.theme === 'canyon') {
+            skyGrad.addColorStop(0, '#0369a1');
+            skyGrad.addColorStop(0.4, '#fdba74');
+            skyGrad.addColorStop(0.8, '#f97316');
+            skyGrad.addColorStop(1, '#c2410c');
+          } else if (lvl.theme === 'sunset') {
+            skyGrad.addColorStop(0, '#312e81');
+            skyGrad.addColorStop(0.35, '#701a75');
+            skyGrad.addColorStop(0.65, '#c026d3');
+            skyGrad.addColorStop(0.85, '#f97316');
+            skyGrad.addColorStop(1, '#fde047');
+          } else if (lvl.theme === 'twilight') {
+            skyGrad.addColorStop(0, '#090d16');
+            skyGrad.addColorStop(0.4, '#1e1b4b');
+            skyGrad.addColorStop(0.75, '#312e81');
+            skyGrad.addColorStop(1, '#4f46e5');
+          } else if (lvl.theme === 'frozen') {
+            skyGrad.addColorStop(0, '#082f49');
+            skyGrad.addColorStop(0.4, '#0284c7');
+            skyGrad.addColorStop(0.75, '#7dd3fc');
+            skyGrad.addColorStop(1, '#f0f9ff');
+          } else if (lvl.theme === 'pinnacle') {
+            skyGrad.addColorStop(0, '#18181b');
+            skyGrad.addColorStop(0.4, '#451a03');
+            skyGrad.addColorStop(0.75, '#b45309');
+            skyGrad.addColorStop(1, '#fef08a');
+          } else {
+            skyGrad.addColorStop(0, '#0369a1');
+            skyGrad.addColorStop(0.6, '#60a5fa');
+            skyGrad.addColorStop(1, '#bfdbfe');
+          }
+          ctx.fillStyle = skyGrad;
+          ctx.fillRect(0, 0, viewWidth, viewHeight);
+
+          // 2. CELESTIAL BODY (SUN / MOON WITH SHINE)
+          const sunX = viewWidth * 0.82;
+          const sunY = viewHeight * 0.22;
+          const isNight = lvl.theme === 'twilight';
+
+          // Outer Glow
+          const glowGrad = ctx.createRadialGradient(sunX, sunY, 4, sunX, sunY, 40);
+          glowGrad.addColorStop(0, isNight ? 'rgba(254, 240, 138, 0.4)' : 'rgba(254, 215, 170, 0.5)');
+          glowGrad.addColorStop(1, 'rgba(255, 255, 255, 0)');
+          ctx.fillStyle = glowGrad;
+          ctx.beginPath();
+          ctx.arc(sunX, sunY, 40, 0, Math.PI * 2);
+          ctx.fill();
+
+          // Main Sun/Moon
+          ctx.beginPath();
+          ctx.arc(sunX, sunY, 20, 0, Math.PI * 2);
+          ctx.fillStyle = isNight ? '#fef08a' : '#ffffff';
+          ctx.shadowColor = isNight ? '#fef08a' : '#f59e0b';
+          ctx.shadowBlur = 16;
+          ctx.fill();
+          ctx.shadowBlur = 0;
+
+          // 3. CLOUDS (ORGANIC SHADING)
+          ctx.fillStyle = isNight ? 'rgba(255, 255, 255, 0.15)' : 'rgba(255, 255, 255, 0.7)';
+          clouds.forEach(c => {
+            c.x += c.speed;
+            if (c.x > viewWidth + 90) c.x = -90;
+            ctx.beginPath();
+            ctx.arc(c.x, c.y, 16 * c.scale, 0, Math.PI * 2);
+            ctx.arc(c.x + 14 * c.scale, c.y - 7 * c.scale, 20 * c.scale, 0, Math.PI * 2);
+            ctx.arc(c.x + 32 * c.scale, c.y, 15 * c.scale, 0, Math.PI * 2);
+            ctx.fill();
+          });
+
+          // 4. PARALLAX DISTANT MOUNTAINS
+          // Far Mountains
+          ctx.fillStyle = isNight ? '#13192b' : 'rgba(71, 85, 105, 0.4)';
+          ctx.beginPath();
+          ctx.moveTo(0, viewHeight * 0.72);
+          ctx.lineTo(viewWidth * 0.18, viewHeight * 0.38);
+          ctx.lineTo(viewWidth * 0.36, viewHeight * 0.62);
+          ctx.lineTo(viewWidth * 0.62, viewHeight * 0.34);
+          ctx.lineTo(viewWidth * 0.88, viewHeight * 0.58);
+          ctx.lineTo(viewWidth, viewHeight * 0.44);
+          ctx.lineTo(viewWidth, viewHeight);
+          ctx.lineTo(0, viewHeight);
+          ctx.closePath();
+          ctx.fill();
+
+          // Near Mountains
+          ctx.fillStyle = isNight ? '#1e293b' : 'rgba(51, 65, 85, 0.65)';
+          ctx.beginPath();
+          ctx.moveTo(0, viewHeight * 0.8);
+          ctx.lineTo(viewWidth * 0.28, viewHeight * 0.46);
+          ctx.lineTo(viewWidth * 0.54, viewHeight * 0.74);
+          ctx.lineTo(viewWidth * 0.82, viewHeight * 0.48);
+          ctx.lineTo(viewWidth, viewHeight * 0.7);
+          ctx.lineTo(viewWidth, viewHeight);
+          ctx.lineTo(0, viewHeight);
+          ctx.closePath();
+          ctx.fill();
+
+          // 5. RIVER & RAPIDS AT THE BOTTOM (WATER SIMULATION)
+          const riverTopY = viewHeight * 0.82;
+          const riverH = viewHeight - riverTopY;
+
+          // River Deep Gradient
+          const riverGrad = ctx.createLinearGradient(0, riverTopY, 0, viewHeight);
+          riverGrad.addColorStop(0, '#0284c7');
+          riverGrad.addColorStop(0.35, '#0369a1');
+          riverGrad.addColorStop(1, '#0c4a6e');
+          ctx.fillStyle = riverGrad;
+          ctx.fillRect(0, riverTopY, viewWidth, riverH);
+
+          // Flowing Water Waves & Foam Rapids
+          const wavePhase = timestamp * 0.003;
+          ctx.strokeStyle = 'rgba(255, 255, 255, 0.45)';
+          ctx.lineWidth = 2;
+
+          for (let row = 0; row < 3; row++) {
+            const rowY = riverTopY + 8 + row * 10;
+            ctx.beginPath();
+            ctx.moveTo(0, rowY);
+            for (let x = 0; x < viewWidth; x += 15) {
+              const wy = rowY + Math.sin(wavePhase * 2 + x * 0.04 + row) * 3;
+              ctx.lineTo(x, wy);
+            }
+            ctx.stroke();
+          }
+
+          // Sparkling water highlights
+          ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
+          for (let i = 0; i < 8; i++) {
+            const sx = (Math.sin(timestamp * 0.002 + i * 1.5) * 0.45 + 0.5) * viewWidth;
+            const sy = riverTopY + 12 + (i * 4);
+            ctx.fillRect(sx, sy, 16, 2.5);
+          }
+
+          // 6. ROCK CLIFFS (LEFT & RIGHT) WITH GRASS ON TOP
+          const cliffY = viewHeight * 0.56;
+          const cliffWidth = Math.max(viewWidth * 0.18, 75);
+          const bridgeStartX = cliffWidth;
+          const bridgeEndX = viewWidth - cliffWidth;
+          const bridgeSpan = bridgeEndX - bridgeStartX;
+
+          // Left Cliff Body
+          const cliffGradL = ctx.createLinearGradient(0, cliffY, cliffWidth, viewHeight);
+          cliffGradL.addColorStop(0, '#475569');
+          cliffGradL.addColorStop(0.5, '#334155');
+          cliffGradL.addColorStop(1, '#0f172a');
+          ctx.fillStyle = cliffGradL;
+          ctx.beginPath();
+          ctx.moveTo(0, cliffY);
+          ctx.lineTo(cliffWidth, cliffY);
+          ctx.lineTo(cliffWidth * 0.88, viewHeight * 0.72);
+          ctx.lineTo(cliffWidth * 0.5, viewHeight);
+          ctx.lineTo(0, viewHeight);
+          ctx.closePath();
+          ctx.fill();
+
+          // Left Cliff Stratified Ledge Texture
+          ctx.strokeStyle = 'rgba(255, 255, 255, 0.08)';
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.moveTo(cliffWidth * 0.1, cliffY + 14);
+          ctx.lineTo(cliffWidth * 0.9, cliffY + 18);
+          ctx.moveTo(cliffWidth * 0.2, cliffY + 30);
+          ctx.lineTo(cliffWidth * 0.8, cliffY + 34);
+          ctx.stroke();
+
+          // Right Cliff Body
+          const cliffGradR = ctx.createLinearGradient(bridgeEndX, cliffY, viewWidth, viewHeight);
+          cliffGradR.addColorStop(0, '#475569');
+          cliffGradR.addColorStop(0.5, '#334155');
+          cliffGradR.addColorStop(1, '#0f172a');
+          ctx.fillStyle = cliffGradR;
+          ctx.beginPath();
+          ctx.moveTo(bridgeEndX, cliffY);
+          ctx.lineTo(viewWidth, cliffY);
+          ctx.lineTo(viewWidth, viewHeight);
+          ctx.lineTo(bridgeEndX + cliffWidth * 0.5, viewHeight);
+          ctx.lineTo(bridgeEndX + cliffWidth * 0.12, viewHeight * 0.72);
+          ctx.closePath();
+          ctx.fill();
+
+          // Lush Grass Caps on Cliffs (The character stands here!)
+          ctx.fillStyle = '#10b981';
+          ctx.fillRect(0, cliffY - 3, cliffWidth, 5);
+          ctx.fillRect(bridgeEndX, cliffY - 3, cliffWidth, 5);
+
+          // Grass Tuft Details
+          ctx.fillStyle = '#059669';
+          ctx.fillRect(cliffWidth * 0.25, cliffY - 6, 4, 3);
+          ctx.fillRect(cliffWidth * 0.45, cliffY - 5, 3, 2);
+          ctx.fillRect(bridgeEndX + 16, cliffY - 6, 4, 3);
+          ctx.fillRect(bridgeEndX + 36, cliffY - 5, 3, 2);
+
+          // Goal Flag on Right Cliff Grass
+          const flagBaseX = bridgeEndX + cliffWidth * 0.55;
+          const flagBaseY = cliffY - 2;
+          ctx.strokeStyle = '#94a3b8';
+          ctx.lineWidth = 3;
+          ctx.beginPath();
+          ctx.moveTo(flagBaseX, flagBaseY);
+          ctx.lineTo(flagBaseX, flagBaseY - 36);
+          ctx.stroke();
+
+          // Flag Golden Finial Ball
+          ctx.fillStyle = '#fbbf24';
+          ctx.beginPath();
+          ctx.arc(flagBaseX, flagBaseY - 37, 3, 0, Math.PI * 2);
+          ctx.fill();
+
+          // Waving Banner Flag
+          const flagWave = Math.sin(timestamp * 0.006) * 3;
+          ctx.fillStyle = '#f59e0b';
+          ctx.beginPath();
+          ctx.moveTo(flagBaseX, flagBaseY - 36);
+          ctx.lineTo(flagBaseX + 20, flagBaseY - 27 + flagWave);
+          ctx.lineTo(flagBaseX, flagBaseY - 18);
+          ctx.closePath();
+          ctx.fill();
+
+          // 7. SUSPENSION TOWERS & STEEL CABLES
+          const towerHeight = 44;
+          // Left Tower
+          ctx.fillStyle = '#334155';
+          ctx.fillRect(bridgeStartX - 10, cliffY - towerHeight, 10, towerHeight);
+          ctx.fillStyle = '#475569';
+          ctx.fillRect(bridgeStartX - 12, cliffY - towerHeight - 4, 14, 5);
+
+          // Right Tower
+          ctx.fillStyle = '#334155';
+          ctx.fillRect(bridgeEndX, cliffY - towerHeight, 10, towerHeight);
+          ctx.fillStyle = '#475569';
+          ctx.fillRect(bridgeEndX - 2, cliffY - towerHeight - 4, 14, 5);
+
+          // Main Suspension Cable (Catenary Arc)
+          ctx.strokeStyle = '#94a3b8';
+          ctx.lineWidth = 2.5;
+          ctx.beginPath();
+          ctx.moveTo(bridgeStartX - 5, cliffY - towerHeight + 4);
+          const midX = (bridgeStartX + bridgeEndX) / 2;
+          const cableDipY = cliffY + 6;
+          ctx.quadraticCurveTo(midX, cableDipY, bridgeEndX + 5, cliffY - towerHeight + 4);
+          ctx.stroke();
+
+          // 8. BRIDGE PLANKS & SUSPENDER ROPES
+          const plankW = bridgeSpan / totalPlanks;
+          const bridgeY = cliffY;
+
+          // Vertical suspender wires and ghost slots
+          for (let i = 0; i < totalPlanks; i++) {
+            const px = bridgeStartX + i * plankW;
+            const centerPlankX = px + plankW / 2;
+
+            // Compute Cable Y at this X
+            const t = (centerPlankX - (bridgeStartX - 5)) / (bridgeSpan + 10);
+            const cableYAtX = (1 - t) * (1 - t) * (cliffY - towerHeight + 4) + 2 * (1 - t) * t * cableDipY + t * t * (cliffY - towerHeight + 4);
+
+            // Vertical wire
+            ctx.strokeStyle = 'rgba(148, 163, 184, 0.45)';
+            ctx.lineWidth = 1.2;
+            ctx.beginPath();
+            ctx.moveTo(centerPlankX, cableYAtX);
+            ctx.lineTo(centerPlankX, bridgeY + 3);
+            ctx.stroke();
+
+            const pStatus = state.plankStates[i];
+
+            if (pStatus === null) {
+              // Ghost Plank Slot outline
+              ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
+              ctx.lineWidth = 1;
+              ctx.setLineDash([3, 3]);
+              ctx.strokeRect(px + 2, bridgeY, plankW - 4, 9);
+              ctx.setLineDash([]);
+
+              // Number label inside slot
+              ctx.fillStyle = 'rgba(255, 255, 255, 0.35)';
+              ctx.font = 'bold 11px system-ui, sans-serif';
+              ctx.textAlign = 'center';
+              ctx.fillText(`Plank ${i + 1}`, centerPlankX, bridgeY + 22);
+            } else if (pStatus === true) {
+              // Solid Wooden Plank
+              const plankGrad = ctx.createLinearGradient(px, bridgeY, px, bridgeY + 11);
+              plankGrad.addColorStop(0, '#d97706');
+              plankGrad.addColorStop(0.5, '#b45309');
+              plankGrad.addColorStop(1, '#78350f');
+
+              ctx.fillStyle = plankGrad;
+              ctx.fillRect(px + 1.5, bridgeY, plankW - 3, 10);
+
+              // Top highlight wood grain
+              ctx.fillStyle = 'rgba(251, 191, 36, 0.4)';
+              ctx.fillRect(px + 2, bridgeY + 1, plankW - 4, 2);
+
+              // Steel bolts / rivets
+              ctx.fillStyle = '#f8fafc';
+              ctx.beginPath();
+              ctx.arc(px + 4, bridgeY + 5, 1.5, 0, Math.PI * 2);
+              ctx.arc(px + plankW - 4, bridgeY + 5, 1.5, 0, Math.PI * 2);
+              ctx.fill();
+            } else if (pStatus === false) {
+              // Broken / Missing Plank Slot (Jagged wood splinters on edges with clear gap!)
+              ctx.fillStyle = '#78350f';
+              // Left jagged splinter
+              ctx.beginPath();
+              ctx.moveTo(px + 1.5, bridgeY);
+              ctx.lineTo(px + plankW * 0.22, bridgeY);
+              ctx.lineTo(px + plankW * 0.14, bridgeY + 10);
+              ctx.lineTo(px + 1.5, bridgeY + 10);
+              ctx.closePath();
+              ctx.fill();
+
+              // Right jagged splinter
+              ctx.beginPath();
+              ctx.moveTo(px + plankW - 1.5, bridgeY);
+              ctx.lineTo(px + plankW * 0.78, bridgeY);
+              ctx.lineTo(px + plankW * 0.86, bridgeY + 10);
+              ctx.lineTo(px + plankW - 1.5, bridgeY + 10);
+              ctx.closePath();
+              ctx.fill();
+
+              // Red dotted indicator showing hazardous empty gap
+              ctx.strokeStyle = 'rgba(239, 68, 68, 0.6)';
+              ctx.lineWidth = 1.5;
+              ctx.setLineDash([2, 2]);
+              ctx.strokeRect(px + plankW * 0.25, bridgeY + 2, plankW * 0.5, 6);
+              ctx.setLineDash([]);
+            }
+          }
+
+          // 9. ANIMATED DROPPING PLANKS (BOUNCE PHYSICS)
+          for (let idx = animatedPlanks.length - 1; idx >= 0; idx--) {
+            const p = animatedPlanks[idx];
+            p.vy += 34 * dt;
+            p.y += p.vy;
+
+            if (p.y >= bridgeY) {
+              p.y = bridgeY;
+              p.vy = -p.vy * 0.35;
+              if (Math.abs(p.vy) < 1) {
+                createPlankDust(p.x + p.w / 2, bridgeY + 5);
+                animatedPlanks.splice(idx, 1);
+                continue;
+              }
+            }
+
+            ctx.fillStyle = '#f59e0b';
+            ctx.fillRect(p.x + 1.5, p.y, p.w - 3, 10);
+          }
+
+          // 10. CHARACTER (BUILDER / EXPLORER)
+          // Starts on grass: cliffWidth * 0.4
+          const grassStartX = cliffWidth * 0.35;
+          let charX = grassStartX;
+          let charY = bridgeY - 26;
+
+          if (state.isFalling) {
+            // Apply falling physics: gravity and rotation
+            state.charFallVy += 38 * dt;
+            state.charFallX += state.charFallVx * dt * 60;
+            state.charFallY += state.charFallVy * dt * 60;
+            state.charFallAngle += 0.08;
+
+            charX = state.charFallX;
+            charY = state.charFallY;
+
+            // Check if hits river
+            if (charY >= riverTopY - 10 && !state.charInWater) {
+              state.charInWater = true;
+              sound.playWaterSplash();
+              createWaterSplash(charX + 8, riverTopY + 5);
+              state.charFallVy = 0.8; // Buoyant drag in river
+              state.charFallVx = 1.2; // Flowing right with current
+            }
+          } else if (state.isWalking) {
+            charX = state.charCurrentX;
+            charY = state.charCurrentY;
+            walkTimer += dt * 14;
+            charY += Math.sin(walkTimer) * 4;
+          } else if (state.celebrating) {
+            charX = bridgeEndX + cliffWidth * 0.35;
+            charY += Math.sin(timestamp * 0.008) * 6; // Joyful victory jump on right grass
+          } else {
+            // Default idle on left grass
+            charX = grassStartX;
+            charY = bridgeY - 26;
+          }
+
+          // Draw Character Body with Rotation & Floating if in water
+          ctx.save();
+          ctx.translate(charX + 8, charY + 12);
+
+          if (state.isFalling) {
+            ctx.rotate(state.charFallAngle);
+          }
+
+          // Shadow (only when on grass/bridge and not falling)
+          if (!state.isFalling) {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.28)';
+            ctx.beginPath();
+            ctx.ellipse(0, 14, 10, 3, 0, 0, Math.PI * 2);
+            ctx.fill();
+          }
+
+          // Legs
+          ctx.fillStyle = '#1e293b';
+          const legW = 3.2;
+          if (state.isWalking) {
+            const legSwing = Math.sin(walkTimer) * 4;
+            ctx.fillRect(-4 + legSwing, 4, legW, 10);
+            ctx.fillRect(1 - legSwing, 4, legW, 10);
+          } else if (state.isFalling) {
+            // Flailing legs in free-fall
+            ctx.fillRect(-5, 4, legW, 9);
+            ctx.fillRect(2, 5, legW, 8);
+          } else {
+            ctx.fillRect(-4, 4, legW, 10);
+            ctx.fillRect(1, 4, legW, 10);
+          }
+
+          // Torso / High-visibility builder vest
+          ctx.fillStyle = '#ea580c'; // Vibrant safety orange
+          ctx.fillRect(-6, -5, 12, 11);
+
+          // Reflective Safety Strap
+          ctx.fillStyle = '#facc15';
+          ctx.fillRect(-6, 0, 12, 2.5);
+
+          // Builder Arms
+          ctx.fillStyle = '#ea580c';
+          if (state.isFalling) {
+            // Arms flailing up in panic!
+            ctx.fillRect(-9, -11, 3.5, 9);
+            ctx.fillRect(5.5, -11, 3.5, 9);
+          } else if (state.celebrating) {
+            // Arms raised up in triumph
+            ctx.fillRect(-9, -10, 3.5, 9);
+            ctx.fillRect(5.5, -10, 3.5, 9);
+          } else {
+            // Holding wrench/tools
+            ctx.fillRect(-8, -4, 3, 8);
+            ctx.fillRect(5, -4, 3, 8);
+          }
+
+          // Head & Face
+          ctx.fillStyle = '#fed7aa';
+          ctx.beginPath();
+          ctx.arc(0, -9, 6, 0, Math.PI * 2);
+          ctx.fill();
+
+          // Safety Helmet (Hardhat)
+          ctx.fillStyle = '#facc15';
+          ctx.beginPath();
+          ctx.arc(0, -11, 7, Math.PI, 0);
+          ctx.fill();
+          // Helmet Brim
+          ctx.fillRect(-7, -11.5, 14, 2.5);
+
+          // Face Expression: Surprised Eyes if falling!
+          ctx.fillStyle = '#0f172a';
+          if (state.isFalling) {
+            // Wide panicked eyes
+            ctx.beginPath();
+            ctx.arc(2, -10, 1.8, 0, Math.PI * 2);
+            ctx.fill();
+            // Open mouth
+            ctx.beginPath();
+            ctx.arc(2, -7, 2, 0, Math.PI * 2);
+            ctx.fill();
+          } else {
+            // Normal focused expression
+            ctx.fillRect(1, -10, 2, 2);
+          }
+
+          ctx.restore();
+
+          // 11. WATER RIPPLE IF CHARACTER FLOATING IN RIVER
+          if (state.charInWater) {
+            const rippleR = (timestamp * 0.05) % 25;
+            ctx.strokeStyle = `rgba(255, 255, 255, ${Math.max(0, 1 - rippleR / 25)})`;
+            ctx.lineWidth = 1.5;
+            ctx.beginPath();
+            ctx.ellipse(charX + 8, riverTopY + 12, rippleR, rippleR * 0.4, 0, 0, Math.PI * 2);
+            ctx.stroke();
+          }
+
+          // 12. PARTICLES DRAW & LIFECYCLE
+          for (let i = particles.length - 1; i >= 0; i--) {
+            const pt = particles[i];
+            pt.x += pt.vx;
+            pt.y += pt.vy;
+            pt.alpha -= pt.decay;
+            if (pt.rotSpeed) pt.rotation += pt.rotSpeed;
+
+            if (pt.alpha <= 0) {
+              particles.splice(i, 1);
+              continue;
+            }
+
+            ctx.save();
+            ctx.globalAlpha = Math.max(pt.alpha, 0);
+            ctx.fillStyle = pt.color;
+            if (pt.rotation !== undefined) {
+              ctx.translate(pt.x, pt.y);
+              ctx.rotate(pt.rotation);
+              ctx.fillRect(-pt.size / 2, -pt.size / 2, pt.size, pt.size);
+            } else {
+              ctx.beginPath();
+              ctx.arc(pt.x, pt.y, pt.size, 0, Math.PI * 2);
+              ctx.fill();
+            }
+            ctx.restore();
+          }
+
+          requestAnimationFrame(renderScene);
+        }
+
+        // Launch continuous render loop
+        requestAnimationFrame(renderScene);
+
+        /* ==========================================================================
+           5. GAME CONTROLS, 3-QUESTION GAMEPLAY, WALKING & RIVER FALL ANIMATION
+           ========================================================================== */
+        // HUD Elements
+        const levelDisplay = document.getElementById('level-display');
+        const scoreDisplay = document.getElementById('score-display');
+        const heartsDisplay = document.getElementById('hearts-display');
+        const streakLabel = document.getElementById('streak-label');
+        const progressSegments = document.getElementById('progress-segments');
+        const equationTopic = document.getElementById('equation-topic');
+        const equationDisplay = document.getElementById('equation-display');
+        const equationSubhint = document.getElementById('equation-subhint');
+        const toast = document.getElementById('toast-message');
+        const dangerBanner = document.getElementById('danger-warning-banner');
+
+        // Buttons
+        const choiceBtns = [
+          document.getElementById('opt-0'),
+          document.getElementById('opt-1'),
+          document.getElementById('opt-2'),
+          document.getElementById('opt-3')
+        ];
+        const choiceVals = [
+          document.getElementById('opt-val-0'),
+          document.getElementById('opt-val-1'),
+          document.getElementById('opt-val-2'),
+          document.getElementById('opt-val-3')
+        ];
+
+        // Modals
+        const modalClear = document.getElementById('modal-clear');
+        const modalFail = document.getElementById('modal-fail');
+        const modalVictory = document.getElementById('modal-victory');
+        const modalLevelSelect = document.getElementById('modal-level-select');
+        const modalGuide = document.getElementById('modal-guide');
+
+        function showToast(msg) {
+          toast.textContent = msg;
+          toast.classList.add('show');
+          setTimeout(() => toast.classList.remove('show'), 2000);
+        }
+
+        function updateHUD() {
+          const lvl = LEVELS[state.currentLevelIndex];
+          levelDisplay.textContent = `Level ${lvl.id}`;
+          scoreDisplay.textContent = `${state.score} pts`;
+
+          // Hearts
+          let heartStr = '';
+          for (let i = 0; i < 3; i++) {
+            heartStr += i < state.hearts ? '❤️' : '🖤';
+          }
+          heartsDisplay.textContent = heartStr;
+
+          // Combo
+          streakLabel.textContent = `⚡ Combo: ${state.combo}x`;
+          if (state.combo >= 3) {
+            streakLabel.style.color = '#10b981';
+          } else {
+            streakLabel.style.color = '#f59e0b';
+          }
+
+          // 3 Planks Progress Segments
+          progressSegments.innerHTML = '';
+          for (let i = 0; i < 3; i++) {
+            const pip = document.createElement('div');
+            const status = state.plankStates[i];
+            if (status === true) {
+              pip.className = 'plank-pip active';
+            } else if (status === false) {
+              pip.className = 'plank-pip broken';
+            } else {
+              pip.className = 'plank-pip';
+            }
+            progressSegments.appendChild(pip);
+          }
+        }
+
+        function loadQuestion() {
+          const lvl = LEVELS[state.currentLevelIndex];
+          const q = lvl.generator();
+          state.currentQuestion = q;
+          state.questionStartTime = Date.now();
+
+          equationTopic.textContent = `${lvl.category} • Plank ${state.questionIndex + 1} of 3`;
+          equationSubhint.textContent = q.subhint;
+
+          // Render Equation
+          if (q.text.includes('=')) {
+            const parts = q.text.split('=');
+            if (parts[1].trim() === '' || parts[1].trim() === '?') {
+              equationDisplay.innerHTML = `<span>${parts[0].trim()} =</span> <span class="equation-unknown">?</span>`;
+            } else {
+              equationDisplay.innerHTML = `<span>${parts[0].trim()} = ${parts[1].trim()}</span>`;
+            }
+          } else {
+            equationDisplay.innerHTML = `<span>${q.text}</span>`;
+          }
+
+          // Generate 4 Unique Multiple Choice Options
+          const correct = q.answer;
+          const optionsSet = new Set([correct]);
+
+          while (optionsSet.size < 4) {
+            const delta = (Math.floor(Math.random() * 5) + 1) * (Math.random() > 0.5 ? 1 : -1);
+            let wrong = correct + delta;
+            if (wrong < 0 && lvl.id < 6) wrong = correct + Math.abs(delta) + 1;
+            if (wrong !== correct) {
+              optionsSet.add(wrong);
+            }
+          }
+
+          state.options = Array.from(optionsSet).sort(() => Math.random() - 0.5);
+
+          // Reset buttons
+          choiceBtns.forEach((btn, i) => {
+            btn.className = 'choice-btn';
+            btn.disabled = false;
+            choiceVals[i].textContent = state.options[i];
+          });
+        }
+
+        function startLevel(lvlIndex) {
+          state.currentLevelIndex = lvlIndex;
+          state.hearts = 3;
+          state.combo = 0;
+          state.questionIndex = 0;
+          state.plankStates = [null, null, null];
+          state.isTransitioning = false;
+          state.isWalking = false;
+          state.celebrating = false;
+          state.levelStartTime = Date.now();
+
+          // Reset falling state
+          state.isFalling = false;
+          state.charInWater = false;
+          dangerBanner.classList.remove('show');
+
+          animatedPlanks.length = 0;
+          particles.length = 0;
+
+          // Close any open modals
+          document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('active'));
+
+          updateHUD();
+          loadQuestion();
+          resizeCanvas();
+        }
+
+        function handleAnswer(selectedIndex) {
+          if (state.isTransitioning) return;
+          const chosenVal = state.options[selectedIndex];
+          const isCorrect = chosenVal === state.currentQuestion.answer;
+          const selectedBtn = choiceBtns[selectedIndex];
+
+          state.isTransitioning = true;
+          const curIndex = state.questionIndex;
+
+          const cliffWidth = Math.max(viewWidth * 0.18, 75);
+          const bridgeSpan = viewWidth - 2 * cliffWidth;
+          const plankW = bridgeSpan / 3;
+          const targetPlankX = cliffWidth + curIndex * plankW;
+          const bridgeY = viewHeight * 0.56;
+
+          if (isCorrect) {
+            selectedBtn.classList.add('correct');
+            sound.playPlankSnap();
+
+            // Score calculation
+            const elapsedSeconds = (Date.now() - state.questionStartTime) / 1000;
+            let points = 100;
+            if (elapsedSeconds < 4) {
+              points += 50;
+              showToast("⚡ Rapid Calculation! +50");
+            }
+            state.combo++;
+            points += (state.combo - 1) * 20;
+            state.score += points;
+
+            // Spawn physics dropping plank
+            animatedPlanks.push({
+              x: targetPlankX,
+              y: -20,
+              w: plankW,
+              vy: 0
+            });
+
+            state.plankStates[curIndex] = true;
+            updateHUD();
+          } else {
+            // Wrong answer on this plank
+            selectedBtn.classList.add('wrong');
+            sound.playPlankBreak();
+            createWoodSplinters(targetPlankX + plankW / 2, bridgeY);
+            state.combo = 0;
+            state.hearts = Math.max(0, state.hearts - 1);
+            state.plankStates[curIndex] = false;
+            updateHUD();
+            showToast("❌ Broken Plank!");
+          }
+
+          // Advance to next question or begin bridge crossing sequence
+          setTimeout(() => {
+            state.questionIndex++;
+            if (state.questionIndex < 3) {
+              state.isTransitioning = false;
+              loadQuestion();
+            } else {
+              // ALL 3 QUESTIONS ANSWERED -> INITIATE WALKING ACROSS THE BRIDGE!
+              startBridgeCrossingSequence();
+            }
+          }, 700);
+        }
+
+        /* BRIDGE CROSSING WALK ANIMATION & RESOLUTION */
+        function startBridgeCrossingSequence() {
+          state.isTransitioning = true;
+
+          // Disable choice buttons during crossing
+          choiceBtns.forEach(btn => {
+            btn.disabled = true;
+          });
+
+          equationTopic.textContent = "Bridge Crossing Inspection";
+          equationDisplay.innerHTML = `<span style="font-size:clamp(18px, 4vw, 24px); color:#fbbf24; font-weight:700;">🚶 Testing the Bridge...</span>`;
+          equationSubhint.textContent = "The builder steps across the span to verify structural integrity!";
+
+          const cliffWidth = Math.max(viewWidth * 0.18, 75);
+          const bridgeSpan = viewWidth - 2 * cliffWidth;
+          const plankW = bridgeSpan / 3;
+          const bridgeY = viewHeight * 0.56;
+
+          const startX = cliffWidth * 0.35;
+          const endGoalX = viewWidth - cliffWidth * 0.65;
+
+          const allCorrect = state.plankStates.every(p => p === true);
+          const firstFailIndex = state.plankStates.indexOf(false); // 0, 1, or 2
+
+          state.isWalking = true;
+          state.charCurrentX = startX;
+          state.charCurrentY = bridgeY - 26;
+
+          const startTime = Date.now();
+
+          if (allCorrect) {
+            // SUCCESS: Character walks all the way across to the right cliff!
+            const walkDuration = 2600; // ms
+
+            const walkInterval = setInterval(() => {
+              const progress = Math.min((Date.now() - startTime) / walkDuration, 1);
+              state.charCurrentX = startX + progress * (endGoalX - startX);
+
+              if (progress >= 1) {
+                clearInterval(walkInterval);
+                state.isWalking = false;
+                state.celebrating = true;
+                sound.playFanfare();
+                createConfettiBurst(endGoalX + 8, bridgeY - 30);
+                showToast("🎉 Bridge Crossed Safely!");
+                setTimeout(showLevelClearModal, 1200);
+              }
+            }, 16);
+          } else {
+            // FAILURE: Character walks across good planks up to the broken plank, then falls into river!
+            const fallTargetX = cliffWidth + (firstFailIndex + 0.45) * plankW;
+            const distanceToHole = fallTargetX - startX;
+            const walkDuration = Math.max(800, (distanceToHole / (endGoalX - startX)) * 2600);
+
+            const walkInterval = setInterval(() => {
+              const progress = Math.min((Date.now() - startTime) / walkDuration, 1);
+              state.charCurrentX = startX + progress * (fallTargetX - startX);
+
+              if (progress >= 1) {
+                clearInterval(walkInterval);
+                state.isWalking = false;
+                
+                // TRIGGER FALL INTO RIVER!
+                state.isFalling = true;
+                state.charFallX = fallTargetX;
+                state.charFallY = bridgeY - 26;
+                state.charFallVx = 1.0;
+                state.charFallVy = -3.2; // Little stumble hop into the hole
+                state.charFallAngle = 0;
+                state.charInWater = false;
+
+                sound.playPlankBreak();
+                dangerBanner.classList.add('show');
+
+                // After falling and water splash, show fail modal
+                setTimeout(() => {
+                  showLevelFailModal();
+                  dangerBanner.classList.remove('show');
+                }, 1800);
+              }
+            }, 16);
+          }
+        }
+
+        /* MODAL CONTROLS */
+        function showLevelClearModal() {
+          const lvl = LEVELS[state.currentLevelIndex];
+          document.getElementById('clear-stat-lvl').textContent = lvl.id;
+          document.getElementById('clear-stat-planks').textContent = `3/3`;
+          document.getElementById('clear-stat-score').textContent = `+360`;
+
+          const starsElem = document.getElementById('clear-stars');
+          if (state.hearts === 3) starsElem.textContent = '★★★';
+          else if (state.hearts === 2) starsElem.textContent = '★★☆';
+          else starsElem.textContent = '★☆☆';
+
+          if (state.currentLevelIndex + 1 > state.unlockedLevelIndex) {
+            state.unlockedLevelIndex = Math.min(state.currentLevelIndex + 1, 9);
+            saveGame();
+          }
+
+          if (state.currentLevelIndex >= 9) {
+            document.getElementById('vic-total-score').textContent = `${state.score} pts`;
+            modalVictory.classList.add('active');
+          } else {
+            modalClear.classList.add('active');
+          }
+        }
+
+        function showLevelFailModal() {
+          const failedCount = state.plankStates.filter(p => p === false).length;
+          document.getElementById('fail-stat-ans').textContent = `${failedCount} broken plank${failedCount > 1 ? 's' : ''}`;
+          modalFail.classList.add('active');
+        }
+
+        function openLevelSelect() {
+          const grid = document.getElementById('level-select-grid');
+          grid.innerHTML = '';
+
+          LEVELS.forEach((lvl, idx) => {
+            const cell = document.createElement('button');
+            const isUnlocked = idx <= state.unlockedLevelIndex;
+            cell.className = `level-cell ${isUnlocked ? '' : 'locked'} ${idx === state.currentLevelIndex ? 'current' : ''}`;
+            cell.innerHTML = `
+              <span>${lvl.id}</span>
+              <span class="level-stars">${isUnlocked ? (idx < state.unlockedLevelIndex ? '★★★' : '★☆☆') : '🔒'}</span>
+            `;
+            if (isUnlocked) {
+              cell.addEventListener('click', () => {
+                sound.playClick();
+                modalLevelSelect.classList.remove('active');
+                startLevel(idx);
+              });
+            }
+            grid.appendChild(cell);
+          });
+
+          modalLevelSelect.classList.add('active');
+        }
+
+        /* ==========================================================================
+           6. EVENT LISTENERS & FULLSCREEN API
+           ========================================================================== */
+        // Choice buttons click
+        choiceBtns.forEach((btn, idx) => {
+          btn.addEventListener('click', () => handleAnswer(idx));
+        });
+
+        // Keyboard Shortcuts
+        window.addEventListener('keydown', (e) => {
+          if (e.key === '1') handleAnswer(0);
+          else if (e.key === '2') handleAnswer(1);
+          else if (e.key === '3') handleAnswer(2);
+          else if (e.key === '4') handleAnswer(3);
+          else if (e.key.toLowerCase() === 'm') toggleSound();
+          else if (e.key.toLowerCase() === 'f') toggleFullscreen();
+          else if (e.key === 'Escape') {
+            document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('active'));
+          }
+        });
+
+        // Fullscreen API
+        const btnFullscreen = document.getElementById('btn-fullscreen');
+        const fsEnterIcon = document.getElementById('fs-enter-icon');
+        const fsExitIcon = document.getElementById('fs-exit-icon');
+
+        function toggleFullscreen() {
+          sound.playClick();
+          try {
+            if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+              const el = document.documentElement;
+              if (el.requestFullscreen) {
+                el.requestFullscreen();
+              } else if (el.webkitRequestFullscreen) {
+                el.webkitRequestFullscreen();
+              }
+            } else {
+              if (document.exitFullscreen) {
+                document.exitFullscreen();
+              } else if (document.webkitExitFullscreen) {
+                document.webkitExitFullscreen();
+              }
+            }
+          } catch (err) {
+            showToast("Fullscreen toggled");
+          }
+        }
+
+        function updateFullscreenIcon() {
+          const isFs = !!(document.fullscreenElement || document.webkitFullscreenElement);
+          fsEnterIcon.style.display = isFs ? 'none' : 'block';
+          fsExitIcon.style.display = isFs ? 'block' : 'none';
+          setTimeout(resizeCanvas, 150);
+        }
+
+        btnFullscreen.addEventListener('click', toggleFullscreen);
+        document.addEventListener('fullscreenchange', updateFullscreenIcon);
+        document.addEventListener('webkitfullscreenchange', updateFullscreenIcon);
+
+        // Sound Toggle
+        const btnSound = document.getElementById('btn-sound');
+        const soundOnIcon = document.getElementById('sound-icon-on');
+        const soundOffIcon = document.getElementById('sound-icon-off');
+
+        function toggleSound() {
+          sound.init();
+          sound.muted = !sound.muted;
+          if (sound.muted) {
+            sound.stopBGM();
+          } else {
+            sound.startBGM();
+          }
+          soundOnIcon.style.display = sound.muted ? 'none' : 'block';
+          soundOffIcon.style.display = sound.muted ? 'block' : 'none';
+          sound.playClick();
+        }
+        btnSound.addEventListener('click', toggleSound);
+
+        // Auto initialize audio on first user touch or click anywhere
+        const startAudioOnFirstInteraction = () => {
+          sound.init();
+          window.removeEventListener('click', startAudioOnFirstInteraction);
+          window.removeEventListener('keydown', startAudioOnFirstInteraction);
+          window.removeEventListener('touchstart', startAudioOnFirstInteraction);
+        };
+        window.addEventListener('click', startAudioOnFirstInteraction);
+        window.addEventListener('keydown', startAudioOnFirstInteraction);
+        window.addEventListener('touchstart', startAudioOnFirstInteraction);
+
+        // Header Buttons
+        document.getElementById('btn-levels').addEventListener('click', () => {
+          sound.playClick();
+          openLevelSelect();
+        });
+        document.getElementById('btn-help').addEventListener('click', () => {
+          sound.playClick();
+          modalGuide.classList.add('active');
+        });
+        document.getElementById('btn-close-guide').addEventListener('click', () => {
+          sound.playClick();
+          modalGuide.classList.remove('active');
+        });
+        document.getElementById('btn-close-level-select').addEventListener('click', () => {
+          sound.playClick();
+          modalLevelSelect.classList.remove('active');
+        });
+
+        // Modal Action Buttons
+        document.getElementById('btn-next-level').addEventListener('click', () => {
+          sound.playClick();
+          modalClear.classList.remove('active');
+          startLevel(Math.min(state.currentLevelIndex + 1, 9));
+        });
+        document.getElementById('btn-replay-level').addEventListener('click', () => {
+          sound.playClick();
+          modalClear.classList.remove('active');
+          startLevel(state.currentLevelIndex);
+        });
+        document.getElementById('btn-retry-level').addEventListener('click', () => {
+          sound.playClick();
+          modalFail.classList.remove('active');
+          startLevel(state.currentLevelIndex);
+        });
+        document.getElementById('btn-fail-levels').addEventListener('click', () => {
+          sound.playClick();
+          modalFail.classList.remove('active');
+          openLevelSelect();
+        });
+        document.getElementById('btn-restart-game').addEventListener('click', () => {
+          sound.playClick();
+          modalVictory.classList.remove('active');
+          state.score = 0;
+          startLevel(0);
+        });
+        document.getElementById('btn-vic-map').addEventListener('click', () => {
+          sound.playClick();
+          modalVictory.classList.remove('active');
+          openLevelSelect();
+        });
+
+        // Initialize First Game Run
+        window.addEventListener('DOMContentLoaded', () => {
+          resizeCanvas();
+          startLevel(state.unlockedLevelIndex || 0);
+        });
+
+        setTimeout(() => {
+          resizeCanvas();
+        }, 100);
+
+      })();
+    </script>
+  
+  <!-- PWA Service Worker Registration -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js').catch(() => {});
+      });
+    }
+  </script>
+
+
+  <!-- 5-Second Hint Ad Modal System -->
+  <div id="fl-hint-modal-overlay" style="
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 999999;
+    background: rgba(10, 15, 30, 0.85);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    align-items: center;
+    justify-content: center;
+    font-family: system-ui, -apple-system, sans-serif;
+    padding: 16px;
+    box-sizing: border-box;
+  ">
+    <div style="
+      background: linear-gradient(145deg, #1e293b, #0f172a);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.6), 0 0 30px rgba(245, 158, 11, 0.2);
+      border-radius: 20px;
+      max-width: 420px;
+      width: 100%;
+      padding: 24px;
+      text-align: center;
+      color: #f8fafc;
+      position: relative;
+    ">
+      <button id="fl-hint-close-btn" style="
+        position: absolute;
+        top: 14px;
+        right: 14px;
+        background: rgba(255,255,255,0.08);
+        border: none;
+        color: #94a3b8;
+        font-size: 18px;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      ">✕</button>
+
+      <div style="
+        width: 56px;
+        height: 56px;
+        margin: 0 auto 14px auto;
+        background: rgba(245, 158, 11, 0.15);
+        border: 1px solid rgba(245, 158, 11, 0.3);
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 28px;
+      ">💡</div>
+
+      <h3 style="margin: 0 0 6px 0; font-size: 19px; font-weight: 800; color: #fbbf24;">Unlocking Hint</h3>
+      <p style="margin: 0 0 18px 0; font-size: 13px; color: #94a3b8; line-height: 1.4;">
+        Sponsored Reward: Wait 5 seconds to reveal your clue assistance.
+      </p>
+
+      <div id="fl-hint-ad-box" style="
+        background: rgba(0, 0, 0, 0.35);
+        border: 1px dashed rgba(255, 255, 255, 0.15);
+        border-radius: 12px;
+        padding: 16px;
+        margin-bottom: 18px;
+      ">
+        <div style="font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: #64748b; margin-bottom: 4px;">Advertisement</div>
+        <div style="font-size: 14px; font-weight: 600; color: #e2e8f0;">Brain Booster Puzzles</div>
+        <div style="font-size: 11px; color: #38bdf8; margin-top: 2px;">play.funlogic.games</div>
+      </div>
+
+      <div style="margin-bottom: 16px;">
+        <div style="display: flex; justify-content: space-between; font-size: 12px; font-weight: 700; margin-bottom: 6px;">
+          <span style="color: #94a3b8;">Sponsor Video</span>
+          <span id="fl-hint-timer-txt" style="color: #f59e0b;">5s</span>
+        </div>
+        <div style="width: 100%; height: 8px; background: rgba(255,255,255,0.1); border-radius: 4px; overflow: hidden;">
+          <div id="fl-hint-progress-bar" style="width: 0%; height: 100%; background: linear-gradient(90deg, #f59e0b, #10b981); transition: width 0.1s linear;"></div>
+        </div>
+      </div>
+
+      <button id="fl-hint-claim-btn" disabled style="
+        width: 100%;
+        padding: 12px;
+        border-radius: 12px;
+        border: none;
+        background: #334155;
+        color: #64748b;
+        font-weight: 700;
+        font-size: 14px;
+        cursor: not-allowed;
+        transition: all 0.2s;
+      ">Please wait 5s...</button>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      let countdownTimer = null;
+      let originalHintCallback = null;
+
+      const overlay = document.getElementById('fl-hint-modal-overlay');
+      const timerTxt = document.getElementById('fl-hint-timer-txt');
+      const progressBar = document.getElementById('fl-hint-progress-bar');
+      const claimBtn = document.getElementById('fl-hint-claim-btn');
+      const closeBtn = document.getElementById('fl-hint-close-btn');
+
+      function showHintAdModal(callback) {
+        if (!overlay) return;
+        originalHintCallback = callback;
+        overlay.style.display = 'flex';
+        
+        let timeLeft = 50; // 5.0 seconds
+        claimBtn.disabled = true;
+        claimBtn.style.background = '#334155';
+        claimBtn.style.color = '#64748b';
+        claimBtn.style.cursor = 'not-allowed';
+        claimBtn.textContent = 'Please wait 5s...';
+        progressBar.style.width = '0%';
+        timerTxt.textContent = '5s';
+
+        try {
+          if (window.parent && window.parent !== window) {
+            window.parent.postMessage({ type: 'hint_ad_started', duration: 5 }, '*');
+          }
+        } catch(e) {}
+
+        clearInterval(countdownTimer);
+        countdownTimer = setInterval(() => {
+          timeLeft--;
+          const percent = ((50 - timeLeft) / 50) * 100;
+          progressBar.style.width = percent + '%';
+          const secondsRemaining = Math.ceil(timeLeft / 10);
+          timerTxt.textContent = secondsRemaining + 's';
+          claimBtn.textContent = 'Please wait ' + secondsRemaining + 's...';
+
+          if (timeLeft <= 0) {
+            clearInterval(countdownTimer);
+            timerTxt.textContent = 'Ready!';
+            timerTxt.style.color = '#10b981';
+            claimBtn.disabled = false;
+            claimBtn.style.background = 'linear-gradient(90deg, #f59e0b, #10b981)';
+            claimBtn.style.color = '#0f172a';
+            claimBtn.style.cursor = 'pointer';
+            claimBtn.textContent = '✨ Get Hint Now';
+
+            try {
+              if (window.parent && window.parent !== window) {
+                window.parent.postMessage({ type: 'hint_ad_completed' }, '*');
+              }
+            } catch(e) {}
+          }
+        }, 100);
+      }
+
+      function closeHintModal() {
+        clearInterval(countdownTimer);
+        if (overlay) overlay.style.display = 'none';
+      }
+
+      function claimHint() {
+        closeHintModal();
+        if (typeof originalHintCallback === 'function') {
+          originalHintCallback();
+        }
+      }
+
+      if (closeBtn) closeBtn.addEventListener('click', closeHintModal);
+      if (claimBtn) claimBtn.addEventListener('click', claimHint);
+
+      window.showHintWith5sAd = showHintAdModal;
+
+      window.addEventListener('DOMContentLoaded', () => {
+        setTimeout(() => {
+          const hintSelectors = [
+            '#btn-hint', '#hint-btn', '#button-hint', '#hint',
+            '.btn-hint', '.hint-btn', '[data-action="hint"]',
+            'button[title*="Hint" i]', 'button[aria-label*="Hint" i]'
+          ];
+
+          hintSelectors.forEach(selector => {
+            document.querySelectorAll(selector).forEach(btn => {
+              if (!btn.getAttribute('data-fl-hooked')) {
+                btn.setAttribute('data-fl-hooked', 'true');
+                btn.addEventListener('click', function(e) {
+                  if (!this.hasAttribute('data-hint-approved')) {
+                    e.stopImmediatePropagation();
+                    e.preventDefault();
+                    showHintAdModal(() => {
+                      this.setAttribute('data-hint-approved', 'true');
+                      this.click();
+                      setTimeout(() => this.removeAttribute('data-hint-approved'), 500);
+                    });
+                  }
+                }, true);
+              }
+            });
+          });
+        }, 300);
+      });
+    })();
+  </script>
+
+</body>
+</html>

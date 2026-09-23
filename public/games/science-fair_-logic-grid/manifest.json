@@ -1,0 +1,18 @@
+{
+  "name": "Science Fair Logic Grid",
+  "short_name": "Science Fair",
+  "description": "Science Fair Logic Grid is a classic deductive reasoning puzzle game for all ages. Solve science fair mystery grids by cross-referencing clues, eliminating possibilities with crosses, and finding matches with checkmarks. Features interactive 2.5D science experiment booths, step-by-step hints, audio feedback, and multiple difficulty levels.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0f172a",
+  "theme_color": "#0f172a",
+  "icons": [
+    {
+      "src": "./cover.svg",
+      "sizes": "800x600",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

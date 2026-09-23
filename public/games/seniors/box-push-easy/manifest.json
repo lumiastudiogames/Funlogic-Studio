@@ -1,0 +1,18 @@
+{
+  "name": "Box Push Easy 60+",
+  "short_name": "Box Push Eas",
+  "description": "Box Push Easy 60+ is a gentle Sokoban puzzle designed for seniors. Features only 1 box to push, a compact 6x6 room, 60px on-screen arrow controls, and unlimited undo.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0f172a",
+  "theme_color": "#0f172a",
+  "icons": [
+    {
+      "src": "./cover.svg",
+      "sizes": "800x600",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

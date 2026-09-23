@@ -1,0 +1,6 @@
+{
+  "name": "Museum Art Heist - Logic Grid",
+  "description": "Investigative logic grid puzzle game where you link detectives, stolen artworks, and forensic clues.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

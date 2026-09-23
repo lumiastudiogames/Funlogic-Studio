@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <title>15 Puzzle Classic</title>
+  <link rel="stylesheet" href="./style.css" />
+
+  
+  
+  
+  
+
+  
+  
+  
+  
+
+  <meta name="description" content="The historic 15 Puzzle (Gem Puzzle / Boss Puzzle) on a 4x4 grid. Slide the tiles adjacent to the empty space to sort numbers 1 to 15 in ascending order with smooth tactile slides, move tracking, and solvable randomization." />
+  <meta name="keywords" content="15 puzzle, sliding puzzle, fifteen puzzle, 15 number puzzle, slide tiles, boss puzzle, gem puzzle, classic sliding game" />
+  <meta name="game-tags" content="sliding puzzle 15, 15 puzzle classic, brain puzzle, brain game, brain logic, brain logic puzzle, brain teaser, brain teasers, brain teaser puzzle, brain teaser game, iq puzzle, iq game, iq test, iq test puzzle, iq test game, iq logic, iq logic puzzle, brain iq, brain iq puzzle, brain iq game, brain iq test, iq brain, iq brain puzzle, iq brain game, iq brain test, intelligence puzzle, intelligence game, intelligence test, intelligence logic, smart puzzle, smart game, smart logic, smart brain, clever puzzle, clever game, clever logic, clever brain, genius puzzle, genius game, genius logic, genius brain, genius test, brain test, brain test puzzle, brain test game, brain test logic, iq test logic, iq test brain, logic brain teaser, logic brain teaser puzzle, logic brain test, brain logic test, brain logic game, brain logic challenge, brain challenge, brain challenge puzzle, brain challenge game, iq challenge, iq challenge puzzle, iq challenge game, brain teaser free, brain teaser online, brain teaser best, brain teaser top, brain teaser new, brain teaser 2024, brain teaser 2025, brain puzzle free, brain puzzle online, brain puzzle best, brain puzzle top, brain puzzle new, brain game free, brain game online, brain game best, brain game top, iq puzzle free, iq puzzle online, iq puzzle best, iq puzzle top, iq game free, iq game online, iq game best, iq test free, iq test online, iq test best, brain training, brain training puzzle, brain training game, brain training free, brain training online, brain training best, mind puzzle, mind game, mind logic, mind logic puzzle, mind teaser, mind test, mind test puzzle, mind test game, mind brain, mind brain puzzle, puzzle brain iq, puzzle brain teaser, puzzle iq test, puzzle brain test, test brain puzzle, test iq puzzle, test brain iq, quiz brain, quiz iq, quiz brain puzzle, quiz iq puzzle, quiz brain teaser, quiz logic, quiz logic puzzle, riddles puzzle, riddles game, riddles logic, riddles brain, riddles brain teaser, riddles iq, logic riddles, logic riddles puzzle, logic riddles game, brain riddles, brain riddles puzzle, brain riddles game, iq riddles, iq riddles puzzle, logic puzzle brain, logic puzzle iq, logic puzzle brain teaser, logic puzzle genius, brain puzzle genius, brain puzzle smart, brain puzzle clever, iq puzzle genius, iq puzzle smart, brain teaser genius, brain teaser smart, brain teaser clever, brain teaser logic, brain teaser iq" />
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What is the goal of the 15 Puzzle?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Place the 15 numbered tiles in order from 1 to 15, reading from left-to-right, top-to-bottom, leaving the bottom-right space empty."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do tiles move?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Tap or click any tile adjacent (up, down, left, or right) to the empty space to slide it into the gap. You can also use arrow keys."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Are all generated puzzles solvable?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes! The shuffle algorithm performs hundreds of authentic valid moves from the solved state, ensuring 100% solvable configurations."
+      }
+    }
+  ]
+}
+  </script>
+
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#0f172a" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="15 Puzzle Classic" />
+  <link rel="apple-touch-icon" href="cover.svg" />
+</head>
+<body>
+  <main class="game-stage">
+    <header class="hud-header">
+      <div>
+        <h1 class="brand-title">15 Puzzle</h1>
+      </div>
+      <div class="hud-scores">
+        <div class="score-box">
+          <span class="score-label">Moves</span>
+          <span id="moves-val" class="score-value">0</span>
+        </div>
+        <div class="score-box">
+          <span class="score-label">Time</span>
+          <span id="timer-val" class="score-value">00:00</span>
+        </div>
+      </div>
+    </header>
+
+    <nav class="action-bar">
+      <div style="display: flex; gap: 8px; align-items: center;">
+        <button id="btn-howto" class="btn-tactile" style="width: 36px; height: 36px; padding: 0; justify-content: center;" title="How to play">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+        </button>
+        <button id="btn-sound" class="btn-tactile" style="width: 36px; height: 36px; padding: 0; justify-content: center;" title="Toggle Sound">
+          <span id="sound-icon">🔊</span>
+        </button>
+      </div>
+      <div style="display: flex; gap: 8px;">
+        <button id="btn-undo" class="btn-tactile">Undo</button>
+        <button id="btn-shuffle" class="btn-tactile" style="background: #0284c7; color: white;">Shuffle</button>
+      </div>
+    </nav>
+
+    <section class="board-wrapper">
+      <div id="board-container" class="board-15" aria-label="15 Puzzle 4x4 Grid"></div>
+    </section>
+
+    <!-- Modals -->
+    <aside id="modal-howto" class="modal-overlay" aria-hidden="true">
+      <div class="modal-card">
+        <h3 style="font-size: 20px; font-weight: 800; color: #38bdf8;">How to Play 15 Puzzle</h3>
+        <div style="font-size: 13px; color: #cbd5e1; line-height: 1.5; text-align: left; background: #1e293b; padding: 12px; border-radius: 10px;">
+          • Tap any tile adjacent to the empty spot to slide it into the gap.<br/><br/>
+          • You can also use the <strong>Arrow Keys</strong> or <strong>W/A/S/D</strong>.<br/><br/>
+          • Reorder the numbers from <strong>1 to 15</strong> in rows from left to right to win!
+        </div>
+        <button id="btn-close-howto" class="btn-tactile" style="width: 100%; justify-content: center; background: #0284c7; color: white;">Got it!</button>
+      </div>
+    </aside>
+
+    <aside id="modal-win" class="modal-overlay" aria-hidden="true">
+      <div class="modal-card">
+        <div style="font-size: 44px;">🎉</div>
+        <h3 style="font-size: 24px; font-weight: 900; color: #38bdf8;">Puzzle Solved!</h3>
+        <p style="font-size: 13px; color: #cbd5e1;">Brilliant spatial reasoning! You sorted all 15 tiles into perfect order.</p>
+        <div style="display: flex; justify-content: space-around; background: #1e293b; padding: 12px; border-radius: 12px;">
+          <div>
+            <span style="font-size: 10px; color: #94a3b8; font-weight: 700; display: block;">MOVES</span>
+            <span id="win-moves" style="font-size: 18px; font-weight: 800; color: #38bdf8;">0</span>
+          </div>
+          <div>
+            <span style="font-size: 10px; color: #94a3b8; font-weight: 700; display: block;">TIME</span>
+            <span id="win-time" style="font-size: 18px; font-weight: 800; color: #38bdf8;">00:00</span>
+          </div>
+        </div>
+        <button id="btn-play-again" class="btn-tactile" style="width: 100%; justify-content: center; padding: 12px; font-size: 15px; background: #0284c7; color: white;">Play Another Shuffle</button>
+      </div>
+    </aside>
+  </main>
+
+  <script src="./game.js"></script>
+
+  <!-- PWA & Initial Screen Fullscreen UI -->
+  <button id="fl-fullscreen-btn" aria-label="Fullscreen" title="Toggle Fullscreen" style="
+    position: fixed;
+    top: 14px;
+    right: 14px;
+    z-index: 99999;
+    background: rgba(15, 23, 42, 0.75);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #ffffff;
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 18px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    transition: transform 0.15s ease, background 0.2s ease;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+  " onmouseover="this.style.transform='scale(1.08)'" onmouseout="this.style.transform='scale(1)'">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/>
+    </svg>
+  </button>
+
+  <script>
+    (function() {
+      // Register PWA Service Worker
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('./sw.js').catch(() => {});
+        });
+      }
+
+      // Initial Screen Fullscreen Handler
+      const fsBtn = document.getElementById('fl-fullscreen-btn');
+      if (fsBtn) {
+        fsBtn.addEventListener('click', function(e) {
+          e.stopPropagation();
+          if (!document.fullscreenElement && !document.webkitFullscreenElement && !document.mozFullScreenElement && !document.msFullscreenElement) {
+            const el = document.documentElement;
+            if (el.requestFullscreen) el.requestFullscreen().catch(()=>{});
+            else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+            else if (el.mozRequestFullScreen) el.mozRequestFullScreen();
+            else if (el.msRequestFullscreen) el.msRequestFullscreen();
+          } else {
+            if (document.exitFullscreen) document.exitFullscreen().catch(()=>{});
+            else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+            else if (document.mozCancelFullScreen) document.mozCancelFullScreen();
+            else if (document.msExitFullscreen) document.msExitFullscreen();
+          }
+        });
+      }
+    })();
+  </script>
+
+  <!-- 5-Second Hint Ad Modal System -->
+  <div id="fl-hint-modal-overlay" style="
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 999999;
+    background: rgba(10, 15, 30, 0.85);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    align-items: center;
+    justify-content: center;
+    font-family: system-ui, -apple-system, sans-serif;
+    padding: 16px;
+    box-sizing: border-box;
+  ">
+    <div style="
+      background: linear-gradient(145deg, #1e293b, #0f172a);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.6), 0 0 30px rgba(245, 158, 11, 0.2);
+      border-radius: 20px;
+      max-width: 420px;
+      width: 100%;
+      padding: 24px;
+      text-align: center;
+      color: #f8fafc;
+      position: relative;
+      animation: flModalPop 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    ">
+      <!-- Close Button -->
+      <button id="fl-hint-close-btn" style="
+        position: absolute;
+        top: 14px;
+        right: 14px;
+        background: rgba(255,255,255,0.08);
+        border: none;
+        color: #94a3b8;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        cursor: pointer;
+        font-size: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s;
+      " onmouseover="this.style.color='#fff';this.style.background='rgba(255,255,255,0.15)'" onmouseout="this.style.color='#94a3b8';this.style.background='rgba(255,255,255,0.08)'">✕</button>
+
+      <!-- Icon -->
+      <div style="
+        width: 56px;
+        height: 56px;
+        background: rgba(245, 158, 11, 0.15);
+        border: 1px solid rgba(245, 158, 11, 0.3);
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 28px;
+        margin: 0 auto 14px auto;
+      ">💡</div>
+
+      <!-- Title & Subtitle -->
+      <h3 style="margin: 0 0 6px 0; font-size: 19px; font-weight: 800; color: #fbbf24;">Unlocking Hint</h3>
+      <p style="margin: 0 0 18px 0; font-size: 13px; color: #94a3b8; line-height: 1.4;">
+        Short sponsor break (max 5s) to support free puzzles!
+      </p>
+
+      <!-- Ad / Sponsor Banner Box -->
+      <div id="fl-hint-ad-box" style="
+        background: rgba(0, 0, 0, 0.35);
+        border: 1px dashed rgba(255, 255, 255, 0.12);
+        border-radius: 12px;
+        height: 100px;
+        margin-bottom: 18px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        color: #64748b;
+        font-size: 12px;
+      ">
+        <span style="font-weight: 700; color: #e2e8f0; font-size: 13px;">FunLogic Sponsor Ad</span>
+        <span>Ad space placeholder (300x100)</span>
+      </div>
+
+      <!-- Progress Bar & Countdown -->
+      <div style="margin-bottom: 16px;">
+        <div style="display: flex; justify-content: space-between; font-size: 12px; font-weight: 700; color: #cbd5e1; margin-bottom: 6px;">
+          <span>Hint ready in:</span>
+          <span id="fl-hint-timer-txt" style="color: #f59e0b;">5s</span>
+        </div>
+        <div style="width: 100%; height: 8px; background: rgba(255,255,255,0.1); border-radius: 4px; overflow: hidden;">
+          <div id="fl-hint-progress-bar" style="width: 0%; height: 100%; background: linear-gradient(90deg, #f59e0b, #10b981); border-radius: 4px; transition: width 0.1s linear;"></div>
+        </div>
+      </div>
+
+      <!-- Action Button -->
+      <button id="fl-hint-claim-btn" disabled style="
+        width: 100%;
+        padding: 12px;
+        border-radius: 12px;
+        border: none;
+        background: #334155;
+        color: #64748b;
+        font-size: 14px;
+        font-weight: 800;
+        cursor: not-allowed;
+        transition: all 0.2s;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      ">Please wait 5s...</button>
+    </div>
+  </div>
+
+  <style>
+    @keyframes flModalPop {
+      0% { transform: scale(0.85); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+  </style>
+
+  <script>
+    (function() {
+      let countdownTimer = null;
+      let originalHintCallback = null;
+
+      const overlay = document.getElementById('fl-hint-modal-overlay');
+      const timerTxt = document.getElementById('fl-hint-timer-txt');
+      const progressBar = document.getElementById('fl-hint-progress-bar');
+      const claimBtn = document.getElementById('fl-hint-claim-btn');
+      const closeBtn = document.getElementById('fl-hint-close-btn');
+
+      function showHintAdModal(callback) {
+        if (!overlay) return;
+        originalHintCallback = callback;
+        overlay.style.display = 'flex';
+        
+        let timeLeft = 50; // 5.0 seconds (50 x 100ms)
+        claimBtn.disabled = true;
+        claimBtn.style.background = '#334155';
+        claimBtn.style.color = '#64748b';
+        claimBtn.style.cursor = 'not-allowed';
+        claimBtn.textContent = 'Please wait 5s...';
+        progressBar.style.width = '0%';
+        timerTxt.textContent = '5s';
+
+        // Notify parent portal
+        try {
+          if (window.parent && window.parent !== window) {
+            window.parent.postMessage({ type: 'hint_ad_started', duration: 5 }, '*');
+          }
+        } catch(e) {}
+
+        clearInterval(countdownTimer);
+        countdownTimer = setInterval(() => {
+          timeLeft--;
+          const percent = ((50 - timeLeft) / 50) * 100;
+          progressBar.style.width = percent + '%';
+          const secondsRemaining = Math.ceil(timeLeft / 10);
+          timerTxt.textContent = secondsRemaining + 's';
+          claimBtn.textContent = 'Please wait ' + secondsRemaining + 's...';
+
+          if (timeLeft <= 0) {
+            clearInterval(countdownTimer);
+            timerTxt.textContent = 'Ready!';
+            timerTxt.style.color = '#10b981';
+            claimBtn.disabled = false;
+            claimBtn.style.background = 'linear-gradient(90deg, #f59e0b, #10b981)';
+            claimBtn.style.color = '#0f172a';
+            claimBtn.style.cursor = 'pointer';
+            claimBtn.textContent = '✨ Get Hint Now';
+
+            try {
+              if (window.parent && window.parent !== window) {
+                window.parent.postMessage({ type: 'hint_ad_completed' }, '*');
+              }
+            } catch(e) {}
+          }
+        }, 100);
+      }
+
+      function closeHintModal() {
+        clearInterval(countdownTimer);
+        if (overlay) overlay.style.display = 'none';
+      }
+
+      function claimHint() {
+        closeHintModal();
+        if (typeof originalHintCallback === 'function') {
+          originalHintCallback();
+        }
+      }
+
+      if (closeBtn) closeBtn.addEventListener('click', closeHintModal);
+      if (claimBtn) claimBtn.addEventListener('click', claimHint);
+
+      // Expose globally for game engines
+      window.showHintWith5sAd = showHintAdModal;
+
+      // Automatically hook into any existing hint button in the DOM
+      window.addEventListener('DOMContentLoaded', () => {
+        setTimeout(() => {
+          const hintSelectors = [
+            '#btn-hint', '#hint-btn', '#button-hint', '#hint',
+            '.btn-hint', '.hint-btn', '[data-action="hint"]',
+            'button[title*="Hint" i]', 'button[aria-label*="Hint" i]'
+          ];
+
+          hintSelectors.forEach(selector => {
+            document.querySelectorAll(selector).forEach(btn => {
+              if (!btn.getAttribute('data-fl-hooked')) {
+                btn.setAttribute('data-fl-hooked', 'true');
+                btn.addEventListener('click', function(e) {
+                  // If modal not already claimed in this click
+                  if (!this.hasAttribute('data-hint-approved')) {
+                    e.stopImmediatePropagation();
+                    e.preventDefault();
+                    showHintAdModal(() => {
+                      this.setAttribute('data-hint-approved', 'true');
+                      this.click();
+                      setTimeout(() => this.removeAttribute('data-hint-approved'), 500);
+                    });
+                  }
+                }, true); // Capture phase to intercept first
+              }
+            });
+          });
+        }, 300);
+      });
+    })();
+  </script>
+
+</body>
+</html>

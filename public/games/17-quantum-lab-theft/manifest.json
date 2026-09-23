@@ -1,0 +1,18 @@
+{
+  "name": "Quantum Realm: The Vanished Formula",
+  "short_name": "Quantum Real",
+  "description": "At the Geneva particle facility, a revolutionary unified quantum field theorem was extracted from encrypted cleanrooms. Use logic matrix deduction to trace the theft.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0f172a",
+  "theme_color": "#0f172a",
+  "icons": [
+    {
+      "src": "./cover.svg",
+      "sizes": "800x600",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

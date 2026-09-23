@@ -1,0 +1,18 @@
+{
+  "name": "Museum Art Heist Logic Grid",
+  "short_name": "Museum Art H",
+  "description": "Museum Art Heist Logic Grid is a challenging HTML5 puzzle game designed to sharpen your cognitive and problem-solving skills with intuitive controls and progressive level difficulties.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0f172a",
+  "theme_color": "#0f172a",
+  "icons": [
+    {
+      "src": "./cover.svg",
+      "sizes": "800x600",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

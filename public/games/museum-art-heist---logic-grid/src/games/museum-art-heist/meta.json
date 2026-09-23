@@ -1,0 +1,34 @@
+{
+  "title": "Museum Art Heist Logic Grid",
+  "categoryId": "logic",
+  "icon": "🕵️‍♂️",
+  "instructions": "Relacione cada investigador à sua pintura roubada e à pista forense deixada na cena do crime usando a grade lógica de dedução.",
+  "description": "Museum Art Heist é um envolvente jogo de puzzle estilo Logic Grid (grade de dedução lógica). Assuma o papel do detetive-chefe e analise as pistas forenses deixadas pelo ladrão para correlacionar os investigadores, as pinturas inestimáveis e os vestígios da cena do crime.",
+  "keywords": [
+    "logic grid",
+    "museum art heist",
+    "grade logica",
+    "jogo de detetive",
+    "puzzle de deducao",
+    "charadas logicas",
+    "raciocinio logico",
+    "jogos de misterio",
+    "einstein riddle",
+    "jogos gratis online",
+    "jogar sem instalar"
+  ],
+  "faqs": [
+    {
+      "q": "Como jogar Museum Art Heist Logic Grid?",
+      "a": "Toque nas células da grade para alternar entre Vazio, ❌ (Falso) e ✔️ (Verdadeiro). Leia as pistas para eliminar combinações impossíveis e confirmar os relacionamentos corretos entre detetives, pinturas e evidências."
+    },
+    {
+      "q": "O que acontece ao marcar um ✔️ na grade?",
+      "a": "O jogo elimina automaticamente todas as outras opções da mesma linha e coluna dentro daquele subquadrante, poupando seu tempo de anotação."
+    },
+    {
+      "q": "O jogo funciona no celular e computador?",
+      "a": "Sim, o jogo é 100% responsivo, com controles touch otimizados e atalhos táteis para telas de qualquer tamanho."
+    }
+  ]
+}

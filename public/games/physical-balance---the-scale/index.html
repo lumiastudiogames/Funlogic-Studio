@@ -1,0 +1,2709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <title>Physical Balance - The Scale</title>
+  <meta name="description" content="A mobile-first scale balance puzzle game optimized for Moto G4 (360x640). Place weights to reach 10kg equilibrium using logic across 15 progressive levels." />
+  <meta property="og:title" content="Physical Balance - The Scale" />
+  <meta property="og:description" content="A mobile-first scale balance puzzle game. Place weights to reach 10kg equilibrium using logic across 15 progressive levels." />
+  <meta property="og:type" content="website" />
+
+  <style>
+    /* CSS RESET & VARIABLES - OPTIMIZED FOR MOTO G4 (360x640) & MOBILE VIEWPORTS */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    :root {
+      --bg-dark: #080c14;
+      --bg-surface: #111827;
+      --bg-card: #1f293d;
+      --bg-card-hover: #2d3b55;
+      --accent-gold: #fbbf24;
+      --accent-gold-light: #fef08a;
+      --accent-brass: #d97706;
+      --accent-brass-dark: #78350f;
+      --accent-cyan: #06b6d4;
+      --accent-green: #10b981;
+      --accent-green-glow: rgba(16, 185, 129, 0.5);
+      --accent-red: #ef4444;
+      --accent-purple: #a855f7;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --border-color: rgba(255, 255, 255, 0.1);
+      --border-gold: rgba(251, 191, 36, 0.4);
+      --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.5);
+      --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.6);
+      --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.7);
+      --font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      height: 100dvh;
+      overflow: hidden;
+      background-color: var(--bg-dark);
+      background-image: 
+        radial-gradient(circle at 50% 20%, rgba(30, 41, 59, 0.7) 0%, transparent 75%),
+        radial-gradient(circle at 80% 80%, rgba(15, 23, 42, 0.9) 0%, transparent 60%),
+        linear-gradient(to bottom, #080c14 0%, #030508 100%);
+      font-family: var(--font-family);
+      color: var(--text-main);
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* MAIN APP CONTAINER - EXACT 360x640 READY */
+    #app {
+      width: 100%;
+      height: 100%;
+      height: 100dvh;
+      max-width: 480px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+      padding: clamp(4px, 1vh, 8px);
+      padding-top: max(clamp(4px, 1vh, 8px), env(safe-area-inset-top));
+      padding-bottom: max(clamp(4px, 1vh, 8px), env(safe-area-inset-bottom));
+      padding-left: max(clamp(4px, 1vh, 8px), env(safe-area-inset-left));
+      padding-right: max(clamp(4px, 1vh, 8px), env(safe-area-inset-right));
+    }
+
+    /* TOP HEADER BAR */
+    header#top-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+      flex-shrink: 0;
+      height: 44px;
+      margin-bottom: 4px;
+    }
+
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .level-badge-btn {
+      background: linear-gradient(135deg, #1e293b, #0f172a);
+      border: 1px solid var(--border-gold);
+      border-radius: 10px;
+      padding: 4px 10px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      color: var(--accent-gold);
+      font-weight: 800;
+      font-size: 13px;
+      cursor: pointer;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.2s ease;
+      min-height: 40px;
+    }
+
+    .level-badge-btn:active {
+      transform: scale(0.96);
+      background: linear-gradient(135deg, #334155, #1e293b);
+    }
+
+    .target-pill {
+      background: rgba(251, 191, 36, 0.12);
+      border: 1px solid rgba(251, 191, 36, 0.35);
+      border-radius: 16px;
+      padding: 3px 8px;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--accent-gold-light);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      white-space: nowrap;
+    }
+
+    .target-pill span.num {
+      color: #0f172a;
+      font-size: 13px;
+      font-weight: 800;
+      background: var(--accent-gold);
+      padding: 1px 5px;
+      border-radius: 6px;
+    }
+
+    .header-controls {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .icon-btn {
+      width: 40px;
+      height: 40px;
+      min-width: 40px;
+      min-height: 40px;
+      border-radius: 10px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      position: relative;
+    }
+
+    .icon-btn:active {
+      transform: scale(0.92);
+      background: var(--bg-card);
+    }
+
+    .icon-btn svg {
+      width: 18px;
+      height: 18px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .icon-btn.active-music {
+      border-color: var(--accent-cyan);
+      color: var(--accent-cyan);
+      background: rgba(6, 182, 212, 0.15);
+      box-shadow: 0 0 8px rgba(6, 182, 212, 0.3);
+    }
+
+    /* MISSION INSTRUCTION STRIP */
+    #level-info-strip {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(17, 24, 39, 0.85);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 5px 10px;
+      margin-bottom: 4px;
+      font-size: 12px;
+      color: var(--text-muted);
+      flex-shrink: 0;
+    }
+
+    #level-title-text {
+      font-weight: 700;
+      color: #f1f5f9;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    #level-rule-text {
+      font-size: 11px;
+      color: var(--accent-cyan);
+      font-weight: 600;
+      text-align: right;
+    }
+
+    /* GAME PLAYFIELD STAGE */
+    #game-stage {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      min-height: 0;
+      background: radial-gradient(circle at 50% 35%, rgba(30, 41, 59, 0.5) 0%, transparent 80%), rgba(11, 16, 26, 0.7);
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      padding: 6px;
+      overflow: hidden;
+    }
+
+    /* SCALE RIG CONTAINER */
+    #scale-container {
+      flex: 1;
+      position: relative;
+      width: 100%;
+      min-height: 160px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #scale-svg {
+      width: 100%;
+      height: 100%;
+      max-height: 320px;
+      overflow: visible;
+    }
+
+    /* DIAL / NEEDLE GAUGE */
+    .dial-arc {
+      stroke: #334155;
+      stroke-width: 4;
+      fill: none;
+    }
+    .dial-center-tick {
+      stroke: var(--accent-green);
+      stroke-width: 3.5;
+    }
+    .dial-needle {
+      stroke: var(--accent-gold);
+      stroke-width: 3.5;
+      stroke-linecap: round;
+      transform-origin: 300px 75px;
+      transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.8));
+    }
+
+    /* TILTING BEAM & PAN GROUPS */
+    #scale-beam-group {
+      transform-origin: 300px 95px;
+      transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+
+    .pan-chain {
+      stroke: #cbd5e1;
+      stroke-width: 2.2;
+      stroke-dasharray: 4, 3;
+    }
+
+    .pan-dish {
+      fill: url(#panGradient);
+      stroke: #d97706;
+      stroke-width: 2.5;
+      filter: drop-shadow(0 6px 10px rgba(0,0,0,0.6));
+    }
+
+    .pan-dish-left-group {
+      transform-origin: 110px 95px;
+      transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+
+    .pan-dish-right-group {
+      transform-origin: 490px 95px;
+      transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+
+    /* INTERACTIVE DROP PAN DOM ZONES */
+    #pan-left-zone, #pan-right-zone {
+      position: absolute;
+      width: clamp(95px, 26vw, 130px);
+      min-height: 90px;
+      display: flex;
+      flex-direction: column-reverse;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 3px;
+      padding-bottom: 8px;
+      pointer-events: auto;
+      border-radius: 12px;
+      transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), background-color 0.2s ease, box-shadow 0.2s ease;
+      z-index: 10;
+    }
+
+    #pan-left-zone.drag-hover, #pan-right-zone.drag-hover {
+      background: rgba(251, 191, 36, 0.18);
+      box-shadow: 0 0 15px rgba(251, 191, 36, 0.4);
+      outline: 2px dashed var(--accent-gold);
+    }
+
+    /* PAN LIVE READOUT TAGS */
+    .pan-weight-tag {
+      position: absolute;
+      bottom: -4px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #0f172a;
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 1px 7px;
+      font-size: 10px;
+      font-weight: 800;
+      color: #94a3b8;
+      white-space: nowrap;
+      pointer-events: none;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.3s ease;
+    }
+
+    .pan-weight-tag.balanced {
+      border-color: var(--accent-green);
+      color: var(--accent-green);
+      background: rgba(16, 185, 129, 0.2);
+      box-shadow: 0 0 10px var(--accent-green-glow);
+    }
+
+    /* STATUS METRIC GAUGE BAR */
+    #status-bar-wrapper {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 4px 10px;
+      margin-top: 2px;
+      flex-shrink: 0;
+      gap: 6px;
+    }
+
+    .status-metric {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .metric-label {
+      font-size: 9px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+    }
+
+    .metric-value {
+      font-size: 14px;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .metric-value.match {
+      color: var(--accent-green);
+      text-shadow: 0 0 8px var(--accent-green-glow);
+    }
+
+    #balance-indicator {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-weight: 800;
+      font-size: 12px;
+      padding: 3px 8px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.05);
+      transition: all 0.3s ease;
+    }
+
+    #balance-indicator.tilt-left {
+      color: #f97316;
+      background: rgba(249, 115, 22, 0.15);
+    }
+    #balance-indicator.tilt-right {
+      color: #38bdf8;
+      background: rgba(56, 189, 248, 0.15);
+    }
+    #balance-indicator.balanced {
+      color: var(--accent-green);
+      background: rgba(16, 185, 129, 0.25);
+      box-shadow: 0 0 12px var(--accent-green-glow);
+      animation: pulse-green 1.5s infinite;
+    }
+
+    @keyframes pulse-green {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.04); }
+    }
+
+    /* INVENTORY / WEIGHT TRAY */
+    #tray-section {
+      width: 100%;
+      flex-shrink: 0;
+      margin-top: 4px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .tray-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 10px;
+      color: var(--text-muted);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding: 0 2px;
+    }
+
+    #weights-tray {
+      width: 100%;
+      min-height: 70px;
+      background: linear-gradient(180deg, #111827 0%, #080c14 100%);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 6px 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 6px;
+      box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.7);
+    }
+
+    #weights-tray.drag-hover {
+      border-color: var(--accent-gold);
+      background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+    }
+
+    /* WEIGHT ITEM STYLING (TACTILE PHYSICAL PIECES) */
+    .weight-item {
+      position: relative;
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-width: 48px;
+      height: 48px;
+      padding: 3px 6px;
+      border-radius: 10px;
+      font-family: var(--font-family);
+      font-weight: 800;
+      font-size: 13px;
+      cursor: grab;
+      touch-action: none;
+      transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.2s ease, filter 0.2s ease;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.5), inset 0 1px 1px rgba(255,255,255,0.3), inset 0 -2px 4px rgba(0,0,0,0.4);
+      z-index: 5;
+    }
+
+    #pan-left-zone .weight-item, #pan-right-zone .weight-item {
+      transform: rotate(calc(var(--tilt, 0deg) * 0.35)) translateX(calc(-1 * var(--tilt, 0deg) * 0.75px));
+    }
+
+    .weight-item:hover {
+      transform: scale(1.08) translateY(-4px) rotate(-1.5deg);
+      box-shadow: 0 8px 16px rgba(0,0,0,0.6), inset 0 1px 1px rgba(255,255,255,0.4);
+      z-index: 10;
+    }
+
+    .weight-item:active, .weight-item.dragging {
+      cursor: grabbing;
+      transform: scale(1.15) rotate(3deg) !important;
+      box-shadow: 0 12px 24px rgba(0,0,0,0.85);
+      z-index: 100;
+      opacity: 0.95;
+    }
+
+    /* DROP LANDING BOUNCE ANIMATION */
+    @keyframes weight-land-impact {
+      0% { transform: scale(1.35) translateY(-16px) rotate(-8deg); }
+      35% { transform: scale(0.82, 1.25) translateY(5px) rotate(4deg); }
+      60% { transform: scale(1.12, 0.88) translateY(-3px) rotate(-2deg); }
+      80% { transform: scale(0.96, 1.04) translateY(1px) rotate(1deg); }
+      100% { transform: scale(1) translateY(0) rotate(0deg); }
+    }
+
+    .weight-item.just-dropped {
+      animation: weight-land-impact 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+    }
+
+    /* CELEBRATION EQUILIBRIUM BOUNCE */
+    @keyframes balance-celebrate-jiggle {
+      0% { transform: scale(1) rotate(0deg); }
+      25% { transform: scale(1.18) translateY(-8px) rotate(-5deg); }
+      50% { transform: scale(0.92) translateY(3px) rotate(5deg); }
+      75% { transform: scale(1.06) translateY(-2px) rotate(-2deg); }
+      100% { transform: scale(1) translateY(0) rotate(0deg); }
+    }
+
+    .weight-item.celebrate-bounce {
+      animation: balance-celebrate-jiggle 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+    }
+
+    .weight-item.fixed-weight {
+      cursor: not-allowed;
+      border-style: dashed;
+      opacity: 0.88;
+    }
+
+    /* WEIGHT TYPES & METALLIC MATERIAL FINISHES */
+    .weight-brass {
+      background: linear-gradient(135deg, #fef08a, #f59e0b 50%, #b45309);
+      color: #3b1904;
+      border: 1px solid #fef08a;
+      text-shadow: 0 1px 0 rgba(255,255,255,0.5);
+    }
+
+    .weight-iron {
+      background: linear-gradient(135deg, #64748b, #334155 50%, #0f172a);
+      color: #f8fafc;
+      border: 1px solid #94a3b8;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.9);
+    }
+
+    .weight-titanium {
+      background: linear-gradient(135deg, #e0f2fe, #38bdf8 50%, #0369a1);
+      color: #0c4a6e;
+      border: 1px solid #bae6fd;
+      text-shadow: 0 1px 0 rgba(255,255,255,0.6);
+    }
+
+    .weight-helium {
+      background: linear-gradient(135deg, #f3e8ff, #a855f7 50%, #6b21a8);
+      color: #3b0764;
+      border: 1px solid #e9d5ff;
+      border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+      box-shadow: 0 0 12px rgba(168, 85, 247, 0.5), inset 0 2px 4px rgba(255,255,255,0.6);
+      animation: float-balloon-sway 2.4s ease-in-out infinite alternate !important;
+    }
+
+    @keyframes float-balloon-sway {
+      0% { transform: translateY(0px) rotate(-3deg); }
+      50% { transform: translateY(-7px) rotate(4deg); }
+      100% { transform: translateY(0px) rotate(-3deg); }
+    }
+
+    .weight-mystery {
+      background: linear-gradient(135deg, #fef3c7, #d97706 50%, #78350f);
+      color: #fef3c7;
+      border: 2px solid #fbbf24;
+      box-shadow: 0 4px 10px rgba(217, 119, 6, 0.5);
+    }
+
+    .weight-knob {
+      width: 10px;
+      height: 3px;
+      background: rgba(255,255,255,0.4);
+      border-radius: 3px 3px 0 0;
+      margin-bottom: 2px;
+    }
+
+    .weight-val {
+      font-size: 12px;
+      line-height: 1;
+      font-weight: 800;
+    }
+
+    .weight-unit {
+      font-size: 8px;
+      font-weight: 700;
+      opacity: 0.85;
+      line-height: 1;
+    }
+
+    /* BOTTOM ACTION BUTTONS */
+    #bottom-actions {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+      margin-top: 4px;
+      flex-shrink: 0;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      padding: 8px 12px;
+      border-radius: 10px;
+      font-family: var(--font-family);
+      font-weight: 800;
+      font-size: 13px;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+      min-height: 44px;
+      white-space: nowrap;
+    }
+
+    .btn:active {
+      transform: scale(0.95);
+    }
+
+    .btn-secondary {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+    }
+
+    .btn-secondary:active {
+      background: var(--bg-card);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #fbbf24, #d97706);
+      color: #080c14;
+      box-shadow: 0 3px 10px rgba(245, 158, 11, 0.35);
+    }
+
+    .btn-success {
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: #ffffff;
+      box-shadow: 0 3px 10px rgba(16, 185, 129, 0.35);
+    }
+
+    /* MODAL OVERLAYS & DIALOGS */
+    .modal-backdrop {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(3, 5, 8, 0.88);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px;
+      z-index: 1000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+    }
+
+    .modal-backdrop.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal-card {
+      background: linear-gradient(180deg, #1f293d 0%, #0f172a 100%);
+      border: 1px solid var(--border-gold);
+      border-radius: 18px;
+      width: 100%;
+      max-width: 400px;
+      padding: 18px;
+      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.8);
+      transform: translateY(16px) scale(0.95);
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      max-height: 92vh;
+      overflow-y: auto;
+    }
+
+    .modal-backdrop.active .modal-card {
+      transform: translateY(0) scale(1);
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .modal-title {
+      font-size: 18px;
+      font-weight: 800;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .modal-close-btn {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+    }
+
+    .modal-close-btn:active {
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+    }
+
+    .modal-body {
+      font-size: 13px;
+      line-height: 1.5;
+      color: #cbd5e1;
+    }
+
+    /* MANUAL / INSTRUCTIONS CARDS */
+    .manual-step {
+      display: flex;
+      gap: 10px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 10px;
+      align-items: flex-start;
+      margin-bottom: 8px;
+    }
+
+    .step-icon {
+      font-size: 20px;
+      background: var(--bg-surface);
+      border-radius: 8px;
+      padding: 6px;
+      line-height: 1;
+    }
+
+    .step-text strong {
+      color: var(--accent-gold-light);
+      display: block;
+      margin-bottom: 2px;
+    }
+
+    /* LEVEL SELECT GRID */
+    .levels-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 6px;
+      margin-top: 6px;
+    }
+
+    .level-tile {
+      aspect-ratio: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      border-radius: 10px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      cursor: pointer;
+      font-weight: 800;
+      font-size: 14px;
+      color: #cbd5e1;
+      transition: all 0.2s ease;
+      position: relative;
+    }
+
+    .level-tile.current {
+      border: 2px solid var(--accent-gold);
+      background: rgba(251, 191, 36, 0.15);
+      color: var(--accent-gold-light);
+      box-shadow: 0 0 10px rgba(251, 191, 36, 0.3);
+    }
+
+    .level-tile.completed {
+      border-color: var(--accent-green);
+      color: #fff;
+    }
+
+    .level-tile.locked {
+      opacity: 0.35;
+      cursor: not-allowed;
+      filter: grayscale(1);
+    }
+
+    .stars-row {
+      display: flex;
+      gap: 1px;
+      font-size: 8px;
+      margin-top: 1px;
+      color: var(--accent-gold);
+    }
+
+    /* VICTORY CELEBRATION */
+    .win-stars {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      font-size: 32px;
+      color: var(--accent-gold);
+      margin: 4px 0;
+      text-shadow: 0 0 15px rgba(251, 191, 36, 0.6);
+      animation: pop-stars 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    @keyframes pop-stars {
+      0% { transform: scale(0.4); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    .stats-card {
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 10px;
+      padding: 10px;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 6px;
+      text-align: center;
+    }
+
+    .stats-card .stat-val {
+      font-size: 16px;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .stats-card .stat-label {
+      font-size: 10px;
+      color: var(--text-muted);
+    }
+
+    /* CONFETTI CANVAS */
+    #confetti-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 2000;
+    }
+
+    /* FLOATING DRAG GHOST */
+    #drag-ghost {
+      position: fixed;
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.95;
+      transform: translate(-50%, -50%) scale(1.15);
+      filter: drop-shadow(0 12px 20px rgba(0,0,0,0.8));
+      display: none;
+    }
+  </style>
+
+  <script>
+    function triggerPlatformWin(timeInSeconds) {
+      const elapsed = Math.round(timeInSeconds || 45);
+      try {
+        if (typeof window.onWin === 'function') {
+          window.onWin(elapsed);
+        }
+        if (window.parent && window.parent !== window) {
+          window.parent.postMessage({ type: 'win', time: elapsed }, '*');
+        }
+      } catch(e) { console.error('Platform win notify error:', e); }
+    }
+  </script>
+
+</head>
+<body>
+  <div id="app">
+    <!-- TOP HEADER -->
+    <header id="top-bar">
+      <div class="brand-group">
+        <button id="level-btn" class="level-badge-btn" title="Levels">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 6h16M4 12h16M4 18h7"/></svg>
+          <span id="level-indicator-text">Lvl 1/15</span>
+        </button>
+
+        <div class="target-pill">
+          <span>Target</span>
+          <span class="num" id="target-weight-badge">10.0 kg</span>
+        </div>
+      </div>
+
+      <div class="header-controls">
+        <button id="manual-btn" class="icon-btn" title="Game Instructions" aria-label="Manual">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        </button>
+        <button id="bgm-btn" class="icon-btn" title="Toggle Background Music" aria-label="Music">
+          <svg viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+        </button>
+        <button id="sound-btn" class="icon-btn" title="Toggle SFX" aria-label="Sound">
+          <svg id="sound-icon-on" viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+          <svg id="sound-icon-off" viewBox="0 0 24 24" style="display: none;"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>
+        </button>
+        <button id="fullscreen-btn" class="icon-btn" title="Fullscreen" aria-label="Fullscreen">
+          <svg id="fs-icon-enter" viewBox="0 0 24 24"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
+          <svg id="fs-icon-exit" viewBox="0 0 24 24" style="display: none;"><path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- LEVEL MISSION STRIP -->
+    <div id="level-info-strip">
+      <div id="level-title-text">Level 1: First Steps</div>
+      <div id="level-rule-text">Place weights to match 10 kg</div>
+    </div>
+
+    <!-- MAIN PLAYFIELD -->
+    <main id="game-stage">
+      <div id="scale-container">
+        <!-- VECTOR SCALE RIG SVG -->
+        <svg id="scale-svg" viewBox="0 0 600 320" preserveAspectRatio="xMidYMid meet">
+          <defs>
+            <linearGradient id="brassGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#fef08a" />
+              <stop offset="50%" stop-color="#fbbf24" />
+              <stop offset="100%" stop-color="#b45309" />
+            </linearGradient>
+            <linearGradient id="beamGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stop-color="#fef08a" />
+              <stop offset="30%" stop-color="#d97706" />
+              <stop offset="100%" stop-color="#78350f" />
+            </linearGradient>
+            <linearGradient id="baseGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#1e293b" />
+              <stop offset="50%" stop-color="#475569" />
+              <stop offset="100%" stop-color="#1e293b" />
+            </linearGradient>
+            <linearGradient id="panGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stop-color="#334155" />
+              <stop offset="60%" stop-color="#1e293b" />
+              <stop offset="100%" stop-color="#0f172a" />
+            </linearGradient>
+          </defs>
+
+          <!-- BASE & PILLAR -->
+          <path d="M220 300 L380 300 L360 270 L240 270 Z" fill="url(#baseGradient)" stroke="#64748b" stroke-width="2"/>
+          <rect x="286" y="95" width="28" height="175" rx="6" fill="url(#baseGradient)" stroke="#64748b" stroke-width="2"/>
+          <circle cx="300" cy="180" r="16" fill="url(#brassGradient)" stroke="#78350f" stroke-width="2"/>
+          
+          <!-- DIAL GAUGE ARC & NEEDLE -->
+          <path class="dial-arc" d="M260 80 A 45 45 0 0 1 340 80" />
+          <line class="dial-center-tick" x1="300" y1="72" x2="300" y2="82" />
+          <line x1="275" y1="75" x2="278" y2="83" stroke="#64748b" stroke-width="1.5" />
+          <line x1="325" y1="75" x2="322" y2="83" stroke="#64748b" stroke-width="1.5" />
+          <line id="dial-needle-el" class="dial-needle" x1="300" y1="75" x2="300" y2="40" />
+
+          <!-- TILTING BEAM ASSEMBLY -->
+          <g id="scale-beam-group">
+            <!-- Beam Main Arm -->
+            <rect x="80" y="88" width="440" height="14" rx="7" fill="url(#beamGradient)" stroke="#78350f" stroke-width="1.5"/>
+            <!-- Center Pivot Pin -->
+            <circle cx="300" cy="95" r="12" fill="url(#brassGradient)" stroke="#78350f" stroke-width="2"/>
+            <circle cx="300" cy="95" r="4" fill="#451a03" />
+
+            <!-- Left Pan Hanging Point & Chains -->
+            <circle cx="110" cy="95" r="6" fill="url(#brassGradient)"/>
+            <g id="left-pan-svg-group" class="pan-dish-left-group">
+              <line class="pan-chain" x1="110" y1="95" x2="70" y2="210" />
+              <line class="pan-chain" x1="110" y1="95" x2="150" y2="210" />
+              <!-- Pan Dish -->
+              <ellipse cx="110" cy="214" rx="55" ry="12" class="pan-dish" />
+            </g>
+
+            <!-- Right Pan Hanging Point & Chains -->
+            <circle cx="490" cy="95" r="6" fill="url(#brassGradient)"/>
+            <g id="right-pan-svg-group" class="pan-dish-right-group">
+              <line class="pan-chain" x1="490" y1="95" x2="450" y2="210" />
+              <line class="pan-chain" x1="490" y1="95" x2="530" y2="210" />
+              <!-- Pan Dish -->
+              <ellipse cx="490" cy="214" rx="55" ry="12" class="pan-dish" />
+            </g>
+          </g>
+        </svg>
+
+        <!-- INTERACTIVE PAN DOM DROP ZONES -->
+        <div id="pan-left-zone" class="pan-zone" data-pan="left">
+          <div class="pan-weight-tag" id="left-pan-tag">0.0 kg</div>
+        </div>
+
+        <div id="pan-right-zone" class="pan-zone" data-pan="right">
+          <div class="pan-weight-tag" id="right-pan-tag">0.0 kg</div>
+        </div>
+      </div>
+
+      <!-- STATUS & METRIC GAUGE -->
+      <div id="status-bar-wrapper">
+        <div class="status-metric">
+          <span class="metric-label">Left Pan</span>
+          <span class="metric-value" id="status-left-val">0.0 kg</span>
+        </div>
+
+        <div id="balance-indicator">
+          <span id="balance-icon">⚖️</span>
+          <span id="balance-status-text">Unbalanced</span>
+        </div>
+
+        <div class="status-metric" style="text-align: right;">
+          <span class="metric-label">Right Pan</span>
+          <span class="metric-value" id="status-right-val">0.0 kg</span>
+        </div>
+      </div>
+
+      <!-- INVENTORY WEIGHT TRAY -->
+      <section id="tray-section">
+        <div class="tray-header">
+          <span>Weights (Drag or Tap to Place)</span>
+          <span id="placed-counter-text">0 placed</span>
+        </div>
+        <div id="weights-tray" class="tray-zone"></div>
+      </section>
+    </main>
+
+    <!-- BOTTOM ACTION BUTTONS -->
+    <footer id="bottom-actions">
+      <button id="reset-btn" class="btn btn-secondary">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+        <span>Reset</span>
+      </button>
+
+      <button id="clear-pan-btn" class="btn btn-secondary">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+        <span>Clear</span>
+      </button>
+
+      <button id="action-next-btn" class="btn btn-primary" style="flex: 1;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        <span id="check-action-label">Balance Scale</span>
+      </button>
+    </footer>
+  </div>
+
+  <!-- DRAG GHOST -->
+  <div id="drag-ghost"></div>
+
+  <!-- CONFETTI CANVAS -->
+  <canvas id="confetti-canvas"></canvas>
+
+  <!-- START MANUAL / INSTRUCTION OVERLAY MODAL -->
+  <div id="manual-modal" class="modal-backdrop active">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2 class="modal-title">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+          How to Play - Physical Balance
+        </h2>
+        <button class="modal-close-btn" data-close="manual-modal" aria-label="Close">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="manual-step">
+          <div class="step-icon">🎯</div>
+          <div class="step-text">
+            <strong>Goal: Match 10.0 kg Equilibrium</strong>
+            Place the available weights onto the scale pan so that both sides balance perfectly at 10.0 kg!
+          </div>
+        </div>
+
+        <div class="manual-step">
+          <div class="step-icon">🖐️</div>
+          <div class="step-text">
+            <strong>Drag & Drop or Tap to Place</strong>
+            Drag weights with your finger directly onto the scale pan, or simply tap any weight to move it automatically.
+          </div>
+        </div>
+
+        <div class="manual-step">
+          <div class="step-icon">💡</div>
+          <div class="step-text">
+            <strong>Special Pieces & Logic Rules</strong>
+            Watch out for 🎈 Helium Balloons (-2kg buoyancy), 📦 Mystery Crates (?), and specific piece limits in advanced levels!
+          </div>
+        </div>
+      </div>
+      <div style="display: flex; gap: 8px; margin-top: 4px;">
+        <button id="start-game-manual-btn" class="btn btn-primary" style="width: 100%; font-size: 15px;">
+          START GAME ✨
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- LEVEL SELECT MODAL -->
+  <div id="levels-modal" class="modal-backdrop">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2 class="modal-title">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+          Select Level
+        </h2>
+        <button class="modal-close-btn" data-close="levels-modal" aria-label="Close">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p style="color: var(--text-muted); margin-bottom: 8px; font-size: 12px;">Complete each level by achieving a perfect 10 kg equilibrium.</p>
+        <div class="levels-grid" id="levels-grid-container"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HINT MODAL -->
+  <div id="hint-modal" class="modal-backdrop">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2 class="modal-title">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#06b6d4" stroke-width="2.5"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-7 7c0 2.5 1.5 4.5 3 6v1a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2v-1c1.5-1.5 3-3.5 3-6a7 7 0 0 0-7-7z"/></svg>
+          Level Hint
+        </h2>
+        <button class="modal-close-btn" data-close="hint-modal" aria-label="Close">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="modal-body" id="hint-content-body"></div>
+      <div style="display: flex; justify-content: flex-end; margin-top: 4px;">
+        <button class="btn btn-secondary" data-close="hint-modal">Got it</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- VICTORY MODAL -->
+  <div id="victory-modal" class="modal-backdrop">
+    <div class="modal-card" style="text-align: center;">
+      <div class="win-stars" id="win-stars-display">★★★</div>
+      <h2 class="modal-title" style="justify-content: center; font-size: 22px; color: var(--accent-gold-light);">
+        Equilibrium Achieved!
+      </h2>
+      <p style="color: #cbd5e1; font-size: 13px;" id="victory-feedback-msg">
+        The scale is in perfect balance at 10.0 kg.
+      </p>
+
+      <div class="stats-card">
+        <div>
+          <div class="stat-val" id="win-stat-moves">0</div>
+          <div class="stat-label">Moves Used</div>
+        </div>
+        <div>
+          <div class="stat-val" id="win-stat-target">10.0 kg</div>
+          <div class="stat-label">Net Weight</div>
+        </div>
+      </div>
+
+      <div style="display: flex; gap: 6px; margin-top: 6px;">
+        <button id="modal-replay-btn" class="btn btn-secondary" style="flex: 1;">Replay</button>
+        <button id="modal-next-btn" class="btn btn-success" style="flex: 1.5;">Next Level →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MASTER GAME COMPLETE MODAL -->
+  <div id="game-win-modal" class="modal-backdrop">
+    <div class="modal-card" style="text-align: center;">
+      <div class="win-stars">🏆 🌟 🏆</div>
+      <h2 class="modal-title" style="justify-content: center; font-size: 22px; color: var(--accent-gold);">
+        Master of Equilibrium!
+      </h2>
+      <p style="color: #cbd5e1; font-size: 13px; line-height: 1.5;">
+        Congratulations! You solved all 15 balance puzzles with mathematical precision!
+      </p>
+      <div class="stats-card" style="margin: 10px 0;">
+        <div>
+          <div class="stat-val" id="total-stars-val">45 / 45</div>
+          <div class="stat-label">Total Stars</div>
+        </div>
+        <div>
+          <div class="stat-val">15 / 15</div>
+          <div class="stat-label">Levels Cleared</div>
+        </div>
+      </div>
+      <button id="restart-game-btn" class="btn btn-primary" style="width: 100%;">
+        Play Again From Level 1
+      </button>
+    </div>
+  </div>
+
+  <!-- PURE VANILLA JAVASCRIPT LOGIC (NO REACT / NO FRAMEWORKS) -->
+  <script>
+    (function() {
+      'use strict';
+
+      // --- 1. PROCEDURAL WEB AUDIO SYNTHESIZER & AMBIENT MUSIC ENGINE ---
+      class SoundEngine {
+        constructor() {
+          this.ctx = null;
+          this.sfxMuted = localStorage.getItem('scale_muted') === 'true';
+          this.bgmMuted = localStorage.getItem('scale_bgm_muted') === 'true';
+          this.padInterval = null;
+          this.arpInterval = null;
+          this.bgmGainNode = null;
+          this.delayNode = null;
+          this.bgmPlaying = false;
+        }
+
+        init() {
+          if (!this.ctx) {
+            const AudioCtx = window.AudioContext || window.webkitAudioContext;
+            if (AudioCtx) {
+              this.ctx = new AudioCtx();
+            }
+          }
+          if (this.ctx && this.ctx.state === 'suspended') {
+            this.ctx.resume();
+          }
+        }
+
+        // Ambient Background Music Generator (Rich serene chords & crystalline delay arpeggios)
+        startBGM() {
+          this.init();
+          if (this.bgmPlaying || this.bgmMuted || !this.ctx) return;
+          this.bgmPlaying = true;
+
+          // Main Master Volume Node for BGM
+          if (!this.bgmGainNode) {
+            this.bgmGainNode = this.ctx.createGain();
+            this.bgmGainNode.gain.setValueAtTime(0.3, this.ctx.currentTime);
+
+            // Reverb/Delay FX chain
+            this.delayNode = this.ctx.createDelay();
+            this.delayNode.delayTime.setValueAtTime(0.35, this.ctx.currentTime); // 350ms ambient echo delay
+
+            const feedbackNode = this.ctx.createGain();
+            feedbackNode.gain.setValueAtTime(0.35, this.ctx.currentTime);
+
+            const delayFilter = this.ctx.createBiquadFilter();
+            delayFilter.type = 'lowpass';
+            delayFilter.frequency.setValueAtTime(1400, this.ctx.currentTime);
+
+            this.delayNode.connect(delayFilter);
+            delayFilter.connect(feedbackNode);
+            feedbackNode.connect(this.delayNode);
+
+            this.delayNode.connect(this.bgmGainNode);
+            this.bgmGainNode.connect(this.ctx.destination);
+          } else {
+            this.bgmGainNode.gain.cancelScheduledValues(this.ctx.currentTime);
+            this.bgmGainNode.gain.setValueAtTime(0.3, this.ctx.currentTime);
+          }
+
+          // Harmonic Chords Progression (frequencies in Hz)
+          // Progression: Cmaj7 -> Am9 -> Fmaj7 -> Gadd9
+          const chordProgression = [
+            { pad: [130.81, 196.00, 246.94, 329.63], arpeggio: [261.63, 329.63, 392.00, 493.88, 523.25, 659.25] }, // Cmaj7
+            { pad: [110.00, 164.81, 196.00, 261.63], arpeggio: [220.00, 261.63, 329.63, 392.00, 440.00, 523.25] }, // Am9
+            { pad: [87.31, 130.81, 164.81, 220.00],  arpeggio: [174.61, 220.00, 261.63, 329.63, 349.23, 440.00] }, // Fmaj7
+            { pad: [98.00, 146.83, 196.00, 246.94],  arpeggio: [196.00, 246.94, 293.66, 392.00, 493.88, 587.33] }  // Gadd9
+          ];
+
+          let chordIndex = 0;
+          let noteIndex = 0;
+
+          // 1. Play warm bass/pad chord
+          const playPadChord = () => {
+            if (!this.bgmPlaying || this.bgmMuted || !this.ctx) return;
+            const now = this.ctx.currentTime;
+            const currentChord = chordProgression[chordIndex % chordProgression.length];
+
+            currentChord.pad.forEach((freq, i) => {
+              const osc = this.ctx.createOscillator();
+              const gain = this.ctx.createGain();
+              const filter = this.ctx.createBiquadFilter();
+
+              osc.type = i === 0 ? 'sine' : 'triangle';
+              osc.frequency.setValueAtTime(freq, now);
+
+              filter.type = 'lowpass';
+              filter.frequency.setValueAtTime(500 + i * 120, now);
+
+              // Soft swell envelope: 1.8s fade in, sustain, 2s fade out
+              gain.gain.setValueAtTime(0, now);
+              gain.gain.linearRampToValueAtTime(0.04 / (i + 1), now + 1.8);
+              gain.gain.linearRampToValueAtTime(0.03 / (i + 1), now + 4.5);
+              gain.gain.exponentialRampToValueAtTime(0.0001, now + 6.8);
+
+              osc.connect(filter);
+              filter.connect(gain);
+              gain.connect(this.bgmGainNode);
+
+              osc.start(now);
+              osc.stop(now + 7.0);
+            });
+
+            chordIndex++;
+          };
+
+          // 2. Play melodic chime/arpeggio note
+          const playArpeggioNote = () => {
+            if (!this.bgmPlaying || this.bgmMuted || !this.ctx) return;
+            const now = this.ctx.currentTime;
+            const activeChord = chordProgression[(chordIndex > 0 ? chordIndex - 1 : 0) % chordProgression.length];
+            const arpNotes = activeChord.arpeggio;
+
+            const freq = arpNotes[noteIndex % arpNotes.length];
+            noteIndex++;
+
+            const osc = this.ctx.createOscillator();
+            const gain = this.ctx.createGain();
+            const filter = this.ctx.createBiquadFilter();
+
+            osc.type = 'sine'; // Crystalline kalimba bell tone
+            osc.frequency.setValueAtTime(freq, now);
+
+            filter.type = 'lowpass';
+            filter.frequency.setValueAtTime(1500, now);
+
+            // Plucked bell envelope
+            gain.gain.setValueAtTime(0, now);
+            gain.gain.linearRampToValueAtTime(0.045, now + 0.04);
+            gain.gain.exponentialRampToValueAtTime(0.0002, now + 1.5);
+
+            osc.connect(filter);
+            filter.connect(gain);
+
+            // Dry signal to master
+            gain.connect(this.bgmGainNode);
+            // Wet signal to delay echo effect
+            if (this.delayNode) gain.connect(this.delayNode);
+
+            osc.start(now);
+            osc.stop(now + 1.6);
+          };
+
+          // Schedule musical loops
+          playPadChord();
+          playArpeggioNote();
+
+          this.padInterval = setInterval(() => {
+            if (this.bgmPlaying && !this.bgmMuted) playPadChord();
+          }, 6500);
+
+          this.arpInterval = setInterval(() => {
+            if (this.bgmPlaying && !this.bgmMuted) playArpeggioNote();
+          }, 540);
+        }
+
+        stopBGM() {
+          this.bgmPlaying = false;
+          if (this.padInterval) {
+            clearInterval(this.padInterval);
+            this.padInterval = null;
+          }
+          if (this.arpInterval) {
+            clearInterval(this.arpInterval);
+            this.arpInterval = null;
+          }
+          if (this.bgmGainNode && this.ctx) {
+            this.bgmGainNode.gain.linearRampToValueAtTime(0, this.ctx.currentTime + 0.4);
+          }
+        }
+
+        toggleBGM() {
+          this.bgmMuted = !this.bgmMuted;
+          localStorage.setItem('scale_bgm_muted', this.bgmMuted.toString());
+          if (this.bgmMuted) {
+            this.stopBGM();
+          } else {
+            this.startBGM();
+          }
+          return !this.bgmMuted;
+        }
+
+        // Sound Effects
+        playPickup() {
+          if (this.sfxMuted) return;
+          this.init();
+          if (!this.ctx) return;
+          const now = this.ctx.currentTime;
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(320, now);
+          osc.frequency.exponentialRampToValueAtTime(480, now + 0.08);
+          gain.gain.setValueAtTime(0.2, now);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.08);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start(now);
+          osc.stop(now + 0.08);
+        }
+
+        playDrop() {
+          if (this.sfxMuted) return;
+          this.init();
+          if (!this.ctx) return;
+          const now = this.ctx.currentTime;
+          
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(240, now);
+          osc.frequency.exponentialRampToValueAtTime(60, now + 0.12);
+          gain.gain.setValueAtTime(0.3, now);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.12);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start(now);
+          osc.stop(now + 0.12);
+        }
+
+        playBalanceSuccess() {
+          if (this.sfxMuted) return;
+          this.init();
+          if (!this.ctx) return;
+          const now = this.ctx.currentTime;
+          const notes = [523.25, 659.25, 783.99, 1046.50];
+          notes.forEach((freq, idx) => {
+            const osc = this.ctx.createOscillator();
+            const gain = this.ctx.createGain();
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(freq, now + idx * 0.08);
+            gain.gain.setValueAtTime(0, now + idx * 0.08);
+            gain.gain.linearRampToValueAtTime(0.22, now + idx * 0.08 + 0.02);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.08 + 0.4);
+            osc.connect(gain);
+            gain.connect(this.ctx.destination);
+            osc.start(now + idx * 0.08);
+            osc.stop(now + idx * 0.08 + 0.45);
+          });
+        }
+
+        playLevelComplete() {
+          if (this.sfxMuted) return;
+          this.init();
+          if (!this.ctx) return;
+          const now = this.ctx.currentTime;
+          const fanfare = [
+            { f: 440, t: 0.00, d: 0.12 },
+            { f: 554.37, t: 0.12, d: 0.12 },
+            { f: 659.25, t: 0.24, d: 0.15 },
+            { f: 880, t: 0.40, d: 0.45 }
+          ];
+          fanfare.forEach(n => {
+            const osc = this.ctx.createOscillator();
+            const gain = this.ctx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(n.f, now + n.t);
+            gain.gain.setValueAtTime(0.25, now + n.t);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + n.t + n.d);
+            osc.connect(gain);
+            gain.connect(this.ctx.destination);
+            osc.start(now + n.t);
+            osc.stop(now + n.t + n.d);
+          });
+        }
+
+        playError() {
+          if (this.sfxMuted) return;
+          this.init();
+          if (!this.ctx) return;
+          const now = this.ctx.currentTime;
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(140, now);
+          osc.frequency.linearRampToValueAtTime(110, now + 0.18);
+          gain.gain.setValueAtTime(0.2, now);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.18);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start(now);
+          osc.stop(now + 0.18);
+        }
+
+        playClick() {
+          if (this.sfxMuted) return;
+          this.init();
+          if (!this.ctx) return;
+          const now = this.ctx.currentTime;
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(800, now);
+          gain.gain.setValueAtTime(0.12, now);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.04);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start(now);
+          osc.stop(now + 0.04);
+        }
+      }
+
+      const sounds = new SoundEngine();
+
+      // --- 2. 15 PUZZLE LEVELS DATA ---
+      const LEVELS_DATA = [
+        {
+          id: 1,
+          title: "First Steps",
+          rule: "Place weights to match 10 kg",
+          target: 10.0,
+          leftFixed: [{ id: 'f1', val: 10.0, type: 'iron', label: '10 kg' }],
+          tray: [
+            { id: 'w1', val: 5.0, type: 'brass', label: '5 kg' },
+            { id: 'w2', val: 3.0, type: 'brass', label: '3 kg' },
+            { id: 'w3', val: 2.0, type: 'iron', label: '2 kg' },
+            { id: 'w4', val: 1.0, type: 'iron', label: '1 kg' }
+          ],
+          hint: "Sum: 5 + 3 + 2 = 10 kg. Place 5kg, 3kg, and 2kg on the right pan."
+        },
+        {
+          id: 2,
+          title: "Exact Triplet",
+          rule: "Use EXACTLY 3 weights to reach 10 kg",
+          target: 10.0,
+          requiredCount: 3,
+          leftFixed: [{ id: 'f2', val: 10.0, type: 'iron', label: '10 kg' }],
+          tray: [
+            { id: 'w5', val: 4.0, type: 'titanium', label: '4 kg' },
+            { id: 'w6', val: 4.0, type: 'titanium', label: '4 kg' },
+            { id: 'w7', val: 2.0, type: 'iron', label: '2 kg' },
+            { id: 'w8', val: 3.0, type: 'brass', label: '3 kg' },
+            { id: 'w9', val: 1.0, type: 'iron', label: '1 kg' }
+          ],
+          hint: "To use exactly 3 pieces totaling 10 kg, combine 4 + 4 + 2 = 10 kg."
+        },
+        {
+          id: 3,
+          title: "Odd Combinations",
+          rule: "Combine odd weights to equal 10 kg",
+          target: 10.0,
+          leftFixed: [{ id: 'f3', val: 10.0, type: 'brass', label: '10 kg' }],
+          tray: [
+            { id: 'w10', val: 7.0, type: 'titanium', label: '7 kg' },
+            { id: 'w11', val: 3.0, type: 'brass', label: '3 kg' },
+            { id: 'w12', val: 5.0, type: 'brass', label: '5 kg' },
+            { id: 'w13', val: 1.0, type: 'iron', label: '1 kg' },
+            { id: 'w14', val: 1.0, type: 'iron', label: '1 kg' }
+          ],
+          hint: "Try 7kg + 3kg = 10kg, or 5kg + 3kg + 1kg + 1kg = 10kg!"
+        },
+        {
+          id: 4,
+          title: "Preloaded Pan",
+          rule: "Pan already has 3 kg. Add weights to reach 10 kg",
+          target: 10.0,
+          leftFixed: [{ id: 'f4', val: 10.0, type: 'brass', label: '10 kg' }],
+          rightFixed: [{ id: 'rf1', val: 3.0, type: 'iron', label: '3 kg' }],
+          tray: [
+            { id: 'w15', val: 4.0, type: 'titanium', label: '4 kg' },
+            { id: 'w16', val: 3.0, type: 'brass', label: '3 kg' },
+            { id: 'w17', val: 2.0, type: 'iron', label: '2 kg' },
+            { id: 'w18', val: 1.0, type: 'iron', label: '1 kg' }
+          ],
+          hint: "Target is 10 kg. With 3 kg already fixed, add 7 kg more (e.g. 4kg + 3kg)."
+        },
+        {
+          id: 5,
+          title: "Mystery Crate [?]",
+          rule: "Deduce unknown weight (?) to reach 10 kg. Clue: ? + 2kg = 6kg",
+          target: 10.0,
+          leftFixed: [{ id: 'f5', val: 10.0, type: 'brass', label: '10 kg' }],
+          tray: [
+            { id: 'w19', val: 4.0, type: 'mystery', label: '? (4kg)', display: '?' },
+            { id: 'w20', val: 3.0, type: 'brass', label: '3 kg' },
+            { id: 'w21', val: 3.0, type: 'brass', label: '3 kg' },
+            { id: 'w22', val: 2.0, type: 'iron', label: '2 kg' },
+            { id: 'w23', val: 5.0, type: 'titanium', label: '5 kg' }
+          ],
+          hint: "Mystery crate [?] is ? = 6 - 2 = 4 kg. Combine [?] (4kg) + 3kg + 3kg = 10kg!"
+        },
+        {
+          id: 6,
+          title: "Helium Buoyancy",
+          rule: "Use Helium Balloon (-2 kg) to balance the scale",
+          target: 10.0,
+          leftFixed: [{ id: 'f6', val: 10.0, type: 'titanium', label: '10 kg' }],
+          tray: [
+            { id: 'w24', val: 8.0, type: 'titanium', label: '8 kg' },
+            { id: 'w25', val: 4.0, type: 'brass', label: '4 kg' },
+            { id: 'w26', val: -2.0, type: 'helium', label: '-2 kg 🎈' },
+            { id: 'w27', val: 3.0, type: 'iron', label: '3 kg' }
+          ],
+          hint: "8kg + 4kg = 12kg. Adding the Helium balloon (-2kg) reduces total weight: 12 - 2 = 10 kg!"
+        },
+        {
+          id: 7,
+          title: "Two-Pan Balance",
+          rule: "Place weights on Left and Right so both equal 10 kg",
+          target: 10.0,
+          leftFixed: [{ id: 'lf7', val: 6.0, type: 'iron', label: '6 kg' }],
+          rightFixed: [{ id: 'rf7', val: 3.0, type: 'iron', label: '3 kg' }],
+          allowLeftDrop: true,
+          tray: [
+            { id: 'w28', val: 4.0, type: 'brass', label: '4 kg' },
+            { id: 'w29', val: 5.0, type: 'titanium', label: '5 kg' },
+            { id: 'w30', val: 2.0, type: 'iron', label: '2 kg' },
+            { id: 'w31', val: 1.0, type: 'iron', label: '1 kg' }
+          ],
+          hint: "Left pan needs 4kg (6 + 4 = 10kg). Right pan needs 7kg (3 + 5 + 2 = 10kg)."
+        },
+        {
+          id: 8,
+          title: "Minimalist Weight",
+          rule: "Reach 10 kg using MINIMUM number of weights (Max 2 pieces)",
+          target: 10.0,
+          maxWeightsOnRight: 2,
+          leftFixed: [{ id: 'f8', val: 10.0, type: 'titanium', label: '10 kg' }],
+          tray: [
+            { id: 'w32', val: 6.0, type: 'titanium', label: '6 kg' },
+            { id: 'w33', val: 4.0, type: 'brass', label: '4 kg' },
+            { id: 'w34', val: 5.0, type: 'brass', label: '5 kg' },
+            { id: 'w35', val: 5.0, type: 'brass', label: '5 kg' },
+            { id: 'w36', val: 3.0, type: 'iron', label: '3 kg' },
+            { id: 'w37', val: 2.0, type: 'iron', label: '2 kg' }
+          ],
+          hint: "5kg + 5kg = 10kg (2 pieces) or 6kg + 4kg = 10kg (2 pieces)!"
+        },
+        {
+          id: 9,
+          title: "Decimal Precision",
+          rule: "Match 10.0 kg using decimal fractional weights",
+          target: 10.0,
+          leftFixed: [{ id: 'f9', val: 10.0, type: 'brass', label: '10.0 kg' }],
+          tray: [
+            { id: 'w38', val: 3.5, type: 'brass', label: '3.5 kg' },
+            { id: 'w39', val: 2.5, type: 'brass', label: '2.5 kg' },
+            { id: 'w40', val: 4.0, type: 'titanium', label: '4.0 kg' },
+            { id: 'w41', val: 1.5, type: 'iron', label: '1.5 kg' },
+            { id: 'w42', val: 2.0, type: 'iron', label: '2.0 kg' }
+          ],
+          hint: "3.5kg + 2.5kg = 6.0kg. Add the 4.0kg piece to get 10.0 kg!"
+        },
+        {
+          id: 10,
+          title: "Dual Mystery Crates",
+          rule: "Clues: A + B = 7 kg and A = B + 3 kg. Reach 10 kg!",
+          target: 10.0,
+          leftFixed: [{ id: 'f10', val: 10.0, type: 'titanium', label: '10.0 kg' }],
+          tray: [
+            { id: 'w43', val: 5.0, type: 'mystery', label: 'A (5kg)', display: 'A' },
+            { id: 'w44', val: 2.0, type: 'mystery', label: 'B (2kg)', display: 'B' },
+            { id: 'w45', val: 3.0, type: 'brass', label: '3.0 kg' },
+            { id: 'w46', val: 4.0, type: 'iron', label: '4.0 kg' }
+          ],
+          hint: "Solving A + B = 7 and A = B + 3 gives A = 5kg and B = 2kg. Combine A(5kg) + B(2kg) + 3kg = 10 kg!"
+        },
+        {
+          id: 11,
+          title: "Sub-Zero Float",
+          rule: "Heavy weights with negative fractional buoyancy (-1.5 kg)",
+          target: 10.0,
+          leftFixed: [{ id: 'f11', val: 10.0, type: 'titanium', label: '10.0 kg' }],
+          tray: [
+            { id: 'w47', val: 7.5, type: 'titanium', label: '7.5 kg' },
+            { id: 'w48', val: 4.0, type: 'brass', label: '4.0 kg' },
+            { id: 'w49', val: -1.5, type: 'helium', label: '-1.5 kg 🎈' },
+            { id: 'w50', val: 3.0, type: 'iron', label: '3.0 kg' },
+            { id: 'w51', val: 2.0, type: 'iron', label: '2.0 kg' }
+          ],
+          hint: "7.5kg + 4.0kg = 11.5kg. Add the -1.5kg balloon to reach 11.5 - 1.5 = 10.0 kg!"
+        },
+        {
+          id: 12,
+          title: "Unique Trio Lock",
+          rule: "Exactly 3 weights, all must have DIFFERENT values",
+          target: 10.0,
+          requiredCount: 3,
+          requireUnique: true,
+          leftFixed: [{ id: 'f12', val: 10.0, type: 'brass', label: '10.0 kg' }],
+          tray: [
+            { id: 'w52', val: 5.0, type: 'titanium', label: '5 kg' },
+            { id: 'w53', val: 4.0, type: 'titanium', label: '4 kg' },
+            { id: 'w54', val: 3.0, type: 'brass', label: '3 kg' },
+            { id: 'w55', val: 2.0, type: 'iron', label: '2 kg' },
+            { id: 'w56', val: 1.0, type: 'iron', label: '1 kg' }
+          ],
+          hint: "Find 3 unique numbers summing to 10: 5 + 3 + 2 = 10 kg, or 5 + 4 + 1 = 10 kg!"
+        },
+        {
+          id: 13,
+          title: "Cross-Pan Tug-of-War",
+          rule: "Left has 14 kg, Right has 4 kg. Balance both pans to 14 kg net!",
+          target: 14.0,
+          leftFixed: [{ id: 'lf13', val: 14.0, type: 'titanium', label: '14.0 kg' }],
+          rightFixed: [{ id: 'rf13', val: 4.0, type: 'iron', label: '4.0 kg' }],
+          tray: [
+            { id: 'w57', val: 5.0, type: 'brass', label: '5 kg' },
+            { id: 'w58', val: 3.0, type: 'brass', label: '3 kg' },
+            { id: 'w59', val: 2.0, type: 'iron', label: '2 kg' },
+            { id: 'w60', val: 4.0, type: 'titanium', label: '4 kg' }
+          ],
+          hint: "The right pan needs 10 kg more to match 14 kg. Combine 5kg + 3kg + 2kg = 10kg!"
+        },
+        {
+          id: 14,
+          title: "Triple Equation Crypt",
+          rule: "X = 3 kg, Y = X + 2 kg, Z = Y - 1 kg. Reach 10 kg using mystery crates!",
+          target: 10.0,
+          leftFixed: [{ id: 'f14', val: 10.0, type: 'titanium', label: '10.0 kg' }],
+          tray: [
+            { id: 'w61', val: 3.0, type: 'mystery', label: 'X (3kg)', display: 'X' },
+            { id: 'w62', val: 5.0, type: 'mystery', label: 'Y (5kg)', display: 'Y' },
+            { id: 'w63', val: 4.0, type: 'mystery', label: 'Z (4kg)', display: 'Z' },
+            { id: 'w64', val: 2.0, type: 'iron', label: '2 kg' },
+            { id: 'w65', val: 1.0, type: 'iron', label: '1 kg' }
+          ],
+          hint: "X=3kg, Y=5kg, Z=4kg. Notice Y(5kg) + X(3kg) + 2kg = 10kg!"
+        },
+        {
+          id: 15,
+          title: "Grand Master Equilibrium",
+          rule: "Finale: Combine balloons, decimals, and mystery Ω (5kg) to reach 10.0 kg!",
+          target: 10.0,
+          leftFixed: [{ id: 'f15', val: 10.0, type: 'brass', label: '10.0 kg' }],
+          tray: [
+            { id: 'w66', val: 5.0, type: 'mystery', label: 'Ω (5kg)', display: 'Ω' },
+            { id: 'w67', val: 4.5, type: 'titanium', label: '4.5 kg' },
+            { id: 'w68', val: 3.5, type: 'brass', label: '3.5 kg' },
+            { id: 'w69', val: -3.0, type: 'helium', label: '-3.0 kg 🎈' },
+            { id: 'w70', val: 2.0, type: 'iron', label: '2.0 kg' },
+            { id: 'w71', val: 1.0, type: 'iron', label: '1.0 kg' }
+          ],
+          hint: "Ω (5kg) + 4.5kg + 3.5kg = 13.0kg. Add the -3.0kg balloon to reach 10.0 kg exactly!"
+        }
+      ];
+
+      // --- 3. STATE ---
+      let currentLevelIndex = 0;
+      let leftPanItems = [];
+      let rightPanItems = [];
+      let trayItems = [];
+      let movesCount = 0;
+      let levelCompleted = false;
+
+      let maxUnlockedLevel = parseInt(localStorage.getItem('scale_unlocked') || '1', 10);
+      let levelStars = JSON.parse(localStorage.getItem('scale_stars') || '{}');
+
+      // Drag State
+      let activeDragItem = null;
+      let activeDragSource = null;
+      let lastMovedItemId = null;
+      let dragGhostEl = document.getElementById('drag-ghost');
+
+      // DOM
+      const levelIndicatorText = document.getElementById('level-indicator-text');
+      const targetWeightBadge = document.getElementById('target-weight-badge');
+      const levelTitleText = document.getElementById('level-title-text');
+      const levelRuleText = document.getElementById('level-rule-text');
+      const weightsTrayEl = document.getElementById('weights-tray');
+      const panLeftZoneEl = document.getElementById('pan-left-zone');
+      const panRightZoneEl = document.getElementById('pan-right-zone');
+      const leftPanTag = document.getElementById('left-pan-tag');
+      const rightPanTag = document.getElementById('right-pan-tag');
+      const statusLeftVal = document.getElementById('status-left-val');
+      const statusRightVal = document.getElementById('status-right-val');
+      const balanceIndicator = document.getElementById('balance-indicator');
+      const balanceStatusText = document.getElementById('balance-status-text');
+      const balanceIcon = document.getElementById('balance-icon');
+      const placedCounterText = document.getElementById('placed-counter-text');
+      const scaleBeamGroup = document.getElementById('scale-beam-group');
+      const dialNeedleEl = document.getElementById('dial-needle-el');
+      const leftPanSvgGroup = document.getElementById('left-pan-svg-group');
+      const rightPanSvgGroup = document.getElementById('right-pan-svg-group');
+      const actionNextBtn = document.getElementById('action-next-btn');
+      const checkActionLabel = document.getElementById('check-action-label');
+
+      // --- 4. SCALE POSITIONING ---
+      function updatePanPositions() {
+        const svg = document.getElementById('scale-svg');
+        const container = document.getElementById('scale-container');
+        if (!svg || !container) return;
+
+        const svgRect = svg.getBoundingClientRect();
+        const contRect = container.getBoundingClientRect();
+
+        const scaleX = svgRect.width / 600;
+        const scaleY = svgRect.height / 320;
+
+        const leftX = (svgRect.left - contRect.left) + 110 * scaleX;
+        const rightX = (svgRect.left - contRect.left) + 490 * scaleX;
+        const panY = (svgRect.top - contRect.top) + 214 * scaleY;
+
+        panLeftZoneEl.style.left = `${leftX}px`;
+        panLeftZoneEl.style.top = `${panY}px`;
+
+        panRightZoneEl.style.left = `${rightX}px`;
+        panRightZoneEl.style.top = `${panY}px`;
+
+        evaluateScalePhysics(false);
+      }
+
+      window.addEventListener('resize', updatePanPositions);
+      window.addEventListener('orientationchange', () => setTimeout(updatePanPositions, 200));
+
+      // --- 5. LEVEL INITIALIZATION ---
+      function loadLevel(index) {
+        if (index < 0) index = 0;
+        if (index >= LEVELS_DATA.length) index = LEVELS_DATA.length - 1;
+
+        currentLevelIndex = index;
+        const level = LEVELS_DATA[currentLevelIndex];
+        movesCount = 0;
+        levelCompleted = false;
+
+        levelIndicatorText.textContent = `Lvl ${level.id}/${LEVELS_DATA.length}`;
+        targetWeightBadge.textContent = `${level.target.toFixed(1)} kg`;
+        levelTitleText.textContent = `Level ${level.id}: ${level.title}`;
+        levelRuleText.textContent = level.rule;
+
+        leftPanItems = [];
+        rightPanItems = [];
+        trayItems = JSON.parse(JSON.stringify(level.tray));
+
+        if (level.leftFixed) {
+          level.leftFixed.forEach(w => leftPanItems.push({ ...w, isFixed: true }));
+        }
+        if (level.rightFixed) {
+          level.rightFixed.forEach(w => rightPanItems.push({ ...w, isFixed: true }));
+        }
+
+        checkActionLabel.textContent = "Balance Scale";
+        actionNextBtn.className = "btn btn-primary";
+
+        renderPansAndTray();
+        evaluateScalePhysics(false);
+        updatePanPositions();
+      }
+
+      // --- 6. RENDER ELEMENTS ---
+      function createWeightElement(item, sourceLocation) {
+        const div = document.createElement('div');
+        div.className = `weight-item weight-${item.type || 'brass'}`;
+        if (item.isFixed) div.classList.add('fixed-weight');
+        if (item.id === lastMovedItemId) div.classList.add('just-dropped');
+        div.dataset.id = item.id;
+        div.dataset.val = item.val;
+        div.dataset.source = sourceLocation;
+
+        const knob = document.createElement('div');
+        knob.className = 'weight-knob';
+
+        const valSpan = document.createElement('span');
+        valSpan.className = 'weight-val';
+        valSpan.textContent = item.display ? item.display : (item.val > 0 ? `${item.val}` : `${item.val}`);
+
+        const unitSpan = document.createElement('span');
+        unitSpan.className = 'weight-unit';
+        unitSpan.textContent = item.display ? 'mystery' : 'kg';
+
+        div.appendChild(knob);
+        div.appendChild(valSpan);
+        div.appendChild(unitSpan);
+
+        if (!item.isFixed) {
+          div.addEventListener('pointerdown', (e) => onPointerDown(e, item, sourceLocation, div));
+          div.addEventListener('click', (e) => onQuickTapWeight(e, item, sourceLocation));
+        }
+
+        return div;
+      }
+
+      function renderPansAndTray() {
+        weightsTrayEl.innerHTML = '';
+        
+        Array.from(panLeftZoneEl.children).forEach(child => {
+          if (!child.classList.contains('pan-weight-tag')) child.remove();
+        });
+
+        Array.from(panRightZoneEl.children).forEach(child => {
+          if (!child.classList.contains('pan-weight-tag')) child.remove();
+        });
+
+        trayItems.forEach(item => {
+          weightsTrayEl.appendChild(createWeightElement(item, 'tray'));
+        });
+
+        leftPanItems.forEach(item => {
+          panLeftZoneEl.appendChild(createWeightElement(item, 'left'));
+        });
+
+        rightPanItems.forEach(item => {
+          panRightZoneEl.appendChild(createWeightElement(item, 'right'));
+        });
+
+        const totalUserPlaced = rightPanItems.filter(w => !w.isFixed).length + leftPanItems.filter(w => !w.isFixed).length;
+        placedCounterText.textContent = `${totalUserPlaced} placed`;
+      }
+
+      // --- 7. DRAG & DROP POINTER HANDLERS ---
+      let startX = 0;
+      let startY = 0;
+      let isDragging = false;
+      let currentTargetZone = null;
+
+      function onPointerDown(e, item, sourceLocation, el) {
+        if (e.button !== 0 && e.pointerType === 'mouse') return;
+        sounds.init();
+        sounds.startBGM();
+
+        startX = e.clientX;
+        startY = e.clientY;
+        activeDragItem = item;
+        activeDragSource = sourceLocation;
+        isDragging = false;
+
+        const onMove = (moveEvent) => {
+          const dx = moveEvent.clientX - startX;
+          const dy = moveEvent.clientY - startY;
+          if (!isDragging && Math.hypot(dx, dy) > 8) {
+            isDragging = true;
+            sounds.playPickup();
+            el.classList.add('dragging');
+
+            dragGhostEl.innerHTML = el.innerHTML;
+            dragGhostEl.className = el.className;
+            dragGhostEl.classList.remove('dragging');
+            dragGhostEl.style.display = 'inline-flex';
+            dragGhostEl.style.width = `${el.offsetWidth}px`;
+            dragGhostEl.style.height = `${el.offsetHeight}px`;
+          }
+
+          if (isDragging) {
+            dragGhostEl.style.left = `${moveEvent.clientX}px`;
+            dragGhostEl.style.top = `${moveEvent.clientY}px`;
+
+            checkDropZoneHover(moveEvent.clientX, moveEvent.clientY);
+          }
+        };
+
+        const onUp = (upEvent) => {
+          window.removeEventListener('pointermove', onMove);
+          window.removeEventListener('pointerup', onUp);
+          window.removeEventListener('pointercancel', onUp);
+
+          el.classList.remove('dragging');
+          dragGhostEl.style.display = 'none';
+
+          if (isDragging) {
+            handleDropPlacement();
+            clearZoneHovers();
+          }
+
+          activeDragItem = null;
+          activeDragSource = null;
+          isDragging = false;
+        };
+
+        window.addEventListener('pointermove', onMove);
+        window.addEventListener('pointerup', onUp);
+        window.addEventListener('pointercancel', onUp);
+      }
+
+      function checkDropZoneHover(x, y) {
+        clearZoneHovers();
+        const leftRect = panLeftZoneEl.getBoundingClientRect();
+        const rightRect = panRightZoneEl.getBoundingClientRect();
+        const trayRect = weightsTrayEl.getBoundingClientRect();
+
+        const level = LEVELS_DATA[currentLevelIndex];
+
+        if (x >= rightRect.left && x <= rightRect.right && y >= rightRect.top && y <= rightRect.bottom) {
+          panRightZoneEl.classList.add('drag-hover');
+          currentTargetZone = 'right';
+        } else if (level.allowLeftDrop && x >= leftRect.left && x <= leftRect.right && y >= leftRect.top && y <= leftRect.bottom) {
+          panLeftZoneEl.classList.add('drag-hover');
+          currentTargetZone = 'left';
+        } else if (x >= trayRect.left && x <= trayRect.right && y >= trayRect.top && y <= trayRect.bottom) {
+          weightsTrayEl.classList.add('drag-hover');
+          currentTargetZone = 'tray';
+        } else {
+          currentTargetZone = null;
+        }
+      }
+
+      function clearZoneHovers() {
+        panLeftZoneEl.classList.remove('drag-hover');
+        panRightZoneEl.classList.remove('drag-hover');
+        weightsTrayEl.classList.remove('drag-hover');
+      }
+
+      function handleDropPlacement() {
+        if (!activeDragItem) return;
+        const target = currentTargetZone;
+        if (!target || target === activeDragSource) return;
+
+        moveItemBetweenContainers(activeDragItem, activeDragSource, target);
+      }
+
+      function onQuickTapWeight(e, item, sourceLocation) {
+        if (isDragging) return;
+        sounds.init();
+        sounds.startBGM();
+
+        if (sourceLocation === 'tray') {
+          moveItemBetweenContainers(item, 'tray', 'right');
+        } else {
+          moveItemBetweenContainers(item, sourceLocation, 'tray');
+        }
+      }
+
+      function moveItemBetweenContainers(item, fromZone, toZone) {
+        if (fromZone === 'tray') {
+          const idx = trayItems.findIndex(w => w.id === item.id);
+          if (idx !== -1) trayItems.splice(idx, 1);
+        } else if (fromZone === 'left') {
+          const idx = leftPanItems.findIndex(w => w.id === item.id);
+          if (idx !== -1) leftPanItems.splice(idx, 1);
+        } else if (fromZone === 'right') {
+          const idx = rightPanItems.findIndex(w => w.id === item.id);
+          if (idx !== -1) rightPanItems.splice(idx, 1);
+        }
+
+        if (toZone === 'tray') {
+          trayItems.push(item);
+          sounds.playDrop();
+        } else if (toZone === 'left') {
+          leftPanItems.push(item);
+          sounds.playDrop();
+        } else if (toZone === 'right') {
+          rightPanItems.push(item);
+          sounds.playDrop();
+        }
+
+        movesCount++;
+        lastMovedItemId = item.id;
+        renderPansAndTray();
+        evaluateScalePhysics(true);
+        setTimeout(() => {
+          lastMovedItemId = null;
+        }, 550);
+      }
+
+      // --- 8. SCALE PHYSICS ---
+      function calculatePanTotal(items) {
+        return items.reduce((sum, item) => sum + item.val, 0);
+      }
+
+      function evaluateScalePhysics(triggerAudio = true) {
+        const level = LEVELS_DATA[currentLevelIndex];
+        const leftTotal = calculatePanTotal(leftPanItems);
+        const rightTotal = calculatePanTotal(rightPanItems);
+
+        leftPanTag.textContent = `${leftTotal.toFixed(1)} kg`;
+        rightPanTag.textContent = `${rightTotal.toFixed(1)} kg`;
+        statusLeftVal.textContent = `${leftTotal.toFixed(1)} kg`;
+        statusRightVal.textContent = `${rightTotal.toFixed(1)} kg`;
+
+        const weightDiff = rightTotal - leftTotal;
+        const maxAngle = 14;
+        let tiltAngle = Math.max(-maxAngle, Math.min(maxAngle, weightDiff * 2.5));
+
+        scaleBeamGroup.style.transform = `rotate(${tiltAngle}deg)`;
+        dialNeedleEl.style.transform = `rotate(${tiltAngle * 1.8}deg)`;
+        leftPanSvgGroup.style.transform = `rotate(${-tiltAngle}deg)`;
+        rightPanSvgGroup.style.transform = `rotate(${-tiltAngle}deg)`;
+
+        // Synchronize DOM weight containers with SVG scale tilt
+        const svg = document.getElementById('scale-svg');
+        if (svg) {
+          const svgRect = svg.getBoundingClientRect();
+          const scaleX = svgRect.width / 600;
+          const scaleY = svgRect.height / 320;
+          const angleRad = (tiltAngle * Math.PI) / 180;
+
+          // Left hanging point: dx = -190, dy = 0 relative to pivot (300, 95)
+          const leftShiftY = -190 * Math.sin(angleRad) * scaleY;
+          const leftShiftX = 190 * (1 - Math.cos(angleRad)) * scaleX;
+
+          // Right hanging point: dx = +190, dy = 0 relative to pivot (300, 95)
+          const rightShiftY = 190 * Math.sin(angleRad) * scaleY;
+          const rightShiftX = -190 * (1 - Math.cos(angleRad)) * scaleX;
+
+          panLeftZoneEl.style.transform = `translate(-50%, -100%) translate(${leftShiftX}px, ${leftShiftY}px)`;
+          panRightZoneEl.style.transform = `translate(-50%, -100%) translate(${rightShiftX}px, ${rightShiftY}px)`;
+          
+          panLeftZoneEl.style.setProperty('--tilt', `${tiltAngle}deg`);
+          panRightZoneEl.style.setProperty('--tilt', `${tiltAngle}deg`);
+        }
+
+        let isBalanced = false;
+        let meetsConstraints = true;
+
+        const isExactMatch = Math.abs(leftTotal - rightTotal) < 0.001;
+        const rightMatchesTarget = Math.abs(rightTotal - level.target) < 0.001;
+
+        if (level.allowLeftDrop) {
+          isBalanced = isExactMatch && Math.abs(leftTotal - level.target) < 0.001;
+        } else {
+          isBalanced = isExactMatch && rightMatchesTarget;
+        }
+
+        const rightUserPieces = rightPanItems.filter(w => !w.isFixed);
+        if (level.requiredCount && rightUserPieces.length !== level.requiredCount) {
+          meetsConstraints = false;
+        }
+        if (level.maxWeightsOnRight && rightUserPieces.length > level.maxWeightsOnRight) {
+          meetsConstraints = false;
+        }
+        if (level.requireUnique) {
+          const vals = rightUserPieces.map(w => w.val);
+          if (new Set(vals).size !== vals.length) meetsConstraints = false;
+        }
+
+        if (isBalanced && meetsConstraints) {
+          balanceIndicator.className = 'balanced';
+          balanceIcon.textContent = '✨';
+          balanceStatusText.textContent = 'Balanced!';
+          leftPanTag.classList.add('balanced');
+          rightPanTag.classList.add('balanced');
+          statusRightVal.classList.add('match');
+
+          if (!levelCompleted) {
+            checkActionLabel.textContent = "Success! Next →";
+            actionNextBtn.className = "btn btn-success";
+            if (triggerAudio) {
+              sounds.playBalanceSuccess();
+              document.querySelectorAll('.weight-item').forEach(el => {
+                if (el.parentElement === panLeftZoneEl || el.parentElement === panRightZoneEl) {
+                  el.classList.add('celebrate-bounce');
+                  setTimeout(() => el.classList.remove('celebrate-bounce'), 600);
+                }
+              });
+            }
+          }
+        } else {
+          leftPanTag.classList.remove('balanced');
+          rightPanTag.classList.remove('balanced');
+          statusRightVal.classList.remove('match');
+          checkActionLabel.textContent = "Balance Scale";
+          actionNextBtn.className = "btn btn-primary";
+
+          if (weightDiff < -0.05) {
+            balanceIndicator.className = 'tilt-left';
+            balanceIcon.textContent = '⬅️';
+            balanceStatusText.textContent = 'Left Heavy';
+          } else if (weightDiff > 0.05) {
+            balanceIndicator.className = 'tilt-right';
+            balanceIcon.textContent = '➡️';
+            balanceStatusText.textContent = 'Right Heavy';
+          } else {
+            balanceIndicator.className = '';
+            balanceIcon.textContent = '⚖️';
+            balanceStatusText.textContent = meetsConstraints ? 'Equilibrium' : 'Check Rules';
+          }
+        }
+      }
+
+      // --- 9. COMPLETION & CELEBRATION ---
+      function handleCompleteLevel() {
+        const level = LEVELS_DATA[currentLevelIndex];
+        const leftTotal = calculatePanTotal(leftPanItems);
+        const rightTotal = calculatePanTotal(rightPanItems);
+
+        const isExactMatch = Math.abs(leftTotal - rightTotal) < 0.001;
+        const rightMatchesTarget = Math.abs(rightTotal - level.target) < 0.001;
+
+        let isBalanced = false;
+        if (level.allowLeftDrop) {
+          isBalanced = isExactMatch && Math.abs(leftTotal - level.target) < 0.001;
+        } else {
+          isBalanced = isExactMatch && rightMatchesTarget;
+        }
+
+        const rightUserPieces = rightPanItems.filter(w => !w.isFixed);
+        let constraintFail = '';
+        if (level.requiredCount && rightUserPieces.length !== level.requiredCount) {
+          constraintFail = `Rule requirement: Use exactly ${level.requiredCount} weights on the right pan. (Currently placed: ${rightUserPieces.length})`;
+        } else if (level.maxWeightsOnRight && rightUserPieces.length > level.maxWeightsOnRight) {
+          constraintFail = `Rule requirement: Use at most ${level.maxWeightsOnRight} weights on the right pan. (Currently placed: ${rightUserPieces.length})`;
+        } else if (level.requireUnique) {
+          const vals = rightUserPieces.map(w => w.val);
+          if (new Set(vals).size !== vals.length) {
+            constraintFail = `Rule requirement: All weights on the pan must have distinct values!`;
+          }
+        }
+
+        if (!isBalanced || constraintFail) {
+          sounds.playError();
+          scaleBeamGroup.style.transform = `rotate(10deg)`;
+          setTimeout(() => scaleBeamGroup.style.transform = `rotate(-10deg)`, 100);
+          setTimeout(() => evaluateScalePhysics(false), 250);
+
+          if (constraintFail) {
+            showModal('hint-modal', `<p style="color: #ef4444; font-weight: bold;">Constraint not met:</p><p style="margin-top: 6px;">${constraintFail}</p>`);
+          }
+          return;
+        }
+
+        levelCompleted = true;
+        sounds.playLevelComplete();
+        launchConfetti();
+
+        let stars = 3;
+        if (movesCount > level.tray.length + 3) stars = 2;
+        if (movesCount > level.tray.length + 6) stars = 1;
+
+        levelStars[level.id] = Math.max(levelStars[level.id] || 0, stars);
+        localStorage.setItem('scale_stars', JSON.stringify(levelStars));
+
+        if (level.id >= maxUnlockedLevel && maxUnlockedLevel < LEVELS_DATA.length) {
+          maxUnlockedLevel = level.id + 1;
+          localStorage.setItem('scale_unlocked', maxUnlockedLevel.toString());
+        }
+
+        if (currentLevelIndex === LEVELS_DATA.length - 1) {
+          let totalStars = 0;
+          Object.values(levelStars).forEach(s => totalStars += s);
+          document.getElementById('total-stars-val').textContent = `${totalStars} / ${LEVELS_DATA.length * 3}`;
+          showModal('game-win-modal');
+        } else {
+          document.getElementById('win-stars-display').textContent = '★'.repeat(stars) + '☆'.repeat(3 - stars);
+          document.getElementById('win-stat-moves').textContent = movesCount.toString();
+          document.getElementById('win-stat-target').textContent = `${rightTotal.toFixed(1)} kg`;
+          showModal('victory-modal');
+        }
+      }
+
+      function launchConfetti() {
+        const canvas = document.getElementById('confetti-canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const colors = ['#fbbf24', '#10b981', '#38bdf8', '#a855f7', '#ec4899'];
+        const particles = [];
+        for (let i = 0; i < 70; i++) {
+          particles.push({
+            x: canvas.width / 2 + (Math.random() - 0.5) * 80,
+            y: canvas.height * 0.45,
+            vx: (Math.random() - 0.5) * 10,
+            vy: -Math.random() * 10 - 3,
+            size: Math.random() * 7 + 4,
+            color: colors[Math.floor(Math.random() * colors.length)],
+            rotation: Math.random() * 360,
+            rotSpeed: (Math.random() - 0.5) * 8,
+            gravity: 0.3,
+            opacity: 1
+          });
+        }
+
+        function render() {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          let active = false;
+
+          particles.forEach(p => {
+            p.x += p.vx;
+            p.y += p.vy;
+            p.vy += p.gravity;
+            p.rotation += p.rotSpeed;
+            p.opacity -= 0.009;
+
+            if (p.opacity > 0) {
+              active = true;
+              ctx.save();
+              ctx.translate(p.x, p.y);
+              ctx.rotate((p.rotation * Math.PI) / 180);
+              ctx.fillStyle = p.color;
+              ctx.globalAlpha = Math.max(0, p.opacity);
+              ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);
+              ctx.restore();
+            }
+          });
+
+          if (active) requestAnimationFrame(render);
+          else ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+        render();
+      }
+
+      // --- 10. MODALS & UI CONTROLS ---
+      function showModal(id, customBodyHtml = null) {
+        const modal = document.getElementById(id);
+        if (!modal) return;
+        if (customBodyHtml) {
+          const body = modal.querySelector('.modal-body');
+          if (body) body.innerHTML = customBodyHtml;
+        }
+        modal.classList.add('active');
+        sounds.playClick();
+      }
+
+      function closeModal(id) {
+        const modal = document.getElementById(id);
+        if (modal) modal.classList.remove('active');
+        sounds.playClick();
+      }
+
+      function openLevelSelectModal() {
+        const grid = document.getElementById('levels-grid-container');
+        grid.innerHTML = '';
+
+        LEVELS_DATA.forEach((lvl, idx) => {
+          const tile = document.createElement('div');
+          const isUnlocked = lvl.id <= maxUnlockedLevel;
+          const isCurrent = idx === currentLevelIndex;
+          const stars = levelStars[lvl.id] || 0;
+
+          tile.className = `level-tile ${isUnlocked ? 'unlocked' : 'locked'} ${isCurrent ? 'current' : ''} ${stars > 0 ? 'completed' : ''}`;
+          
+          const numSpan = document.createElement('span');
+          numSpan.textContent = isUnlocked ? lvl.id : '🔒';
+          tile.appendChild(numSpan);
+
+          if (isUnlocked && stars > 0) {
+            const starsSpan = document.createElement('div');
+            starsSpan.className = 'stars-row';
+            starsSpan.textContent = '★'.repeat(stars);
+            tile.appendChild(starsSpan);
+          }
+
+          if (isUnlocked) {
+            tile.addEventListener('click', () => {
+              loadLevel(idx);
+              closeModal('levels-modal');
+            });
+          }
+
+          grid.appendChild(tile);
+        });
+
+        showModal('levels-modal');
+      }
+
+      function openHintModal() {
+        const level = LEVELS_DATA[currentLevelIndex];
+        const html = `
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            <div style="background: rgba(251, 191, 36, 0.1); border-left: 3px solid var(--accent-gold); padding: 8px 10px; border-radius: 4px;">
+              <strong style="color: var(--accent-gold-light);">${level.title}</strong>
+              <p style="font-size: 12px; color: #cbd5e1; margin-top: 2px;">${level.rule}</p>
+            </div>
+            <div style="background: rgba(6, 182, 212, 0.1); border-left: 3px solid var(--accent-cyan); padding: 8px 10px; border-radius: 4px;">
+              <strong style="color: var(--accent-cyan);">Logical Clue:</strong>
+              <p style="font-size: 12px; color: #e2e8f0; margin-top: 2px;">${level.hint}</p>
+            </div>
+          </div>
+        `;
+        showModal('hint-modal', html);
+      }
+
+      // Button Listeners
+      document.querySelectorAll('[data-close]').forEach(btn => {
+        btn.addEventListener('click', () => closeModal(btn.getAttribute('data-close')));
+      });
+
+      document.getElementById('level-btn').addEventListener('click', openLevelSelectModal);
+      document.getElementById('manual-btn').addEventListener('click', () => showModal('manual-modal'));
+
+      document.getElementById('start-game-manual-btn').addEventListener('click', () => {
+        sounds.init();
+        sounds.startBGM();
+        closeModal('manual-modal');
+      });
+
+      // BGM Button Toggle
+      const bgmBtn = document.getElementById('bgm-btn');
+      function updateBgmUI() {
+        if (!sounds.bgmMuted) {
+          bgmBtn.classList.add('active-music');
+        } else {
+          bgmBtn.classList.remove('active-music');
+        }
+      }
+      updateBgmUI();
+
+      bgmBtn.addEventListener('click', () => {
+        const isPlaying = sounds.toggleBGM();
+        updateBgmUI();
+        sounds.playClick();
+      });
+
+      // Sound FX Toggle
+      const soundBtn = document.getElementById('sound-btn');
+      const soundIconOn = document.getElementById('sound-icon-on');
+      const soundIconOff = document.getElementById('sound-icon-off');
+
+      function updateSoundUI() {
+        if (sounds.sfxMuted) {
+          soundIconOn.style.display = 'none';
+          soundIconOff.style.display = 'block';
+        } else {
+          soundIconOn.style.display = 'block';
+          soundIconOff.style.display = 'none';
+        }
+      }
+      updateSoundUI();
+
+      soundBtn.addEventListener('click', () => {
+        sounds.sfxMuted = !sounds.sfxMuted;
+        localStorage.setItem('scale_muted', sounds.sfxMuted.toString());
+        updateSoundUI();
+        if (!sounds.sfxMuted) sounds.playClick();
+      });
+
+      // Fullscreen Toggle
+      const fullscreenBtn = document.getElementById('fullscreen-btn');
+      const fsIconEnter = document.getElementById('fs-icon-enter');
+      const fsIconExit = document.getElementById('fs-icon-exit');
+
+      function toggleFullScreen() {
+        sounds.playClick();
+        if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+          const docEl = document.documentElement;
+          if (docEl.requestFullscreen) docEl.requestFullscreen().catch(() => {});
+          else if (docEl.webkitRequestFullscreen) docEl.webkitRequestFullscreen();
+        } else {
+          if (document.exitFullscreen) document.exitFullscreen().catch(() => {});
+          else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+        }
+      }
+
+      function updateFullscreenUI() {
+        const isFS = !!(document.fullscreenElement || document.webkitFullscreenElement);
+        if (isFS) {
+          fsIconEnter.style.display = 'none';
+          fsIconExit.style.display = 'block';
+        } else {
+          fsIconEnter.style.display = 'block';
+          fsIconExit.style.display = 'none';
+        }
+        setTimeout(updatePanPositions, 200);
+      }
+
+      fullscreenBtn.addEventListener('click', toggleFullScreen);
+      document.addEventListener('fullscreenchange', updateFullscreenUI);
+
+      // Reset & Clear
+      document.getElementById('reset-btn').addEventListener('click', () => {
+        sounds.playClick();
+        loadLevel(currentLevelIndex);
+      });
+
+      document.getElementById('clear-pan-btn').addEventListener('click', () => {
+        sounds.playClick();
+        const leftRem = leftPanItems.filter(w => !w.isFixed);
+        const rightRem = rightPanItems.filter(w => !w.isFixed);
+
+        leftPanItems = leftPanItems.filter(w => w.isFixed);
+        rightPanItems = rightPanItems.filter(w => w.isFixed);
+
+        trayItems.push(...leftRem, ...rightRem);
+        movesCount++;
+        renderPansAndTray();
+        evaluateScalePhysics(true);
+      });
+
+      actionNextBtn.addEventListener('click', handleCompleteLevel);
+
+      document.getElementById('modal-next-btn').addEventListener('click', () => {
+        closeModal('victory-modal');
+        if (currentLevelIndex < LEVELS_DATA.length - 1) {
+          loadLevel(currentLevelIndex + 1);
+        }
+      });
+
+      document.getElementById('modal-replay-btn').addEventListener('click', () => {
+        closeModal('victory-modal');
+        loadLevel(currentLevelIndex);
+      });
+
+      document.getElementById('restart-game-btn').addEventListener('click', () => {
+        closeModal('game-win-modal');
+        loadLevel(0);
+      });
+
+      // Pan Direct Click
+      panRightZoneEl.addEventListener('click', (e) => {
+        if (e.target === panRightZoneEl && trayItems.length > 0) {
+          moveItemBetweenContainers(trayItems[0], 'tray', 'right');
+        }
+      });
+
+      // --- 11. BOOTSTRAP ---
+      const initialLevel = Math.min(maxUnlockedLevel - 1, LEVELS_DATA.length - 1);
+      loadLevel(initialLevel >= 0 ? initialLevel : 0);
+
+      setTimeout(updatePanPositions, 100);
+      setTimeout(updatePanPositions, 400);
+
+    })();
+  </script>
+
+  <!-- PWA Service Worker Registration -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js').catch(() => {});
+      });
+    }
+  </script>
+
+
+  <!-- 5-Second Hint Ad Modal System -->
+  <div id="fl-hint-modal-overlay" style="
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 999999;
+    background: rgba(10, 15, 30, 0.85);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    align-items: center;
+    justify-content: center;
+    font-family: system-ui, -apple-system, sans-serif;
+    padding: 16px;
+    box-sizing: border-box;
+  ">
+    <div style="
+      background: linear-gradient(145deg, #1e293b, #0f172a);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.6), 0 0 30px rgba(245, 158, 11, 0.2);
+      border-radius: 20px;
+      max-width: 420px;
+      width: 100%;
+      padding: 24px;
+      text-align: center;
+      color: #f8fafc;
+      position: relative;
+    ">
+      <button id="fl-hint-close-btn" style="
+        position: absolute;
+        top: 14px;
+        right: 14px;
+        background: rgba(255,255,255,0.08);
+        border: none;
+        color: #94a3b8;
+        font-size: 18px;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      ">✕</button>
+
+      <div style="
+        width: 56px;
+        height: 56px;
+        margin: 0 auto 14px auto;
+        background: rgba(245, 158, 11, 0.15);
+        border: 1px solid rgba(245, 158, 11, 0.3);
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 28px;
+      ">💡</div>
+
+      <h3 style="margin: 0 0 6px 0; font-size: 19px; font-weight: 800; color: #fbbf24;">Unlocking Hint</h3>
+      <p style="margin: 0 0 18px 0; font-size: 13px; color: #94a3b8; line-height: 1.4;">
+        Sponsored Reward: Wait 5 seconds to reveal your clue assistance.
+      </p>
+
+      <div id="fl-hint-ad-box" style="
+        background: rgba(0, 0, 0, 0.35);
+        border: 1px dashed rgba(255, 255, 255, 0.15);
+        border-radius: 12px;
+        padding: 16px;
+        margin-bottom: 18px;
+      ">
+        <div style="font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: #64748b; margin-bottom: 4px;">Advertisement</div>
+        <div style="font-size: 14px; font-weight: 600; color: #e2e8f0;">Brain Booster Puzzles</div>
+        <div style="font-size: 11px; color: #38bdf8; margin-top: 2px;">play.funlogic.games</div>
+      </div>
+
+      <div style="margin-bottom: 16px;">
+        <div style="display: flex; justify-content: space-between; font-size: 12px; font-weight: 700; margin-bottom: 6px;">
+          <span style="color: #94a3b8;">Sponsor Video</span>
+          <span id="fl-hint-timer-txt" style="color: #f59e0b;">5s</span>
+        </div>
+        <div style="width: 100%; height: 8px; background: rgba(255,255,255,0.1); border-radius: 4px; overflow: hidden;">
+          <div id="fl-hint-progress-bar" style="width: 0%; height: 100%; background: linear-gradient(90deg, #f59e0b, #10b981); transition: width 0.1s linear;"></div>
+        </div>
+      </div>
+
+      <button id="fl-hint-claim-btn" disabled style="
+        width: 100%;
+        padding: 12px;
+        border-radius: 12px;
+        border: none;
+        background: #334155;
+        color: #64748b;
+        font-weight: 700;
+        font-size: 14px;
+        cursor: not-allowed;
+        transition: all 0.2s;
+      ">Please wait 5s...</button>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      let countdownTimer = null;
+      let originalHintCallback = null;
+
+      const overlay = document.getElementById('fl-hint-modal-overlay');
+      const timerTxt = document.getElementById('fl-hint-timer-txt');
+      const progressBar = document.getElementById('fl-hint-progress-bar');
+      const claimBtn = document.getElementById('fl-hint-claim-btn');
+      const closeBtn = document.getElementById('fl-hint-close-btn');
+
+      function showHintAdModal(callback) {
+        if (!overlay) return;
+        originalHintCallback = callback;
+        overlay.style.display = 'flex';
+        
+        let timeLeft = 50; // 5.0 seconds
+        claimBtn.disabled = true;
+        claimBtn.style.background = '#334155';
+        claimBtn.style.color = '#64748b';
+        claimBtn.style.cursor = 'not-allowed';
+        claimBtn.textContent = 'Please wait 5s...';
+        progressBar.style.width = '0%';
+        timerTxt.textContent = '5s';
+
+        try {
+          if (window.parent && window.parent !== window) {
+            window.parent.postMessage({ type: 'hint_ad_started', duration: 5 }, '*');
+          }
+        } catch(e) {}
+
+        clearInterval(countdownTimer);
+        countdownTimer = setInterval(() => {
+          timeLeft--;
+          const percent = ((50 - timeLeft) / 50) * 100;
+          progressBar.style.width = percent + '%';
+          const secondsRemaining = Math.ceil(timeLeft / 10);
+          timerTxt.textContent = secondsRemaining + 's';
+          claimBtn.textContent = 'Please wait ' + secondsRemaining + 's...';
+
+          if (timeLeft <= 0) {
+            clearInterval(countdownTimer);
+            timerTxt.textContent = 'Ready!';
+            timerTxt.style.color = '#10b981';
+            claimBtn.disabled = false;
+            claimBtn.style.background = 'linear-gradient(90deg, #f59e0b, #10b981)';
+            claimBtn.style.color = '#0f172a';
+            claimBtn.style.cursor = 'pointer';
+            claimBtn.textContent = '✨ Get Hint Now';
+
+            try {
+              if (window.parent && window.parent !== window) {
+                window.parent.postMessage({ type: 'hint_ad_completed' }, '*');
+              }
+            } catch(e) {}
+          }
+        }, 100);
+      }
+
+      function closeHintModal() {
+        clearInterval(countdownTimer);
+        if (overlay) overlay.style.display = 'none';
+      }
+
+      function claimHint() {
+        closeHintModal();
+        if (typeof originalHintCallback === 'function') {
+          originalHintCallback();
+        }
+      }
+
+      if (closeBtn) closeBtn.addEventListener('click', closeHintModal);
+      if (claimBtn) claimBtn.addEventListener('click', claimHint);
+
+      window.showHintWith5sAd = showHintAdModal;
+
+      window.addEventListener('DOMContentLoaded', () => {
+        setTimeout(() => {
+          const hintSelectors = [
+            '#btn-hint', '#hint-btn', '#button-hint', '#hint',
+            '.btn-hint', '.hint-btn', '[data-action="hint"]',
+            'button[title*="Hint" i]', 'button[aria-label*="Hint" i]'
+          ];
+
+          hintSelectors.forEach(selector => {
+            document.querySelectorAll(selector).forEach(btn => {
+              if (!btn.getAttribute('data-fl-hooked')) {
+                btn.setAttribute('data-fl-hooked', 'true');
+                btn.addEventListener('click', function(e) {
+                  if (!this.hasAttribute('data-hint-approved')) {
+                    e.stopImmediatePropagation();
+                    e.preventDefault();
+                    showHintAdModal(() => {
+                      this.setAttribute('data-hint-approved', 'true');
+                      this.click();
+                      setTimeout(() => this.removeAttribute('data-hint-approved'), 500);
+                    });
+                  }
+                }, true);
+              }
+            });
+          });
+        }, 300);
+      });
+    })();
+  </script>
+
+</body>
+</html>

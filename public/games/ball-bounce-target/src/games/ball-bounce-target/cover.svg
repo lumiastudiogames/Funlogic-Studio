@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" width="100%" height="100%">
+  <defs>
+    <!-- Background Blueprint Grid Pattern -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f172a" />
+      <stop offset="100%" stop-color="#1e293b" />
+    </linearGradient>
+    <pattern id="grid" width="30" height="30" patternUnits="userSpaceOnUse">
+      <path d="M 30 0 L 0 0 0 30" fill="none" stroke="rgba(56, 189, 248, 0.12)" stroke-width="1" />
+    </pattern>
+    <radialGradient id="ballGrad" cx="35%" cy="35%" r="65%">
+      <stop offset="0%" stop-color="#fef08a" />
+      <stop offset="40%" stop-color="#eab308" />
+      <stop offset="100%" stop-color="#ca8a04" />
+    </radialGradient>
+    <linearGradient id="woodGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#d97706" />
+      <stop offset="50%" stop-color="#b45309" />
+      <stop offset="100%" stop-color="#78350f" />
+    </linearGradient>
+    <linearGradient id="rimGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#f97316" />
+      <stop offset="100%" stop-color="#ea580c" />
+    </linearGradient>
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="6" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="600" height="400" fill="url(#bgGrad)" />
+  <rect width="600" height="400" fill="url(#grid)" />
+
+  <!-- Title Watermark -->
+  <text x="300" y="60" text-anchor="middle" font-family="system-ui, sans-serif" font-weight="900" font-size="28" fill="#38bdf8" letter-spacing="3">BALL BOUNCE TARGET</text>
+  <text x="300" y="86" text-anchor="middle" font-family="system-ui, sans-serif" font-weight="600" font-size="14" fill="#94a3b8" letter-spacing="1">PHYSICS DEFLECTOR PUZZLE</text>
+
+  <!-- Trajectory Dotted Path -->
+  <path d="M 120 130 Q 220 180 270 210" fill="none" stroke="#38bdf8" stroke-width="4" stroke-dasharray="8,8" opacity="0.85" />
+  <path d="M 270 210 Q 340 180 430 290" fill="none" stroke="#38bdf8" stroke-width="4" stroke-dasharray="8,8" opacity="0.85" />
+
+  <!-- Deflector Plank 1 (Angled Wood Block with 2.5D bevel) -->
+  <g transform="translate(270, 210) rotate(-35)">
+    <!-- Shadow -->
+    <rect x="-65" y="12" width="130" height="24" rx="6" fill="rgba(0,0,0,0.3)" />
+    <!-- 3D Side depth -->
+    <rect x="-65" y="4" width="130" height="24" rx="6" fill="#78350f" />
+    <!-- Top Face -->
+    <rect x="-65" y="-8" width="130" height="20" rx="6" fill="url(#woodGrad)" stroke="#fde68a" stroke-width="1.5" />
+    <!-- Wood grain lines -->
+    <line x1="-50" y1="2" x2="50" y2="2" stroke="#92400e" stroke-width="1.5" opacity="0.6" />
+    <!-- Center Pivot Dot -->
+    <circle cx="0" cy="2" r="5" fill="#fde68a" />
+    <circle cx="0" cy="2" r="2.5" fill="#78350f" />
+  </g>
+
+  <!-- Spark Impact Effect at Collision Point -->
+  <circle cx="270" cy="210" r="16" fill="none" stroke="#fef08a" stroke-width="3" opacity="0.75" filter="url(#glow)" />
+  <line x1="270" y1="195" x2="270" y2="188" stroke="#fef08a" stroke-width="3" stroke-linecap="round" />
+  <line x1="285" y1="210" x2="292" y2="210" stroke="#fef08a" stroke-width="3" stroke-linecap="round" />
+  <line x1="255" y1="210" x2="248" y2="210" stroke="#fef08a" stroke-width="3" stroke-linecap="round" />
+
+  <!-- Starting Ball -->
+  <g transform="translate(120, 130)">
+    <!-- Glow -->
+    <circle cx="0" cy="0" r="26" fill="rgba(234, 179, 8, 0.25)" filter="url(#glow)" />
+    <!-- Sphere -->
+    <circle cx="0" cy="0" r="20" fill="url(#ballGrad)" />
+    <ellipse cx="-5" cy="-6" rx="6" ry="3" fill="#ffffff" opacity="0.7" transform="rotate(-30, -5, -6)" />
+    <!-- Label -->
+    <rect x="-24" y="26" width="48" height="18" rx="9" fill="#10b981" />
+    <text x="0" y="39" text-anchor="middle" font-family="system-ui, sans-serif" font-weight="800" font-size="10" fill="#ffffff">START</text>
+  </g>
+
+  <!-- Target Basket (at bottom right) -->
+  <g transform="translate(430, 290)">
+    <!-- Base stand -->
+    <rect x="-40" y="55" width="80" height="14" rx="4" fill="#1e3a8a" />
+    <rect x="-8" y="25" width="16" height="30" fill="#2563eb" />
+    <!-- Backboard frame -->
+    <rect x="-35" y="-30" width="70" height="50" rx="8" fill="rgba(30, 41, 59, 0.7)" stroke="#22c55e" stroke-width="4" />
+    <circle cx="0" cy="-5" r="14" fill="none" stroke="#22c55e" stroke-width="2.5" />
+    <path d="M -6 -5 L -2 -1 L 6 -9" fill="none" stroke="#22c55e" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+    <!-- Net -->
+    <polygon points="-22,12 22,12 12,42 -12,42" fill="rgba(255,255,255,0.15)" stroke="#e2e8f0" stroke-width="2" />
+    <line x1="-16" y1="12" x2="6" y2="42" stroke="#cbd5e1" stroke-width="1.5" />
+    <line x1="16" y1="12" x2="-6" y2="42" stroke="#cbd5e1" stroke-width="1.5" />
+    <line x1="-8" y1="12" x2="10" y2="42" stroke="#cbd5e1" stroke-width="1.5" />
+    <line x1="8" y1="12" x2="-10" y2="42" stroke="#cbd5e1" stroke-width="1.5" />
+    <!-- Orange Rim with 3D ring -->
+    <ellipse cx="0" cy="12" rx="26" ry="7" fill="none" stroke="url(#rimGrad)" stroke-width="5" />
+  </g>
+</svg>

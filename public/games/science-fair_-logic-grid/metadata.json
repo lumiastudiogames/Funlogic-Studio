@@ -1,0 +1,6 @@
+{
+  "name": "Science Fair: Logic Grid",
+  "description": "Science fair deductive logic puzzle game: deduce students, science projects (Volcano, Robot, Solar Panel) and medals.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

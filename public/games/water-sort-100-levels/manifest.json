@@ -1,0 +1,18 @@
+{
+  "name": "Water Sort 100 Levels",
+  "short_name": "Water Sort 1",
+  "description": "The definitive campaign: climb from Level 1 to Level 100! Start with 3 easy colors, gradually ramping up to 12 colors across 14 tubes. Strategically ration your 3 undos per level and unlock the entire puzzle journey.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0f172a",
+  "theme_color": "#0f172a",
+  "icons": [
+    {
+      "src": "./cover.svg",
+      "sizes": "800x600",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

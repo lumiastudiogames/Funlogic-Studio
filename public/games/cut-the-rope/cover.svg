@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="800" height="600">
+  <defs>
+    <linearGradient id="bgGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="50%" stop-color="#1e1b4b"/>
+      <stop offset="100%" stop-color="#312e81"/>
+    </linearGradient>
+
+    <linearGradient id="cardGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="rgba(255, 255, 255, 0.15)"/>
+      <stop offset="100%" stop-color="rgba(255, 255, 255, 0.03)"/>
+    </linearGradient>
+
+    <radialGradient id="glow" cx="50%" cy="40%" r="55%">
+      <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#38bdf8" stop-opacity="0"/>
+    </radialGradient>
+
+    <filter id="dropShadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="12" stdDeviation="16" flood-color="#000000" flood-opacity="0.5"/>
+    </filter>
+
+    <filter id="glowEffect">
+      <feGaussianBlur stdDeviation="8" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="800" height="600" fill="url(#bgGrad)"/>
+  <circle cx="400" cy="250" r="340" fill="url(#glow)"/>
+
+  <!-- Decorative Pattern Lines -->
+  <g opacity="0.08" stroke="#ffffff" stroke-width="1.5">
+    <line x1="0" y1="100" x2="800" y2="100"/>
+    <line x1="0" y1="200" x2="800" y2="200"/>
+    <line x1="0" y1="300" x2="800" y2="300"/>
+    <line x1="0" y1="400" x2="800" y2="400"/>
+    <line x1="0" y1="500" x2="800" y2="500"/>
+    <line x1="160" y1="0" x2="160" y2="600"/>
+    <line x1="320" y1="0" x2="320" y2="600"/>
+    <line x1="480" y1="0" x2="480" y2="600"/>
+    <line x1="640" y1="0" x2="640" y2="600"/>
+  </g>
+
+  <!-- Central Glassmorphism Card Frame -->
+  <rect x="60" y="50" width="680" height="500" rx="32" fill="url(#cardGrad)" stroke="rgba(255, 255, 255, 0.25)" stroke-width="2" filter="url(#dropShadow)"/>
+
+  <!-- Category Tag Badge -->
+  <rect x="260" y="80" width="280" height="44" rx="22" fill="rgba(56, 189, 248, 0.25)" stroke="rgba(255, 255, 255, 0.3)" stroke-width="1.5"/>
+  <text x="400" y="108" fill="#38bdf8" font-size="14" font-weight="900" font-family="system-ui, -apple-system, sans-serif" text-anchor="middle" letter-spacing="2.5">LOGIC PUZZLE</text>
+
+  <!-- Specialized Dynamic Gameplay Vector Graphic -->
+  
+      <!-- Mechanical Gears & Trajectory -->
+      <g transform="translate(0, -10)">
+        <text x="320" y="270" font-size="100" text-anchor="middle" fill="#f59e0b" filter="url(#glowEffect)">⚙️</text>
+        <text x="470" y="280" font-size="90" text-anchor="middle" fill="#06b6d4">⚙️</text>
+        <path d="M 220 320 Q 400 160 580 320" fill="none" stroke="#38bdf8" stroke-width="5" stroke-dasharray="10,10"/>
+        <circle cx="400" cy="225" r="16" fill="#ef4444" filter="url(#glowEffect)"/>
+      </g>
+
+  <!-- Title Text Box -->
+  <text x="400" y="445" fill="#ffffff" font-size="34" font-weight="900" font-family="system-ui, -apple-system, sans-serif" text-anchor="middle" filter="url(#dropShadow)">Cut the Rope - Slice Puzzle</text>
+
+  <!-- Eye-Catching Play Pill Button -->
+  <rect x="300" y="480" width="200" height="48" rx="24" fill="#38bdf8" filter="url(#glowEffect)"/>
+  <text x="400" y="511" fill="#0f172a" font-size="17" font-weight="900" font-family="system-ui, -apple-system, sans-serif" text-anchor="middle" letter-spacing="1.5">PLAY NOW ▶</text>
+</svg>

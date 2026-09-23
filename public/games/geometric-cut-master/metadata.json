@@ -1,0 +1,6 @@
+{
+  "name": "Geometric Cut Master",
+  "description": "Slice geometric shapes into equal halves with a single swipe gesture across 20 challenging levels with vanilla JS physics and procedural audio.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

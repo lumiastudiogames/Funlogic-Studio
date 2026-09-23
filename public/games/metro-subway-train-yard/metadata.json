@@ -1,0 +1,7 @@
+{
+  "name": "Metro Subway Train Yard",
+  "description": "Multi-car subway train switching puzzle game. Guide trains of 2 to 4 cars across parallel tracks and switch junctions to their matching tunnels without collisions.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
+

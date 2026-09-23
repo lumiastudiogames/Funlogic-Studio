@@ -1,0 +1,6 @@
+{
+  "name": "Water Sort Lab",
+  "description": "Colorful liquid puzzle sorting game with test tubes and fluid physics in Vanilla JavaScript and Canvas.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

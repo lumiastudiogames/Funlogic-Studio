@@ -1,0 +1,263 @@
+* {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: #022c22;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+#game-stage {
+  width: 100%;
+  max-width: 900px;
+  height: 100dvh;
+  background: radial-gradient(circle at center, #15803d 0%, #14532d 60%, #052e16 100%);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+}
+
+@media (min-width: 640px) {
+  #game-stage {
+    height: 90vh;
+    max-height: 850px;
+    border-radius: 24px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.1);
+  }
+}
+
+.header-hud {
+  width: 100%;
+  height: 54px;
+  background: rgba(5, 46, 22, 0.9);
+  padding: 0 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+  z-index: 20;
+}
+
+.hud-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.badge-info {
+  background: rgba(255, 255, 255, 0.12);
+  color: #86efac;
+  font-size: 12px;
+  font-weight: 800;
+  padding: 4px 10px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.btn-tactile {
+  height: 38px;
+  padding: 0 14px;
+  border-radius: 10px;
+  font-weight: 800;
+  font-size: 13px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  cursor: pointer;
+  border: none;
+  background: #166534;
+  color: #f0fdf4;
+  box-shadow: 0 3px 0 #14532d;
+  transition: all 0.1s ease;
+  flex-shrink: 0;
+}
+
+.btn-tactile:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.btn-tactile:not(:disabled):active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 #14532d;
+}
+
+/* AI Opponent Area */
+.ai-area {
+  padding: 8px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  background: rgba(0, 0, 0, 0.2);
+  flex-shrink: 0;
+}
+
+.ai-cards {
+  display: flex;
+  gap: 4px;
+  overflow-x: auto;
+}
+
+.ai-card-back {
+  width: 28px;
+  height: 48px;
+  background: #334155;
+  border: 1px solid #64748b;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+/* Board Center Area */
+.table-area {
+  flex: 1;
+  position: relative;
+  overflow-x: auto;
+  overflow-y: hidden;
+  display: flex;
+  align-items: center;
+  padding: 20px;
+}
+
+.domino-train {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin: auto;
+  min-width: min-content;
+  padding: 0 20px;
+}
+
+/* Player Hand Area */
+.player-area {
+  background: rgba(5, 46, 22, 0.85);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 10px 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.hand-scroll {
+  display: flex;
+  gap: 8px;
+  max-width: 100%;
+  overflow-x: auto;
+  padding: 4px;
+}
+
+/* Tactile Domino Stone */
+.domino {
+  display: flex;
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.9);
+  border: 1px solid #cbd5e1;
+  position: relative;
+  cursor: pointer;
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+  flex-shrink: 0;
+}
+
+.domino.vertical {
+  flex-direction: column;
+  width: 44px;
+  height: 84px;
+}
+
+.domino.horizontal {
+  flex-direction: row;
+  width: 84px;
+  height: 44px;
+}
+
+.domino.playable {
+  box-shadow: 0 0 12px #4ade80, 0 4px 6px rgba(0,0,0,0.3);
+  border-color: #22c55e;
+  transform: translateY(-4px);
+}
+
+.domino.playable:hover {
+  transform: translateY(-8px);
+}
+
+.domino-half {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.domino-divider-v {
+  height: 1px;
+  background: #94a3b8;
+  position: relative;
+  width: 80%;
+  margin: 0 auto;
+}
+
+.domino-divider-h {
+  width: 1px;
+  background: #94a3b8;
+  position: relative;
+  height: 80%;
+  margin: auto 0;
+}
+
+.pips-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  width: 24px;
+  height: 24px;
+  place-items: center;
+}
+
+.pip {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #0f172a;
+}
+
+/* Modal Prompt (choose left or right) */
+.side-chooser {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(15, 23, 42, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 16px;
+  padding: 18px 24px;
+  box-shadow: 0 20px 25px -5px rgba(0,0,0,0.5);
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  z-index: 30;
+}
+
+.side-chooser.active {
+  display: flex;
+}

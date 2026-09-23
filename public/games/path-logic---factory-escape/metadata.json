@@ -1,0 +1,6 @@
+{
+  "name": "Path Logic - Factory Escape",
+  "description": "A mobile-first 6x6 grid puzzle game where you draw continuous power paths to charge all batteries and guide Sparky the robot out of the factory maze across 20 levels.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

@@ -1,0 +1,2704 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    <title>Shadow Logic - Spatial Puzzle Game</title>
+    <meta name="description" content="A mobile-first spatial reasoning puzzle game. Analyze the light angle, match 3D objects with their cast shadows across 12 challenging levels." />
+    <meta property="og:title" content="Shadow Logic - Spatial Puzzle Game" />
+    <meta property="og:description" content="A mobile-first spatial reasoning puzzle game. Analyze the light angle, match 3D objects with their cast shadows across 12 challenging levels." />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <style>
+      /* --- RESET & MOBILE-FIRST BASE STYLES --- */
+      *, *::before, *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        user-select: none;
+        -webkit-user-select: none;
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      :root {
+        --bg-main: #0c1017;
+        --bg-panel: #151c27;
+        --bg-card: #1c2636;
+        --bg-card-hover: #243144;
+        --accent-gold: #f59e0b;
+        --accent-amber: #fbbf24;
+        --accent-glow: rgba(245, 158, 11, 0.35);
+        --accent-cyan: #38bdf8;
+        --accent-emerald: #10b981;
+        --accent-rose: #f43f5e;
+        --text-primary: #f8fafc;
+        --text-secondary: #94a3b8;
+        --text-muted: #64748b;
+        --border-subtle: rgba(255, 255, 255, 0.08);
+        --border-active: rgba(245, 158, 11, 0.5);
+        --pedestal-base: #1e293b;
+        --pedestal-rim: #334155;
+        --shadow-color: rgba(0, 0, 0, 0.78);
+        --radius-sm: 8px;
+        --radius-md: 14px;
+        --radius-lg: 20px;
+        --font-main: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      }
+
+      html, body {
+        width: 100%;
+        height: 100%;
+        height: 100dvh;
+        overflow: hidden;
+        background-color: var(--bg-main);
+        color: var(--text-primary);
+        font-family: var(--font-main);
+        touch-action: none;
+      }
+
+      body {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
+        background: radial-gradient(circle at 50% 20%, #172338 0%, #0c1017 70%, #070a0f 100%);
+        position: relative;
+      }
+
+      /* Background ambient light beam */
+      .ambient-beam {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 0;
+        opacity: 0.18;
+        transition: background 0.6s ease;
+      }
+
+      /* --- APP CONTAINER --- */
+      #app {
+        width: 100%;
+        max-width: 480px;
+        height: 100%;
+        height: 100dvh;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 8px 12px 10px;
+        position: relative;
+        z-index: 1;
+      }
+
+      @media (min-width: 768px) {
+        #app {
+          max-width: 580px;
+          padding: 14px 20px 16px;
+        }
+      }
+
+      /* --- HEADER & HUD --- */
+      header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        padding: 4px 0;
+        gap: 6px;
+      }
+
+      .hud-group {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .btn-icon {
+        width: 42px;
+        height: 42px;
+        min-width: 42px;
+        min-height: 42px;
+        border-radius: var(--radius-md);
+        background: var(--bg-panel);
+        border: 1px solid var(--border-subtle);
+        color: var(--text-primary);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        outline: none;
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      .btn-icon:hover {
+        background: var(--bg-card);
+        border-color: var(--border-active);
+      }
+
+      .btn-icon:active {
+        transform: scale(0.92);
+      }
+
+      .btn-icon.active {
+        background: rgba(245, 158, 11, 0.2);
+        border-color: var(--accent-gold);
+        color: var(--accent-amber);
+      }
+
+      .btn-icon svg {
+        width: 20px;
+        height: 20px;
+        stroke: currentColor;
+        stroke-width: 2;
+        fill: none;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+
+      .level-badge {
+        background: rgba(30, 41, 59, 0.85);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 999px;
+        padding: 6px 14px;
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        color: var(--accent-amber);
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      }
+
+      .level-stars {
+        display: flex;
+        gap: 2px;
+      }
+
+      .star-icon {
+        width: 14px;
+        height: 14px;
+        fill: #475569;
+        stroke: #64748b;
+        stroke-width: 1;
+      }
+
+      .star-icon.filled {
+        fill: #f59e0b;
+        stroke: #fbbf24;
+      }
+
+      /* --- LIGHT SOURCE INDICATOR BAR --- */
+      .light-banner {
+        width: 100%;
+        background: linear-gradient(135deg, rgba(30, 41, 59, 0.7) 0%, rgba(15, 23, 42, 0.85) 100%);
+        border: 1px solid var(--border-subtle);
+        border-radius: var(--radius-md);
+        padding: 8px 12px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        position: relative;
+        overflow: hidden;
+        margin: 4px 0 6px;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+      }
+
+      .light-banner::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 4px;
+        height: 100%;
+        background: var(--accent-gold);
+        box-shadow: 0 0 10px var(--accent-gold);
+      }
+
+      .light-info {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+      }
+
+      .light-label {
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+        color: var(--text-muted);
+        font-weight: 600;
+      }
+
+      .light-title {
+        font-size: 14px;
+        font-weight: 700;
+        color: var(--text-primary);
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .light-compass {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(15, 23, 42, 0.6);
+        padding: 4px 10px;
+        border-radius: 999px;
+        border: 1px solid var(--border-subtle);
+      }
+
+      .compass-dial {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        border: 1px dashed rgba(245, 158, 11, 0.4);
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .compass-arrow {
+        position: absolute;
+        width: 2px;
+        height: 14px;
+        background: var(--accent-amber);
+        top: 2px;
+        transform-origin: 50% 12px;
+        box-shadow: 0 0 6px var(--accent-gold);
+        transition: transform 0.4s ease;
+      }
+
+      .compass-arrow::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -3px;
+        border-left: 4px solid transparent;
+        border-right: 4px solid transparent;
+        border-bottom: 5px solid var(--accent-amber);
+      }
+
+      .light-angle-text {
+        font-size: 12px;
+        font-weight: 700;
+        color: var(--accent-amber);
+        font-family: monospace;
+      }
+
+      /* --- MAIN PLAYFIELD (OBJECTS & PEDESTALS) --- */
+      .playfield {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        align-items: center;
+        position: relative;
+        width: 100%;
+        min-height: 220px;
+      }
+
+      /* Ray Guides Layer */
+      .ray-canvas {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 2;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+
+      .ray-canvas.visible {
+        opacity: 1;
+      }
+
+      .pedestals-row {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+        width: 100%;
+        height: 100%;
+        align-items: center;
+      }
+
+      @media (min-width: 480px) {
+        .pedestals-row {
+          gap: 14px;
+        }
+      }
+
+      .pedestal-slot {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-end;
+        position: relative;
+        height: 100%;
+        max-height: 260px;
+      }
+
+      .object-wrapper {
+        width: 100%;
+        height: 100px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        z-index: 3;
+        transition: transform 0.3s ease;
+      }
+
+      @media (min-height: 640px) {
+        .object-wrapper {
+          height: 120px;
+        }
+      }
+
+      .object-svg {
+        width: 80px;
+        height: 80px;
+        filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.5));
+        transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+
+      @media (min-width: 400px) {
+        .object-svg {
+          width: 90px;
+          height: 90px;
+        }
+      }
+
+      .pedestal-stage {
+        width: 100%;
+        height: 85px;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        z-index: 1;
+      }
+
+      /* Drop target zone for shadow */
+      .drop-zone {
+        width: 92%;
+        height: 70px;
+        border-radius: var(--radius-md);
+        background: rgba(21, 28, 39, 0.7);
+        border: 2px dashed rgba(255, 255, 255, 0.15);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        transition: all 0.25s ease;
+        cursor: pointer;
+        overflow: hidden;
+      }
+
+      .drop-zone::after {
+        content: "DROP SHADOW";
+        font-size: 9px;
+        font-weight: 700;
+        letter-spacing: 0.6px;
+        color: var(--text-muted);
+        opacity: 0.7;
+        pointer-events: none;
+      }
+
+      .drop-zone.hovered {
+        border-color: var(--accent-amber);
+        background: rgba(245, 158, 11, 0.15);
+        transform: scale(1.04);
+        box-shadow: 0 0 16px var(--accent-glow);
+      }
+
+      .drop-zone.matched {
+        border-style: solid;
+        border-color: var(--accent-emerald);
+        background: rgba(16, 185, 129, 0.15);
+        box-shadow: 0 0 18px rgba(16, 185, 129, 0.3);
+      }
+
+      .drop-zone.matched::after {
+        display: none;
+      }
+
+      .drop-zone.incorrect {
+        animation: shake 0.4s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+        border-color: var(--accent-rose);
+        background: rgba(244, 63, 94, 0.2);
+      }
+
+      .slotted-shadow-svg {
+        width: 100%;
+        height: 100%;
+        padding: 6px;
+        filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.6));
+      }
+
+      /* --- SHADOWS TRAY (SOURCE TO DRAG) --- */
+      .tray-section {
+        width: 100%;
+        background: rgba(15, 23, 42, 0.8);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        border: 1px solid var(--border-subtle);
+        border-radius: var(--radius-lg);
+        padding: 8px 10px 10px;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.4);
+      }
+
+      .tray-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 4px;
+      }
+
+      .tray-title {
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.8px;
+        text-transform: uppercase;
+        color: var(--text-secondary);
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
+
+      .tray-hint {
+        font-size: 11px;
+        color: var(--accent-amber);
+        font-weight: 600;
+      }
+
+      .shadow-cards-row {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+        width: 100%;
+      }
+
+      .shadow-card {
+        height: 80px;
+        background: var(--bg-card);
+        border: 1px solid var(--border-subtle);
+        border-radius: var(--radius-md);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        cursor: grab;
+        touch-action: none;
+        transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease, opacity 0.2s ease;
+        padding: 6px;
+      }
+
+      @media (min-height: 640px) {
+        .shadow-card {
+          height: 92px;
+        }
+      }
+
+      .shadow-card:active {
+        cursor: grabbing;
+      }
+
+      .shadow-card.selected {
+        border-color: var(--accent-amber);
+        box-shadow: 0 0 14px var(--accent-glow);
+        transform: translateY(-4px);
+        background: var(--bg-card-hover);
+      }
+
+      .shadow-card.used {
+        opacity: 0.22;
+        pointer-events: none;
+        border-color: transparent;
+        transform: scale(0.94);
+      }
+
+      .shadow-card-svg {
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+      }
+
+      /* Dragging floating ghost clone */
+      .drag-ghost {
+        position: fixed;
+        width: 80px;
+        height: 80px;
+        pointer-events: none;
+        z-index: 9999;
+        transform: translate(-50%, -50%) scale(1.15);
+        filter: drop-shadow(0 12px 24px rgba(0, 0, 0, 0.75));
+        transition: transform 0.05s ease-out;
+        opacity: 0.95;
+      }
+
+      /* --- MODALS & OVERLAYS --- */
+      .modal-backdrop {
+        position: fixed;
+        inset: 0;
+        background: rgba(7, 10, 15, 0.85);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 16px;
+        z-index: 100;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      .modal-backdrop.active {
+        opacity: 1;
+        pointer-events: auto;
+      }
+
+      .modal-dialog {
+        width: 100%;
+        max-width: 420px;
+        background: #161f2e;
+        border: 1px solid var(--border-active);
+        border-radius: var(--radius-lg);
+        padding: 22px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), 0 0 24px var(--accent-glow);
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        transform: scale(0.92) translateY(12px);
+        transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+        max-height: 90vh;
+        overflow-y: auto;
+      }
+
+      .modal-backdrop.active .modal-dialog {
+        transform: scale(1) translateY(0);
+      }
+
+      .modal-title {
+        font-size: 20px;
+        font-weight: 800;
+        color: var(--text-primary);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .modal-desc {
+        font-size: 14px;
+        line-height: 1.5;
+        color: var(--text-secondary);
+      }
+
+      .btn-primary {
+        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        color: #0f172a;
+        font-size: 15px;
+        font-weight: 800;
+        letter-spacing: 0.5px;
+        padding: 14px 24px;
+        border-radius: var(--radius-md);
+        border: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        box-shadow: 0 4px 14px rgba(245, 158, 11, 0.4);
+        transition: all 0.2s ease;
+        min-height: 48px;
+      }
+
+      .btn-primary:active {
+        transform: scale(0.96);
+      }
+
+      .btn-secondary {
+        background: var(--bg-panel);
+        color: var(--text-primary);
+        font-size: 14px;
+        font-weight: 600;
+        padding: 12px 20px;
+        border-radius: var(--radius-md);
+        border: 1px solid var(--border-subtle);
+        cursor: pointer;
+        min-height: 48px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        transition: background 0.2s ease;
+      }
+
+      .btn-secondary:active {
+        transform: scale(0.96);
+      }
+
+      /* Level Select Grid */
+      .level-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 10px;
+        padding: 4px 0;
+      }
+
+      .level-cell {
+        aspect-ratio: 1;
+        background: var(--bg-card);
+        border: 1px solid var(--border-subtle);
+        border-radius: var(--radius-md);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        min-height: 52px;
+      }
+
+      .level-cell.current {
+        border-color: var(--accent-gold);
+        background: rgba(245, 158, 11, 0.2);
+        box-shadow: 0 0 12px var(--accent-glow);
+      }
+
+      .level-cell.locked {
+        opacity: 0.35;
+        cursor: not-allowed;
+        filter: grayscale(1);
+      }
+
+      .level-cell-num {
+        font-size: 15px;
+        font-weight: 800;
+        color: var(--text-primary);
+      }
+
+      .level-cell-stars {
+        display: flex;
+        gap: 2px;
+      }
+
+      .level-cell-stars .mini-star {
+        width: 10px;
+        height: 10px;
+        fill: #475569;
+      }
+
+      .level-cell-stars .mini-star.filled {
+        fill: var(--accent-amber);
+      }
+
+      /* Celebration Confetti Canvas */
+      #confetti-canvas {
+        position: fixed;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 150;
+      }
+
+      /* Tutorial Diagram Card */
+      .tutorial-card {
+        background: rgba(15, 23, 42, 0.7);
+        border: 1px solid var(--border-subtle);
+        border-radius: var(--radius-md);
+        padding: 12px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .tutorial-step {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .tutorial-icon {
+        width: 38px;
+        height: 38px;
+        min-width: 38px;
+        border-radius: 50%;
+        background: rgba(245, 158, 11, 0.2);
+        color: var(--accent-amber);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 800;
+        font-size: 15px;
+      }
+
+      .tutorial-text {
+        font-size: 13px;
+        color: var(--text-secondary);
+        line-height: 1.4;
+      }
+
+      .tutorial-text strong {
+        color: var(--text-primary);
+      }
+
+      /* Toast Notification */
+      .toast {
+        position: absolute;
+        bottom: 110px;
+        left: 50%;
+        transform: translateX(-50%) translateY(20px);
+        background: rgba(15, 23, 42, 0.94);
+        border: 1px solid var(--border-active);
+        border-radius: 999px;
+        padding: 8px 18px;
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--text-primary);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+        opacity: 0;
+        pointer-events: none;
+        transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        z-index: 50;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        white-space: nowrap;
+      }
+
+      .toast.visible {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+      }
+
+      /* Landscape & Wide Responsive adjustments */
+      @media (orientation: landscape) and (max-height: 500px) {
+        #app {
+          max-width: 100%;
+          padding: 4px 10px;
+        }
+
+        header {
+          padding: 2px 0;
+        }
+
+        .light-banner {
+          margin: 2px 0;
+          padding: 4px 10px;
+        }
+
+        .pedestals-row {
+          gap: 6px;
+        }
+
+        .object-wrapper {
+          height: 65px;
+        }
+
+        .object-svg {
+          width: 55px;
+          height: 55px;
+        }
+
+        .drop-zone {
+          height: 50px;
+        }
+
+        .shadow-card {
+          height: 56px;
+        }
+
+        .tray-section {
+          padding: 4px 8px;
+        }
+      }
+
+      /* Keyframe animations */
+      @keyframes shake {
+        10%, 90% { transform: translate3d(-2px, 0, 0); }
+        20%, 80% { transform: translate3d(3px, 0, 0); }
+        30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+        40%, 60% { transform: translate3d(4px, 0, 0); }
+      }
+
+      @keyframes pulseGlow {
+        0%, 100% { opacity: 0.6; transform: scale(1); }
+        50% { opacity: 1; transform: scale(1.08); }
+      }
+
+      @keyframes celebrateHop {
+        0% { transform: translateY(0); }
+        40% { transform: translateY(-14px) scale(1.06); }
+        70% { transform: translateY(2px); }
+        100% { transform: translateY(0); }
+      }
+
+      .anim-hop {
+        animation: celebrateHop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+    </style>
+  
+  <script>
+    function triggerPlatformWin(timeInSeconds) {
+      const elapsed = Math.round(timeInSeconds || 45);
+      try {
+        if (typeof window.onWin === 'function') {
+          window.onWin(elapsed);
+        }
+        if (window.parent && window.parent !== window) {
+          window.parent.postMessage({ type: 'win', time: elapsed }, '*');
+        }
+      } catch(e) { console.error('Platform win notify error:', e); }
+    }
+  </script>
+
+</head>
+  <body>
+    <!-- Ambient Light Background Gradient -->
+    <div id="ambient-beam" class="ambient-beam"></div>
+    <canvas id="confetti-canvas"></canvas>
+
+    <!-- MAIN GAME ROOT -->
+    <div id="app">
+      <!-- TOP HUD -->
+      <header id="main-header">
+        <div class="hud-group">
+          <button id="btn-levels" class="btn-icon" aria-label="Level Select" title="Levels">
+            <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+          </button>
+          <button id="btn-rays" class="btn-icon" aria-label="Toggle Light Rays" title="Ray Guides">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></svg>
+          </button>
+        </div>
+
+        <div id="level-badge" class="level-badge">
+          <span id="level-title-text">Level 1</span>
+          <div id="level-stars-display" class="level-stars">
+            <svg class="star-icon filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+            <svg class="star-icon filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+            <svg class="star-icon filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+          </div>
+        </div>
+
+        <div class="hud-group">
+          <button id="btn-sound" class="btn-icon active" aria-label="Toggle Sound Effects" title="SFX">
+            <svg id="icon-sound-on" viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
+          </button>
+          <button id="btn-music" class="btn-icon active" aria-label="Toggle Background Music" title="Music">
+            <svg id="icon-music-on" viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg>
+          </button>
+          <button id="btn-help" class="btn-icon" aria-label="Help Guide" title="How to Play">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+          </button>
+          <button id="btn-fullscreen" class="btn-icon" aria-label="Fullscreen Mode" title="Fullscreen">
+            <svg id="icon-fs-enter" viewBox="0 0 24 24"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path></svg>
+          </button>
+        </div>
+      </header>
+
+      <!-- LIGHT SOURCE BANNER -->
+      <div id="light-banner" class="light-banner">
+        <div class="light-info">
+          <span class="light-label">Illumination Vector</span>
+          <div id="light-description" class="light-title">
+            <span>☀️ Morning Sun</span>
+          </div>
+        </div>
+        <div class="light-compass">
+          <div class="compass-dial">
+            <div id="compass-arrow" class="compass-arrow"></div>
+          </div>
+          <span id="light-angle-label" class="light-angle-text">45° NE</span>
+        </div>
+      </div>
+
+      <!-- PLAYFIELD: OBJECTS & DROP PEDESTALS -->
+      <main class="playfield" id="playfield">
+        <canvas id="ray-canvas" class="ray-canvas"></canvas>
+        <div class="pedestals-row" id="pedestals-row">
+          <!-- Populated by JavaScript for the 3 objects & 3 pedestals -->
+        </div>
+      </main>
+
+      <!-- SHADOWS TRAY (DRAGGABLE/SELECTABLE SOURCE) -->
+      <section class="tray-section" id="tray-section">
+        <div class="tray-header">
+          <span class="tray-title">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M2 12h20"></path></svg>
+            Cast Shadows (Drag to Object)
+          </span>
+          <span id="match-counter" class="tray-hint">0 / 3 Matched</span>
+        </div>
+        <div class="shadow-cards-row" id="shadow-cards-row">
+          <!-- Populated by JavaScript for the 3 shadow options -->
+        </div>
+      </section>
+
+      <!-- TOAST NOTIFICATION -->
+      <div id="toast" class="toast">
+        <span id="toast-icon">💡</span>
+        <span id="toast-msg">Select a shadow and drop on its object!</span>
+      </div>
+    </div>
+
+    <!-- HOW TO PLAY / TUTORIAL MODAL -->
+    <div id="modal-tutorial" class="modal-backdrop">
+      <div class="modal-dialog">
+        <div class="modal-title">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M12 16v-4M12 8h.01"></path></svg>
+          How to Play Shadow Logic
+        </div>
+        <div class="modal-desc">
+          Master the physics of light projection and 3D spatial reasoning!
+        </div>
+        <div class="tutorial-card">
+          <div class="tutorial-step">
+            <div class="tutorial-icon">1</div>
+            <div class="tutorial-text">
+              <strong>Check the Light Source:</strong> Look at the sun banner and compass arrow at the top to see the illumination angle and elevation.
+            </div>
+          </div>
+          <div class="tutorial-step">
+            <div class="tutorial-icon">2</div>
+            <div class="tutorial-text">
+              <strong>Analyze the 3D Objects:</strong> Note cutouts, heights, angles, and geometry. Low light casts long shadows; overhead light casts compact shadows.
+            </div>
+          </div>
+          <div class="tutorial-step">
+            <div class="tutorial-icon">3</div>
+            <div class="tutorial-text">
+              <strong>Drag & Match:</strong> Drag each shadow card onto the matching object's pedestal (or tap shadow then tap pedestal).
+            </div>
+          </div>
+        </div>
+        <button id="btn-close-tutorial" class="btn-primary">Got it, Let's Play!</button>
+      </div>
+    </div>
+
+    <!-- LEVEL SELECT MODAL -->
+    <div id="modal-levels" class="modal-backdrop">
+      <div class="modal-dialog">
+        <div class="modal-title">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+          Select Level (12 Levels)
+        </div>
+        <div class="modal-desc">
+          Test your spatial reasoning across progressive light conditions.
+        </div>
+        <div id="level-grid" class="level-grid">
+          <!-- 12 level buttons created in JS -->
+        </div>
+        <button id="btn-close-levels" class="btn-secondary">Close Menu</button>
+      </div>
+    </div>
+
+    <!-- LEVEL COMPLETE MODAL -->
+    <div id="modal-success" class="modal-backdrop">
+      <div class="modal-dialog" style="text-align: center; align-items: center;">
+        <div style="width: 56px; height: 56px; border-radius: 50%; background: rgba(16, 185, 129, 0.2); display: flex; align-items: center; justify-content: center; color: #10b981;">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+        </div>
+        <div class="modal-title" style="justify-content: center;">Stage Cleared!</div>
+        <div id="success-desc" class="modal-desc">
+          Flawless shadow alignment! All 3 objects matched.
+        </div>
+        <div id="success-stars" class="level-stars" style="gap: 8px; justify-content: center; margin: 6px 0;">
+          <svg class="star-icon filled" style="width: 28px; height: 28px;" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+          <svg class="star-icon filled" style="width: 28px; height: 28px;" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+          <svg class="star-icon filled" style="width: 28px; height: 28px;" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+        </div>
+        <div style="display: flex; gap: 10px; width: 100%; margin-top: 8px;">
+          <button id="btn-replay-level" class="btn-secondary" style="flex: 1;">Replay</button>
+          <button id="btn-next-level" class="btn-primary" style="flex: 1.5;">Next Level ➔</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- GRAND VICTORY / GAME COMPLETE MODAL -->
+    <div id="modal-victory" class="modal-backdrop">
+      <div class="modal-dialog" style="text-align: center; align-items: center;">
+        <div style="width: 64px; height: 64px; border-radius: 50%; background: rgba(245, 158, 11, 0.2); display: flex; align-items: center; justify-content: center; color: #fbbf24;">
+          <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>
+        </div>
+        <div class="modal-title" style="justify-content: center;">Master of Shadows!</div>
+        <div class="modal-desc">
+          Incredible! You have conquered all 12 levels of light and shadow logic with supreme spatial precision!
+        </div>
+        <div style="background: rgba(15, 23, 42, 0.6); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 12px 20px; width: 100%;">
+          <div style="font-size: 13px; color: var(--text-muted); text-transform: uppercase;">Total Stars Earned</div>
+          <div id="total-stars-count" style="font-size: 28px; font-weight: 800; color: var(--accent-amber); margin-top: 2px;">36 / 36 ★</div>
+        </div>
+        <button id="btn-restart-game" class="btn-primary" style="width: 100%;">Play Again</button>
+      </div>
+    </div>
+
+    <!-- JAVASCRIPT: PURE VANILLA GAME ENGINE & WEB AUDIO SYNTH -->
+    <script>
+      (function() {
+        'use strict';
+
+        /* --- 1. WEB AUDIO API SOUND GENERATOR --- */
+        class SoundEngine {
+          constructor() {
+            this.ctx = null;
+            this.muted = localStorage.getItem('shadow_logic_muted') === 'true';
+            this.bgmMuted = localStorage.getItem('shadow_logic_bgm_muted') === 'true';
+            this.bgmPlaying = false;
+            this.bgmTimer = null;
+            this.bgmStep = 0;
+          }
+
+          init() {
+            if (!this.ctx) {
+              const AudioCtx = window.AudioContext || window.webkitAudioContext;
+              if (AudioCtx) {
+                this.ctx = new AudioCtx();
+              }
+            }
+            if (this.ctx && this.ctx.state === 'suspended') {
+              this.ctx.resume();
+            }
+            if (!this.bgmPlaying && !this.bgmMuted) {
+              this.startBgm();
+            }
+          }
+
+          toggleMute() {
+            this.muted = !this.muted;
+            localStorage.setItem('shadow_logic_muted', this.muted);
+            return this.muted;
+          }
+
+          toggleBgm() {
+            this.bgmMuted = !this.bgmMuted;
+            localStorage.setItem('shadow_logic_bgm_muted', this.bgmMuted);
+            if (this.bgmMuted) {
+              this.stopBgm();
+            } else {
+              this.startBgm();
+            }
+            return !this.bgmMuted;
+          }
+
+          isBgmActive() {
+            return !this.bgmMuted;
+          }
+
+          startBgm() {
+            this.init();
+            if (!this.ctx || this.bgmMuted || this.bgmPlaying) return;
+            this.bgmPlaying = true;
+            this.bgmStep = 0;
+
+            // Soft ambient polyphonic chord progression for spatial puzzle reasoning
+            const chords = [
+              [130.81, 164.81, 196.00, 246.94], // C3, E3, G3, B3 (Cmaj7)
+              [110.00, 130.81, 164.81, 196.00], // A2, C3, E3, G3 (Am7)
+              [87.31, 130.81, 174.61, 220.00],  // F2, C3, F3, A3 (Fmaj7)
+              [98.00, 146.83, 174.61, 220.00]   // G2, D3, F3, A3 (G7sus4)
+            ];
+
+            const arpeggios = [
+              [261.63, 329.63, 392.00, 493.88, 392.00, 329.63],
+              [220.00, 261.63, 329.63, 392.00, 329.63, 261.63],
+              [174.61, 220.00, 261.63, 349.23, 261.63, 220.00],
+              [196.00, 246.94, 293.66, 349.23, 293.66, 246.94]
+            ];
+
+            const playBgmStep = () => {
+              if (!this.bgmPlaying || this.bgmMuted || !this.ctx) return;
+
+              const chordIdx = Math.floor(this.bgmStep / 8) % chords.length;
+              const subStep = this.bgmStep % 8;
+              const now = this.ctx.currentTime;
+
+              // Soft ambient pad chord on measure start (subStep 0)
+              if (subStep === 0) {
+                const chord = chords[chordIdx];
+                chord.forEach(freq => {
+                  try {
+                    const osc = this.ctx.createOscillator();
+                    const gain = this.ctx.createGain();
+                    const filter = this.ctx.createBiquadFilter();
+
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(freq, now);
+
+                    filter.type = 'lowpass';
+                    filter.frequency.setValueAtTime(450, now);
+
+                    gain.gain.setValueAtTime(0.001, now);
+                    gain.gain.linearRampToValueAtTime(0.022, now + 1.2);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 4.8);
+
+                    osc.connect(filter);
+                    filter.connect(gain);
+                    gain.connect(this.ctx.destination);
+
+                    osc.start(now);
+                    osc.stop(now + 5.0);
+                  } catch(e) {}
+                });
+              }
+
+              // Soft ambient arpeggio bell note
+              if (subStep % 2 === 0) {
+                const arpPattern = arpeggios[chordIdx];
+                const noteFreq = arpPattern[(subStep / 2) % arpPattern.length];
+                try {
+                  const osc = this.ctx.createOscillator();
+                  const gain = this.ctx.createGain();
+
+                  osc.type = 'triangle';
+                  osc.frequency.setValueAtTime(noteFreq, now);
+
+                  gain.gain.setValueAtTime(0.001, now);
+                  gain.gain.linearRampToValueAtTime(0.015, now + 0.08);
+                  gain.gain.exponentialRampToValueAtTime(0.001, now + 0.75);
+
+                  osc.connect(gain);
+                  gain.connect(this.ctx.destination);
+
+                  osc.start(now);
+                  osc.stop(now + 0.8);
+                } catch(e) {}
+              }
+
+              this.bgmStep++;
+            };
+
+            playBgmStep();
+            this.bgmTimer = setInterval(playBgmStep, 650);
+          }
+
+          stopBgm() {
+            this.bgmPlaying = false;
+            if (this.bgmTimer) {
+              clearInterval(this.bgmTimer);
+              this.bgmTimer = null;
+            }
+          }
+
+          playTone(freq, type = 'sine', duration = 0.15, gainVal = 0.15) {
+            if (this.muted) return;
+            this.init();
+            if (!this.ctx) return;
+            try {
+              const osc = this.ctx.createOscillator();
+              const gain = this.ctx.createGain();
+              osc.type = type;
+              osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
+              gain.gain.setValueAtTime(gainVal, this.ctx.currentTime);
+              gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + duration);
+              osc.connect(gain);
+              gain.connect(this.ctx.destination);
+              osc.start();
+              osc.stop(this.ctx.currentTime + duration);
+            } catch (e) {
+              console.warn(e);
+            }
+          }
+
+          playTap() {
+            this.playTone(480, 'triangle', 0.06, 0.1);
+          }
+
+          playPickup() {
+            if (this.muted) return;
+            this.init();
+            if (!this.ctx) return;
+            try {
+              const osc = this.ctx.createOscillator();
+              const gain = this.ctx.createGain();
+              osc.type = 'sine';
+              osc.frequency.setValueAtTime(260, this.ctx.currentTime);
+              osc.frequency.exponentialRampToValueAtTime(520, this.ctx.currentTime + 0.12);
+              gain.gain.setValueAtTime(0.12, this.ctx.currentTime);
+              gain.gain.linearRampToValueAtTime(0.01, this.ctx.currentTime + 0.12);
+              osc.connect(gain);
+              gain.connect(this.ctx.destination);
+              osc.start();
+              osc.stop(this.ctx.currentTime + 0.12);
+            } catch(e) {}
+          }
+
+          playSuccess() {
+            if (this.muted) return;
+            this.init();
+            if (!this.ctx) return;
+            const now = this.ctx.currentTime;
+            const notes = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6
+            notes.forEach((freq, idx) => {
+              const osc = this.ctx.createOscillator();
+              const gain = this.ctx.createGain();
+              osc.type = 'sine';
+              osc.frequency.setValueAtTime(freq, now + idx * 0.06);
+              gain.gain.setValueAtTime(0.15, now + idx * 0.06);
+              gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.06 + 0.35);
+              osc.connect(gain);
+              gain.connect(this.ctx.destination);
+              osc.start(now + idx * 0.06);
+              osc.stop(now + idx * 0.06 + 0.35);
+            });
+          }
+
+          playError() {
+            if (this.muted) return;
+            this.init();
+            if (!this.ctx) return;
+            const now = this.ctx.currentTime;
+            const osc = this.ctx.createOscillator();
+            const gain = this.ctx.createGain();
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(160, now);
+            osc.frequency.linearRampToValueAtTime(110, now + 0.2);
+            gain.gain.setValueAtTime(0.15, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
+            osc.connect(gain);
+            gain.connect(this.ctx.destination);
+            osc.start(now);
+            osc.stop(now + 0.2);
+          }
+
+          playLevelVictory() {
+            if (this.muted) return;
+            this.init();
+            if (!this.ctx) return;
+            const now = this.ctx.currentTime;
+            const chord = [440, 554.37, 659.25, 880, 1108.73];
+            chord.forEach((freq, i) => {
+              const osc = this.ctx.createOscillator();
+              const gain = this.ctx.createGain();
+              osc.type = 'triangle';
+              osc.frequency.setValueAtTime(freq, now + i * 0.07);
+              gain.gain.setValueAtTime(0.18, now + i * 0.07);
+              gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.07 + 0.5);
+              osc.connect(gain);
+              gain.connect(this.ctx.destination);
+              osc.start(now + i * 0.07);
+              osc.stop(now + i * 0.07 + 0.5);
+            });
+          }
+        }
+
+        const sound = new SoundEngine();
+
+        /* --- 2. CONFETTI BURST GENERATOR --- */
+        class ConfettiManager {
+          constructor(canvasId) {
+            this.canvas = document.getElementById(canvasId);
+            this.ctx = this.canvas.getContext('2d');
+            this.particles = [];
+            this.animating = false;
+            this.resize();
+            window.addEventListener('resize', () => this.resize());
+          }
+
+          resize() {
+            this.canvas.width = window.innerWidth;
+            this.canvas.height = window.innerHeight;
+          }
+
+          burst(count = 70) {
+            this.resize();
+            const colors = ['#f59e0b', '#fbbf24', '#38bdf8', '#10b981', '#f43f5e', '#a855f7'];
+            for (let i = 0; i < count; i++) {
+              this.particles.push({
+                x: this.canvas.width / 2 + (Math.random() - 0.5) * 160,
+                y: this.canvas.height / 2 - 40 + (Math.random() - 0.5) * 80,
+                vx: (Math.random() - 0.5) * 14,
+                vy: -Math.random() * 14 - 4,
+                size: Math.random() * 8 + 4,
+                color: colors[Math.floor(Math.random() * colors.length)],
+                rotation: Math.random() * 360,
+                vRot: (Math.random() - 0.5) * 15,
+                alpha: 1,
+                decay: Math.random() * 0.015 + 0.01
+              });
+            }
+            if (!this.animating) {
+              this.animating = true;
+              this.animate();
+            }
+          }
+
+          animate() {
+            if (!this.particles.length) {
+              this.animating = false;
+              this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+              return;
+            }
+            this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+            for (let i = this.particles.length - 1; i >= 0; i--) {
+              const p = this.particles[i];
+              p.x += p.vx;
+              p.y += p.vy;
+              p.vy += 0.45; // Gravity
+              p.rotation += p.vRot;
+              p.alpha -= p.decay;
+
+              if (p.alpha <= 0 || p.y > this.canvas.height) {
+                this.particles.splice(i, 1);
+                continue;
+              }
+
+              this.ctx.save();
+              this.ctx.globalAlpha = Math.max(0, p.alpha);
+              this.ctx.translate(p.x, p.y);
+              this.ctx.rotate((p.rotation * Math.PI) / 180);
+              this.ctx.fillStyle = p.color;
+              this.ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);
+              this.ctx.restore();
+            }
+            requestAnimationFrame(() => this.animate());
+          }
+        }
+
+        const confetti = new ConfettiManager('confetti-canvas');
+
+        /* --- 3. 3D OBJECTS & GEOMETRIC SVG RENDERERS --- */
+        // High quality isometric / perspective SVGs with dynamic highlight angles based on light vector!
+        const OBJECT_LIBRARY = {
+          cube: {
+            name: "Prism Cube",
+            renderObject(lightAngle) {
+              // lightAngle: angle in degrees
+              const rad = (lightAngle * Math.PI) / 180;
+              const lx = Math.cos(rad);
+              const ly = Math.sin(rad);
+              const topCol = lx > 0 ? "#64748b" : "#94a3b8";
+              const leftCol = lx < 0 ? "#334155" : "#475569";
+              const rightCol = lx > 0 ? "#475569" : "#1e293b";
+              return `
+                <svg viewBox="0 0 100 100" class="object-svg">
+                  <!-- Top Face -->
+                  <polygon points="50,15 85,32 50,48 15,32" fill="${topCol}" stroke="#cbd5e1" stroke-width="1.5" />
+                  <!-- Left Face -->
+                  <polygon points="15,32 50,48 50,85 15,68" fill="${leftCol}" stroke="#94a3b8" stroke-width="1.5" />
+                  <!-- Right Face -->
+                  <polygon points="50,48 85,32 85,68 50,85" fill="${rightCol}" stroke="#94a3b8" stroke-width="1.5" />
+                  <!-- Specular highlight -->
+                  <circle cx="50" cy="48" r="3" fill="#f8fafc" opacity="0.6"/>
+                </svg>
+              `;
+            },
+            renderShadow(lightAngle, elevation) {
+              // Calculate shadow projection skew and length
+              const lenMult = elevation === 'low' ? 1.4 : (elevation === 'high' ? 0.6 : 1.0);
+              const rad = (lightAngle * Math.PI) / 180;
+              const dx = -Math.cos(rad) * 26 * lenMult;
+              const dy = Math.sin(rad) * 14 * lenMult + 8;
+              return `
+                <svg viewBox="0 0 100 70" class="shadow-card-svg">
+                  <!-- Ground grid indicator -->
+                  <ellipse cx="50" cy="38" rx="42" ry="24" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.08)" stroke-dasharray="2,2"/>
+                  <!-- Base anchor -->
+                  <ellipse cx="50" cy="38" rx="18" ry="8" fill="rgba(0,0,0,0.3)"/>
+                  <!-- Projected shadow polygon for Cube -->
+                  <polygon points="36,36 64,36 ${64 + dx},${36 + dy} ${36 + dx},${36 + dy}" fill="var(--shadow-color)" opacity="0.9" />
+                </svg>
+              `;
+            }
+          },
+
+          pyramid: {
+            name: "Great Tetrahedron",
+            renderObject(lightAngle) {
+              const lx = Math.cos((lightAngle * Math.PI) / 180);
+              const leftCol = lx < 0 ? "#475569" : "#64748b";
+              const rightCol = lx > 0 ? "#1e293b" : "#334155";
+              return `
+                <svg viewBox="0 0 100 100" class="object-svg">
+                  <!-- Pyramid base line -->
+                  <polygon points="50,15 15,75 50,85" fill="${leftCol}" stroke="#cbd5e1" stroke-width="1.5"/>
+                  <polygon points="50,15 50,85 85,75" fill="${rightCol}" stroke="#94a3b8" stroke-width="1.5"/>
+                  <!-- Peak highlight -->
+                  <circle cx="50" cy="15" r="2.5" fill="#f8fafc"/>
+                </svg>
+              `;
+            },
+            renderShadow(lightAngle, elevation) {
+              const lenMult = elevation === 'low' ? 1.5 : (elevation === 'high' ? 0.6 : 1.0);
+              const rad = (lightAngle * Math.PI) / 180;
+              const dx = -Math.cos(rad) * 32 * lenMult;
+              const dy = Math.sin(rad) * 16 * lenMult + 8;
+              return `
+                <svg viewBox="0 0 100 70" class="shadow-card-svg">
+                  <ellipse cx="50" cy="38" rx="42" ry="24" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.08)" stroke-dasharray="2,2"/>
+                  <ellipse cx="50" cy="38" rx="16" ry="7" fill="rgba(0,0,0,0.3)"/>
+                  <!-- Triangular shadow with sharp apex point -->
+                  <polygon points="34,38 66,38 ${50 + dx},${38 + dy}" fill="var(--shadow-color)" opacity="0.9" />
+                </svg>
+              `;
+            }
+          },
+
+          cylinder: {
+            name: "Doric Column",
+            renderObject(lightAngle) {
+              return `
+                <svg viewBox="0 0 100 100" class="object-svg">
+                  <!-- Body -->
+                  <rect x="30" y="30" width="40" height="50" rx="4" fill="#475569" stroke="#94a3b8" stroke-width="1.5"/>
+                  <!-- Fluting vertical lines -->
+                  <line x1="42" y1="32" x2="42" y2="78" stroke="#334155" stroke-width="2"/>
+                  <line x1="58" y1="32" x2="58" y2="78" stroke="#64748b" stroke-width="2"/>
+                  <!-- Top Oval Cap -->
+                  <ellipse cx="50" cy="30" rx="20" ry="10" fill="#94a3b8" stroke="#cbd5e1" stroke-width="1.5"/>
+                  <!-- Bottom Rim -->
+                  <ellipse cx="50" cy="80" rx="20" ry="8" fill="#334155" stroke="#94a3b8" stroke-width="1.5"/>
+                </svg>
+              `;
+            },
+            renderShadow(lightAngle, elevation) {
+              const lenMult = elevation === 'low' ? 1.4 : (elevation === 'high' ? 0.6 : 1.0);
+              const rad = (lightAngle * Math.PI) / 180;
+              const dx = -Math.cos(rad) * 28 * lenMult;
+              const dy = Math.sin(rad) * 14 * lenMult + 8;
+              return `
+                <svg viewBox="0 0 100 70" class="shadow-card-svg">
+                  <ellipse cx="50" cy="38" rx="42" ry="24" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.08)" stroke-dasharray="2,2"/>
+                  <ellipse cx="50" cy="38" rx="20" ry="8" fill="rgba(0,0,0,0.3)"/>
+                  <!-- Cylindrical shadow with rounded end cap -->
+                  <path d="M 32,38 L 68,38 L ${68 + dx},${38 + dy} A 18 8 0 0 1 ${32 + dx},${38 + dy} Z" fill="var(--shadow-color)" opacity="0.9"/>
+                </svg>
+              `;
+            }
+          },
+
+          torus: {
+            name: "Ring Torus",
+            renderObject(lightAngle) {
+              return `
+                <svg viewBox="0 0 100 100" class="object-svg">
+                  <defs>
+                    <radialGradient id="ringGrad" cx="40%" cy="30%" r="70%">
+                      <stop offset="0%" stop-color="#94a3b8"/>
+                      <stop offset="60%" stop-color="#475569"/>
+                      <stop offset="100%" stop-color="#1e293b"/>
+                    </radialGradient>
+                  </defs>
+                  <!-- Outer ring -->
+                  <ellipse cx="50" cy="50" rx="36" ry="26" fill="url(#ringGrad)" stroke="#cbd5e1" stroke-width="1.5"/>
+                  <!-- Inner hole -->
+                  <ellipse cx="50" cy="50" rx="16" ry="11" fill="#151c27" stroke="#334155" stroke-width="1.5"/>
+                </svg>
+              `;
+            },
+            renderShadow(lightAngle, elevation) {
+              const lenMult = elevation === 'low' ? 1.4 : (elevation === 'high' ? 0.6 : 1.0);
+              const rad = (lightAngle * Math.PI) / 180;
+              const dx = -Math.cos(rad) * 22 * lenMult;
+              const dy = Math.sin(rad) * 12 * lenMult + 6;
+              return `
+                <svg viewBox="0 0 100 70" class="shadow-card-svg">
+                  <ellipse cx="50" cy="38" rx="42" ry="24" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.08)" stroke-dasharray="2,2"/>
+                  <!-- Ring shadow with projected inner hole -->
+                  <ellipse cx="${50 + dx}" cy="${38 + dy}" rx="28" ry="15" fill="var(--shadow-color)" opacity="0.9"/>
+                  <ellipse cx="${50 + dx}" cy="${38 + dy}" rx="12" ry="6" fill="#151c27"/>
+                </svg>
+              `;
+            }
+          },
+
+          hourglass: {
+            name: "Chrono Hourglass",
+            renderObject() {
+              return `
+                <svg viewBox="0 0 100 100" class="object-svg">
+                  <!-- Top base -->
+                  <ellipse cx="50" cy="20" rx="26" ry="6" fill="#94a3b8" stroke="#cbd5e1" stroke-width="1.5"/>
+                  <!-- Hourglass body with waist -->
+                  <path d="M 26,20 Q 50,50 28,80 L 72,80 Q 50,50 74,20 Z" fill="#475569" stroke="#94a3b8" stroke-width="1.5"/>
+                  <!-- Sand inside -->
+                  <polygon points="40,30 60,30 50,48" fill="#f59e0b" opacity="0.8"/>
+                  <polygon points="50,52 35,76 65,76" fill="#f59e0b" opacity="0.8"/>
+                  <!-- Bottom base -->
+                  <ellipse cx="50" cy="80" rx="26" ry="6" fill="#334155" stroke="#94a3b8" stroke-width="1.5"/>
+                </svg>
+              `;
+            },
+            renderShadow(lightAngle, elevation) {
+              const lenMult = elevation === 'low' ? 1.4 : (elevation === 'high' ? 0.6 : 1.0);
+              const rad = (lightAngle * Math.PI) / 180;
+              const dx = -Math.cos(rad) * 26 * lenMult;
+              const dy = Math.sin(rad) * 14 * lenMult + 8;
+              return `
+                <svg viewBox="0 0 100 70" class="shadow-card-svg">
+                  <ellipse cx="50" cy="38" rx="42" ry="24" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.08)" stroke-dasharray="2,2"/>
+                  <!-- Hourglass shaped shadow with pinched waist -->
+                  <path d="M 28,38 Q ${50 + dx * 0.5},${38 + dy * 0.5} ${32 + dx},${38 + dy} L ${68 + dx},${38 + dy} Q ${50 + dx * 0.5},${38 + dy * 0.5} 72,38 Z" fill="var(--shadow-color)" opacity="0.9"/>
+                </svg>
+              `;
+            }
+          },
+
+          archway: {
+            name: "Gothic Portal",
+            renderObject() {
+              return `
+                <svg viewBox="0 0 100 100" class="object-svg">
+                  <!-- Outer Arch -->
+                  <path d="M 20,85 L 20,45 A 30 30 0 0 1 80,45 L 80,85 L 60,85 L 60,50 A 10 10 0 0 0 40,50 L 40,85 Z" fill="#475569" stroke="#94a3b8" stroke-width="1.5"/>
+                  <!-- Arch top keystone -->
+                  <polygon points="46,15 54,15 52,24 48,24" fill="#cbd5e1"/>
+                </svg>
+              `;
+            },
+            renderShadow(lightAngle, elevation) {
+              const lenMult = elevation === 'low' ? 1.4 : (elevation === 'high' ? 0.6 : 1.0);
+              const rad = (lightAngle * Math.PI) / 180;
+              const dx = -Math.cos(rad) * 28 * lenMult;
+              const dy = Math.sin(rad) * 14 * lenMult + 8;
+              return `
+                <svg viewBox="0 0 100 70" class="shadow-card-svg">
+                  <ellipse cx="50" cy="38" rx="42" ry="24" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.08)" stroke-dasharray="2,2"/>
+                  <!-- Arch shadow with projected tunnel hollow -->
+                  <path d="M 20,38 L 80,38 L ${80 + dx},${38 + dy} A 25 10 0 0 1 ${20 + dx},${38 + dy} Z" fill="var(--shadow-color)" opacity="0.9"/>
+                  <!-- Pass through light hole -->
+                  <ellipse cx="${50 + dx * 0.6}" cy="${38 + dy * 0.6}" rx="12" ry="6" fill="#151c27"/>
+                </svg>
+              `;
+            }
+          },
+
+          obelisk: {
+            name: "Sun Spire Obelisk",
+            renderObject() {
+              return `
+                <svg viewBox="0 0 100 100" class="object-svg">
+                  <!-- Tapered shaft -->
+                  <polygon points="44,25 56,25 60,85 40,85" fill="#475569" stroke="#94a3b8" stroke-width="1.5"/>
+                  <!-- Capstone / Pyramidion -->
+                  <polygon points="50,8 44,25 56,25" fill="#f59e0b" stroke="#fbbf24" stroke-width="1.5"/>
+                  <line x1="50" y1="8" x2="50" y2="85" stroke="#334155" stroke-width="1.5"/>
+                </svg>
+              `;
+            },
+            renderShadow(lightAngle, elevation) {
+              const lenMult = elevation === 'low' ? 1.7 : (elevation === 'high' ? 0.55 : 1.1);
+              const rad = (lightAngle * Math.PI) / 180;
+              const dx = -Math.cos(rad) * 36 * lenMult;
+              const dy = Math.sin(rad) * 18 * lenMult + 8;
+              return `
+                <svg viewBox="0 0 100 70" class="shadow-card-svg">
+                  <ellipse cx="50" cy="38" rx="42" ry="24" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.08)" stroke-dasharray="2,2"/>
+                  <!-- Long needle tapered shadow -->
+                  <polygon points="40,38 60,38 ${54 + dx},${38 + dy} ${50 + dx * 1.15},${38 + dy * 1.15} ${46 + dx},${38 + dy}" fill="var(--shadow-color)" opacity="0.9"/>
+                </svg>
+              `;
+            }
+          },
+
+          gear: {
+            name: "Mechanic Gear",
+            renderObject() {
+              return `
+                <svg viewBox="0 0 100 100" class="object-svg">
+                  <!-- Cogwheel outer teeth -->
+                  <circle cx="50" cy="50" r="32" fill="#475569" stroke="#94a3b8" stroke-width="1.5"/>
+                  <rect x="44" y="12" width="12" height="76" rx="2" fill="#475569"/>
+                  <rect x="12" y="44" width="76" height="12" rx="2" fill="#475569"/>
+                  <!-- Inner hole -->
+                  <circle cx="50" cy="50" r="14" fill="#151c27" stroke="#334155" stroke-width="2"/>
+                </svg>
+              `;
+            },
+            renderShadow(lightAngle, elevation) {
+              const lenMult = elevation === 'low' ? 1.4 : (elevation === 'high' ? 0.6 : 1.0);
+              const rad = (lightAngle * Math.PI) / 180;
+              const dx = -Math.cos(rad) * 22 * lenMult;
+              const dy = Math.sin(rad) * 12 * lenMult + 6;
+              return `
+                <svg viewBox="0 0 100 70" class="shadow-card-svg">
+                  <ellipse cx="50" cy="38" rx="42" ry="24" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.08)" stroke-dasharray="2,2"/>
+                  <!-- Notched cog shadow -->
+                  <ellipse cx="${50 + dx}" cy="${38 + dy}" rx="26" ry="14" fill="var(--shadow-color)" opacity="0.9"/>
+                  <rect x="${46 + dx}" y="${24 + dy}" width="8" height="28" fill="var(--shadow-color)" opacity="0.9"/>
+                  <circle cx="${50 + dx}" cy="${38 + dy}" r="6" fill="#151c27"/>
+                </svg>
+              `;
+            }
+          },
+
+          crystal: {
+            name: "Astral Octahedron",
+            renderObject() {
+              return `
+                <svg viewBox="0 0 100 100" class="object-svg">
+                  <!-- Faceted Diamond Crystal -->
+                  <polygon points="50,15 80,45 50,85" fill="#38bdf8" opacity="0.85" stroke="#bae6fd" stroke-width="1.5"/>
+                  <polygon points="50,15 20,45 50,85" fill="#0284c7" opacity="0.85" stroke="#38bdf8" stroke-width="1.5"/>
+                  <polygon points="50,15 50,85 50,45" stroke="#f8fafc" stroke-width="1.5"/>
+                  <line x1="20" y1="45" x2="80" y2="45" stroke="#bae6fd" stroke-width="1.5"/>
+                </svg>
+              `;
+            },
+            renderShadow(lightAngle, elevation) {
+              const lenMult = elevation === 'low' ? 1.4 : (elevation === 'high' ? 0.6 : 1.0);
+              const rad = (lightAngle * Math.PI) / 180;
+              const dx = -Math.cos(rad) * 26 * lenMult;
+              const dy = Math.sin(rad) * 14 * lenMult + 8;
+              return `
+                <svg viewBox="0 0 100 70" class="shadow-card-svg">
+                  <ellipse cx="50" cy="38" rx="42" ry="24" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.08)" stroke-dasharray="2,2"/>
+                  <!-- Diamond Rhombus Shadow -->
+                  <polygon points="50,38 ${68 + dx * 0.5},${38 + dy * 0.5} ${50 + dx},${38 + dy} ${32 + dx * 0.5},${38 + dy * 0.5}" fill="var(--shadow-color)" opacity="0.9"/>
+                </svg>
+              `;
+            }
+          },
+
+          knight: {
+            name: "Knight Totem",
+            renderObject() {
+              return `
+                <svg viewBox="0 0 100 100" class="object-svg">
+                  <!-- Chess Knight silhouette -->
+                  <path d="M 35,85 L 65,85 L 62,65 C 68,55 72,40 65,30 C 58,20 48,15 42,20 C 38,24 35,32 30,38 C 25,44 26,50 34,50 C 32,58 30,70 35,85 Z" fill="#475569" stroke="#94a3b8" stroke-width="1.5"/>
+                  <!-- Eye and ear detail -->
+                  <polygon points="42,20 45,12 49,18" fill="#cbd5e1"/>
+                  <circle cx="44" cy="28" r="2.5" fill="#f8fafc"/>
+                </svg>
+              `;
+            },
+            renderShadow(lightAngle, elevation) {
+              const lenMult = elevation === 'low' ? 1.4 : (elevation === 'high' ? 0.6 : 1.0);
+              const rad = (lightAngle * Math.PI) / 180;
+              const dx = -Math.cos(rad) * 26 * lenMult;
+              const dy = Math.sin(rad) * 14 * lenMult + 8;
+              return `
+                <svg viewBox="0 0 100 70" class="shadow-card-svg">
+                  <ellipse cx="50" cy="38" rx="42" ry="24" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.08)" stroke-dasharray="2,2"/>
+                  <!-- Snouted Knight Shadow -->
+                  <path d="M 35,38 L 65,38 L ${62 + dx},${38 + dy} C ${68 + dx},${38 + dy - 6} ${45 + dx},${38 + dy - 10} ${32 + dx},${38 + dy} Z" fill="var(--shadow-color)" opacity="0.9"/>
+                </svg>
+              `;
+            }
+          },
+
+          ziggurat: {
+            name: "Stepped Ziggurat",
+            renderObject() {
+              return `
+                <svg viewBox="0 0 100 100" class="object-svg">
+                  <!-- Tier 1 -->
+                  <rect x="20" y="65" width="60" height="20" rx="2" fill="#334155" stroke="#94a3b8" stroke-width="1.5"/>
+                  <!-- Tier 2 -->
+                  <rect x="30" y="45" width="40" height="20" rx="2" fill="#475569" stroke="#cbd5e1" stroke-width="1.5"/>
+                  <!-- Tier 3 -->
+                  <rect x="40" y="28" width="20" height="17" rx="2" fill="#64748b" stroke="#e2e8f0" stroke-width="1.5"/>
+                </svg>
+              `;
+            },
+            renderShadow(lightAngle, elevation) {
+              const lenMult = elevation === 'low' ? 1.4 : (elevation === 'high' ? 0.6 : 1.0);
+              const rad = (lightAngle * Math.PI) / 180;
+              const dx = -Math.cos(rad) * 26 * lenMult;
+              const dy = Math.sin(rad) * 14 * lenMult + 8;
+              return `
+                <svg viewBox="0 0 100 70" class="shadow-card-svg">
+                  <ellipse cx="50" cy="38" rx="42" ry="24" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.08)" stroke-dasharray="2,2"/>
+                  <!-- Stepped staircase shadow -->
+                  <polygon points="20,38 80,38 ${65 + dx * 0.5},${38 + dy * 0.5} ${55 + dx},${38 + dy} ${45 + dx},${38 + dy} ${35 + dx * 0.5},${38 + dy * 0.5}" fill="var(--shadow-color)" opacity="0.9"/>
+                </svg>
+              `;
+            }
+          },
+
+          tree: {
+            name: "Pine Monolith",
+            renderObject() {
+              return `
+                <svg viewBox="0 0 100 100" class="object-svg">
+                  <!-- Trunk -->
+                  <rect x="46" y="70" width="8" height="15" fill="#334155"/>
+                  <!-- Tier 1 Branch -->
+                  <polygon points="50,45 25,70 75,70" fill="#10b981" stroke="#059669" stroke-width="1.5"/>
+                  <!-- Tier 2 Branch -->
+                  <polygon points="50,30 32,50 68,50" fill="#34d399" stroke="#10b981" stroke-width="1.5"/>
+                  <!-- Tier 3 Top -->
+                  <polygon points="50,15 38,34 62,34" fill="#6ee7b7" stroke="#34d399" stroke-width="1.5"/>
+                </svg>
+              `;
+            },
+            renderShadow(lightAngle, elevation) {
+              const lenMult = elevation === 'low' ? 1.4 : (elevation === 'high' ? 0.6 : 1.0);
+              const rad = (lightAngle * Math.PI) / 180;
+              const dx = -Math.cos(rad) * 28 * lenMult;
+              const dy = Math.sin(rad) * 15 * lenMult + 8;
+              return `
+                <svg viewBox="0 0 100 70" class="shadow-card-svg">
+                  <ellipse cx="50" cy="38" rx="42" ry="24" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.08)" stroke-dasharray="2,2"/>
+                  <!-- Tiered pine shadow silhouette -->
+                  <polygon points="46,38 54,38 ${62 + dx * 0.4},${38 + dy * 0.4} ${56 + dx * 0.7},${38 + dy * 0.7} ${50 + dx},${38 + dy} ${44 + dx * 0.7},${38 + dy * 0.7} ${38 + dx * 0.4},${38 + dy * 0.4}" fill="var(--shadow-color)" opacity="0.9"/>
+                </svg>
+              `;
+            }
+          }
+        };
+
+        /* --- 4. 12 PROGRESSIVE PUZZLE LEVELS CONFIGURATION --- */
+        const LEVELS = [
+          {
+            id: 1,
+            title: "Morning Sun",
+            lightAngle: 45, // Top-Right (NE) -> casts to SW
+            compassLabel: "45° NE",
+            elevation: "medium",
+            desc: "☀️ Dawn rays at 45° NE cast shadows to the South-West.",
+            objects: ["cube", "cylinder", "pyramid"]
+          },
+          {
+            id: 2,
+            title: "Low Golden Hour",
+            lightAngle: 15, // Low East -> casts long West shadows
+            compassLabel: "15° E",
+            elevation: "low",
+            desc: "🌅 Low sunrise casts dramatic, elongated shadows westward.",
+            objects: ["obelisk", "torus", "ziggurat"]
+          },
+          {
+            id: 3,
+            title: "Zenith Noon",
+            lightAngle: 90, // High overhead North
+            compassLabel: "90° N",
+            elevation: "high",
+            desc: "☀️ High noon creates tight, compressed vertical shadows.",
+            objects: ["hourglass", "archway", "cube"]
+          },
+          {
+            id: 4,
+            title: "Northwest Lantern",
+            lightAngle: 135, // Top-Left (NW) -> casts to SE
+            compassLabel: "135° NW",
+            elevation: "medium",
+            desc: "🏮 Light from North-West casts shadows toward South-East.",
+            objects: ["crystal", "cylinder", "pyramid"]
+          },
+          {
+            id: 5,
+            title: "Sunset Horizon",
+            lightAngle: 165, // Low West -> casts long East
+            compassLabel: "165° W",
+            elevation: "low",
+            desc: "🌇 Low sunset stretches shapes toward the far right.",
+            objects: ["obelisk", "knight", "tree"]
+          },
+          {
+            id: 6,
+            title: "Sharp Meridian",
+            lightAngle: 60, // 60 deg NE
+            compassLabel: "60° NE",
+            elevation: "high",
+            desc: "✨ Steep 60° lighting reveals subtle internal cutouts.",
+            objects: ["torus", "gear", "archway"]
+          },
+          {
+            id: 7,
+            title: "Architect's Angle",
+            lightAngle: 120, // 120 deg NW
+            compassLabel: "120° NW",
+            elevation: "medium",
+            desc: "📐 Angular skew tests alignment of stepped edges.",
+            objects: ["ziggurat", "crystal", "hourglass"]
+          },
+          {
+            id: 8,
+            title: "Midnight Spotlight",
+            lightAngle: 210, // South-West -> casts NE
+            compassLabel: "210° SW",
+            elevation: "medium",
+            desc: "🔦 Southern light source reverses normal projection angles.",
+            objects: ["knight", "obelisk", "cylinder"]
+          },
+          {
+            id: 9,
+            title: "Crystalline Refraction",
+            lightAngle: 30, // 30 deg East-NE
+            compassLabel: "30° ENE",
+            elevation: "low",
+            desc: "💎 Long shadows test intricate geometric silhouettes.",
+            objects: ["crystal", "gear", "tree"]
+          },
+          {
+            id: 10,
+            title: "High Solstice",
+            lightAngle: 80, // 80 deg steep
+            compassLabel: "80° N",
+            elevation: "high",
+            desc: "☀️ High solstice angle: compare concentric hole projections.",
+            objects: ["torus", "archway", "pyramid"]
+          },
+          {
+            id: 11,
+            title: "Dusk Silhouette",
+            lightAngle: 150, // 150 deg Low NW
+            compassLabel: "150° WNW",
+            elevation: "low",
+            desc: "🕯️ Deep twilight: distinguish slender spires from totems.",
+            objects: ["knight", "obelisk", "ziggurat"]
+          },
+          {
+            id: 12,
+            title: "Grand Observatory",
+            lightAngle: 40, // Master Level
+            compassLabel: "40° NE",
+            elevation: "medium",
+            desc: "🪐 Master Challenge: Match all 3 complex geometric relics!",
+            objects: ["gear", "crystal", "hourglass"]
+          }
+        ];
+
+        /* --- 5. GAME STATE & CONTROLLER --- */
+        let currentLevelIdx = 0;
+        let unlockedLevels = parseInt(localStorage.getItem('shadow_logic_unlocked') || '1', 10);
+        let levelStars = JSON.parse(localStorage.getItem('shadow_logic_stars') || '{}');
+        let currentMatches = [null, null, null]; // Slotted object keys for pedestals 0, 1, 2
+        let levelErrors = 0;
+        let selectedShadowIdx = null;
+        let showRayGuides = false;
+
+        // Active level object instances
+        let activeObjects = [];
+        let activeShadowOptions = [];
+
+        // DOM Elements
+        const ambientBeam = document.getElementById('ambient-beam');
+        const rayCanvas = document.getElementById('ray-canvas');
+        const pedestalsRow = document.getElementById('pedestals-row');
+        const shadowCardsRow = document.getElementById('shadow-cards-row');
+        const levelTitleText = document.getElementById('level-title-text');
+        const levelStarsDisplay = document.getElementById('level-stars-display');
+        const lightDescription = document.getElementById('light-description');
+        const compassArrow = document.getElementById('compass-arrow');
+        const lightAngleLabel = document.getElementById('light-angle-label');
+        const matchCounter = document.getElementById('match-counter');
+        const toast = document.getElementById('toast');
+        const toastMsg = document.getElementById('toast-msg');
+
+        // Buttons & Modals
+        const btnLevels = document.getElementById('btn-levels');
+        const btnRays = document.getElementById('btn-rays');
+        const btnSound = document.getElementById('btn-sound');
+        const btnMusic = document.getElementById('btn-music');
+        const btnHelp = document.getElementById('btn-help');
+        const btnFullscreen = document.getElementById('btn-fullscreen');
+
+        const modalTutorial = document.getElementById('modal-tutorial');
+        const modalLevels = document.getElementById('modal-levels');
+        const modalSuccess = document.getElementById('modal-success');
+        const modalVictory = document.getElementById('modal-victory');
+        const levelGrid = document.getElementById('level-grid');
+
+        const btnCloseTutorial = document.getElementById('btn-close-tutorial');
+        const btnCloseLevels = document.getElementById('btn-close-levels');
+        const btnReplayLevel = document.getElementById('btn-replay-level');
+        const btnNextLevel = document.getElementById('btn-next-level');
+        const btnRestartGame = document.getElementById('btn-restart-game');
+
+        /* --- 6. LEVEL INITIALIZATION & RENDERING --- */
+        function loadLevel(idx) {
+          currentLevelIdx = Math.max(0, Math.min(LEVELS.length - 1, idx));
+          const levelData = LEVELS[currentLevelIdx];
+          currentMatches = [null, null, null];
+          levelErrors = 0;
+          selectedShadowIdx = null;
+
+          // Update HUD
+          levelTitleText.textContent = `Level ${levelData.id}`;
+          lightDescription.innerHTML = `<span>${levelData.desc.split('.')[0]}</span>`;
+          lightAngleLabel.textContent = levelData.compassLabel;
+          compassArrow.style.transform = `rotate(${levelData.lightAngle}deg)`;
+
+          // Stars header display
+          const starsForLevel = levelStars[levelData.id] || 0;
+          renderStarsHUD(starsForLevel);
+
+          // Update ambient beam gradient based on light angle
+          const rad = (levelData.lightAngle * Math.PI) / 180;
+          const beamX = 50 + Math.cos(rad) * 40;
+          const beamY = 20 + Math.sin(rad) * 20;
+          ambientBeam.style.background = `radial-gradient(circle at ${beamX}% ${beamY}%, rgba(245, 158, 11, 0.3) 0%, rgba(56, 189, 248, 0.05) 50%, transparent 80%)`;
+
+          // Active 3 Objects for this level
+          activeObjects = levelData.objects.map((key, i) => ({
+            index: i,
+            key: key,
+            data: OBJECT_LIBRARY[key]
+          }));
+
+          // Active 3 Shadows (shuffled so order != objects order)
+          activeShadowOptions = activeObjects.map(obj => ({
+            key: obj.key,
+            objectIndex: obj.index,
+            svgContent: obj.data.renderShadow(levelData.lightAngle, levelData.elevation)
+          }));
+
+          // Fisher-Yates shuffle for shadows tray
+          for (let i = activeShadowOptions.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [activeShadowOptions[i], activeShadowOptions[j]] = [activeShadowOptions[j], activeShadowOptions[i]];
+          }
+
+          renderPlayfield(levelData);
+          renderShadowTray();
+          updateMatchCounter();
+          drawRayGuides();
+
+          showToast(`Level ${levelData.id}: Analyze the ${levelData.compassLabel} light!`, 2500);
+        }
+
+        function renderStarsHUD(count) {
+          levelStarsDisplay.innerHTML = '';
+          for (let i = 1; i <= 3; i++) {
+            const filled = i <= count ? 'filled' : '';
+            levelStarsDisplay.innerHTML += `
+              <svg class="star-icon ${filled}" viewBox="0 0 24 24">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+              </svg>
+            `;
+          }
+        }
+
+        function renderPlayfield(levelData) {
+          pedestalsRow.innerHTML = '';
+
+          activeObjects.forEach((obj, idx) => {
+            const slot = document.createElement('div');
+            slot.className = 'pedestal-slot';
+            slot.id = `pedestal-slot-${idx}`;
+
+            const objSvgHtml = obj.data.renderObject(levelData.lightAngle);
+
+            slot.innerHTML = `
+              <div class="object-wrapper" id="obj-wrap-${idx}">
+                ${objSvgHtml}
+              </div>
+              <div class="pedestal-stage">
+                <div class="drop-zone" id="drop-zone-${idx}" data-target-idx="${idx}" data-object-key="${obj.key}">
+                </div>
+              </div>
+            `;
+
+            pedestalsRow.appendChild(slot);
+
+            // Drop zone click/tap handler for fallback tap placement
+            const dropZoneEl = slot.querySelector('.drop-zone');
+            dropZoneEl.addEventListener('click', () => handleDropZoneTap(idx));
+          });
+        }
+
+        function renderShadowTray() {
+          shadowCardsRow.innerHTML = '';
+
+          activeShadowOptions.forEach((shadow, idx) => {
+            const card = document.createElement('div');
+            card.className = 'shadow-card';
+            card.id = `shadow-card-${idx}`;
+            card.dataset.shadowIdx = idx;
+            card.dataset.objectKey = shadow.key;
+
+            card.innerHTML = shadow.svgContent;
+
+            // Pointer event listeners for robust mobile & desktop drag
+            setupPointerDrag(card, idx);
+
+            // Click listener for tap-to-select mode
+            card.addEventListener('click', (e) => {
+              e.stopPropagation();
+              handleShadowCardTap(idx);
+            });
+
+            shadowCardsRow.appendChild(card);
+          });
+        }
+
+        function updateMatchCounter() {
+          const matchedCount = currentMatches.filter(m => m !== null).length;
+          matchCounter.textContent = `${matchedCount} / 3 Matched`;
+          if (matchedCount === 3) {
+            matchCounter.style.color = 'var(--accent-emerald)';
+          } else {
+            matchCounter.style.color = 'var(--accent-amber)';
+          }
+        }
+
+        /* --- 7. POINTER DRAG & DROP ENGINE --- */
+        let activeDrag = null;
+
+        function setupPointerDrag(element, shadowIdx) {
+          element.addEventListener('pointerdown', (e) => {
+            // Only start drag if card is not already matched/used
+            if (element.classList.contains('used')) return;
+
+            sound.playPickup();
+            selectedShadowIdx = shadowIdx;
+            highlightSelectedShadowCard();
+
+            const rect = element.getBoundingClientRect();
+            const ghost = document.createElement('div');
+            ghost.className = 'drag-ghost';
+            ghost.innerHTML = element.innerHTML;
+            ghost.style.left = `${e.clientX}px`;
+            ghost.style.top = `${e.clientY}px`;
+            document.body.appendChild(ghost);
+
+            activeDrag = {
+              shadowIdx: shadowIdx,
+              shadowKey: element.dataset.objectKey,
+              sourceElement: element,
+              ghostElement: ghost,
+              pointerId: e.pointerId
+            };
+
+            element.setPointerCapture(e.pointerId);
+            element.style.opacity = '0.4';
+          });
+
+          element.addEventListener('pointermove', (e) => {
+            if (!activeDrag || activeDrag.pointerId !== e.pointerId) return;
+
+            activeDrag.ghostElement.style.left = `${e.clientX}px`;
+            activeDrag.ghostElement.style.top = `${e.clientY}px`;
+
+            // Hit test over drop zones
+            checkDropZoneHover(e.clientX, e.clientY);
+          });
+
+          element.addEventListener('pointerup', (e) => {
+            if (!activeDrag || activeDrag.pointerId !== e.pointerId) return;
+            finishDrag(e.clientX, e.clientY);
+          });
+
+          element.addEventListener('pointercancel', (e) => {
+            if (!activeDrag || activeDrag.pointerId !== e.pointerId) return;
+            cancelDrag();
+          });
+        }
+
+        function checkDropZoneHover(x, y) {
+          const dropZones = document.querySelectorAll('.drop-zone');
+          dropZones.forEach(dz => {
+            const r = dz.getBoundingClientRect();
+            if (x >= r.left && x <= r.right && y >= r.top && y <= r.bottom) {
+              dz.classList.add('hovered');
+            } else {
+              dz.classList.remove('hovered');
+            }
+          });
+        }
+
+        function finishDrag(x, y) {
+          if (!activeDrag) return;
+
+          let droppedZone = null;
+          const dropZones = document.querySelectorAll('.drop-zone');
+          dropZones.forEach(dz => {
+            dz.classList.remove('hovered');
+            const r = dz.getBoundingClientRect();
+            if (x >= r.left && x <= r.right && y >= r.top && y <= r.bottom) {
+              droppedZone = dz;
+            }
+          });
+
+          if (activeDrag.ghostElement && activeDrag.ghostElement.parentNode) {
+            activeDrag.ghostElement.parentNode.removeChild(activeDrag.ghostElement);
+          }
+
+          activeDrag.sourceElement.style.opacity = '1';
+
+          if (droppedZone) {
+            const targetIdx = parseInt(droppedZone.dataset.targetIdx, 10);
+            attemptMatch(activeDrag.shadowIdx, targetIdx);
+          }
+
+          activeDrag = null;
+        }
+
+        function cancelDrag() {
+          if (!activeDrag) return;
+          if (activeDrag.ghostElement && activeDrag.ghostElement.parentNode) {
+            activeDrag.ghostElement.parentNode.removeChild(activeDrag.ghostElement);
+          }
+          activeDrag.sourceElement.style.opacity = '1';
+          activeDrag = null;
+        }
+
+        /* --- 8. TAP-TO-SELECT & TAP-TO-PLACE LOGIC --- */
+        function handleShadowCardTap(shadowIdx) {
+          const cardEl = document.getElementById(`shadow-card-${shadowIdx}`);
+          if (cardEl.classList.contains('used')) return;
+
+          if (selectedShadowIdx === shadowIdx) {
+            // Deselect
+            selectedShadowIdx = null;
+            highlightSelectedShadowCard();
+          } else {
+            selectedShadowIdx = shadowIdx;
+            sound.playPickup();
+            highlightSelectedShadowCard();
+            showToast("Now tap an object's pedestal to place!", 1800);
+          }
+        }
+
+        function highlightSelectedShadowCard() {
+          const cards = document.querySelectorAll('.shadow-card');
+          cards.forEach((c, idx) => {
+            if (idx === selectedShadowIdx) {
+              c.classList.add('selected');
+            } else {
+              c.classList.remove('selected');
+            }
+          });
+        }
+
+        function handleDropZoneTap(targetPedestalIdx) {
+          if (selectedShadowIdx === null) {
+            showToast("Select a shadow below first!", 1800);
+            sound.playTap();
+            return;
+          }
+          attemptMatch(selectedShadowIdx, targetPedestalIdx);
+        }
+
+        /* --- 9. MATCH VALIDATION & RESOLUTION --- */
+        function attemptMatch(shadowIdx, targetPedestalIdx) {
+          const shadowData = activeShadowOptions[shadowIdx];
+          const targetObject = activeObjects[targetPedestalIdx];
+          const dropZoneEl = document.getElementById(`drop-zone-${targetPedestalIdx}`);
+          const shadowCardEl = document.getElementById(`shadow-card-${shadowIdx}`);
+          const objWrapEl = document.getElementById(`obj-wrap-${targetPedestalIdx}`);
+
+          if (currentMatches[targetPedestalIdx] !== null) {
+            showToast("This pedestal already has a shadow!", 1500);
+            sound.playError();
+            return;
+          }
+
+          // Check if key matches!
+          if (shadowData.key === targetObject.key) {
+            // SUCCESS!
+            sound.playSuccess();
+            currentMatches[targetPedestalIdx] = shadowData.key;
+
+            // Slot shadow into drop zone
+            dropZoneEl.classList.add('matched');
+            dropZoneEl.innerHTML = `<div class="slotted-shadow-svg">${shadowData.svgContent}</div>`;
+
+            // Mark card as used
+            shadowCardEl.classList.add('used');
+            shadowCardEl.classList.remove('selected');
+            selectedShadowIdx = null;
+
+            // Animation bounce on object
+            objWrapEl.classList.add('anim-hop');
+            setTimeout(() => objWrapEl.classList.remove('anim-hop'), 600);
+
+            updateMatchCounter();
+            showToast(`Correct! Matched ${targetObject.data.name}!`, 1800);
+
+            // Check Level Completion
+            const allMatched = currentMatches.every(m => m !== null);
+            if (allMatched) {
+              setTimeout(() => handleLevelComplete(), 650);
+            }
+          } else {
+            // INCORRECT MATCH
+            levelErrors++;
+            sound.playError();
+
+            dropZoneEl.classList.add('incorrect');
+            setTimeout(() => dropZoneEl.classList.remove('incorrect'), 450);
+
+            showToast("Angle mismatch! Check the light direction.", 2200);
+          }
+        }
+
+        /* --- 10. LEVEL COMPLETION & PROGRESSION --- */
+        function handleLevelComplete() {
+          sound.playLevelVictory();
+          confetti.burst(80);
+
+          // Calculate stars (3 stars if 0 errors, 2 stars if <=2 errors, 1 star otherwise)
+          let stars = 3;
+          if (levelErrors > 2) stars = 1;
+          else if (levelErrors > 0) stars = 2;
+
+          const levelId = LEVELS[currentLevelIdx].id;
+          const prevStars = levelStars[levelId] || 0;
+          if (stars > prevStars) {
+            levelStars[levelId] = stars;
+            localStorage.setItem('shadow_logic_stars', JSON.stringify(levelStars));
+          }
+
+          // Unlock next level
+          if (currentLevelIdx + 2 > unlockedLevels && unlockedLevels < LEVELS.length) {
+            unlockedLevels = currentLevelIdx + 2;
+            localStorage.setItem('shadow_logic_unlocked', unlockedLevels);
+          }
+
+          // Show success modal or game victory modal
+          if (currentLevelIdx === LEVELS.length - 1) {
+            setTimeout(() => {
+              showGameVictoryModal();
+            }, 800);
+          } else {
+            showLevelSuccessModal(stars);
+          }
+        }
+
+        function showLevelSuccessModal(stars) {
+          const successStars = document.getElementById('success-stars');
+          successStars.innerHTML = '';
+          for (let i = 1; i <= 3; i++) {
+            const filled = i <= stars ? 'filled' : '';
+            successStars.innerHTML += `
+              <svg class="star-icon ${filled}" style="width: 28px; height: 28px;" viewBox="0 0 24 24">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+              </svg>
+            `;
+          }
+
+          document.getElementById('success-desc').textContent = `Mastered Level ${LEVELS[currentLevelIdx].id} with ${stars} Star${stars > 1 ? 's' : ''}!`;
+          modalSuccess.classList.add('active');
+        }
+
+        function showGameVictoryModal() {
+          let totalStars = 0;
+          Object.values(levelStars).forEach(s => totalStars += s);
+          document.getElementById('total-stars-count').textContent = `${totalStars} / 36 ★`;
+          modalVictory.classList.add('active');
+        }
+
+        /* --- 11. LIGHT RAY GUIDES CANVAS OVERLAY --- */
+        function drawRayGuides() {
+          const ctx = rayCanvas.getContext('2d');
+          rayCanvas.width = playfield.clientWidth;
+          rayCanvas.height = playfield.clientHeight;
+          ctx.clearRect(0, 0, rayCanvas.width, rayCanvas.height);
+
+          if (!showRayGuides) return;
+
+          const levelData = LEVELS[currentLevelIdx];
+          const rad = (levelData.lightAngle * Math.PI) / 180;
+          const cos = Math.cos(rad);
+          const sin = Math.sin(rad);
+
+          ctx.strokeStyle = 'rgba(245, 158, 11, 0.45)';
+          ctx.lineWidth = 1.5;
+          ctx.setLineDash([4, 4]);
+
+          activeObjects.forEach((_, idx) => {
+            const slotEl = document.getElementById(`pedestal-slot-${idx}`);
+            if (!slotEl) return;
+            const r = slotEl.getBoundingClientRect();
+            const parentR = playfield.getBoundingClientRect();
+
+            const objX = r.left - parentR.left + r.width / 2;
+            const objY = r.top - parentR.top + 45;
+
+            // Draw incoming ray from light source
+            const sourceX = objX + cos * 140;
+            const sourceY = objY - sin * 140;
+
+            // Draw ground cast target
+            const castX = objX - cos * 50;
+            const castY = objY + 80;
+
+            ctx.beginPath();
+            ctx.moveTo(sourceX, sourceY);
+            ctx.lineTo(objX, objY);
+            ctx.lineTo(castX, castY);
+            ctx.stroke();
+
+            // Small sun node
+            ctx.fillStyle = '#f59e0b';
+            ctx.beginPath();
+            ctx.arc(sourceX, sourceY, 3, 0, Math.PI * 2);
+            ctx.fill();
+          });
+        }
+
+        /* --- 12. MODAL & LEVEL SELECT BUILDER --- */
+        function renderLevelSelectGrid() {
+          levelGrid.innerHTML = '';
+          LEVELS.forEach((lvl, idx) => {
+            const isUnlocked = lvl.id <= unlockedLevels;
+            const isCurrent = idx === currentLevelIdx;
+            const stars = levelStars[lvl.id] || 0;
+
+            const cell = document.createElement('div');
+            cell.className = `level-cell ${isUnlocked ? '' : 'locked'} ${isCurrent ? 'current' : ''}`;
+
+            let starsHtml = '';
+            for (let s = 1; s <= 3; s++) {
+              starsHtml += `<svg class="mini-star ${s <= stars ? 'filled' : ''}" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>`;
+            }
+
+            cell.innerHTML = `
+              <div class="level-cell-num">${lvl.id}</div>
+              <div class="level-cell-stars">${starsHtml}</div>
+            `;
+
+            if (isUnlocked) {
+              cell.addEventListener('click', () => {
+                sound.playTap();
+                modalLevels.classList.remove('active');
+                loadLevel(idx);
+              });
+            }
+
+            levelGrid.appendChild(cell);
+          });
+        }
+
+        /* --- 13. TOAST & FULLSCREEN UTILITIES --- */
+        let toastTimeout = null;
+        function showToast(msg, duration = 2000) {
+          toastMsg.textContent = msg;
+          toast.classList.add('visible');
+          clearTimeout(toastTimeout);
+          toastTimeout = setTimeout(() => {
+            toast.classList.remove('visible');
+          }, duration);
+        }
+
+        function toggleFullscreen() {
+          sound.playTap();
+          if (!document.fullscreenElement) {
+            document.documentElement.requestFullscreen().catch(err => {
+              showToast("Fullscreen unavailable in iframe view", 1800);
+            });
+          } else {
+            if (document.exitFullscreen) {
+              document.exitFullscreen();
+            }
+          }
+        }
+
+        /* --- 14. EVENT LISTENERS --- */
+        btnLevels.addEventListener('click', () => {
+          sound.playTap();
+          renderLevelSelectGrid();
+          modalLevels.classList.add('active');
+        });
+
+        btnRays.addEventListener('click', () => {
+          sound.playTap();
+          showRayGuides = !showRayGuides;
+          btnRays.classList.toggle('active', showRayGuides);
+          rayCanvas.classList.toggle('visible', showRayGuides);
+          drawRayGuides();
+          showToast(showRayGuides ? "☀️ Light Ray Guides Enabled" : "Ray Guides Hidden", 1500);
+        });
+
+        btnSound.addEventListener('click', () => {
+          const isMuted = sound.toggleMute();
+          btnSound.classList.toggle('active', !isMuted);
+          showToast(isMuted ? "SFX Muted" : "SFX Enabled", 1500);
+        });
+
+        btnMusic.addEventListener('click', () => {
+          const isBgmActive = sound.toggleBgm();
+          btnMusic.classList.toggle('active', isBgmActive);
+          showToast(isBgmActive ? "🎵 Music Enabled" : "🔇 Music Muted", 1500);
+        });
+
+        btnHelp.addEventListener('click', () => {
+          sound.playTap();
+          modalTutorial.classList.add('active');
+        });
+
+        btnFullscreen.addEventListener('click', toggleFullscreen);
+
+        btnCloseTutorial.addEventListener('click', () => {
+          sound.playTap();
+          modalTutorial.classList.remove('active');
+        });
+
+        btnCloseLevels.addEventListener('click', () => {
+          sound.playTap();
+          modalLevels.classList.remove('active');
+        });
+
+        btnReplayLevel.addEventListener('click', () => {
+          sound.playTap();
+          modalSuccess.classList.remove('active');
+          loadLevel(currentLevelIdx);
+        });
+
+        btnNextLevel.addEventListener('click', () => {
+          sound.playTap();
+          modalSuccess.classList.remove('active');
+          if (currentLevelIdx < LEVELS.length - 1) {
+            loadLevel(currentLevelIdx + 1);
+          }
+        });
+
+        btnRestartGame.addEventListener('click', () => {
+          sound.playTap();
+          modalVictory.classList.remove('active');
+          loadLevel(0);
+        });
+
+        window.addEventListener('resize', () => {
+          drawRayGuides();
+        });
+
+        // Audio Context gesture unlock & button state sync
+        btnSound.classList.toggle('active', !sound.muted);
+        btnMusic.classList.toggle('active', sound.isBgmActive());
+
+        const handleFirstInteraction = () => {
+          sound.init();
+          window.removeEventListener('pointerdown', handleFirstInteraction);
+          window.removeEventListener('click', handleFirstInteraction);
+          window.removeEventListener('touchstart', handleFirstInteraction);
+        };
+        window.addEventListener('pointerdown', handleFirstInteraction);
+        window.addEventListener('click', handleFirstInteraction);
+        window.addEventListener('touchstart', handleFirstInteraction);
+
+        // Initialize First Level
+        window.addEventListener('DOMContentLoaded', () => {
+          loadLevel(0);
+        });
+
+        // Instant startup
+        loadLevel(0);
+
+      })();
+    </script>
+  
+  <!-- PWA Service Worker Registration -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js').catch(() => {});
+      });
+    }
+  </script>
+
+
+  <!-- 5-Second Hint Ad Modal System -->
+  <div id="fl-hint-modal-overlay" style="
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 999999;
+    background: rgba(10, 15, 30, 0.85);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    align-items: center;
+    justify-content: center;
+    font-family: system-ui, -apple-system, sans-serif;
+    padding: 16px;
+    box-sizing: border-box;
+  ">
+    <div style="
+      background: linear-gradient(145deg, #1e293b, #0f172a);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.6), 0 0 30px rgba(245, 158, 11, 0.2);
+      border-radius: 20px;
+      max-width: 420px;
+      width: 100%;
+      padding: 24px;
+      text-align: center;
+      color: #f8fafc;
+      position: relative;
+    ">
+      <button id="fl-hint-close-btn" style="
+        position: absolute;
+        top: 14px;
+        right: 14px;
+        background: rgba(255,255,255,0.08);
+        border: none;
+        color: #94a3b8;
+        font-size: 18px;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      ">✕</button>
+
+      <div style="
+        width: 56px;
+        height: 56px;
+        margin: 0 auto 14px auto;
+        background: rgba(245, 158, 11, 0.15);
+        border: 1px solid rgba(245, 158, 11, 0.3);
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 28px;
+      ">💡</div>
+
+      <h3 style="margin: 0 0 6px 0; font-size: 19px; font-weight: 800; color: #fbbf24;">Unlocking Hint</h3>
+      <p style="margin: 0 0 18px 0; font-size: 13px; color: #94a3b8; line-height: 1.4;">
+        Sponsored Reward: Wait 5 seconds to reveal your clue assistance.
+      </p>
+
+      <div id="fl-hint-ad-box" style="
+        background: rgba(0, 0, 0, 0.35);
+        border: 1px dashed rgba(255, 255, 255, 0.15);
+        border-radius: 12px;
+        padding: 16px;
+        margin-bottom: 18px;
+      ">
+        <div style="font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: #64748b; margin-bottom: 4px;">Advertisement</div>
+        <div style="font-size: 14px; font-weight: 600; color: #e2e8f0;">Brain Booster Puzzles</div>
+        <div style="font-size: 11px; color: #38bdf8; margin-top: 2px;">play.funlogic.games</div>
+      </div>
+
+      <div style="margin-bottom: 16px;">
+        <div style="display: flex; justify-content: space-between; font-size: 12px; font-weight: 700; margin-bottom: 6px;">
+          <span style="color: #94a3b8;">Sponsor Video</span>
+          <span id="fl-hint-timer-txt" style="color: #f59e0b;">5s</span>
+        </div>
+        <div style="width: 100%; height: 8px; background: rgba(255,255,255,0.1); border-radius: 4px; overflow: hidden;">
+          <div id="fl-hint-progress-bar" style="width: 0%; height: 100%; background: linear-gradient(90deg, #f59e0b, #10b981); transition: width 0.1s linear;"></div>
+        </div>
+      </div>
+
+      <button id="fl-hint-claim-btn" disabled style="
+        width: 100%;
+        padding: 12px;
+        border-radius: 12px;
+        border: none;
+        background: #334155;
+        color: #64748b;
+        font-weight: 700;
+        font-size: 14px;
+        cursor: not-allowed;
+        transition: all 0.2s;
+      ">Please wait 5s...</button>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      let countdownTimer = null;
+      let originalHintCallback = null;
+
+      const overlay = document.getElementById('fl-hint-modal-overlay');
+      const timerTxt = document.getElementById('fl-hint-timer-txt');
+      const progressBar = document.getElementById('fl-hint-progress-bar');
+      const claimBtn = document.getElementById('fl-hint-claim-btn');
+      const closeBtn = document.getElementById('fl-hint-close-btn');
+
+      function showHintAdModal(callback) {
+        if (!overlay) return;
+        originalHintCallback = callback;
+        overlay.style.display = 'flex';
+        
+        let timeLeft = 50; // 5.0 seconds
+        claimBtn.disabled = true;
+        claimBtn.style.background = '#334155';
+        claimBtn.style.color = '#64748b';
+        claimBtn.style.cursor = 'not-allowed';
+        claimBtn.textContent = 'Please wait 5s...';
+        progressBar.style.width = '0%';
+        timerTxt.textContent = '5s';
+
+        try {
+          if (window.parent && window.parent !== window) {
+            window.parent.postMessage({ type: 'hint_ad_started', duration: 5 }, '*');
+          }
+        } catch(e) {}
+
+        clearInterval(countdownTimer);
+        countdownTimer = setInterval(() => {
+          timeLeft--;
+          const percent = ((50 - timeLeft) / 50) * 100;
+          progressBar.style.width = percent + '%';
+          const secondsRemaining = Math.ceil(timeLeft / 10);
+          timerTxt.textContent = secondsRemaining + 's';
+          claimBtn.textContent = 'Please wait ' + secondsRemaining + 's...';
+
+          if (timeLeft <= 0) {
+            clearInterval(countdownTimer);
+            timerTxt.textContent = 'Ready!';
+            timerTxt.style.color = '#10b981';
+            claimBtn.disabled = false;
+            claimBtn.style.background = 'linear-gradient(90deg, #f59e0b, #10b981)';
+            claimBtn.style.color = '#0f172a';
+            claimBtn.style.cursor = 'pointer';
+            claimBtn.textContent = '✨ Get Hint Now';
+
+            try {
+              if (window.parent && window.parent !== window) {
+                window.parent.postMessage({ type: 'hint_ad_completed' }, '*');
+              }
+            } catch(e) {}
+          }
+        }, 100);
+      }
+
+      function closeHintModal() {
+        clearInterval(countdownTimer);
+        if (overlay) overlay.style.display = 'none';
+      }
+
+      function claimHint() {
+        closeHintModal();
+        if (typeof originalHintCallback === 'function') {
+          originalHintCallback();
+        }
+      }
+
+      if (closeBtn) closeBtn.addEventListener('click', closeHintModal);
+      if (claimBtn) claimBtn.addEventListener('click', claimHint);
+
+      window.showHintWith5sAd = showHintAdModal;
+
+      window.addEventListener('DOMContentLoaded', () => {
+        setTimeout(() => {
+          const hintSelectors = [
+            '#btn-hint', '#hint-btn', '#button-hint', '#hint',
+            '.btn-hint', '.hint-btn', '[data-action="hint"]',
+            'button[title*="Hint" i]', 'button[aria-label*="Hint" i]'
+          ];
+
+          hintSelectors.forEach(selector => {
+            document.querySelectorAll(selector).forEach(btn => {
+              if (!btn.getAttribute('data-fl-hooked')) {
+                btn.setAttribute('data-fl-hooked', 'true');
+                btn.addEventListener('click', function(e) {
+                  if (!this.hasAttribute('data-hint-approved')) {
+                    e.stopImmediatePropagation();
+                    e.preventDefault();
+                    showHintAdModal(() => {
+                      this.setAttribute('data-hint-approved', 'true');
+                      this.click();
+                      setTimeout(() => this.removeAttribute('data-hint-approved'), 500);
+                    });
+                  }
+                }, true);
+              }
+            });
+          });
+        }, 300);
+      });
+    })();
+  </script>
+
+</body>
+</html>

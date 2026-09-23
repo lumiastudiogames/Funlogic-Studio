@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <title>Clock Gears - Ratio &amp; Speed Challenge</title>
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body class="bg-[#0f0a07] text-[#e6ca98]">
+  <div id="game-root" class="w-full h-full flex items-center justify-center"></div>
+
+  <script src="./game.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const container = document.getElementById('game-root');
+      GearTrainGame.render(container, (timeInSeconds) => {
+        // Official platform postMessage integration
+        if (window.parent && window.parent !== window) {
+          window.parent.postMessage({ type: 'win', time: timeInSeconds }, '*');
+        }
+      });
+    });
+  </script>
+</body>
+</html>

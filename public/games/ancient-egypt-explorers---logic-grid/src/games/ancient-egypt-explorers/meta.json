@@ -1,0 +1,36 @@
+{
+  "title": "Ancient Egypt Explorers: Logic Grid",
+  "categoryId": "logic",
+  "icon": "relic_amphora",
+  "instructions": "Use a matriz de dedução lógica e as pistas históricas para descobrir qual arqueólogo explorou qual tumba faraônica e qual relíquia dourada encontrou.",
+  "description": "Ancient Egypt Explorers é um intrigante jogo de matriz lógica ambientado nas areias do Egito Antigo. Cruze evidências arqueológicas, elimine contradições e confirme associações para desvendar os segredos de Gizé, Sacará e o Vale dos Reis com gráficos 2.5D e áudio procedural.",
+  "keywords": [
+    "logic grid",
+    "matriz logica",
+    "ancient egypt",
+    "egito antigo",
+    "puzzle logico",
+    "arqueologia",
+    "enigmas",
+    "raciocinio logico",
+    "quebra cabeca",
+    "tumbas farao",
+    "reliquias douradas",
+    "jogos de deducao",
+    "jogos leves online"
+  ],
+  "faqs": [
+    {
+      "q": "Como funciona a matriz lógica do Egito?",
+      "a": "Toque nas células para alternar entre Vazio, Exclusão (X) e Associação Confirmada (V). O jogo propaga automaticamente deduções de linha e coluna."
+    },
+    {
+      "q": "O que fazer se travar em uma pista?",
+      "a": "Utilize o botão 'DICA' no topo da tela para decifrar um hieróglifo com auxílio de um curto papiro patrocinado."
+    },
+    {
+      "q": "O jogo salva meu progresso?",
+      "a": "Sim, todas as fases desbloqueadas e melhores tempos de exploração ficam salvos no seu navegador."
+    }
+  ]
+}

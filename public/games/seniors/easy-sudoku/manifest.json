@@ -1,0 +1,18 @@
+{
+  "name": "Easy Sudoku 60+",
+  "short_name": "Easy Sudoku ",
+  "description": "Easy Sudoku 60+ is a large-print, high-contrast 9x9 Sudoku designed for seniors. Features 45 pre-filled numbers, 60px cells, untimed play, and big number buttons.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0f172a",
+  "theme_color": "#0f172a",
+  "icons": [
+    {
+      "src": "./cover.svg",
+      "sizes": "800x600",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

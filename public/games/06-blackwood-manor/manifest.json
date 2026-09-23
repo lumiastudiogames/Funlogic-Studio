@@ -1,0 +1,18 @@
+{
+  "name": "The Mystery of Blackwood Manor",
+  "short_name": "The Mystery ",
+  "description": "Lord Blackwood summoned his relatives to read his new last will. By midnight, the patriarch was silenced. Can you determine who had what motive and where they hid?",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0f172a",
+  "theme_color": "#0f172a",
+  "icons": [
+    {
+      "src": "./cover.svg",
+      "sizes": "800x600",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

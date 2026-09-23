@@ -1,0 +1,18 @@
+{
+  "name": "Test Tube Sort (Lab Edition)",
+  "short_name": "Test Tube So",
+  "description": "Step into the research laboratory! Test Tube Sort features 10 authentic borosilicate glass tubes resting in a polished mahogany wooden rack. Reagents react with realistic liquid and glass acoustic synthesis. If you get stuck, tap the Hint button to highlight the next logical pour.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0f172a",
+  "theme_color": "#0f172a",
+  "icons": [
+    {
+      "src": "./cover.svg",
+      "sizes": "800x600",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

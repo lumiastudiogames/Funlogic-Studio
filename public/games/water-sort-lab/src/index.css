@@ -1,0 +1,97 @@
+@import "tailwindcss";
+
+@layer base {
+  * {
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+
+  body {
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: radial-gradient(circle at 50% 10%, #f8fafc 0%, #eef2f7 50%, #e2e8f0 100%);
+    min-height: 100vh;
+    color: #1e293b;
+  }
+}
+
+.font-outfit {
+  font-family: 'Outfit', sans-serif;
+}
+
+/* Tactile 3D laboratory style buttons */
+.btn-tactile {
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+.btn-tactile:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 12px -2px rgba(0, 0, 0, 0.1), 0 3px 6px -3px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+.btn-tactile:active {
+  transform: translateY(1px);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08), inset 0 2px 4px rgba(0, 0, 0, 0.06);
+}
+
+.btn-undo {
+  background: linear-gradient(180deg, #f0f7ff 0%, #e0effe 100%);
+  border: 1px solid #bfdbfe;
+  color: #1d4ed8;
+}
+
+.btn-undo:hover {
+  background: linear-gradient(180deg, #e0effe 0%, #dbeafe 100%);
+}
+
+.btn-reset {
+  background: linear-gradient(180deg, #fff5f5 0%, #fee2e2 100%);
+  border: 1px solid #fecaca;
+  color: #dc2626;
+}
+
+.btn-reset:hover {
+  background: linear-gradient(180deg, #fee2e2 0%, #fecaca 100%);
+}
+
+.btn-add-tube {
+  background: linear-gradient(180deg, #f0fdf4 0%, #dcfce7 100%);
+  border: 1px solid #bbf7d0;
+  color: #15803d;
+}
+
+.btn-add-tube:hover {
+  background: linear-gradient(180deg, #dcfce7 0%, #bbf7d0 100%);
+}
+
+/* Glass lab card container matching reference image */
+.lab-card {
+  background: #ffffff;
+  border-radius: 24px;
+  box-shadow: 0 20px 40px -15px rgba(15, 23, 42, 0.12), 0 0 0 1px rgba(226, 232, 240, 0.8), inset 0 2px 4px rgba(255, 255, 255, 0.9);
+}
+
+/* Glossy badge and pill styling */
+.lab-pill {
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  color: #475569;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+.lab-pill-blue {
+  background: #eff6ff;
+  border: 1px solid #dbeafe;
+  color: #2563eb;
+}
+
+/* Subtle animations */
+@keyframes softPulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.05); opacity: 0.85; }
+}
+
+.animate-soft-pulse {
+  animation: softPulse 2s ease-in-out infinite;
+}
+

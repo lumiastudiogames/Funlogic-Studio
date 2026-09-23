@@ -1,0 +1,75 @@
+@import "tailwindcss";
+
+* {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background-color: #0f172a;
+}
+
+/* Tactile button with physical depth & highlight */
+.btn-tactile {
+  transition: all 0.12s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 
+    0 4px 6px -1px rgba(0, 0, 0, 0.18), 
+    0 2px 4px -2px rgba(0, 0, 0, 0.1), 
+    inset 0 1px 0 rgba(255, 255, 255, 0.25);
+}
+
+.btn-tactile:hover {
+  transform: translateY(-1px);
+  box-shadow: 
+    0 6px 12px -2px rgba(0, 0, 0, 0.25), 
+    inset 0 1px 0 rgba(255, 255, 255, 0.35);
+}
+
+.btn-tactile:active {
+  transform: translateY(1px);
+  box-shadow: 
+    0 1px 2px rgba(0, 0, 0, 0.2), 
+    inset 0 2px 4px rgba(0, 0, 0, 0.25);
+}
+
+/* Light button tactile */
+.btn-tactile-light {
+  transition: all 0.12s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 
+    0 4px 6px -1px rgba(0, 0, 0, 0.08), 
+    0 2px 4px -2px rgba(0, 0, 0, 0.04), 
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+.btn-tactile-light:hover {
+  transform: translateY(-1px);
+  box-shadow: 
+    0 6px 10px -2px rgba(0, 0, 0, 0.12), 
+    inset 0 1px 0 rgba(255, 255, 255, 1);
+}
+
+.btn-tactile-light:active {
+  transform: translateY(1px);
+  box-shadow: 
+    0 1px 2px rgba(0, 0, 0, 0.08), 
+    inset 0 2px 4px rgba(0, 0, 0, 0.10);
+}
+
+/* Custom Scrollbars */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    <title>Metro Subway Train Yard</title>
+    <link rel="stylesheet" href="/src/index.css" />
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body class="bg-slate-950 text-slate-100 antialiased overflow-hidden select-none">
+    <div id="game-root" class="w-full h-full flex items-center justify-center"></div>
+    <script type="module">
+      import { render } from './game.js';
+      const root = document.getElementById('game-root');
+      if (root) {
+        render(root, (timeInSeconds) => {
+          window.parent?.postMessage({ type: 'win', time: timeInSeconds }, '*');
+        });
+      }
+    </script>
+  </body>
+</html>

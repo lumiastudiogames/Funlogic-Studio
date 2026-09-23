@@ -1,0 +1,2852 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
+    />
+    <title>The Secret Code: Vault Breaker</title>
+    <meta
+      name="description"
+      content="A 4-letter Mastermind-style vault cracking game based on intelligence transmissions and espionage deduction."
+    />
+    <meta property="og:title" content="The Secret Code: Vault Breaker" />
+    <meta
+      property="og:description"
+      content="Decrypt secret 4-letter vault passcodes by analyzing intercepted signals in 3 attempts!"
+    />
+    <meta property="og:type" content="website" />
+    <meta name="theme-color" content="#070a12" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+    <style>
+      /* --- RESET & COLOR VARIABLES --- */
+      *, *::before, *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        user-select: none;
+        -webkit-user-select: none;
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      :root {
+        --bg-main: #070a12;
+        --bg-panel: #0d1322;
+        --bg-card: #141d33;
+        --bg-card-hover: #1c2846;
+        --border-subtle: #1e2d4d;
+        --cyan-neon: #00f0ff;
+        --cyan-glow: rgba(0, 240, 255, 0.4);
+        --green-exact: #10b981;
+        --green-exact-glow: rgba(16, 185, 129, 0.45);
+        --gold-misplaced: #f59e0b;
+        --gold-glow: rgba(245, 158, 11, 0.45);
+        --gray-wrong: #2a374f;
+        --gray-text: #8899b5;
+        --text-bright: #f0f6fc;
+        --red-alarm: #ef4444;
+        --red-glow: rgba(239, 68, 68, 0.5);
+        --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Courier New", monospace;
+        --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      }
+
+      html, body {
+        width: 100%;
+        height: 100%;
+        height: 100dvh;
+        overflow: hidden;
+        background-color: var(--bg-main);
+        color: var(--text-bright);
+        font-family: var(--font-sans);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      /* Animated Blueprint Grid Background */
+      .bg-grid {
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        background-image: 
+          radial-gradient(circle at 50% 30%, rgba(0, 240, 255, 0.08) 0%, transparent 65%),
+          linear-gradient(rgba(30, 45, 77, 0.15) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(30, 45, 77, 0.15) 1px, transparent 1px);
+        background-size: 100% 100%, 24px 24px, 24px 24px;
+        z-index: 0;
+      }
+
+      .laser-scan {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: linear-gradient(90deg, transparent, var(--cyan-neon), transparent);
+        box-shadow: 0 0 12px var(--cyan-neon);
+        opacity: 0.6;
+        animation: laserScan 6s ease-in-out infinite;
+        pointer-events: none;
+        z-index: 1;
+      }
+
+      @keyframes laserScan {
+        0%, 100% { top: 0%; opacity: 0.2; }
+        50% { top: 100%; opacity: 0.65; }
+      }
+
+      /* --- MAIN APPLICATION LAYOUT (OPTIMIZED FOR MOTO G4 360x640) --- */
+      #app-container {
+        position: relative;
+        z-index: 2;
+        width: 100%;
+        max-width: 480px;
+        height: 100%;
+        height: 100dvh;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 6px 8px 8px;
+      }
+
+      /* HEADER BAR */
+      .header-bar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 4px 8px;
+        background: rgba(13, 19, 34, 0.92);
+        border: 1px solid var(--border-subtle);
+        border-radius: 8px;
+        backdrop-filter: blur(8px);
+        gap: 6px;
+        min-height: 44px;
+      }
+
+      .logo-group {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .logo-icon {
+        width: 28px;
+        height: 28px;
+        border-radius: 6px;
+        background: linear-gradient(135deg, rgba(0, 240, 255, 0.2), #0d1322);
+        border: 1px solid var(--cyan-neon);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 0 8px var(--cyan-glow);
+      }
+
+      .logo-icon svg {
+        width: 15px;
+        height: 15px;
+        stroke: var(--cyan-neon);
+      }
+
+      .logo-text {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .logo-title {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        font-weight: 800;
+        letter-spacing: 0.8px;
+        color: var(--text-bright);
+        text-transform: uppercase;
+      }
+
+      .logo-subtitle {
+        font-size: 8px;
+        color: var(--cyan-neon);
+        letter-spacing: 0.5px;
+        font-family: var(--font-mono);
+      }
+
+      .header-actions {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
+
+      .icon-btn {
+        width: 34px;
+        height: 34px;
+        min-width: 34px;
+        min-height: 34px;
+        border-radius: 6px;
+        background: var(--bg-card);
+        border: 1px solid var(--border-subtle);
+        color: var(--text-bright);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: transform 0.1s ease, background 0.15s ease;
+        touch-action: manipulation;
+      }
+
+      .icon-btn:active {
+        transform: scale(0.92);
+        background: var(--bg-card-hover);
+        border-color: var(--cyan-neon);
+      }
+
+      .icon-btn svg {
+        width: 15px;
+        height: 15px;
+        stroke: currentColor;
+        stroke-width: 2;
+        fill: none;
+      }
+
+      .icon-btn.music-active {
+        border-color: var(--cyan-neon);
+        color: var(--cyan-neon);
+        box-shadow: 0 0 10px var(--cyan-glow);
+        animation: pulseMusicGlow 1.8s ease-in-out infinite;
+      }
+
+      @keyframes pulseMusicGlow {
+        0%, 100% { box-shadow: 0 0 6px var(--cyan-glow); }
+        50% { box-shadow: 0 0 14px var(--cyan-neon); border-color: #38bdf8; }
+      }
+
+      /* --- TRANSMISSION DOSSIER BANNER (CLUES ONLY) --- */
+      .story-dossier-bar {
+        background: linear-gradient(135deg, rgba(16, 24, 43, 0.95), rgba(8, 14, 26, 0.95));
+        border: 1.5px solid var(--cyan-neon);
+        border-radius: 8px;
+        padding: 6px 10px;
+        margin-top: 4px;
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+        box-shadow: 0 0 12px rgba(0, 240, 255, 0.15);
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .story-dossier-bar::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 22px;
+        height: 22px;
+        background: linear-gradient(135deg, transparent 50%, rgba(0, 240, 255, 0.3) 50%);
+      }
+
+      .story-top-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .story-tag {
+        font-family: var(--font-mono);
+        font-size: 9px;
+        font-weight: 800;
+        color: var(--cyan-neon);
+        letter-spacing: 0.6px;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        text-transform: uppercase;
+      }
+
+      .story-tap-hint {
+        font-size: 8.5px;
+        color: var(--gray-text);
+        display: flex;
+        align-items: center;
+        gap: 3px;
+        font-family: var(--font-mono);
+      }
+
+      .story-narrative-preview {
+        font-size: 11.5px;
+        line-height: 1.45;
+        color: #f1f5f9;
+        white-space: normal;
+        word-break: break-word;
+        padding-top: 3px;
+      }
+
+      /* --- VAULT HUD & 3 ATTEMPTS COUNTER --- */
+      .vault-hud {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: rgba(13, 19, 34, 0.75);
+        border: 1px solid var(--border-subtle);
+        border-radius: 8px;
+        padding: 6px 8px;
+        margin-top: 4px;
+        gap: 8px;
+      }
+
+      .attempts-tracker {
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+        flex: 1;
+      }
+
+      .tracker-label {
+        font-family: var(--font-mono);
+        font-size: 9px;
+        color: var(--gray-text);
+        display: flex;
+        justify-content: space-between;
+        font-weight: 700;
+      }
+
+      .tracker-counter {
+        color: var(--cyan-neon);
+        font-weight: bold;
+      }
+
+      /* 3 FUSE BARS (3 ATTEMPTS) */
+      .fuse-bars {
+        display: flex;
+        gap: 4px;
+        height: 6px;
+      }
+
+      .fuse-node {
+        flex: 1;
+        background: var(--cyan-neon);
+        box-shadow: 0 0 6px var(--cyan-glow);
+        border-radius: 3px;
+        transition: all 0.3s ease;
+      }
+
+      .fuse-node.blown {
+        background: #182236;
+        box-shadow: none;
+      }
+
+      .fuse-node.critical {
+        background: var(--red-alarm);
+        box-shadow: 0 0 8px var(--red-glow);
+      }
+
+      /* 4 Tumbler Pin Indicators */
+      .tumbler-pins {
+        display: flex;
+        align-items: center;
+        gap: 3px;
+      }
+
+      .vault-wheel-mini {
+        width: 26px;
+        height: 26px;
+        border-radius: 50%;
+        background: radial-gradient(circle, #1c2846 30%, #0d1322 80%);
+        border: 1.5px solid var(--border-subtle);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: inset 0 0 5px rgba(0,0,0,0.8);
+        transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+      }
+
+      .vault-wheel-mini svg {
+        width: 13px;
+        height: 13px;
+        stroke: var(--cyan-neon);
+      }
+
+      .pin-slot {
+        width: 20px;
+        height: 24px;
+        background: var(--bg-card);
+        border: 1px solid var(--border-subtle);
+        border-radius: 4px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: var(--font-mono);
+        font-size: 11px;
+        font-weight: bold;
+        color: var(--gray-text);
+        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      }
+
+      .pin-slot.locked {
+        background: rgba(16, 185, 129, 0.2);
+        border-color: var(--green-exact);
+        color: var(--green-exact);
+        box-shadow: 0 0 8px var(--green-exact-glow);
+        transform: translateY(-1px);
+      }
+
+      /* --- ATTEMPTS BOARD (EXACTLY 3 ROWS FOR 3 ATTEMPTS) --- */
+      .board-wrapper {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 8px;
+        padding: 6px 0;
+        min-height: 0;
+      }
+
+      .attempt-row {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        width: 100%;
+        height: clamp(48px, 11vh, 64px);
+      }
+
+      .attempt-num {
+        width: 14px;
+        font-family: var(--font-mono);
+        font-size: 10px;
+        font-weight: bold;
+        color: var(--gray-text);
+        text-align: right;
+        opacity: 0.7;
+      }
+
+      .row-cells {
+        display: flex;
+        gap: 6px;
+        height: 100%;
+      }
+
+      .letter-cell {
+        aspect-ratio: 1 / 1;
+        height: 100%;
+        max-height: 64px;
+        border-radius: 8px;
+        background: var(--bg-panel);
+        border: 1.5px solid var(--border-subtle);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: var(--font-mono);
+        font-size: clamp(18px, 5.5vw, 24px);
+        font-weight: 800;
+        color: var(--text-bright);
+        text-transform: uppercase;
+        transition: border-color 0.15s ease, transform 0.15s ease;
+      }
+
+      .attempt-row.active .letter-cell {
+        border-color: #2b3d63;
+        background: #0f182a;
+      }
+
+      .attempt-row.active .letter-cell.filled {
+        border-color: var(--cyan-neon);
+        box-shadow: 0 0 8px var(--cyan-glow);
+        transform: scale(1.04);
+      }
+
+      .letter-cell.reveal-flip {
+        animation: cellFlip 0.45s ease forwards;
+      }
+
+      @keyframes cellFlip {
+        0% { transform: rotateX(0deg); }
+        50% { transform: rotateX(90deg); }
+        100% { transform: rotateX(0deg); }
+      }
+
+      .letter-cell.status-exact {
+        background: var(--green-exact) !important;
+        border-color: #34d399 !important;
+        color: #ffffff !important;
+        box-shadow: 0 0 10px var(--green-exact-glow);
+      }
+
+      .letter-cell.status-misplaced {
+        background: var(--gold-misplaced) !important;
+        border-color: #fbbf24 !important;
+        color: #0b111e !important;
+        box-shadow: 0 0 10px var(--gold-glow);
+        font-weight: 900;
+      }
+
+      .letter-cell.status-wrong {
+        background: var(--gray-wrong) !important;
+        border-color: #354460 !important;
+        color: #6b7c99 !important;
+      }
+
+      /* Clue Summary Chips per Row */
+      .row-clues {
+        display: flex;
+        align-items: center;
+        gap: 3px;
+        width: 52px;
+        height: 100%;
+        background: rgba(13, 19, 34, 0.7);
+        border: 1px solid var(--border-subtle);
+        border-radius: 6px;
+        padding: 0 4px;
+        justify-content: space-around;
+      }
+
+      .clue-chip {
+        display: flex;
+        align-items: center;
+        gap: 2px;
+        font-family: var(--font-mono);
+        font-size: 11px;
+        font-weight: bold;
+      }
+
+      .clue-chip.exact {
+        color: var(--green-exact);
+      }
+
+      .clue-chip.misplaced {
+        color: var(--gold-misplaced);
+      }
+
+      .clue-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        display: inline-block;
+      }
+
+      .clue-dot.dot-exact {
+        background: var(--green-exact);
+        box-shadow: 0 0 4px var(--green-exact);
+      }
+
+      .clue-dot.dot-misplaced {
+        background: var(--gold-misplaced);
+        box-shadow: 0 0 4px var(--gold-misplaced);
+      }
+
+      .attempt-row.shake {
+        animation: rowShake 0.4s ease;
+      }
+
+      @keyframes rowShake {
+        0%, 100% { transform: translateX(0); }
+        20%, 60% { transform: translateX(-5px); }
+        40%, 80% { transform: translateX(5px); }
+      }
+
+      /* --- VIRTUAL KEYBOARD --- */
+      .keyboard-container {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        width: 100%;
+        margin-top: 2px;
+        touch-action: manipulation;
+      }
+
+      .keyboard-row {
+        display: flex;
+        justify-content: center;
+        gap: 3px;
+        width: 100%;
+      }
+
+      .key-btn {
+        height: 44px;
+        min-height: 44px;
+        flex: 1;
+        max-width: 42px;
+        border-radius: 6px;
+        background: #151f33;
+        border: 1px solid #202d4a;
+        color: var(--text-bright);
+        font-family: var(--font-sans);
+        font-size: clamp(13px, 3.8vw, 15px);
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: transform 0.08s ease, background-color 0.15s ease;
+        touch-action: manipulation;
+      }
+
+      .key-btn:active {
+        transform: scale(0.92);
+        background: #24355a;
+      }
+
+      .key-btn.key-wide {
+        flex: 1.5;
+        max-width: 56px;
+        font-size: 10px;
+        letter-spacing: 0.5px;
+        font-weight: 800;
+        font-family: var(--font-mono);
+      }
+
+      .key-btn.key-enter {
+        background: linear-gradient(135deg, #0f766e, #042f2e);
+        border-color: #14b8a6;
+        color: #ccfbf1;
+      }
+
+      .key-btn.key-backspace svg {
+        width: 16px;
+        height: 16px;
+        stroke: currentColor;
+        stroke-width: 2;
+      }
+
+      .key-btn.key-exact {
+        background: var(--green-exact) !important;
+        border-color: #34d399 !important;
+        color: #ffffff !important;
+        box-shadow: 0 0 6px var(--green-exact-glow);
+      }
+
+      .key-btn.key-misplaced {
+        background: var(--gold-misplaced) !important;
+        border-color: #fbbf24 !important;
+        color: #0b111e !important;
+        box-shadow: 0 0 6px var(--gold-glow);
+      }
+
+      .key-btn.key-wrong {
+        background: #0f1422 !important;
+        border-color: #182030 !important;
+        color: #475569 !important;
+        opacity: 0.55;
+      }
+
+      /* --- TOAST NOTIFICATIONS --- */
+      #toast-msg {
+        position: fixed;
+        top: 50px;
+        left: 50%;
+        transform: translateX(-50%) translateY(-20px);
+        background: rgba(15, 23, 42, 0.96);
+        border: 1px solid var(--cyan-neon);
+        color: var(--text-bright);
+        padding: 8px 16px;
+        border-radius: 8px;
+        font-family: var(--font-mono);
+        font-size: 11px;
+        font-weight: bold;
+        letter-spacing: 0.5px;
+        box-shadow: 0 4px 18px rgba(0,0,0,0.6), 0 0 12px var(--cyan-glow);
+        opacity: 0;
+        pointer-events: none;
+        transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        z-index: 100;
+        text-align: center;
+      }
+
+      #toast-msg.show {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+      }
+
+      /* --- MODAL SYSTEM --- */
+      .modal-backdrop {
+        position: fixed;
+        inset: 0;
+        background: rgba(4, 7, 15, 0.88);
+        backdrop-filter: blur(8px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 12px;
+        z-index: 50;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.25s ease;
+      }
+
+      .modal-backdrop.open {
+        opacity: 1;
+        pointer-events: auto;
+      }
+
+      .modal-card {
+        width: 100%;
+        max-width: 420px;
+        max-height: 92vh;
+        overflow-y: auto;
+        background: #0d1322;
+        border: 1.5px solid var(--border-subtle);
+        border-radius: 12px;
+        padding: 16px;
+        box-shadow: 0 16px 36px rgba(0,0,0,0.8), 0 0 20px rgba(0, 240, 255, 0.15);
+        transform: scale(0.92);
+        transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .modal-backdrop.open .modal-card {
+        transform: scale(1);
+      }
+
+      .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid var(--border-subtle);
+        padding-bottom: 8px;
+      }
+
+      .modal-title {
+        font-family: var(--font-mono);
+        font-size: 13px;
+        font-weight: 800;
+        letter-spacing: 0.8px;
+        color: var(--cyan-neon);
+        text-transform: uppercase;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .modal-close-btn {
+        background: transparent;
+        border: none;
+        color: var(--gray-text);
+        cursor: pointer;
+        padding: 4px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .modal-body {
+        font-size: 12px;
+        line-height: 1.45;
+        color: #cbd5e1;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      /* Story Dossier Box */
+      .dossier-box {
+        background: #111a2e;
+        border: 1px solid var(--border-subtle);
+        border-left: 3px solid var(--cyan-neon);
+        border-radius: 8px;
+        padding: 10px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .dossier-meta {
+        display: flex;
+        justify-content: space-between;
+        font-family: var(--font-mono);
+        font-size: 9.5px;
+        color: var(--gray-text);
+        font-weight: 700;
+      }
+
+      .dossier-transmission {
+        font-size: 12px;
+        line-height: 1.5;
+        color: #f1f5f9;
+        background: rgba(0,0,0,0.3);
+        padding: 10px;
+        border-radius: 6px;
+        border: 1px dashed #203154;
+        font-family: var(--font-sans);
+      }
+
+      /* Rule Demo Rows */
+      .demo-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background: var(--bg-card);
+        padding: 8px;
+        border-radius: 6px;
+        border: 1px solid var(--border-subtle);
+      }
+
+      .demo-cells {
+        display: flex;
+        gap: 3px;
+      }
+
+      .demo-cell {
+        width: 24px;
+        height: 24px;
+        border-radius: 4px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: var(--font-mono);
+        font-weight: 800;
+        font-size: 12px;
+      }
+
+      .demo-text {
+        font-size: 11px;
+        flex: 1;
+      }
+
+      /* Stats Grid */
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 6px;
+        text-align: center;
+      }
+
+      .stat-box {
+        background: var(--bg-card);
+        border: 1px solid var(--border-subtle);
+        border-radius: 6px;
+        padding: 8px 2px;
+      }
+
+      .stat-val {
+        font-family: var(--font-mono);
+        font-size: 16px;
+        font-weight: 900;
+        color: var(--cyan-neon);
+      }
+
+      .stat-lbl {
+        font-size: 8.5px;
+        color: var(--gray-text);
+        margin-top: 2px;
+        text-transform: uppercase;
+        font-weight: 700;
+      }
+
+      .distribution-bars {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        background: var(--bg-card);
+        border: 1px solid var(--border-subtle);
+        border-radius: 6px;
+        padding: 8px;
+      }
+
+      .dist-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-family: var(--font-mono);
+        font-size: 10px;
+      }
+
+      .dist-num {
+        width: 12px;
+        color: var(--gray-text);
+        font-weight: bold;
+      }
+
+      .dist-bar-wrapper {
+        flex: 1;
+        background: #111827;
+        height: 16px;
+        border-radius: 4px;
+        overflow: hidden;
+      }
+
+      .dist-bar {
+        height: 100%;
+        background: var(--cyan-neon);
+        border-radius: 4px;
+        min-width: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        padding-right: 6px;
+        font-size: 9px;
+        font-weight: bold;
+        color: #070a12;
+      }
+
+      .dist-bar.highlight {
+        background: var(--green-exact);
+      }
+
+      /* Action Buttons */
+      .primary-action-btn {
+        width: 100%;
+        min-height: 44px;
+        background: linear-gradient(135deg, #00f0ff, #0284c7);
+        border: none;
+        border-radius: 8px;
+        color: #04101c;
+        font-family: var(--font-mono);
+        font-size: 12px;
+        font-weight: 800;
+        letter-spacing: 0.8px;
+        text-transform: uppercase;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        box-shadow: 0 4px 14px var(--cyan-glow);
+        transition: transform 0.15s ease;
+        touch-action: manipulation;
+      }
+
+      .primary-action-btn:active {
+        transform: scale(0.97);
+      }
+
+      .secondary-action-btn {
+        width: 100%;
+        min-height: 40px;
+        background: var(--bg-card);
+        border: 1px solid var(--border-subtle);
+        border-radius: 8px;
+        color: var(--text-bright);
+        font-family: var(--font-mono);
+        font-size: 11.5px;
+        font-weight: 700;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        transition: all 0.15s ease;
+        touch-action: manipulation;
+      }
+
+      .reveal-box {
+        background: linear-gradient(135deg, rgba(0, 240, 255, 0.1), rgba(16, 185, 129, 0.1));
+        border: 1.5px dashed var(--cyan-neon);
+        border-radius: 8px;
+        padding: 10px;
+        text-align: center;
+      }
+
+      .reveal-word {
+        font-family: var(--font-mono);
+        font-size: 24px;
+        font-weight: 900;
+        letter-spacing: 4px;
+        color: var(--cyan-neon);
+        margin: 4px 0;
+      }
+
+      .reveal-def {
+        font-size: 11px;
+        color: var(--gray-text);
+      }
+
+      #fx-canvas {
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: 60;
+      }
+    </style>
+  
+  <script>
+    function triggerPlatformWin(timeInSeconds) {
+      const elapsed = Math.round(timeInSeconds || 45);
+      try {
+        if (typeof window.onWin === 'function') {
+          window.onWin(elapsed);
+        }
+        if (window.parent && window.parent !== window) {
+          window.parent.postMessage({ type: 'win', time: elapsed }, '*');
+        }
+      } catch(e) { console.error('Platform win notify error:', e); }
+    }
+  </script>
+
+</head>
+  <body>
+    <!-- Background grid & scanning line -->
+    <div class="bg-grid"></div>
+    <div class="laser-scan"></div>
+    <canvas id="fx-canvas"></canvas>
+
+    <!-- Floating Toast Notification -->
+    <div id="toast-msg" role="status" aria-live="polite">CODE REJECTED</div>
+
+    <!-- MAIN APP CONTAINER -->
+    <main id="app-container">
+      <div style="display: flex; flex-direction: column; height: 100%; justify-content: space-between; flex: 1;">
+        <!-- HEADER -->
+        <header class="header-bar" id="main-header">
+          <div class="logo-group">
+            <div class="logo-icon" id="vault-logo" aria-hidden="true">
+              <svg viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="9" />
+                <path d="M12 7v5l3 3" />
+                <circle cx="12" cy="12" r="2" />
+              </svg>
+            </div>
+            <div class="logo-text">
+              <span class="logo-title">VAULT BREAKER</span>
+              <span class="logo-subtitle">THE SECRET CODE • HEIST MISSION</span>
+            </div>
+          </div>
+
+          <div class="header-actions">
+            <!-- Intercepted Story File / Intel Button -->
+            <button class="icon-btn" id="btn-story-file" title="Mission Dossier" aria-label="Open Mission Dossier">
+              <svg viewBox="0 0 24 24">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                <polyline points="14 2 14 8 20 8" />
+                <line x1="16" y1="13" x2="8" y2="13" />
+                <line x1="16" y1="17" x2="8" y2="17" />
+              </svg>
+            </button>
+
+            <!-- Tactical Clue Button -->
+            <button class="icon-btn" id="btn-hint" title="Tactical Clue" aria-label="Reveal Single Letter">
+              <svg viewBox="0 0 24 24">
+                <path d="M9 18h6" />
+                <path d="M10 22h4" />
+                <path d="M12 2a7 7 0 0 0-7 7c0 2.5 1.5 4.5 3 6h8c1.5-1.5 3-3.5 3-6a7 7 0 0 0-7-7z" />
+              </svg>
+            </button>
+
+            <!-- Sound & Music Toggle -->
+            <button class="icon-btn" id="btn-sound" title="Audio & Music" aria-label="Toggle Audio">
+              <svg id="sound-icon-on" viewBox="0 0 24 24">
+                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07" />
+              </svg>
+              <svg id="sound-icon-off" viewBox="0 0 24 24" style="display: none;">
+                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                <line x1="23" y1="9" x2="17" y2="15" />
+                <line x1="17" y1="9" x2="23" y2="15" />
+              </svg>
+            </button>
+
+            <!-- Stats Records -->
+            <button class="icon-btn" id="btn-stats" title="Mission Records" aria-label="Statistics">
+              <svg viewBox="0 0 24 24">
+                <line x1="18" y1="20" x2="18" y2="10" />
+                <line x1="12" y1="20" x2="12" y2="4" />
+                <line x1="6" y1="20" x2="6" y2="14" />
+              </svg>
+            </button>
+
+            <!-- Operations Manual / Help -->
+            <button class="icon-btn" id="btn-help" title="Operations Manual" aria-label="Help Manual">
+              <svg viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="10" />
+                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+                <line x1="12" y1="17" x2="12.01" y2="17" />
+              </svg>
+            </button>
+
+            <!-- Fullscreen Toggle -->
+            <button class="icon-btn" id="btn-fullscreen" title="Fullscreen" aria-label="Toggle Fullscreen">
+              <svg id="fs-icon-enter" viewBox="0 0 24 24">
+                <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3" />
+              </svg>
+              <svg id="fs-icon-exit" viewBox="0 0 24 24" style="display: none;">
+                <path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3" />
+              </svg>
+            </button>
+          </div>
+        </header>
+
+        <!-- INTERCEPTED SIGNAL TRANSMISSION BANNER -->
+        <section class="story-dossier-bar" id="story-dossier-bar" title="Full Transmission Dossier">
+          <div class="story-top-row">
+            <span class="story-tag" id="story-mission-tag">
+              <svg style="width:11px;height:11px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+              </svg>
+              <span id="story-title-text">OPERATION #101 • INTERCEPTED TRANSMISSION</span>
+            </span>
+            <span class="story-tap-hint">
+              <span>Full Dossier</span> &rarr;
+            </span>
+          </div>
+          <div class="story-narrative-preview" id="story-narrative-preview">
+            Loading signal transmission intel...
+          </div>
+        </section>
+
+        <!-- VAULT HUD & 3 BYPASS ATTEMPTS TRACKER -->
+        <section class="vault-hud" id="vault-hud">
+          <div class="attempts-tracker">
+            <div class="tracker-label">
+              <span>BYPASS CIRCUIT ATTEMPTS</span>
+              <span class="tracker-counter" id="tracker-text">3 / 3 REMAINING</span>
+            </div>
+            <!-- EXACTLY 3 FUSE BARS FOR 3 ATTEMPTS -->
+            <div class="fuse-bars" id="fuse-bars" aria-hidden="true">
+              <div class="fuse-node"></div>
+              <div class="fuse-node"></div>
+              <div class="fuse-node"></div>
+            </div>
+          </div>
+
+          <!-- Vault Tumbler Pins Status -->
+          <div class="tumbler-pins" title="Discovered Tumbler Positions">
+            <div class="vault-wheel-mini" id="vault-wheel" aria-hidden="true">
+              <svg viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="8" />
+                <line x1="12" y1="4" x2="12" y2="8" />
+                <line x1="12" y1="16" x2="12" y2="20" />
+                <line x1="4" y1="12" x2="8" y2="12" />
+                <line x1="16" y1="12" x2="20" y2="12" />
+              </svg>
+            </div>
+            <div class="pin-slot" id="pin-0" title="Pin 1">?</div>
+            <div class="pin-slot" id="pin-1" title="Pin 2">?</div>
+            <div class="pin-slot" id="pin-2" title="Pin 3">?</div>
+            <div class="pin-slot" id="pin-3" title="Pin 4">?</div>
+          </div>
+        </section>
+
+        <!-- BOARD (EXACTLY 3 ATTEMPT ROWS) -->
+        <section class="board-wrapper" id="game-board" aria-label="Decryption Board">
+          <!-- 3 Rows dynamically generated -->
+        </section>
+      </div>
+
+      <!-- VIRTUAL KEYBOARD -->
+      <nav class="keyboard-container" id="virtual-keyboard" aria-label="Tactile Keypad">
+        <!-- Row 1 -->
+        <div class="keyboard-row" id="kb-row-1">
+          <button class="key-btn" data-key="Q">Q</button>
+          <button class="key-btn" data-key="W">W</button>
+          <button class="key-btn" data-key="E">E</button>
+          <button class="key-btn" data-key="R">R</button>
+          <button class="key-btn" data-key="T">T</button>
+          <button class="key-btn" data-key="Y">Y</button>
+          <button class="key-btn" data-key="U">U</button>
+          <button class="key-btn" data-key="I">I</button>
+          <button class="key-btn" data-key="O">O</button>
+          <button class="key-btn" data-key="P">P</button>
+        </div>
+        <!-- Row 2 -->
+        <div class="keyboard-row" id="kb-row-2">
+          <button class="key-btn" data-key="A">A</button>
+          <button class="key-btn" data-key="S">S</button>
+          <button class="key-btn" data-key="D">D</button>
+          <button class="key-btn" data-key="F">F</button>
+          <button class="key-btn" data-key="G">G</button>
+          <button class="key-btn" data-key="H">H</button>
+          <button class="key-btn" data-key="J">J</button>
+          <button class="key-btn" data-key="K">K</button>
+          <button class="key-btn" data-key="L">L</button>
+        </div>
+        <!-- Row 3: ENTER + ZXCVBNM + BACKSPACE -->
+        <div class="keyboard-row" id="kb-row-3">
+          <button class="key-btn key-wide key-enter" data-key="ENTER" aria-label="Submit Code">ENTER</button>
+          <button class="key-btn" data-key="Z">Z</button>
+          <button class="key-btn" data-key="X">X</button>
+          <button class="key-btn" data-key="C">C</button>
+          <button class="key-btn" data-key="V">V</button>
+          <button class="key-btn" data-key="B">B</button>
+          <button class="key-btn" data-key="N">N</button>
+          <button class="key-btn" data-key="M">M</button>
+          <button class="key-btn key-wide key-backspace" data-key="BACKSPACE" aria-label="Delete Letter">
+            <svg viewBox="0 0 24 24">
+              <path d="M21 4H8l-7 8 7 8h13a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z" />
+              <line x1="18" y1="9" x2="12" y2="15" />
+              <line x1="12" y1="9" x2="18" y2="15" />
+            </svg>
+          </button>
+        </div>
+      </nav>
+    </main>
+
+    <!-- ================= MODALS ================= -->
+
+    <!-- MISSION DOSSIER MODAL (SIGNAL TRANSMISSION INTEL) -->
+    <div class="modal-backdrop" id="modal-dossier" role="dialog" aria-modal="true" aria-labelledby="dossier-title">
+      <div class="modal-card">
+        <div class="modal-header">
+          <div class="modal-title" id="dossier-title">
+            <svg style="width:16px;height:16px;" viewBox="0 0 24 24">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+              <polyline points="14 2 14 8 20 8" />
+              <line x1="16" y1="13" x2="8" y2="13" />
+              <line x1="16" y1="17" x2="8" y2="17" />
+            </svg>
+            INTERCEPTED MISSION DOSSIER
+          </div>
+          <button class="modal-close-btn" data-close="modal-dossier" aria-label="Close">
+            <svg style="width:18px;height:18px;" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="dossier-box">
+            <div class="dossier-meta">
+              <span id="dossier-target-name">TARGET: SUBTERRANEAN VAULT</span>
+              <span id="dossier-case-code">SECURITY LEVEL: HIGH</span>
+            </div>
+            <div style="font-weight: bold; color: var(--cyan-neon); font-size: 11px; text-transform: uppercase;">
+              Intercepted Transmission Signal:
+            </div>
+            <div class="dossier-transmission" id="dossier-full-story">
+              <!-- Transmission intel inserted dynamically -->
+            </div>
+          </div>
+
+          <p style="font-size: 11px; color: var(--gray-text);">
+            Espionage Briefing: Read the transmission signal carefully to deduce the secret 4-letter passcode. Type your guess on the keypad to test the tumbler pins!
+          </p>
+        </div>
+        <button class="primary-action-btn" data-close="modal-dossier">
+          BEGIN VAULT BYPASS
+        </button>
+      </div>
+    </div>
+
+    <!-- OPERATIONS MANUAL (TUTORIAL MODAL IN ENGLISH) -->
+    <div class="modal-backdrop" id="modal-help" role="dialog" aria-modal="true" aria-labelledby="help-title">
+      <div class="modal-card">
+        <div class="modal-header">
+          <div class="modal-title" id="help-title">
+            <svg style="width:16px;height:16px;" viewBox="0 0 24 24">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+              <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+            </svg>
+            VAULT OPERATIONS MANUAL
+          </div>
+          <button class="modal-close-btn" data-close="modal-help" aria-label="Close">
+            <svg style="width:18px;height:18px;" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p><strong>Objective:</strong> Decrypt the <strong>secret 4-letter vault passcode</strong> in exactly <strong>3 attempts</strong> using the transmission intel and Mastermind color feedback!</p>
+          
+          <div style="font-weight: bold; color: var(--cyan-neon); font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.5px;">
+            1. 📡 ANALYZE THE SIGNAL TRANSMISSION:
+          </div>
+          <p style="font-size: 11px;">Each vault mission includes an intercepted signal transmission. Read the intel carefully to deduce the 4-letter word!</p>
+
+          <div style="font-weight: bold; color: var(--cyan-neon); font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.5px;">
+            2. 🟢 MASTERMIND COLOR FEEDBACK:
+          </div>
+
+          <div class="demo-row">
+            <div class="demo-cells">
+              <div class="demo-cell status-exact">G</div>
+              <div class="demo-cell" style="background:#151f33;">O</div>
+              <div class="demo-cell" style="background:#151f33;">L</div>
+              <div class="demo-cell" style="background:#151f33;">D</div>
+            </div>
+            <div class="demo-text">
+              <strong style="color:var(--green-exact);">GREEN:</strong> Letter is <strong>correct</strong> and in the <strong>exact slot</strong>!
+            </div>
+          </div>
+
+          <div class="demo-row">
+            <div class="demo-cells">
+              <div class="demo-cell" style="background:#151f33;">L</div>
+              <div class="demo-cell status-misplaced">G</div>
+              <div class="demo-cell" style="background:#151f33;">O</div>
+              <div class="demo-cell" style="background:#151f33;">D</div>
+            </div>
+            <div class="demo-text">
+              <strong style="color:var(--gold-misplaced);">YELLOW:</strong> Letter <strong>exists in passcode</strong>, but wrong position.
+            </div>
+          </div>
+
+          <div class="demo-row">
+            <div class="demo-cells">
+              <div class="demo-cell status-wrong">Z</div>
+              <div class="demo-cell status-wrong">X</div>
+              <div class="demo-cell status-wrong">C</div>
+              <div class="demo-cell status-wrong">V</div>
+            </div>
+            <div class="demo-text">
+              <strong style="color:#6b7c99;">DARK GRAY:</strong> Letter is <strong>not part</strong> of the secret passcode.
+            </div>
+          </div>
+
+          <div style="font-weight: bold; color: var(--cyan-neon); font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.5px;">
+            3. ⏱️ 3 BYPASS ATTEMPTS:
+          </div>
+          <p style="font-size: 11px;">You have <strong>only 3 attempts</strong>! Failing all 3 attempts triggers the security alarm and locks down the vault doors permanently.</p>
+        </div>
+        <button class="primary-action-btn" id="btn-start-heist" data-close="modal-help">
+          START HEIST MISSION
+        </button>
+      </div>
+    </div>
+
+    <!-- VAULT UNLOCKED (VICTORY MODAL) -->
+    <div class="modal-backdrop" id="modal-victory" role="dialog" aria-modal="true" aria-labelledby="win-title">
+      <div class="modal-card" style="border-color: var(--green-exact); box-shadow: 0 0 25px var(--green-exact-glow);">
+        <div class="modal-header">
+          <div class="modal-title" id="win-title" style="color: var(--green-exact);">
+            <svg style="width:18px;height:18px;stroke:var(--green-exact);" viewBox="0 0 24 24">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+              <polyline points="22 4 12 14.01 9 11.01" />
+            </svg>
+            VAULT CRACKED SUCCESSFULLY!
+          </div>
+          <button class="modal-close-btn" data-close="modal-victory" aria-label="Close">
+            <svg style="width:18px;height:18px;" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="reveal-box">
+            <div style="font-size: 10px; color: var(--gray-text); text-transform: uppercase;">Decrypted Vault Passcode</div>
+            <div class="reveal-word" id="victory-word">GOLD</div>
+            <div class="reveal-def" id="victory-stats-summary">Bypass completed in 2 of 3 attempts</div>
+          </div>
+
+          <div class="stats-grid">
+            <div class="stat-box">
+              <div class="stat-val" id="win-attempts-val">2/3</div>
+              <div class="stat-lbl">Attempts</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-val" id="win-streak-val">1</div>
+              <div class="stat-lbl">Streak</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-val" id="win-accuracy-val">100%</div>
+              <div class="stat-lbl">Win Rate</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-val" id="win-time-val">24s</div>
+              <div class="stat-lbl">Time</div>
+            </div>
+          </div>
+        </div>
+        <button class="primary-action-btn" id="btn-play-again-win" style="background: linear-gradient(135deg, #10b981, #047857); color: #fff;">
+          NEXT HEIST MISSION
+        </button>
+        <button class="secondary-action-btn" id="btn-share-win">
+          <svg style="width:14px;height:14px;" viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+          COPY HEIST REPORT
+        </button>
+      </div>
+    </div>
+
+    <!-- SYSTEM LOCKOUT (DEFEAT MODAL) -->
+    <div class="modal-backdrop" id="modal-gameover" role="dialog" aria-modal="true" aria-labelledby="gameover-title">
+      <div class="modal-card" style="border-color: var(--red-alarm); box-shadow: 0 0 25px var(--red-glow);">
+        <div class="modal-header">
+          <div class="modal-title" id="gameover-title" style="color: var(--red-alarm);">
+            <svg style="width:18px;height:18px;stroke:var(--red-alarm);" viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="10" />
+              <line x1="15" y1="9" x2="9" y2="15" />
+              <line x1="9" y1="9" x2="15" y2="15" />
+            </svg>
+            ALARM TRIGGERED! SYSTEM LOCKOUT
+          </div>
+          <button class="modal-close-btn" data-close="modal-gameover" aria-label="Close">
+            <svg style="width:18px;height:18px;" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p style="color:#f87171;">All 3 bypass attempts failed. The vault defense circuits triggered the security shutters.</p>
+          
+          <div class="reveal-box" style="border-color: var(--red-alarm); background: rgba(239, 68, 68, 0.1);">
+            <div style="font-size: 10px; color: #fca5a5; text-transform: uppercase;">Revealed Vault Passcode</div>
+            <div class="reveal-word" id="gameover-word" style="color: #fca5a5;">GOLD</div>
+            <div class="reveal-def" id="gameover-def">Target security passcode</div>
+          </div>
+        </div>
+        <button class="primary-action-btn" id="btn-retry-heist" style="background: linear-gradient(135deg, #ef4444, #991b1b); color: #fff;">
+          RETRY HEIST MISSION
+        </button>
+      </div>
+    </div>
+
+    <!-- MISSION RECORDS & STATS MODAL -->
+    <div class="modal-backdrop" id="modal-stats" role="dialog" aria-modal="true" aria-labelledby="stats-title">
+      <div class="modal-card">
+        <div class="modal-header">
+          <div class="modal-title" id="stats-title">
+            <svg style="width:16px;height:16px;" viewBox="0 0 24 24">
+              <line x1="18" y1="20" x2="18" y2="10" />
+              <line x1="12" y1="20" x2="12" y2="4" />
+              <line x1="6" y1="20" x2="6" y2="14" />
+            </svg>
+            MISSION RECORDS & STATS
+          </div>
+          <button class="modal-close-btn" data-close="modal-stats" aria-label="Close">
+            <svg style="width:18px;height:18px;" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="stats-grid">
+            <div class="stat-box">
+              <div class="stat-val" id="stat-played">0</div>
+              <div class="stat-lbl">Missions</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-val" id="stat-win-rate">0%</div>
+              <div class="stat-lbl">Win Rate</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-val" id="stat-current-streak">0</div>
+              <div class="stat-lbl">Streak</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-val" id="stat-max-streak">0</div>
+              <div class="stat-lbl">Best</div>
+            </div>
+          </div>
+
+          <div style="font-size: 10px; color: var(--gray-text); text-transform: uppercase; font-weight: bold; letter-spacing: 0.5px;">
+            GUESS DISTRIBUTION (1-3 ATTEMPTS)
+          </div>
+
+          <div class="distribution-bars" id="dist-bars-container">
+            <!-- 3 Bars rendered dynamically -->
+          </div>
+        </div>
+        <button class="primary-action-btn" id="btn-new-custom-game">
+          START RANDOM MISSION
+        </button>
+      </div>
+    </div>
+
+    <!-- PURE JAVASCRIPT GAME ENGINE -->
+    <script>
+      (function() {
+        "use strict";
+
+        // ==========================================
+        // 1. HEIST MISSIONS WITH CLUE TRANSMISSIONS (100% ENGLISH)
+        // Only the transmission signal provides clues! No explicit name given away.
+        // ==========================================
+        const HEIST_MISSIONS = [
+          {
+            id: "case-101",
+            code: "GOLD",
+            caseName: "OPERATION #101 • SWISS BANK HEIST",
+            target: "Subterranean Vault Alpha",
+            preview: "Signal Intercept: 'The central vault holds heavy bullion bars cast from heavy yellow precious metal...'",
+            story: "Intelligence report: The central vault holds heavy bullion bars cast from heavy, luminous yellow precious metal of maximum purity. The access code was configured by the chief of security based on the 4-letter term for this precious yellow element."
+          },
+          {
+            id: "case-102",
+            code: "SAFE",
+            caseName: "OPERATION #102 • DIPLOMATIC EMBASSY",
+            target: "Ambassador's Private Archive",
+            preview: "Signal Intercept: 'Classified papers locked inside a heavy reinforced steel container...'",
+            story: "Intercepted memo: The classified diplomatic papers are locked inside a heavy reinforced steel container built to withstand fire and break-ins. The 4-letter passkey is the noun for this protective steel lockbox."
+          },
+          {
+            id: "case-103",
+            code: "FIRE",
+            caseName: "OPERATION #103 • POWER CORE FACILITY",
+            target: "Reactor Control Chamber",
+            preview: "Thermal Scan: 'Lockdown initiated due to intense combustion, blazing heat, and roaring flames...'",
+            story: "Thermal telemetry: Emergency lockdown was initiated due to intense combustion, blazing heat, and roaring flames around the generator core. The emergency override key is the 4-letter word describing this destructive burning element."
+          },
+          {
+            id: "case-104",
+            code: "MOON",
+            caseName: "OPERATION #104 • LUNAR OBSERVATORY",
+            target: "Sub-Orbital Data Terminal",
+            preview: "Space Station Log: 'Console locked during the night pass beneath Earth's natural satellite...'",
+            story: "Space station log: The navigation console was locked during the night pass beneath the gravitational pull of Earth's natural satellite. The security key references the celestial body that glows in the night sky."
+          },
+          {
+            id: "case-105",
+            code: "TIME",
+            caseName: "OPERATION #105 • CHRONOS TOWER",
+            target: "Atomic Clock Reserve",
+            preview: "Signal Intercept: 'Master vault synchronized with a ticker measuring seconds and hours...'",
+            story: "Intercepted memo: The master vault is synchronized with a precision ticker measuring every second, minute, and hour. The 4-letter password represents what clocks and watches continuously track."
+          },
+          {
+            id: "case-106",
+            code: "BANK",
+            caseName: "OPERATION #106 • METROPOLITAN FINANCIAL",
+            target: "Reserve Cash Vault",
+            preview: "Field Agent Report: 'Target facility storing cash reserves, loans, and vaults...'",
+            story: "Field agent report: The target is a major financial institution storing cash reserves, loans, and safety deposit boxes. The 4-letter passcode is the name of the financial institution building itself."
+          },
+          {
+            id: "case-107",
+            code: "MINT",
+            caseName: "OPERATION #107 • ROYAL TREASURY",
+            target: "Currency Stamping Plant",
+            preview: "Signal Intercept: 'Facility where official government coins and fresh banknotes are stamped...'",
+            story: "Interception signal: The facility where official government coins and fresh banknotes are manufactured under military watch. The access code is the 4-letter word for this coin-making establishment."
+          },
+          {
+            id: "case-108",
+            code: "WIND",
+            caseName: "OPERATION #108 • ALPINE TURBINE STATION",
+            target: "High-Altitude Weather Post",
+            preview: "Weather Log: 'High-altitude peak powered by intense atmospheric air currents...'",
+            story: "Weather satellite log: Located at a high-altitude peak powered by intense atmospheric air currents and powerful gusts. The 4-letter code is the term for moving atmospheric air."
+          },
+          {
+            id: "case-109",
+            code: "LOCK",
+            caseName: "OPERATION #109 • BLACK SITE ARMORY",
+            target: "Weapons Depot Delta",
+            preview: "Security Log: 'Heavy door secured by a multi-pin tumbler deadbolt mechanism...'",
+            story: "Security log: The heavy titanium door is secured by a multi-pin tumbler deadbolt mechanism that clicks shut upon closing. The passkey is the 4-letter word for this mechanical security device."
+          },
+          {
+            id: "case-110",
+            code: "CODE",
+            caseName: "OPERATION #110 • CYBER MATRIX SERVER",
+            target: "Mainframe Core",
+            preview: "Decrypted Packet: 'Mainframe access requires entering an encrypted passkey sequence...'",
+            story: "Decrypted packet: Accessing the encrypted mainframe requires entering a secret sequence of characters or symbols used to cipher data. The 4-letter key is the word for an encrypted secret passkey."
+          },
+          {
+            id: "case-111",
+            code: "WAVE",
+            caseName: "OPERATION #111 • NAVAL SUBMARINE BASE",
+            target: "Harbor Sonar Bunker",
+            preview: "Sonar Intercept: 'Harbor vault sits where ocean surges and water ripples crash...'",
+            story: "Sonar intercept: The harbor vault sits directly at the coastal sea wall where ocean surges and water ripples crash against the barrier. The 4-letter passcode is the term for a swell of water."
+          },
+          {
+            id: "case-112",
+            code: "LION",
+            caseName: "OPERATION #112 • ROYAL ANCIENT VAULT",
+            target: "Sovereign Crown Relics",
+            preview: "Dossier: 'Entrance guarded by a stone sculpture of the king of the jungle...'",
+            story: "Historical dossier: The chamber entrance is guarded by a massive stone sculpture of the apex predator known as the king of the jungle. The 4-letter key is the name of this regal wild cat."
+          },
+          {
+            id: "case-113",
+            code: "STAR",
+            caseName: "OPERATION #113 • DEEP SPACE TRANSMITTER",
+            target: "Astrophysics Relay",
+            preview: "Deep Space Log: 'Dish tracks distant luminous celestial spheres burning across galaxies...'",
+            story: "Deep space log: The dish transmitter tracks distant luminous celestial spheres burning with hydrogen fusion across the galaxy. The 4-letter code is the celestial object that shines in deep space."
+          },
+          {
+            id: "case-114",
+            code: "DARK",
+            caseName: "OPERATION #114 • SUBTERRANEAN CAVERN",
+            target: "Underground Research Bunker",
+            preview: "Tactical Scan: 'Deep facility operating without any ambient illumination...'",
+            story: "Tactical scan: Deep underground facility operating without any ambient illumination or light sources. The 4-letter passcode describes the complete absence of light."
+          },
+          {
+            id: "case-115",
+            code: "IRON",
+            caseName: "OPERATION #115 • FORGE STEELWORKS",
+            target: "Industrial Smelting Vault",
+            preview: "Metallurgy Scan: 'Vault forged from heavy magnetic metallic element mined from ore...'",
+            story: "Metallurgy report: The vault is constructed from heavy magnetic metallic element #26, mined from ore and forged into steel girders. The 4-letter code is the name of this magnetic metal."
+          }
+        ];
+
+        // Valid 4-letter words dictionary for user inputs
+        const VALID_WORDS = new Set([
+          "GOLD","SAFE","FIRE","MOON","TIME","BANK","MINT","WIND","LOCK","CODE","WAVE","LION","STAR","DARK","IRON","SHIP","GAME","FAST",
+          "BEAR","BIRD","BLUE","BOOK","CITY","COLD","COOL","DOOR","EAST","FISH","FOOD","FREE","GIFT","GIRL","GOOD","HEAT","HELP","HERO",
+          "HIGH","HOME","HOPE","KING","LAKE","LAND","LIFE","LIKE","LINE","LOVE","MIND","MOST","NAME","NEED","NEWS","NIGHT","OPEN","PARK",
+          "PATH","PLAN","RAIN","READ","REAL","RIVER","ROAD","ROCK","ROSE","SALT","SAND","SNOW","SONG","TOWN","TREE","TRUE","VIEW","WALL",
+          "WARM","WEST","WISH","WORD","WORK","ZERO","ABLE","ACID","AGED","ALSO","AREA","ARMY","AWAY","BABY","BACK","BALL","BAND","BASE",
+          "BATH","BEAR","BEAT","BELL","BEST","BILL","BONE","BORN","BOTH","BUSY","CALL","CALM","CAMP","CARD","CARE","CASE","CASH","CELL",
+          "CENT","CHAT","CHEF","CLUB","COAT","COIN","COOK","CORE","COST","CROP","DARK","DATA","DATE","DAWN","DAYS","DEAL","DEEP","DESK",
+          "DIET","DISC","DISK","DOSE","DRAW","DROP","DRUG","DUST","DUTY","EACH","EARLY","EARTH","EAST","EASY","EDGE","EGGS","ELSE","EVEN",
+          "EVER","FACE","FACT","FAIR","FALL","FARM","FAST","FEAR","FEED","FEEL","FILE","FILL","FILM","FIND","FINE","FIRE","FIRM","FISH",
+          "FLAT","FLOW","FLYING","FOOD","FOOT","FORD","FORM","FORT","FOUR","FREE","FUEL","FULL","FUND","GAIN","GAME","GIFT","GIRL","GIVE",
+          "GLAD","GOAL","GOLD","GOLF","GONE","GOOD","GRAY","GROW","HALL","HAND","HARD","HAVE","HEAD","HEAR","HEAT","HELP","HIGH","HILL",
+          "HOLD","HOLE","HOME","HOPE","HUGE","IDEA","INTO","IRON","ITEM","JOIN","JUMP","JUST","KEEP","KIND","KING","KNOW","LACK","LADY",
+          "LAKE","LAND","LANE","LAST","LATE","LEAD","LEFT","LESS","LIFE","LIFT","LIGHT","LIKE","LINE","LINK","LION","LIST","LIVE","LOAD",
+          "LOCK","LONG","LOOK","LORD","LOSS","LOVE","LOWS","LUCK","MADE","MAIN","MAKE","MALE","MANY","MAPS","MARK","MASS","MATH","MEAL",
+          "MEAT","MEET","MILK","MIND","MINT","MOON","MORE","MOST","MOVE","MUCH","MUST","NAME","NEAR","NEED","NEWS","NEXT","NICE","NIGHT",
+          "NODE","NONE","NOON","NORTH","NOTE","ONLY","OPEN","ORGAN","OVER","PAGE","PAIN","PAIR","PARK","PART","PASS","PATH","PEAK","PLAN",
+          "PLAY","POEM","POET","POLL","POOL","POOR","PORT","POST","PULL","PURE","PUSH","RACE","RAIN","RATE","READ","REAL","REST","RICE",
+          "RICH","RIDE","RING","RISE","RISK","ROAD","ROCK","ROLE","ROOF","ROOM","ROOT","ROSE","RULE","RUSH","SAFE","SAID","SAIL","SALE",
+          "SALT","SAME","SAND","SAVE","SEAT","SEED","SEEK","SEEM","SEEN","SELF","SELL","SEND","SHIP","SHOP","SHOT","SHOW","SIDE","SIGN",
+          "SILK","SITE","SIZE","SKIN","SKY","SLOW","SNOW","SOFT","SOIL","SOLD","SOLE","SOME","SONG","SOON","SORT","SOUL","SPOT","STAR",
+          "STEP","STOP","SUCH","SUIT","SURE","TALK","TALL","TASK","TEAM","TELL","TERM","TEST","TEXT","THAT","THEM","THEN","THEY","THIS",
+          "TIME","TINY","TOOL","TOPIC","TOWN","TREE","TRIP","TRUE","TUBE","TURN","UNIT","UPON","USED","USER","VARY","VERY","VIEW","VOTE",
+          "WAIT","WALK","WALL","WANT","WARM","WAVE","WAYS","WEAK","WEAR","WEEK","WELL","WEST","WHAT","WIFE","WIND","WINE","WING","WISH",
+          "WITH","WOOD","WORD","WORK","YARD","YEAR","ZERO","ZONE"
+        ]);
+
+        // ==========================================
+        // 2. STATE ENGINE (3 ATTEMPTS MAXIMUM)
+        // ==========================================
+        const MAX_ATTEMPTS = 3; // EXACTLY 3 ATTEMPTS
+        const WORD_LENGTH = 4;
+
+        let currentMissionIndex = 0;
+        let targetWord = "GOLD";
+        let currentMissionObj = HEIST_MISSIONS[0];
+
+        let attemptsHistory = []; // Array of { word, result: ['exact'|'misplaced'|'wrong'] }
+        let currentGuess = "";
+        let isGameOver = false;
+        let startTime = Date.now();
+        let revealedPins = [null, null, null, null]; // Single-letter clues
+
+        // Sound State
+        let soundEnabled = true;
+        let audioCtx = null;
+        let musicGainNode = null;
+        let isMusicPlaying = false;
+
+        // Statistics in localStorage
+        let stats = {
+          played: 0,
+          wins: 0,
+          currentStreak: 0,
+          maxStreak: 0,
+          distribution: { 1: 0, 2: 0, 3: 0 }
+        };
+
+        // DOM Element Cache
+        const boardEl = document.getElementById("game-board");
+        const virtualKeyboardEl = document.getElementById("virtual-keyboard");
+        const trackerTextEl = document.getElementById("tracker-text");
+        const fuseBarsEl = document.getElementById("fuse-bars");
+        const toastEl = document.getElementById("toast-msg");
+        const storyTagTextEl = document.getElementById("story-title-text");
+        const storyPreviewEl = document.getElementById("story-narrative-preview");
+
+        // Modals
+        const modalHelp = document.getElementById("modal-help");
+        const modalDossier = document.getElementById("modal-dossier");
+        const modalVictory = document.getElementById("modal-victory");
+        const modalGameover = document.getElementById("modal-gameover");
+        const modalStats = document.getElementById("modal-stats");
+
+        // ==========================================
+        // 3. AUDIO SYNTHESIZER (WEB AUDIO API)
+        // Espionage ambient music loop & tactile FX
+        // ==========================================
+        function initAudio() {
+          if (!audioCtx) {
+            const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+            if (AudioContextClass) {
+              audioCtx = new AudioContextClass();
+            }
+          }
+          if (audioCtx && audioCtx.state === "suspended") {
+            audioCtx.resume();
+          }
+        }
+
+        function playSound(type) {
+          if (!soundEnabled) return;
+          initAudio();
+          if (!audioCtx) return;
+
+          try {
+            const now = audioCtx.currentTime;
+
+            if (type === "key") {
+              // Quick tactile click
+              const osc = audioCtx.createOscillator();
+              const gain = audioCtx.createGain();
+              osc.type = "sine";
+              osc.frequency.setValueAtTime(440, now);
+              osc.frequency.exponentialRampToValueAtTime(120, now + 0.04);
+              gain.gain.setValueAtTime(0.12, now);
+              gain.gain.linearRampToValueAtTime(0.01, now + 0.04);
+              osc.connect(gain);
+              gain.connect(audioCtx.destination);
+              osc.start(now);
+              osc.stop(now + 0.04);
+            } 
+            else if (type === "flip") {
+              // Tumbler mechanical click
+              const osc = audioCtx.createOscillator();
+              const gain = audioCtx.createGain();
+              osc.type = "triangle";
+              osc.frequency.setValueAtTime(280, now);
+              osc.frequency.linearRampToValueAtTime(620, now + 0.06);
+              gain.gain.setValueAtTime(0.15, now);
+              gain.gain.exponentialRampToValueAtTime(0.01, now + 0.06);
+              osc.connect(gain);
+              gain.connect(audioCtx.destination);
+              osc.start(now);
+              osc.stop(now + 0.06);
+            } 
+            else if (type === "win") {
+              // Victory vault unlock fanfare
+              [523.25, 659.25, 783.99, 1046.50].forEach((freq, idx) => {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = "square";
+                osc.frequency.setValueAtTime(freq, now + idx * 0.08);
+                gain.gain.setValueAtTime(0.1, now + idx * 0.08);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.08 + 0.35);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start(now + idx * 0.08);
+                osc.stop(now + idx * 0.08 + 0.35);
+              });
+            } 
+            else if (type === "alarm") {
+              // Defeat alarm siren
+              const osc = audioCtx.createOscillator();
+              const gain = audioCtx.createGain();
+              osc.type = "sawtooth";
+              osc.frequency.setValueAtTime(180, now);
+              osc.frequency.linearRampToValueAtTime(80, now + 0.4);
+              gain.gain.setValueAtTime(0.25, now);
+              gain.gain.linearRampToValueAtTime(0.01, now + 0.4);
+              osc.connect(gain);
+              gain.connect(audioCtx.destination);
+              osc.start(now);
+              osc.stop(now + 0.4);
+            }
+          } catch(e) {
+            // Audio error fallback
+          }
+        }
+
+        // ==========================================
+        // 3.1 PROCEDURAL HACKER CYBER SYNTH MUSIC ENGINE
+        // 122 BPM Cyberpunk / Dark Synth Matrix Soundtrack
+        // ==========================================
+        let sequencerTimer = null;
+        let stepCount = 0;
+        let masterCompressor = null;
+        let ambientPadOsc1 = null;
+        let ambientPadOsc2 = null;
+
+        function startSpyMusic() {
+          startHackerMusic();
+        }
+
+        function startHackerMusic() {
+          if (!soundEnabled || isMusicPlaying) return;
+          initAudio();
+          if (!audioCtx) return;
+
+          try {
+            if (audioCtx.state === "suspended") {
+              audioCtx.resume();
+            }
+
+            isMusicPlaying = true;
+
+            const btnSound = document.getElementById("btn-sound");
+            if (btnSound) btnSound.classList.add("music-active");
+
+            // Master music gain node & dynamics compressor
+            if (!musicGainNode) {
+              musicGainNode = audioCtx.createGain();
+              masterCompressor = audioCtx.createDynamicsCompressor();
+              masterCompressor.threshold.setValueAtTime(-18, audioCtx.currentTime);
+              masterCompressor.knee.setValueAtTime(10, audioCtx.currentTime);
+              masterCompressor.ratio.setValueAtTime(6, audioCtx.currentTime);
+              masterCompressor.attack.setValueAtTime(0.005, audioCtx.currentTime);
+              masterCompressor.release.setValueAtTime(0.1, audioCtx.currentTime);
+
+              musicGainNode.connect(masterCompressor);
+              masterCompressor.connect(audioCtx.destination);
+            }
+
+            musicGainNode.gain.setValueAtTime(0.18, audioCtx.currentTime);
+
+            // Create Sub-bass Cyber Pad Drone
+            createCyberPad();
+
+            // Start 16th-note step sequencer (~123ms per step = 122 BPM)
+            stepCount = 0;
+            if (sequencerTimer) clearInterval(sequencerTimer);
+            sequencerTimer = setInterval(playHackerSequencerStep, 123);
+
+          } catch(e) {
+            console.log("Hacker music awaiting user gesture");
+          }
+        }
+
+        function stopHackerMusic() {
+          if (sequencerTimer) {
+            clearInterval(sequencerTimer);
+            sequencerTimer = null;
+          }
+          if (ambientPadOsc1) {
+            try { ambientPadOsc1.stop(); ambientPadOsc1.disconnect(); } catch(e){}
+            ambientPadOsc1 = null;
+          }
+          if (ambientPadOsc2) {
+            try { ambientPadOsc2.stop(); ambientPadOsc2.disconnect(); } catch(e){}
+            ambientPadOsc2 = null;
+          }
+          if (musicGainNode && audioCtx) {
+            musicGainNode.gain.setValueAtTime(0, audioCtx.currentTime);
+          }
+          isMusicPlaying = false;
+
+          const btnSound = document.getElementById("btn-sound");
+          if (btnSound) btnSound.classList.remove("music-active");
+        }
+
+        function createCyberPad() {
+          if (!audioCtx || !musicGainNode) return;
+          const t = audioCtx.currentTime;
+
+          // Osc 1 - Sawtooth C2 (65.41 Hz)
+          ambientPadOsc1 = audioCtx.createOscillator();
+          ambientPadOsc1.type = "sawtooth";
+          ambientPadOsc1.frequency.setValueAtTime(65.41, t);
+
+          // Osc 2 - Triangle G2 (98.00 Hz)
+          ambientPadOsc2 = audioCtx.createOscillator();
+          ambientPadOsc2.type = "triangle";
+          ambientPadOsc2.frequency.setValueAtTime(98.00, t);
+
+          // Lowpass filter with subtle pulse modulation
+          const filter = audioCtx.createBiquadFilter();
+          filter.type = "lowpass";
+          filter.frequency.setValueAtTime(260, t);
+          filter.Q.setValueAtTime(2.5, t);
+
+          const lfo = audioCtx.createOscillator();
+          lfo.frequency.setValueAtTime(0.25, t); // 0.25 Hz slow sweep
+          const lfoGain = audioCtx.createGain();
+          lfoGain.gain.setValueAtTime(100, t);
+
+          lfo.connect(lfoGain);
+          lfoGain.connect(filter.frequency);
+
+          const padGain = audioCtx.createGain();
+          padGain.gain.setValueAtTime(0.1, t);
+
+          ambientPadOsc1.connect(filter);
+          ambientPadOsc2.connect(filter);
+          filter.connect(padGain);
+          padGain.connect(musicGainNode);
+
+          ambientPadOsc1.start(t);
+          ambientPadOsc2.start(t);
+          lfo.start(t);
+        }
+
+        // C Minor Hacker Bass & Matrix Arp Frequencies
+        const BASS_SEQ = [
+          65.41, 65.41, 77.78, 65.41,  98.00, 65.41, 116.54, 77.78,
+          65.41, 65.41, 87.31, 65.41,  98.00, 116.54, 98.00, 77.78
+        ];
+
+        const ARP_SEQ = [
+          261.63, 311.13, 392.00, 523.25, 466.16, 392.00, 311.13, 261.63,
+          293.66, 349.23, 440.00, 587.33, 523.25, 440.00, 349.23, 293.66
+        ];
+
+        function playHackerSequencerStep() {
+          if (!soundEnabled || !audioCtx || !isMusicPlaying) return;
+
+          const now = audioCtx.currentTime;
+          const step = stepCount % 16;
+          stepCount++;
+
+          // 1. Driving Sawtooth Cyber Bassline
+          const bassFreq = BASS_SEQ[step];
+          if (bassFreq > 0) {
+            const bassOsc = audioCtx.createOscillator();
+            const bassFilter = audioCtx.createBiquadFilter();
+            const bassGain = audioCtx.createGain();
+
+            bassOsc.type = "sawtooth";
+            bassOsc.frequency.setValueAtTime(bassFreq, now);
+
+            bassFilter.type = "lowpass";
+            bassFilter.Q.setValueAtTime(4.5, now);
+            bassFilter.frequency.setValueAtTime(750, now);
+            bassFilter.frequency.exponentialRampToValueAtTime(150, now + 0.1);
+
+            bassGain.gain.setValueAtTime(0.14, now);
+            bassGain.gain.exponentialRampToValueAtTime(0.005, now + 0.11);
+
+            bassOsc.connect(bassFilter);
+            bassFilter.connect(bassGain);
+            bassGain.connect(musicGainNode);
+
+            bassOsc.start(now);
+            bassOsc.stop(now + 0.12);
+          }
+
+          // 2. High Matrix Arpeggio Synthesizer
+          const arpFreq = ARP_SEQ[step];
+          if (arpFreq > 0 && (step % 2 === 0 || step === 7 || step === 15)) {
+            const arpOsc = audioCtx.createOscillator();
+            const arpGain = audioCtx.createGain();
+
+            arpOsc.type = (step % 4 === 0) ? "square" : "triangle";
+            arpOsc.frequency.setValueAtTime(arpFreq, now);
+
+            arpGain.gain.setValueAtTime(0.05, now);
+            arpGain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
+
+            arpOsc.connect(arpGain);
+            arpGain.connect(musicGainNode);
+
+            arpOsc.start(now);
+            arpOsc.stop(now + 0.09);
+          }
+
+          // 3. Cyber Percussion & Beat
+          if (step === 0 || step === 4 || step === 8 || step === 12 || step === 14) {
+            playKickDrum(now);
+          }
+
+          if (step === 4 || step === 12) {
+            playSnareDrum(now);
+          }
+
+          playHiHat(now, step % 2 === 1);
+        }
+
+        function playKickDrum(time) {
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+
+          osc.type = "sine";
+          osc.frequency.setValueAtTime(140, time);
+          osc.frequency.exponentialRampToValueAtTime(32, time + 0.09);
+
+          gain.gain.setValueAtTime(0.28, time);
+          gain.gain.exponentialRampToValueAtTime(0.001, time + 0.1);
+
+          osc.connect(gain);
+          gain.connect(musicGainNode);
+
+          osc.start(time);
+          osc.stop(time + 0.1);
+        }
+
+        function playSnareDrum(time) {
+          const bufferSize = audioCtx.sampleRate * 0.08;
+          const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+          const data = buffer.getChannelData(0);
+          for (let i = 0; i < bufferSize; i++) {
+            data[i] = Math.random() * 2 - 1;
+          }
+
+          const noise = audioCtx.createBufferSource();
+          noise.buffer = buffer;
+
+          const filter = audioCtx.createBiquadFilter();
+          filter.type = "highpass";
+          filter.frequency.setValueAtTime(1000, time);
+
+          const gain = audioCtx.createGain();
+          gain.gain.setValueAtTime(0.12, time);
+          gain.gain.exponentialRampToValueAtTime(0.01, time + 0.08);
+
+          noise.connect(filter);
+          filter.connect(gain);
+          gain.connect(musicGainNode);
+
+          noise.start(time);
+          noise.stop(time + 0.08);
+        }
+
+        function playHiHat(time, isAccent) {
+          const bufferSize = audioCtx.sampleRate * 0.03;
+          const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+          const data = buffer.getChannelData(0);
+          for (let i = 0; i < bufferSize; i++) {
+            data[i] = Math.random() * 2 - 1;
+          }
+
+          const noise = audioCtx.createBufferSource();
+          noise.buffer = buffer;
+
+          const filter = audioCtx.createBiquadFilter();
+          filter.type = "highpass";
+          filter.frequency.setValueAtTime(7000, time);
+
+          const gain = audioCtx.createGain();
+          const vol = isAccent ? 0.05 : 0.025;
+          gain.gain.setValueAtTime(vol, time);
+          gain.gain.exponentialRampToValueAtTime(0.001, time + 0.03);
+
+          noise.connect(filter);
+          filter.connect(gain);
+          gain.connect(musicGainNode);
+
+          noise.start(time);
+          noise.stop(time + 0.03);
+        }
+
+        // ==========================================
+        // 4. LOCAL STORAGE & STATS
+        // ==========================================
+        function loadSavedStats() {
+          try {
+            const raw = localStorage.getItem("vault_breaker_stats_v2");
+            if (raw) {
+              const parsed = JSON.parse(raw);
+              stats = { ...stats, ...parsed };
+            }
+          } catch(e) {}
+        }
+
+        function saveStats() {
+          try {
+            localStorage.setItem("vault_breaker_stats_v2", JSON.stringify(stats));
+          } catch(e) {}
+        }
+
+        function updateStatsUI() {
+          document.getElementById("stat-played").textContent = stats.played;
+          const winPct = stats.played > 0 ? Math.round((stats.wins / stats.played) * 100) : 0;
+          document.getElementById("stat-win-rate").textContent = winPct + "%";
+          document.getElementById("stat-current-streak").textContent = stats.currentStreak;
+          document.getElementById("stat-max-streak").textContent = stats.maxStreak;
+
+          // Render 3 Guess Distribution Bars
+          const container = document.getElementById("dist-bars-container");
+          container.innerHTML = "";
+          let maxVal = 1;
+          for (let i = 1; i <= MAX_ATTEMPTS; i++) {
+            if ((stats.distribution[i] || 0) > maxVal) maxVal = stats.distribution[i];
+          }
+
+          for (let i = 1; i <= MAX_ATTEMPTS; i++) {
+            const val = stats.distribution[i] || 0;
+            const pct = Math.max(12, Math.round((val / maxVal) * 100));
+
+            const row = document.createElement("div");
+            row.className = "dist-row";
+            row.innerHTML = `
+              <span class="dist-num">${i}</span>
+              <div class="dist-bar-wrapper">
+                <div class="dist-bar ${val > 0 ? 'highlight' : ''}" style="width: ${pct}%">
+                  ${val}
+                </div>
+              </div>
+            `;
+            container.appendChild(row);
+          }
+        }
+
+        // ==========================================
+        // 5. GAME INITIALIZATION & BOARD RENDERING
+        // ==========================================
+        function initGame(missionIdx) {
+          if (typeof missionIdx === "number") {
+            currentMissionIndex = missionIdx % HEIST_MISSIONS.length;
+          } else {
+            currentMissionIndex = Math.floor(Math.random() * HEIST_MISSIONS.length);
+          }
+
+          currentMissionObj = HEIST_MISSIONS[currentMissionIndex];
+          targetWord = currentMissionObj.code.toUpperCase();
+
+          attemptsHistory = [];
+          currentGuess = "";
+          isGameOver = false;
+          startTime = Date.now();
+          revealedPins = [null, null, null, null];
+
+          // Update Story Banner & Dossier Details
+          storyTagTextEl.textContent = currentMissionObj.caseName;
+          storyPreviewEl.textContent = currentMissionObj.story;
+
+          document.getElementById("dossier-target-name").textContent = `TARGET: ${currentMissionObj.target.toUpperCase()}`;
+          document.getElementById("dossier-case-code").textContent = `CASE CODE: ${currentMissionObj.id.toUpperCase()}`;
+          document.getElementById("dossier-full-story").textContent = currentMissionObj.story;
+
+          // Reset Pin Slots
+          for (let i = 0; i < WORD_LENGTH; i++) {
+            const pinEl = document.getElementById(`pin-${i}`);
+            if (pinEl) {
+              pinEl.textContent = "?";
+              pinEl.classList.remove("locked");
+            }
+          }
+
+          // Build Exactly 3 Attempt Board Rows
+          renderBoard();
+          updateTrackerHUD();
+          resetKeyboardStyles();
+        }
+
+        function renderBoard() {
+          boardEl.innerHTML = "";
+
+          for (let rowIdx = 0; rowIdx < MAX_ATTEMPTS; rowIdx++) {
+            const rowDiv = document.createElement("div");
+            rowDiv.className = "attempt-row" + (rowIdx === attemptsHistory.length ? " active" : "");
+            rowDiv.id = `attempt-row-${rowIdx}`;
+
+            // Attempt Number
+            const numDiv = document.createElement("div");
+            numDiv.className = "attempt-num";
+            numDiv.textContent = `${rowIdx + 1}`;
+            rowDiv.appendChild(numDiv);
+
+            // 4 Letter Cells
+            const cellsDiv = document.createElement("div");
+            cellsDiv.className = "row-cells";
+
+            const rowData = attemptsHistory[rowIdx];
+            const isCurrentRow = (rowIdx === attemptsHistory.length && !isGameOver);
+
+            for (let colIdx = 0; colIdx < WORD_LENGTH; colIdx++) {
+              const cell = document.createElement("div");
+              cell.className = "letter-cell";
+              cell.id = `cell-${rowIdx}-${colIdx}`;
+
+              if (rowData) {
+                cell.textContent = rowData.word[colIdx];
+                const status = rowData.result[colIdx];
+                cell.classList.add(`status-${status}`);
+              } else if (isCurrentRow) {
+                const char = currentGuess[colIdx] || "";
+                cell.textContent = char;
+                if (char) cell.classList.add("filled");
+              }
+
+              cellsDiv.appendChild(cell);
+            }
+            rowDiv.appendChild(cellsDiv);
+
+            // Row Clue Summary Chips (Exact / Misplaced counters)
+            const cluesDiv = document.createElement("div");
+            cluesDiv.className = "row-clues";
+            cluesDiv.id = `clues-${rowIdx}`;
+
+            if (rowData) {
+              const exactCount = rowData.result.filter(r => r === "exact").length;
+              const misplacedCount = rowData.result.filter(r => r === "misplaced").length;
+
+              cluesDiv.innerHTML = `
+                <div class="clue-chip exact" title="${exactCount} Correct Position">
+                  <span class="clue-dot dot-exact"></span>${exactCount}
+                </div>
+                <div class="clue-chip misplaced" title="${misplacedCount} Wrong Position">
+                  <span class="clue-dot dot-misplaced"></span>${misplacedCount}
+                </div>
+              `;
+            } else {
+              cluesDiv.innerHTML = `
+                <div class="clue-chip" style="color:var(--gray-text); font-size:9px;">-</div>
+              `;
+            }
+            rowDiv.appendChild(cluesDiv);
+
+            boardEl.appendChild(rowDiv);
+          }
+        }
+
+        function updateTrackerHUD() {
+          const remaining = MAX_ATTEMPTS - attemptsHistory.length;
+          trackerTextEl.textContent = `${remaining} / ${MAX_ATTEMPTS} REMAINING`;
+
+          // Fuse node indicator bars (3 nodes)
+          fuseBarsEl.innerHTML = "";
+          for (let i = 0; i < MAX_ATTEMPTS; i++) {
+            const node = document.createElement("div");
+            node.className = "fuse-node";
+            if (i >= remaining) {
+              node.classList.add("blown");
+            } else if (remaining === 1) {
+              node.classList.add("critical");
+            }
+            fuseBarsEl.appendChild(node);
+          }
+        }
+
+        // Keyboard letter status updates
+        function resetKeyboardStyles() {
+          const keys = virtualKeyboardEl.querySelectorAll(".key-btn");
+          keys.forEach(k => {
+            k.classList.remove("key-exact", "key-misplaced", "key-wrong");
+          });
+        }
+
+        function updateKeyboardStyles() {
+          const keyStatusMap = {};
+
+          attemptsHistory.forEach(att => {
+            att.word.split("").forEach((char, idx) => {
+              const res = att.result[idx];
+              const existing = keyStatusMap[char];
+
+              if (res === "exact") {
+                keyStatusMap[char] = "exact";
+              } else if (res === "misplaced" && existing !== "exact") {
+                keyStatusMap[char] = "misplaced";
+              } else if (res === "wrong" && !existing) {
+                keyStatusMap[char] = "wrong";
+              }
+            });
+          });
+
+          const keys = virtualKeyboardEl.querySelectorAll(".key-btn");
+          keys.forEach(k => {
+            const keyVal = k.getAttribute("data-key");
+            if (keyVal && keyVal.length === 1 && keyStatusMap[keyVal]) {
+              k.classList.remove("key-exact", "key-misplaced", "key-wrong");
+              k.classList.add(`key-${keyStatusMap[keyVal]}`);
+            }
+          });
+        }
+
+        // ==========================================
+        // 6. INPUT ENGINE & SUBMISSION LOGIC
+        // ==========================================
+        function handleInput(key) {
+          if (isGameOver) return;
+          startSpyMusic(); // User gesture activates sound
+
+          key = key.toUpperCase();
+
+          if (key === "ENTER") {
+            submitGuess();
+          } else if (key === "BACKSPACE" || key === "DELETE") {
+            if (currentGuess.length > 0) {
+              currentGuess = currentGuess.slice(0, -1);
+              playSound("key");
+              renderBoard();
+            }
+          } else if (/^[A-Z]$/.test(key)) {
+            if (currentGuess.length < WORD_LENGTH) {
+              currentGuess += key;
+              playSound("key");
+              renderBoard();
+            }
+          }
+        }
+
+        function submitGuess() {
+          if (currentGuess.length < WORD_LENGTH) {
+            showToast("ENTER 4-LETTER PASSCODE");
+            shakeActiveRow();
+            return;
+          }
+
+          if (!VALID_WORDS.has(currentGuess) && currentGuess !== targetWord) {
+            showToast("INVALID 4-LETTER WORD");
+            shakeActiveRow();
+            return;
+          }
+
+          // Evaluate guess against target word
+          const result = evaluateGuess(currentGuess, targetWord);
+          const currentRowIdx = attemptsHistory.length;
+
+          attemptsHistory.push({ word: currentGuess, result: result });
+          currentGuess = "";
+
+          // Animate Cell Flipping & Reveal Clues
+          revealRowAnimation(currentRowIdx, () => {
+            updateTrackerHUD();
+            updateKeyboardStyles();
+            checkGameOutcome();
+          });
+        }
+
+        function evaluateGuess(guess, target) {
+          const result = Array(WORD_LENGTH).fill("wrong");
+          const targetArr = target.split("");
+          const guessArr = guess.split("");
+          const taken = Array(WORD_LENGTH).fill(false);
+
+          // 1st Pass: Exact Matches (Green)
+          for (let i = 0; i < WORD_LENGTH; i++) {
+            if (guessArr[i] === targetArr[i]) {
+              result[i] = "exact";
+              taken[i] = true;
+              revealedPins[i] = guessArr[i]; // Unlock Pin
+            }
+          }
+
+          // 2nd Pass: Misplaced Matches (Yellow)
+          for (let i = 0; i < WORD_LENGTH; i++) {
+            if (result[i] === "exact") continue;
+
+            for (let j = 0; j < WORD_LENGTH; j++) {
+              if (!taken[j] && guessArr[i] === targetArr[j]) {
+                result[i] = "misplaced";
+                taken[j] = true;
+                break;
+              }
+            }
+          }
+
+          // Update Pin Slots UI
+          for (let i = 0; i < WORD_LENGTH; i++) {
+            if (revealedPins[i]) {
+              const pinEl = document.getElementById(`pin-${i}`);
+              if (pinEl) {
+                pinEl.textContent = revealedPins[i];
+                pinEl.classList.add("locked");
+              }
+            }
+          }
+
+          return result;
+        }
+
+        function revealRowAnimation(rowIdx, callback) {
+          const rowEl = document.getElementById(`attempt-row-${rowIdx}`);
+          if (!rowEl) {
+            if (callback) callback();
+            return;
+          }
+
+          const cells = rowEl.querySelectorAll(".letter-cell");
+          cells.forEach((cell, idx) => {
+            setTimeout(() => {
+              cell.classList.add("reveal-flip");
+              playSound("flip");
+            }, idx * 110);
+          });
+
+          // Rotate vault wheel
+          const wheel = document.getElementById("vault-wheel");
+          if (wheel) {
+            wheel.style.transform = `rotate(${(rowIdx + 1) * 120}deg)`;
+          }
+
+          setTimeout(() => {
+            renderBoard();
+            if (callback) callback();
+          }, WORD_LENGTH * 110 + 200);
+        }
+
+        function checkGameOutcome() {
+          const lastAttempt = attemptsHistory[attemptsHistory.length - 1];
+          const isWin = lastAttempt && lastAttempt.result.every(r => r === "exact");
+
+          if (isWin) {
+            isGameOver = true;
+            playSound("win");
+            triggerWinParticles();
+
+            // Stats Update
+            stats.played++;
+            stats.wins++;
+            stats.currentStreak++;
+            if (stats.currentStreak > stats.maxStreak) stats.maxStreak = stats.currentStreak;
+            stats.distribution[attemptsHistory.length] = (stats.distribution[attemptsHistory.length] || 0) + 1;
+            saveStats();
+
+            const durationSec = Math.round((Date.now() - startTime) / 1000);
+            document.getElementById("victory-word").textContent = targetWord;
+            document.getElementById("victory-stats-summary").textContent = `Vault cracked in ${attemptsHistory.length} of 3 attempts!`;
+            document.getElementById("win-attempts-val").textContent = `${attemptsHistory.length}/${MAX_ATTEMPTS}`;
+            document.getElementById("win-streak-val").textContent = stats.currentStreak;
+            const winPct = Math.round((stats.wins / stats.played) * 100);
+            document.getElementById("win-accuracy-val").textContent = winPct + "%";
+            document.getElementById("win-time-val").textContent = `${durationSec}s`;
+
+            setTimeout(() => openModal(modalVictory), 400);
+          } else if (attemptsHistory.length >= MAX_ATTEMPTS) {
+            isGameOver = true;
+            playSound("alarm");
+
+            // Stats Update
+            stats.played++;
+            stats.currentStreak = 0;
+            saveStats();
+
+            document.getElementById("gameover-word").textContent = targetWord;
+            document.getElementById("gameover-def").textContent = `Passcode for ${currentMissionObj.target}`;
+
+            setTimeout(() => openModal(modalGameover), 400);
+          } else {
+            const rem = MAX_ATTEMPTS - attemptsHistory.length;
+            if (rem === 1) {
+              showToast("FINAL ATTEMPT REMAINING!");
+            } else {
+              showToast(`${rem} ATTEMPTS REMAINING`);
+            }
+          }
+        }
+
+        function shakeActiveRow() {
+          playSound("alarm");
+          const activeRow = document.getElementById(`attempt-row-${attemptsHistory.length}`);
+          if (activeRow) {
+            activeRow.classList.add("shake");
+            setTimeout(() => activeRow.classList.remove("shake"), 400);
+          }
+        }
+
+        function showToast(msg) {
+          toastEl.textContent = msg;
+          toastEl.classList.add("show");
+          setTimeout(() => toastEl.classList.remove("show"), 2200);
+        }
+
+        // Reveal Tactical Clue (Single Letter)
+        function revealTacticalHint() {
+          if (isGameOver) return;
+
+          // Find an unrevealed index
+          const unrevealedIdxs = [];
+          for (let i = 0; i < WORD_LENGTH; i++) {
+            if (!revealedPins[i]) unrevealedIdxs.push(i);
+          }
+
+          if (unrevealedIdxs.length === 0) {
+            showToast("ALL PIN POSITIONS DISCOVERED!");
+            return;
+          }
+
+          const targetIdx = unrevealedIdxs[Math.floor(Math.random() * unrevealedIdxs.length)];
+          const char = targetWord[targetIdx];
+          revealedPins[targetIdx] = char;
+
+          const pinEl = document.getElementById(`pin-${targetIdx}`);
+          if (pinEl) {
+            pinEl.textContent = char;
+            pinEl.classList.add("locked");
+          }
+
+          playSound("win");
+          showToast(`INTEL REVEALED: SLOT #${targetIdx + 1} IS '${char}'`);
+        }
+
+        // ==========================================
+        // 7. MODAL SYSTEM CONTROLS
+        // ==========================================
+        function openModal(modalEl) {
+          if (!modalEl) return;
+          modalEl.classList.add("open");
+        }
+
+        function closeModal(modalEl) {
+          if (!modalEl) return;
+          modalEl.classList.remove("open");
+        }
+
+        function closeAllModals() {
+          document.querySelectorAll(".modal-backdrop").forEach(m => m.classList.remove("open"));
+        }
+
+        // ==========================================
+        // 8. WIN CELEBRATION PARTICLES CANVAS
+        // ==========================================
+        function triggerWinParticles() {
+          const canvas = document.getElementById("fx-canvas");
+          if (!canvas) return;
+          const ctx = canvas.getContext("2d");
+          canvas.width = window.innerWidth;
+          canvas.height = window.innerHeight;
+
+          const particles = [];
+          const colors = ["#00f0ff", "#10b981", "#f59e0b", "#38bdf8", "#ffffff"];
+
+          for (let i = 0; i < 70; i++) {
+            particles.push({
+              x: canvas.width / 2,
+              y: canvas.height / 2,
+              vx: (Math.random() - 0.5) * 12,
+              vy: (Math.random() - 0.7) * 14,
+              size: Math.random() * 6 + 3,
+              color: colors[Math.floor(Math.random() * colors.length)],
+              alpha: 1,
+              decay: Math.random() * 0.02 + 0.015
+            });
+          }
+
+          function render() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            let active = false;
+
+            particles.forEach(p => {
+              if (p.alpha > 0) {
+                active = true;
+                p.x += p.vx;
+                p.y += p.vy;
+                p.vy += 0.3; // Gravity
+                p.alpha -= p.decay;
+
+                ctx.save();
+                ctx.globalAlpha = Math.max(0, p.alpha);
+                ctx.fillStyle = p.color;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+              }
+            });
+
+            if (active) {
+              requestAnimationFrame(render);
+            } else {
+              ctx.clearRect(0, 0, canvas.width, canvas.height);
+            }
+          }
+          requestAnimationFrame(render);
+        }
+
+        // ==========================================
+        // 9. EVENT LISTENERS & SETUP
+        // ==========================================
+        document.addEventListener("DOMContentLoaded", () => {
+          loadSavedStats();
+          initGame(0);
+
+          // Virtual Keyboard Clicks
+          virtualKeyboardEl.addEventListener("click", (e) => {
+            const btn = e.target.closest(".key-btn");
+            if (btn) {
+              const key = btn.getAttribute("data-key");
+              if (key) handleInput(key);
+            }
+          });
+
+          // Physical Keyboard Typing
+          document.addEventListener("keydown", (e) => {
+            if (e.altKey || e.ctrlKey || e.metaKey) return;
+            handleInput(e.key);
+          });
+
+          // Header Button Actions
+          document.getElementById("btn-story-file").addEventListener("click", () => {
+            playSound("key");
+            openModal(modalDossier);
+          });
+
+          document.getElementById("story-dossier-bar").addEventListener("click", () => {
+            playSound("key");
+            openModal(modalDossier);
+          });
+
+          document.getElementById("btn-hint").addEventListener("click", () => {
+            revealTacticalHint();
+          });
+
+          document.getElementById("btn-help").addEventListener("click", () => {
+            playSound("key");
+            openModal(modalHelp);
+          });
+
+          document.getElementById("btn-stats").addEventListener("click", () => {
+            playSound("key");
+            updateStatsUI();
+            openModal(modalStats);
+          });
+
+          // Sound Toggle Button
+          document.getElementById("btn-sound").addEventListener("click", () => {
+            soundEnabled = !soundEnabled;
+            document.getElementById("sound-icon-on").style.display = soundEnabled ? "block" : "none";
+            document.getElementById("sound-icon-off").style.display = soundEnabled ? "none" : "block";
+
+            if (soundEnabled) {
+              startHackerMusic();
+              showToast("HACKER MUSIC & SFX ACTIVE 🎧");
+            } else {
+              stopHackerMusic();
+              showToast("AUDIO & MUSIC MUTED 🔇");
+            }
+          });
+
+          // Fullscreen Toggle Button
+          document.getElementById("btn-fullscreen").addEventListener("click", () => {
+            if (!document.fullscreenElement) {
+              document.documentElement.requestFullscreen().catch(() => {});
+              document.getElementById("fs-icon-enter").style.display = "none";
+              document.getElementById("fs-icon-exit").style.display = "block";
+            } else {
+              document.exitFullscreen().catch(() => {});
+              document.getElementById("fs-icon-enter").style.display = "block";
+              document.getElementById("fs-icon-exit").style.display = "none";
+            }
+          });
+
+          // Modal Close Buttons
+          document.querySelectorAll("[data-close]").forEach(btn => {
+            btn.addEventListener("click", () => {
+              playSound("key");
+              closeAllModals();
+            });
+          });
+
+          // Play Again / Retry Buttons
+          document.getElementById("btn-play-again-win").addEventListener("click", () => {
+            closeAllModals();
+            initGame(currentMissionIndex + 1);
+          });
+
+          document.getElementById("btn-retry-heist").addEventListener("click", () => {
+            closeAllModals();
+            initGame(currentMissionIndex);
+          });
+
+          document.getElementById("btn-new-custom-game").addEventListener("click", () => {
+            closeAllModals();
+            initGame(Math.floor(Math.random() * HEIST_MISSIONS.length));
+          });
+
+          // Share Victory Report
+          document.getElementById("btn-share-win").addEventListener("click", () => {
+            let report = `🔓 Vault Breaker ${currentMissionObj.caseName}\nScore: ${attemptsHistory.length}/${MAX_ATTEMPTS} attempts\n\n`;
+            attemptsHistory.forEach(att => {
+              att.result.forEach(r => {
+                if (r === "exact") report += "🟩";
+                else if (r === "misplaced") report += "🟨";
+                else report += "⬛";
+              });
+              report += "\n";
+            });
+
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+              navigator.clipboard.writeText(report).then(() => {
+                showToast("HEIST REPORT COPIED TO CLIPBOARD!");
+              }).catch(() => {
+                showToast("REPORT GENERATED!");
+              });
+            } else {
+              showToast("REPORT GENERATED!");
+            }
+          });
+
+          // Automatically Show Operations Manual on First Launch
+          setTimeout(() => {
+            openModal(modalHelp);
+          }, 300);
+
+          // Start Hacker Synth Music on First User Touch/Click
+          const handleFirstInteraction = () => {
+            if (soundEnabled && !isMusicPlaying) {
+              startHackerMusic();
+            }
+            document.removeEventListener("click", handleFirstInteraction);
+            document.removeEventListener("touchstart", handleFirstInteraction);
+          };
+          document.addEventListener("click", handleFirstInteraction, { once: true });
+          document.addEventListener("touchstart", handleFirstInteraction, { once: true });
+        });
+      })();
+    </script>
+  
+  <!-- PWA Service Worker Registration -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js').catch(() => {});
+      });
+    }
+  </script>
+
+
+  <!-- 5-Second Hint Ad Modal System -->
+  <div id="fl-hint-modal-overlay" style="
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 999999;
+    background: rgba(10, 15, 30, 0.85);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    align-items: center;
+    justify-content: center;
+    font-family: system-ui, -apple-system, sans-serif;
+    padding: 16px;
+    box-sizing: border-box;
+  ">
+    <div style="
+      background: linear-gradient(145deg, #1e293b, #0f172a);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.6), 0 0 30px rgba(245, 158, 11, 0.2);
+      border-radius: 20px;
+      max-width: 420px;
+      width: 100%;
+      padding: 24px;
+      text-align: center;
+      color: #f8fafc;
+      position: relative;
+    ">
+      <button id="fl-hint-close-btn" style="
+        position: absolute;
+        top: 14px;
+        right: 14px;
+        background: rgba(255,255,255,0.08);
+        border: none;
+        color: #94a3b8;
+        font-size: 18px;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      ">✕</button>
+
+      <div style="
+        width: 56px;
+        height: 56px;
+        margin: 0 auto 14px auto;
+        background: rgba(245, 158, 11, 0.15);
+        border: 1px solid rgba(245, 158, 11, 0.3);
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 28px;
+      ">💡</div>
+
+      <h3 style="margin: 0 0 6px 0; font-size: 19px; font-weight: 800; color: #fbbf24;">Unlocking Hint</h3>
+      <p style="margin: 0 0 18px 0; font-size: 13px; color: #94a3b8; line-height: 1.4;">
+        Sponsored Reward: Wait 5 seconds to reveal your clue assistance.
+      </p>
+
+      <div id="fl-hint-ad-box" style="
+        background: rgba(0, 0, 0, 0.35);
+        border: 1px dashed rgba(255, 255, 255, 0.15);
+        border-radius: 12px;
+        padding: 16px;
+        margin-bottom: 18px;
+      ">
+        <div style="font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: #64748b; margin-bottom: 4px;">Advertisement</div>
+        <div style="font-size: 14px; font-weight: 600; color: #e2e8f0;">Brain Booster Puzzles</div>
+        <div style="font-size: 11px; color: #38bdf8; margin-top: 2px;">play.funlogic.games</div>
+      </div>
+
+      <div style="margin-bottom: 16px;">
+        <div style="display: flex; justify-content: space-between; font-size: 12px; font-weight: 700; margin-bottom: 6px;">
+          <span style="color: #94a3b8;">Sponsor Video</span>
+          <span id="fl-hint-timer-txt" style="color: #f59e0b;">5s</span>
+        </div>
+        <div style="width: 100%; height: 8px; background: rgba(255,255,255,0.1); border-radius: 4px; overflow: hidden;">
+          <div id="fl-hint-progress-bar" style="width: 0%; height: 100%; background: linear-gradient(90deg, #f59e0b, #10b981); transition: width 0.1s linear;"></div>
+        </div>
+      </div>
+
+      <button id="fl-hint-claim-btn" disabled style="
+        width: 100%;
+        padding: 12px;
+        border-radius: 12px;
+        border: none;
+        background: #334155;
+        color: #64748b;
+        font-weight: 700;
+        font-size: 14px;
+        cursor: not-allowed;
+        transition: all 0.2s;
+      ">Please wait 5s...</button>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      let countdownTimer = null;
+      let originalHintCallback = null;
+
+      const overlay = document.getElementById('fl-hint-modal-overlay');
+      const timerTxt = document.getElementById('fl-hint-timer-txt');
+      const progressBar = document.getElementById('fl-hint-progress-bar');
+      const claimBtn = document.getElementById('fl-hint-claim-btn');
+      const closeBtn = document.getElementById('fl-hint-close-btn');
+
+      function showHintAdModal(callback) {
+        if (!overlay) return;
+        originalHintCallback = callback;
+        overlay.style.display = 'flex';
+        
+        let timeLeft = 50; // 5.0 seconds
+        claimBtn.disabled = true;
+        claimBtn.style.background = '#334155';
+        claimBtn.style.color = '#64748b';
+        claimBtn.style.cursor = 'not-allowed';
+        claimBtn.textContent = 'Please wait 5s...';
+        progressBar.style.width = '0%';
+        timerTxt.textContent = '5s';
+
+        try {
+          if (window.parent && window.parent !== window) {
+            window.parent.postMessage({ type: 'hint_ad_started', duration: 5 }, '*');
+          }
+        } catch(e) {}
+
+        clearInterval(countdownTimer);
+        countdownTimer = setInterval(() => {
+          timeLeft--;
+          const percent = ((50 - timeLeft) / 50) * 100;
+          progressBar.style.width = percent + '%';
+          const secondsRemaining = Math.ceil(timeLeft / 10);
+          timerTxt.textContent = secondsRemaining + 's';
+          claimBtn.textContent = 'Please wait ' + secondsRemaining + 's...';
+
+          if (timeLeft <= 0) {
+            clearInterval(countdownTimer);
+            timerTxt.textContent = 'Ready!';
+            timerTxt.style.color = '#10b981';
+            claimBtn.disabled = false;
+            claimBtn.style.background = 'linear-gradient(90deg, #f59e0b, #10b981)';
+            claimBtn.style.color = '#0f172a';
+            claimBtn.style.cursor = 'pointer';
+            claimBtn.textContent = '✨ Get Hint Now';
+
+            try {
+              if (window.parent && window.parent !== window) {
+                window.parent.postMessage({ type: 'hint_ad_completed' }, '*');
+              }
+            } catch(e) {}
+          }
+        }, 100);
+      }
+
+      function closeHintModal() {
+        clearInterval(countdownTimer);
+        if (overlay) overlay.style.display = 'none';
+      }
+
+      function claimHint() {
+        closeHintModal();
+        if (typeof originalHintCallback === 'function') {
+          originalHintCallback();
+        }
+      }
+
+      if (closeBtn) closeBtn.addEventListener('click', closeHintModal);
+      if (claimBtn) claimBtn.addEventListener('click', claimHint);
+
+      window.showHintWith5sAd = showHintAdModal;
+
+      window.addEventListener('DOMContentLoaded', () => {
+        setTimeout(() => {
+          const hintSelectors = [
+            '#btn-hint', '#hint-btn', '#button-hint', '#hint',
+            '.btn-hint', '.hint-btn', '[data-action="hint"]',
+            'button[title*="Hint" i]', 'button[aria-label*="Hint" i]'
+          ];
+
+          hintSelectors.forEach(selector => {
+            document.querySelectorAll(selector).forEach(btn => {
+              if (!btn.getAttribute('data-fl-hooked')) {
+                btn.setAttribute('data-fl-hooked', 'true');
+                btn.addEventListener('click', function(e) {
+                  if (!this.hasAttribute('data-hint-approved')) {
+                    e.stopImmediatePropagation();
+                    e.preventDefault();
+                    showHintAdModal(() => {
+                      this.setAttribute('data-hint-approved', 'true');
+                      this.click();
+                      setTimeout(() => this.removeAttribute('data-hint-approved'), 500);
+                    });
+                  }
+                }, true);
+              }
+            });
+          });
+        }, 300);
+      });
+    })();
+  </script>
+
+</body>
+</html>

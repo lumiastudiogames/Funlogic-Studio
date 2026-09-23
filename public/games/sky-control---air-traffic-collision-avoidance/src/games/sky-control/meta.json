@@ -1,0 +1,32 @@
+{
+  "title": "Sky Control: Air Traffic Collision Avoidance",
+  "categoryId": "logic",
+  "icon": "✈️",
+  "instructions": "Touch and drag airplanes to draw flight vector paths. Adjust flight levels (FL100, FL200, FL300) to separate traffic in 3D and guide flights to runway landings.",
+  "description": "Sky Control is a tactical top-down air traffic control simulation puzzle game. Direct jetliners, supersonic concordes, and medevac helicopters safely through high-density airspaces without collisions.",
+  "keywords": [
+    "air traffic control",
+    "plane game",
+    "collision avoidance",
+    "atc simulator",
+    "flight vector",
+    "airplane puzzle",
+    "radar game",
+    "runway landing",
+    "mobile flight game"
+  ],
+  "faqs": [
+    {
+      "q": "How do I avoid collisions between planes?",
+      "a": "You can either drag a new flight path to turn the plane away, or change its altitude level (FL100, FL200, FL300). Planes at different altitudes can safely pass over one another."
+    },
+    {
+      "q": "How do I land airplanes?",
+      "a": "Draw a path leading directly into the runway's approach zone, or select the aircraft and tap the LAND button when near the airport at FL100."
+    },
+    {
+      "q": "Does it work on mobile touchscreens?",
+      "a": "Yes, Sky Control is fully optimized for smartphones and tablets with smooth 60 FPS touch vector drawing."
+    }
+  ]
+}

@@ -1,0 +1,6 @@
+{
+  "name": "City Parking Jam",
+  "description": "Untangle crowded parking lots with sedans, SUVs, and vans across 30 challenging levels with unlockables and realistic 2.5D graphics.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
