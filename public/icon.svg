@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="logo-grad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#58CC02"/>
+      <stop offset="100%" stop-color="#4EBA02"/>
+    </linearGradient>
+    <filter id="logo-shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="16" stdDeviation="12" flood-color="#46A302" flood-opacity="0.3"/>
+    </filter>
+  </defs>
+  <!-- Base Container -->
+  <rect width="512" height="512" rx="140" fill="url(#logo-grad)" filter="url(#logo-shadow)"/>
+  <!-- 3D Extruded Bottom Border -->
+  <path d="M 40,400 Q 40,472 112,472 L 400,472 Q 472,472 472,400 L 472,430 Q 472,502 400,502 L 112,502 Q 40,502 40,430 Z" fill="#46A302"/>
+  <!-- High Contrast Letter F -->
+  <text x="256" y="380" font-family="Plus Jakarta Sans, Outfit, system-ui, -apple-system, sans-serif" font-weight="900" font-size="340" fill="#FFFFFF" text-anchor="middle" letter-spacing="-10">F</text>
+</svg>

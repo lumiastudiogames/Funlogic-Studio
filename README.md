@@ -1,11 +1,13 @@
-<div align="center">
+# FunLogic.games
 
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
+Portal de jogos de lógica em JavaScript e TypeScript vanilla.
 
-  <h1>Built with AI Studio</h2>
+## Run Locally
 
-  <p>The fastest path from prompt to production with Gemini.</p>
+Pré-requisito: Node.js.
 
-  <a href="https://aistudio.google.com/apps">Start building</a>
 
-</div>
+1. Instale as dependências: `npm install`
+2. Inicie o app: `npm run dev`
+
+Para gerar a versão de produção, execute `npm run build`.
