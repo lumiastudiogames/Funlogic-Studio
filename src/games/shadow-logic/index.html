@@ -2273,15 +2273,17 @@
             `;
           }
 
-          document.getElementById('success-desc').textContent = `Mastered Level ${LEVELS[currentLevelIdx].id} with ${stars} Star${stars > 1 ? 's' : ''}!`;
-          modalSuccess.classList.add('active');
+          const succDesc = document.getElementById('success-desc');
+          if (succDesc) succDesc.textContent = `Mastered Level ${LEVELS[currentLevelIdx].id} with ${stars} Star${stars > 1 ? 's' : ''}!`;
+          if (modalSuccess) modalSuccess.classList.add('active');
         }
 
         function showGameVictoryModal() {
           let totalStars = 0;
           Object.values(levelStars).forEach(s => totalStars += s);
-          document.getElementById('total-stars-count').textContent = `${totalStars} / 36 ★`;
-          modalVictory.classList.add('active');
+          const totStars = document.getElementById('total-stars-count');
+          if (totStars) totStars.textContent = `${totalStars} / 36 ★`;
+          if (modalVictory) modalVictory.classList.add('active');
         }
 
         /* --- 11. LIGHT RAY GUIDES CANVAS OVERLAY --- */

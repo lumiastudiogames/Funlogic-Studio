@@ -514,17 +514,17 @@ class WaterSortApp {
   }
 
   private updateInGameUI() {
-    this.movesEl.textContent = String(this.state.moves);
-    this.levelBadgeEl.textContent = `LEVEL ${this.state.levelConfig.id}`;
-    this.topMessageEl.textContent = `Pour liquids to sort each tube by color • Level ${this.state.levelConfig.id}`;
-    this.bottomMessageEl.textContent = this.state.statusMessage;
-    this.timeEl.textContent = this.state.getFormattedTime();
+    if (this.movesEl) this.movesEl.textContent = String(this.state.moves);
+    if (this.levelBadgeEl) this.levelBadgeEl.textContent = `LEVEL ${this.state.levelConfig.id}`;
+    if (this.topMessageEl) this.topMessageEl.textContent = `Pour liquids to sort each tube by color • Level ${this.state.levelConfig.id}`;
+    if (this.bottomMessageEl) this.bottomMessageEl.textContent = this.state.statusMessage;
+    if (this.timeEl) this.timeEl.textContent = this.state.getFormattedTime();
 
     const best = this.state.getBestMovesForCurrentLevel();
-    this.bestMovesEl.textContent = best !== null ? `${best} moves` : '-';
+    if (this.bestMovesEl) this.bestMovesEl.textContent = best !== null ? `${best} moves` : '-';
 
-    this.undoBtn.disabled = this.state.history.length === 0 || this.state.isAnimating;
-    this.addTubeBtn.disabled = this.state.extraTubesAdded >= 2 || this.state.isAnimating;
+    if (this.undoBtn) this.undoBtn.disabled = this.state.history.length === 0 || this.state.isAnimating;
+    if (this.addTubeBtn) this.addTubeBtn.disabled = this.state.extraTubesAdded >= 2 || this.state.isAnimating;
 
     this.updateSoundButton(sound.isEnabled());
   }

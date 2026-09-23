@@ -172,9 +172,12 @@
   }
 
   function updateHUD() {
-    document.getElementById('level-badge-text').textContent = `LEVEL ${currentLevel} / 100`;
-    document.getElementById('move-counter').textContent = moves;
-    document.getElementById('undo-counter').textContent = undosRemaining;
+    const lvlEl = document.getElementById('level-badge-text');
+    if (lvlEl) lvlEl.textContent = `LEVEL ${currentLevel} / 100`;
+    const moveEl = document.getElementById('move-counter');
+    if (moveEl) moveEl.textContent = moves;
+    const undoEl = document.getElementById('undo-counter');
+    if (undoEl) undoEl.textContent = undosRemaining;
     const undoBtn = document.getElementById('btn-undo');
     if (undoBtn) {
       undoBtn.style.opacity = undosRemaining > 0 && history.length > 0 ? '1' : '0.5';

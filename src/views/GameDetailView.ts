@@ -66,20 +66,20 @@ export function renderGameDetailView(container: HTMLElement, gameId: string): vo
     <div class="max-w-7xl mx-auto px-4 sm:px-6 py-6 space-y-8">
       
       <!-- Top Breadcrumb & Back Navigation -->
-      <div class="flex flex-wrap items-center justify-between gap-3 text-xs font-bold text-slate-400">
+      <div class="flex flex-wrap items-center justify-between gap-3 text-xs font-bold text-slate-500">
         <div class="flex items-center gap-2">
-          <a href="#home" class="hover:text-white transition flex items-center gap-1 text-decoration-none text-slate-400">
+          <a href="#home" class="hover:text-[#58CC02] transition flex items-center gap-1 text-decoration-none text-slate-600">
             <span>🏠 Home</span>
           </a>
-          <span>›</span>
-          <a href="#category/${game.categoryId}" class="hover:text-[#58CC02] transition text-decoration-none text-slate-300">
+          <span class="text-slate-400">›</span>
+          <a href="#category/${game.categoryId}" class="hover:text-[#58CC02] transition text-decoration-none text-slate-600">
             <span>${category.label}</span>
           </a>
-          <span>›</span>
-          <span class="text-white font-extrabold truncate max-w-[180px] sm:max-w-none">${game.title}</span>
+          <span class="text-slate-400">›</span>
+          <span class="text-slate-900 font-extrabold truncate max-w-[180px] sm:max-w-none uppercase tracking-wide">${game.title}</span>
         </div>
 
-        <a href="#category/${game.categoryId}" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold transition text-decoration-none border border-slate-700 shadow-2xs">
+        <a href="#category/${game.categoryId}" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white hover:bg-slate-100 text-slate-700 text-xs font-bold transition text-decoration-none border border-slate-200 hover:border-slate-300 shadow-2xs">
           <span>← Back to ${category.shortName}</span>
         </a>
       </div>
@@ -160,7 +160,7 @@ export function renderGameDetailView(container: HTMLElement, gameId: string): vo
                     <path d="M8 5v14l11-7z"/>
                   </svg>
                 </span>
-                <span>PLAY NOW — JOGAR GRÁTIS</span>
+                <span>PLAY NOW</span>
               </a>
 
               <div class="flex items-center justify-center gap-2 text-[11px] font-bold text-slate-400">
@@ -205,18 +205,23 @@ export function renderGameDetailView(container: HTMLElement, gameId: string): vo
           </section>
 
           <!-- 3 FAQs Section with Schema FAQPage -->
-          <section class="bg-slate-900/80 rounded-3xl p-6 border border-slate-800 shadow-md space-y-4">
-            <div class="flex items-center justify-between">
-              <h2 class="text-lg sm:text-xl font-black text-white flex items-center gap-2">
+          <details class="group bg-slate-900/80 rounded-3xl border border-slate-800 shadow-md transition-all duration-300">
+            <summary class="flex items-center justify-between p-6 cursor-pointer list-none select-none">
+              <div class="flex items-center gap-2">
                 <span>❓</span>
-                <span>Frequently Asked Questions</span>
-              </h2>
-              <span class="text-[10px] uppercase font-black tracking-wider text-[#58CC02] bg-[#58CC02]/10 border border-[#58CC02]/20 px-2.5 py-1 rounded-full">
-                FAQ Guide
-              </span>
-            </div>
+                <h2 class="text-lg sm:text-xl font-black text-white">Frequently Asked Questions</h2>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="text-[10px] uppercase font-black tracking-wider text-[#58CC02] bg-[#58CC02]/10 border border-[#58CC02]/20 px-2.5 py-1 rounded-full shrink-0">
+                  FAQ Guide
+                </span>
+                <svg class="w-5 h-5 text-slate-400 transition-transform duration-300 group-open:rotate-180 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 9l-7 7-7-7" />
+                </svg>
+              </div>
+            </summary>
 
-            <div class="space-y-3">
+            <div class="p-6 pt-0 border-t border-slate-800/40 space-y-3">
               ${gameFaqs.map((faq, index) => `
                 <div class="rounded-2xl bg-slate-800/90 border border-slate-700/70 p-4 transition-all">
                   <div class="text-sm font-black text-white mb-1.5 flex items-start gap-2">
@@ -229,26 +234,31 @@ export function renderGameDetailView(container: HTMLElement, gameId: string): vo
                 </div>
               `).join('')}
             </div>
-          </section>
+          </details>
         </div>
 
         <!-- Right 1 Col: Keywords, Tags & Features Badge -->
         <div class="space-y-6">
           
           <!-- Keywords Cloud -->
-          <section class="bg-slate-900/80 rounded-3xl p-6 border border-slate-800 shadow-md space-y-3">
-            <h3 class="text-sm font-black text-white uppercase tracking-wider flex items-center gap-2">
-              <span>🏷️</span>
-              <span>Game Keywords & Tags</span>
-            </h3>
-            <div class="flex flex-wrap gap-1.5">
+          <details class="group bg-slate-900/80 rounded-3xl border border-slate-800 shadow-md transition-all duration-300">
+            <summary class="flex items-center justify-between p-6 cursor-pointer list-none select-none">
+              <div class="flex items-center gap-2">
+                <span>🏷️</span>
+                <h3 class="text-sm font-black text-white uppercase tracking-wider">Game Keywords & Tags</h3>
+              </div>
+              <svg class="w-5 h-5 text-slate-400 transition-transform duration-300 group-open:rotate-180 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 9l-7 7-7-7" />
+              </svg>
+            </summary>
+            <div class="p-6 pt-0 border-t border-slate-800/40 flex flex-wrap gap-1.5">
               ${keywordsList.map(kw => `
                 <span class="px-2.5 py-1 rounded-xl text-[11px] font-bold bg-slate-800 text-slate-300 border border-slate-700/60 hover:text-white hover:border-[#58CC02] transition cursor-default">
                   #${kw}
                 </span>
               `).join('')}
             </div>
-          </section>
+          </details>
 
           <!-- Highlights -->
           <section class="bg-slate-900/80 rounded-3xl p-6 border border-slate-800 shadow-md space-y-3">
@@ -285,7 +295,7 @@ export function renderGameDetailView(container: HTMLElement, gameId: string): vo
         <section class="space-y-4 pt-4">
           <div class="flex items-center justify-between">
             <div>
-              <h2 class="text-xl sm:text-2xl font-black text-white tracking-tight">
+              <h2 class="text-xl sm:text-2xl font-black text-[#58CC02] tracking-tight">
                 More in ${category.label}
               </h2>
               <p class="text-xs text-slate-400 font-bold">Similar logic and puzzle games you might enjoy</p>

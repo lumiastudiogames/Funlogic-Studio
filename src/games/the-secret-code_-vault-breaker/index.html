@@ -2003,11 +2003,15 @@
         }
 
         function updateStatsUI() {
-          document.getElementById("stat-played").textContent = stats.played;
+          const stPlayed = document.getElementById("stat-played");
+          if (stPlayed) stPlayed.textContent = stats.played;
           const winPct = stats.played > 0 ? Math.round((stats.wins / stats.played) * 100) : 0;
-          document.getElementById("stat-win-rate").textContent = winPct + "%";
-          document.getElementById("stat-current-streak").textContent = stats.currentStreak;
-          document.getElementById("stat-max-streak").textContent = stats.maxStreak;
+          const stWinRate = document.getElementById("stat-win-rate");
+          if (stWinRate) stWinRate.textContent = winPct + "%";
+          const stCurStr = document.getElementById("stat-current-streak");
+          if (stCurStr) stCurStr.textContent = stats.currentStreak;
+          const stMaxStr = document.getElementById("stat-max-streak");
+          if (stMaxStr) stMaxStr.textContent = stats.maxStreak;
 
           // Render 3 Guess Distribution Bars
           const container = document.getElementById("dist-bars-container");
@@ -2055,12 +2059,15 @@
           revealedPins = [null, null, null, null];
 
           // Update Story Banner & Dossier Details
-          storyTagTextEl.textContent = currentMissionObj.caseName;
-          storyPreviewEl.textContent = currentMissionObj.story;
+          if (storyTagTextEl) storyTagTextEl.textContent = currentMissionObj.caseName;
+          if (storyPreviewEl) storyPreviewEl.textContent = currentMissionObj.story;
 
-          document.getElementById("dossier-target-name").textContent = `TARGET: ${currentMissionObj.target.toUpperCase()}`;
-          document.getElementById("dossier-case-code").textContent = `CASE CODE: ${currentMissionObj.id.toUpperCase()}`;
-          document.getElementById("dossier-full-story").textContent = currentMissionObj.story;
+          const dosTgt = document.getElementById("dossier-target-name");
+          if (dosTgt) dosTgt.textContent = `TARGET: ${currentMissionObj.target.toUpperCase()}`;
+          const dosCode = document.getElementById("dossier-case-code");
+          if (dosCode) dosCode.textContent = `CASE CODE: ${currentMissionObj.id.toUpperCase()}`;
+          const dosStory = document.getElementById("dossier-full-story");
+          if (dosStory) dosStory.textContent = currentMissionObj.story;
 
           // Reset Pin Slots
           for (let i = 0; i < WORD_LENGTH; i++) {
@@ -2340,13 +2347,19 @@
             saveStats();
 
             const durationSec = Math.round((Date.now() - startTime) / 1000);
-            document.getElementById("victory-word").textContent = targetWord;
-            document.getElementById("victory-stats-summary").textContent = `Vault cracked in ${attemptsHistory.length} of 3 attempts!`;
-            document.getElementById("win-attempts-val").textContent = `${attemptsHistory.length}/${MAX_ATTEMPTS}`;
-            document.getElementById("win-streak-val").textContent = stats.currentStreak;
+            const vWord = document.getElementById("victory-word");
+            if (vWord) vWord.textContent = targetWord;
+            const vStatsSum = document.getElementById("victory-stats-summary");
+            if (vStatsSum) vStatsSum.textContent = `Vault cracked in ${attemptsHistory.length} of 3 attempts!`;
+            const wAttVal = document.getElementById("win-attempts-val");
+            if (wAttVal) wAttVal.textContent = `${attemptsHistory.length}/${MAX_ATTEMPTS}`;
+            const wStrVal = document.getElementById("win-streak-val");
+            if (wStrVal) wStrVal.textContent = stats.currentStreak;
             const winPct = Math.round((stats.wins / stats.played) * 100);
-            document.getElementById("win-accuracy-val").textContent = winPct + "%";
-            document.getElementById("win-time-val").textContent = `${durationSec}s`;
+            const wAccVal = document.getElementById("win-accuracy-val");
+            if (wAccVal) wAccVal.textContent = winPct + "%";
+            const wTimeVal = document.getElementById("win-time-val");
+            if (wTimeVal) wTimeVal.textContent = `${durationSec}s`;
 
             setTimeout(() => openModal(modalVictory), 400);
           } else if (attemptsHistory.length >= MAX_ATTEMPTS) {
@@ -2358,8 +2371,10 @@
             stats.currentStreak = 0;
             saveStats();
 
-            document.getElementById("gameover-word").textContent = targetWord;
-            document.getElementById("gameover-def").textContent = `Passcode for ${currentMissionObj.target}`;
+            const goWord = document.getElementById("gameover-word");
+            if (goWord) goWord.textContent = targetWord;
+            const goDef = document.getElementById("gameover-def");
+            if (goDef) goDef.textContent = `Passcode for ${currentMissionObj.target}`;
 
             setTimeout(() => openModal(modalGameover), 400);
           } else {

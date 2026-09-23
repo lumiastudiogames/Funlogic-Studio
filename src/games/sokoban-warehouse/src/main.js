@@ -186,15 +186,15 @@ function updateHeaderUI() {
   const parTarget = document.getElementById('par-target');
   const totalStarsCount = document.getElementById('total-stars-count');
 
-  levelTitle.textContent = isProceduralMode ? game.level.name : `Bay ${game.level.id}: ${game.level.name}`;
-  moveCounter.textContent = game.moves;
-  parTarget.textContent = game.level.parMoves;
+  if (levelTitle) levelTitle.textContent = isProceduralMode ? game.level.name : `Bay ${game.level.id}: ${game.level.name}`;
+  if (moveCounter) moveCounter.textContent = game.moves;
+  if (parTarget) parTarget.textContent = game.level.parMoves;
 
   let starsSum = 0;
   for (const id in saveData.stars) {
     starsSum += saveData.stars[id] || 0;
   }
-  totalStarsCount.textContent = `${starsSum} / 36 Stars`;
+  if (totalStarsCount) totalStarsCount.textContent = `${starsSum} / 36 Stars`;
 }
 
 function updateHintBanner() {

@@ -309,7 +309,7 @@ export function renderGameView(container: HTMLElement, gameId: string): void {
       gameIconSvg: game.iconSvg,
       categoryLabel: game.categoryLabel,
       coverBg: game.coverBg,
-      durationSeconds: 4,
+      durationSeconds: 1.5,
       onComplete: () => {
         mountEngine();
       }

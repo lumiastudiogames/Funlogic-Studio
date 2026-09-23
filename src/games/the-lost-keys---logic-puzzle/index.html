@@ -2450,10 +2450,14 @@
           }
 
           // Update Victory Modal
-          document.getElementById('victory-rank-badge').textContent = rank;
-          document.getElementById('v-stat-time').textContent = timerDisplay.textContent;
-          document.getElementById('v-stat-score').textContent = currentScore.toLocaleString('pt-BR');
-          document.getElementById('v-stat-attempts').textContent = attemptsCount === 1 ? "1ª Tentativa (Perfeito!)" : `${attemptsCount} Tentativas`;
+          const rankBadge = document.getElementById('victory-rank-badge');
+          if (rankBadge) rankBadge.textContent = rank;
+          const statTime = document.getElementById('v-stat-time');
+          if (statTime && typeof timerDisplay !== 'undefined' && timerDisplay) statTime.textContent = timerDisplay.textContent;
+          const statScore = document.getElementById('v-stat-score');
+          if (statScore) statScore.textContent = currentScore.toLocaleString('pt-BR');
+          const statAttempts = document.getElementById('v-stat-attempts');
+          if (statAttempts) statAttempts.textContent = attemptsCount === 1 ? "1ª Tentativa (Perfeito!)" : `${attemptsCount} Tentativas`;
 
           setFeedback("SEGREDO REVELADO! A porta do cofre foi destrancada com sucesso!", "success");
 

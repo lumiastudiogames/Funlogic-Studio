@@ -2007,9 +2007,12 @@
         targetAccuseSuspect = suspect;
         Sounds.accuseOpen();
 
-        document.getElementById('accuse-name').textContent = suspect.name;
-        document.getElementById('accuse-role').textContent = suspect.role;
-        document.getElementById('accuse-statement').textContent = `"${suspect.quote}"`;
+        const accName = document.getElementById('accuse-name');
+        if (accName) accName.textContent = suspect.name;
+        const accRole = document.getElementById('accuse-role');
+        if (accRole) accRole.textContent = suspect.role;
+        const accStmt = document.getElementById('accuse-statement');
+        if (accStmt) accStmt.textContent = `"${suspect.quote}"`;
 
         const portraitBox = document.getElementById('accuse-portrait-box');
         portraitBox.innerHTML = SuspectAvatars[suspect.avatar] || SuspectAvatars.bruno;
@@ -2035,70 +2038,91 @@
           Sounds.victory();
           triggerConfetti();
 
-          verdictModalTitle.textContent = "CASE SOLVED!";
-          verdictIconBox.className = "verdict-icon success";
-          verdictIconEmoji.textContent = "🏆";
-          verdictHeadline.className = "verdict-headline success";
-          verdictHeadline.textContent = "BRILLIANT DEDUCTION!";
-          verdictSubheadline.textContent = `${targetAccuseSuspect.name} is the LIAR and the POISONER!`;
+          if (verdictModalTitle) verdictModalTitle.textContent = "CASE SOLVED!";
+          if (verdictIconBox) verdictIconBox.className = "verdict-icon success";
+          if (verdictIconEmoji) verdictIconEmoji.textContent = "🏆";
+          if (verdictHeadline) {
+            verdictHeadline.className = "verdict-headline success";
+            verdictHeadline.textContent = "BRILLIANT DEDUCTION!";
+          }
+          if (verdictSubheadline) verdictSubheadline.textContent = `${targetAccuseSuspect.name} is the LIAR and the POISONER!`;
 
-          verdictExplanation.innerHTML = `
-            <div><strong>Culprit Identified:</strong> ${targetAccuseSuspect.name} (${targetAccuseSuspect.role})</div>
-            <div><strong>False Statement Exposed:</strong> "${targetAccuseSuspect.quote}"</div>
-            <div style="margin-top:4px; padding-top:4px; border-top:1px dashed #4a2717;">
-              <strong>Full Logical Proof:</strong><br/>
-              ${currentCase.explanation}
-            </div>
-          `;
+          if (verdictExplanation) {
+            verdictExplanation.innerHTML = `
+              <div><strong>Culprit Identified:</strong> ${targetAccuseSuspect.name} (${targetAccuseSuspect.role})</div>
+              <div><strong>False Statement Exposed:</strong> "${targetAccuseSuspect.quote}"</div>
+              <div style="margin-top:4px; padding-top:4px; border-top:1px dashed #4a2717;">
+                <strong>Full Logical Proof:</strong><br/>
+                ${currentCase.explanation}
+              </div>
+            `;
+          }
 
           const hasNext = currentCaseIndex < MysteryCases.length - 1;
-          verdictFooter.innerHTML = `
-            <button id="btn-replay-case" class="btn-modal-secondary">Replay</button>
-            <button id="btn-next-case" class="btn-modal-primary" style="flex:1;">
-              <span>${hasNext ? 'Next Case ➡️' : 'Completed All 10 Cases! 🎉'}</span>
-            </button>
-          `;
+          if (verdictFooter) {
+            verdictFooter.innerHTML = `
+              <button id="btn-replay-case" class="btn-modal-secondary">Replay</button>
+              <button id="btn-next-case" class="btn-modal-primary" style="flex:1;">
+                <span>${hasNext ? 'Next Case ➡️' : 'Completed All 10 Cases! 🎉'}</span>
+              </button>
+            `;
+          }
 
-          document.getElementById('btn-replay-case').onclick = () => {
-            elModalVerdict.classList.remove('active');
-            loadCase(currentCaseIndex);
-          };
+          const replayBtn = document.getElementById('btn-replay-case');
+          if (replayBtn) {
+            replayBtn.onclick = () => {
+              if (elModalVerdict) elModalVerdict.classList.remove('active');
+              loadCase(currentCaseIndex);
+            };
+          }
 
-          document.getElementById('btn-next-case').onclick = () => {
-            elModalVerdict.classList.remove('active');
-            if (hasNext) loadCase(currentCaseIndex + 1);
-            else openCasesModal();
-          };
+          const nextBtn = document.getElementById('btn-next-case');
+          if (nextBtn) {
+            nextBtn.onclick = () => {
+              if (elModalVerdict) elModalVerdict.classList.remove('active');
+              if (hasNext) loadCase(currentCaseIndex + 1);
+              else openCasesModal();
+            };
+          }
 
         } else {
           Sounds.wrong();
 
-          verdictModalTitle.textContent = "FALSE ACCUSATION!";
-          verdictIconBox.className = "verdict-icon failure";
-          verdictIconEmoji.textContent = "⚠️";
-          verdictHeadline.className = "verdict-headline failure";
-          verdictHeadline.textContent = "INSUFFICIENT PROOF!";
-          verdictSubheadline.textContent = `${targetAccuseSuspect.name} was telling the truth!`;
+          if (verdictModalTitle) verdictModalTitle.textContent = "FALSE ACCUSATION!";
+          if (verdictIconBox) verdictIconBox.className = "verdict-icon failure";
+          if (verdictIconEmoji) verdictIconEmoji.textContent = "⚠️";
+          if (verdictHeadline) {
+            verdictHeadline.className = "verdict-headline failure";
+            verdictHeadline.textContent = "INSUFFICIENT PROOF!";
+          }
+          if (verdictSubheadline) verdictSubheadline.textContent = `${targetAccuseSuspect.name} was telling the truth!`;
 
-          verdictExplanation.innerHTML = `
-            <div><strong>Your Accusation:</strong> ${targetAccuseSuspect.name}</div>
-            <div style="color:#ff6b81;">
-              ${targetAccuseSuspect.name} is an innocent witness who spoke the truth. Look for the ONE suspect whose statement contradicts what everyone else saw!
-            </div>
-            <div style="margin-top:4px; font-size:11px; color:#fad390;">
-              💡 <em>Tip: Tap the <strong>💡 Hint</strong> button to watch the 5s sponsor break and unlock an investigative lead!</em>
-            </div>
-          `;
+          if (verdictExplanation) {
+            verdictExplanation.innerHTML = `
+              <div><strong>Your Accusation:</strong> ${targetAccuseSuspect.name}</div>
+              <div style="color:#ff6b81;">
+                ${targetAccuseSuspect.name} is an innocent witness who spoke the truth. Look for the ONE suspect whose statement contradicts what everyone else saw!
+              </div>
+              <div style="margin-top:4px; font-size:11px; color:#fad390;">
+                💡 <em>Tip: Tap the <strong>💡 Hint</strong> button to watch the 5s sponsor break and unlock an investigative lead!</em>
+              </div>
+            `;
+          }
 
-          verdictFooter.innerHTML = `
-            <button id="btn-retry-case" class="btn-modal-primary" style="width:100%; background:linear-gradient(135deg, #e67e22, #d35400); border-color:#f39c12;">
-              <span>Try Again 🔄</span>
-            </button>
-          `;
+          if (verdictFooter) {
+            verdictFooter.innerHTML = `
+              <button id="btn-retry-case" class="btn-modal-primary" style="width:100%; background:linear-gradient(135deg, #e67e22, #d35400); border-color:#f39c12;">
+                <span>Try Again 🔄</span>
+              </button>
+            `;
+          }
 
-          document.getElementById('btn-retry-case').onclick = () => {
-            elModalVerdict.classList.remove('active');
-          };
+          const retryBtn = document.getElementById('btn-retry-case');
+          if (retryBtn) {
+            retryBtn.onclick = () => {
+              if (elModalVerdict) elModalVerdict.classList.remove('active');
+            };
+          }
         }
 
         elModalVerdict.classList.add('active');
