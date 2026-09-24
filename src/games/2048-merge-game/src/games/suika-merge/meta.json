@@ -1,0 +1,34 @@
+{
+  "title": "2048 Merge Drag & Drop",
+  "categoryId": "logic",
+  "icon": "🔢",
+  "instructions": "Arraste e solte os blocos numéricos nas colunas para fundir números iguais (2+2=4, 4+4=8, 8+8=16). Faça combos em cascata e alcance o bloco 2048!",
+  "description": "2048 Merge Drag & Drop é um viciante jogo de quebra-cabeça e física 2.5D combinando a clássica mecânica 2048 com drop de blocos e explosões de estrelinhas cintilantes. Posicione estrategicamente as peças, crie fusões múltiplas e complete fases desafiadoras com gráficos táteis de alta nitidez.",
+  "keywords": [
+    "2048",
+    "2048 merge",
+    "drag and drop",
+    "arrastar e soltar",
+    "combinar numeros",
+    "suika merge",
+    "drop merge 2048",
+    "puzzle logico",
+    "jogos leves online",
+    "quebra-cabeca gratis",
+    "jogar sem instalar"
+  ],
+  "faqs": [
+    {
+      "q": "Como jogar o 2048 Drag & Drop?",
+      "a": "Toque e arraste o bloco numérico na parte inferior para a coluna desejada do tabuleiro 4x4. Ao soltar, a peça desce e, se encontrar blocos de mesmo valor adjacentes, eles se fundem dobrando a pontuação."
+    },
+    {
+      "q": "Como funcionam os combos?",
+      "a": "Quando uma fusão faz outros blocos caírem e gerarem novos merges consecutivos em cadeia, você ganha multiplicadores de combo e pontos extras!"
+    },
+    {
+      "q": "O jogo funciona no celular?",
+      "a": "Sim, 100% responsivo para celulares, tablets e computadores, com controles táteis e gráficos otimizados a 60 FPS."
+    }
+  ]
+}

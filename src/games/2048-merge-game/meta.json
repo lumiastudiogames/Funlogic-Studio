@@ -1,0 +1,47 @@
+{
+  "title": "2048 MERGE PUZZLE",
+  "categoryId": "numbers",
+  "categoryLabel": "Numbers & Math",
+  "id": "2048-merge-game",
+  "icon": "🔢",
+  "coverImage": "./cover.jpg",
+  "shortDesc": "2048 Merge combines physics-based drop mechanics with classic 2048 arithmetic synthesis.",
+  "description": "2048 Merge is a dynamic drop-and-merge puzzle that combines physics-based ball dropping with 2048 arithmetic strategy. Drop matching numbered balls together to merge them into larger values and reach the ultimate 2048 tile.",
+  "instructions": "Tap, drag, and release to drop numbered spheres into the container. Merge two spheres of identical value to double their number and trigger combo reactions.",
+  "keywords": [
+    "2048 merge",
+    "2048 drop",
+    "number merge",
+    "2048 puzzle",
+    "suika merge numbers",
+    "merge balls 2048",
+    "physics 2048",
+    "math puzzle",
+    "2048 ball drop"
+  ],
+  "tags": [
+    "2048",
+    "merge",
+    "numbers",
+    "math",
+    "physics",
+    "drop merge"
+  ],
+  "faqs": [
+    {
+      "q": "How do you play 2048 Merge?",
+      "a": "Aim and drop numbered balls from the top of the container. When two balls of the same number collide, they merge into the next higher value (2+2=4, 4+4=8, up to 2048)."
+    },
+    {
+      "q": "What happens if the container overflows?",
+      "a": "If the balls stack past the top danger line for too long, the round ends. Keep combining matching numbers to keep space open."
+    },
+    {
+      "q": "Can I play 2048 Merge on mobile phones?",
+      "a": "Yes! The game features responsive touch controls where you can drag and tap anywhere to aim and drop your balls."
+    }
+  ],
+  "isSeniors": false,
+  "isKids": false,
+  "is3D": false
+}

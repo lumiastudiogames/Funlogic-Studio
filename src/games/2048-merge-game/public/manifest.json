@@ -1,0 +1,18 @@
+{
+  "name": "Memory Care",
+  "short_name": "Memory Care",
+  "description": "Memory Care is a therapeutic, soothing card matching game designed for seniors. Features 12 extra-large 110px cards, slow 0.8s card turns, cozy familiar symbols, and unlimited moves.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0f172a",
+  "theme_color": "#0f172a",
+  "icons": [
+    {
+      "src": "./cover.svg",
+      "sizes": "800x600",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

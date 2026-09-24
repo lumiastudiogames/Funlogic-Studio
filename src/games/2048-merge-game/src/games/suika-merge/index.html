@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <title>Memory Care</title>
+  <meta name="description" content="Memory Care is a therapeutic, soothing card matching game designed for seniors. Features 12 extra-large 110px cards, slow 0.8s card turns, cozy familiar symbols, and unlimited moves." />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body class="bg-slate-950 flex items-center justify-center min-h-[100dvh] overflow-hidden">
+
+  <div id="game-stage" class="w-full max-w-md h-[100dvh] sm:h-[95vh] sm:max-h-[860px] mx-auto flex flex-col relative overflow-hidden bg-slate-900 sm:rounded-3xl shadow-2xl border border-sky-500/20">
+
+    <header class="game-header">
+      <div class="flex items-center gap-1 sm:gap-1.5 shrink-0">
+        <button id="btn-pause-menu" class="w-8 h-8 sm:w-9 sm:h-9 rounded-lg sm:rounded-xl bg-sky-900/80 border border-sky-400/30 flex items-center justify-center shrink-0 btn-tactile text-sky-200 cursor-pointer" title="Menu">
+          <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+        <button id="current-difficulty-badge" class="px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full text-[10px] sm:text-xs font-black bg-sky-500/20 text-sky-300 border border-sky-400/40 shrink-0 btn-tactile cursor-pointer" title="Change Difficulty">
+          MEDIUM
+        </button>
+      </div>
+
+      <div id="level-goal-badge" class="px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-lg text-[10px] sm:text-xs font-black bg-amber-500/25 text-amber-300 border border-amber-400/50 shadow-sm shrink-0 flex items-center gap-1">
+        <span>GOAL: 2048</span>
+        <span>🍉</span>
+      </div>
+
+      <div class="flex items-center gap-1 sm:gap-1.5 shrink-0">
+        <div class="bg-sky-950 border border-sky-500/30 rounded-lg px-1.5 sm:px-2 py-0.5 text-center min-w-[46px] sm:min-w-[55px] shrink-0">
+          <span class="block text-[7px] sm:text-[9px] font-black text-sky-400 uppercase tracking-wider">SCORE</span>
+          <span id="score-counter" class="font-extrabold text-xs sm:text-base text-white leading-none">0</span>
+        </div>
+
+        <button id="btn-undo" disabled class="btn-tactile w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-sky-800/80 border border-sky-400/30 flex items-center justify-center shrink-0 text-sky-200 disabled:opacity-40" title="Undo">
+          <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6" />
+          </svg>
+        </button>
+
+        <button id="btn-hint" class="btn-tactile w-7 h-7 sm:w-auto px-1 sm:px-2 py-0.5 sm:py-1 rounded-lg bg-amber-500 text-amber-950 font-black text-xs flex items-center justify-center gap-1 shrink-0 btn-3d-orange" title="Hint">
+          <span>💡</span>
+          <span class="hidden sm:inline text-[11px]">HINT</span>
+        </button>
+
+        <button id="btn-sound-toggle" class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-sky-900/80 border border-sky-400/30 flex items-center justify-center shrink-0 btn-tactile text-sky-200" title="Sound">
+          <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path class="sound-icon-path" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072M18.364 5.636a9 9 0 010 12.728M11 5L6 9H2v6h4l5 4V5z" />
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <div class="flex-1 w-full relative overflow-hidden flex items-center justify-center">
+      <canvas id="gameCanvas" class="w-full h-full block cursor-grab active:cursor-grabbing" style="touch-action: none;"></canvas>
+
+      <div id="combo-toast" class="hidden absolute top-4 left-1/2 -translate-x-1/2 px-4 py-1.5 rounded-full bg-amber-400 text-amber-950 font-black text-sm shadow-xl border-2 border-white pointer-events-none z-10" style="display: none;">
+        COMBO x2! ✨
+      </div>
+    </div>
+
+    <footer class="dock-spawner">
+      <div class="flex items-center gap-1.5">
+        <span class="text-sm">👆</span>
+        <span>Drag or tap to drop</span>
+      </div>
+      <div class="flex items-center gap-1 text-sky-300">
+        <span class="text-xs font-black text-amber-300">★ BEST:</span>
+        <span id="best-score-counter" class="font-extrabold text-white">0</span>
+      </div>
+    </footer>
+
+    <div id="screen-main-menu" class="absolute inset-0 bg-slate-950/85 backdrop-blur-md flex flex-col items-center justify-between p-6 z-30 transition-all duration-300" style="display: flex;">
+      <div class="w-full flex items-center justify-end">
+        <button id="btn-sound-menu" class="w-10 h-10 rounded-xl bg-sky-900/60 border border-sky-400/30 flex items-center justify-center btn-tactile text-sky-200">
+          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path class="sound-icon-path" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072M18.364 5.636a9 9 0 010 12.728M11 5L6 9H2v6h4l5 4V5z" />
+          </svg>
+        </button>
+      </div>
+
+      <div class="flex flex-col items-center text-center my-auto">
+        <div class="flex items-center justify-center gap-3 mb-4 float-mascot">
+          <div class="w-12 h-11 rounded-2xl bg-gradient-to-b from-pink-400 to-pink-600 border-b-4 border-pink-800 shadow-lg flex items-center justify-center font-black text-lg text-white">
+            2
+          </div>
+          <div class="w-14 h-12 rounded-2xl bg-gradient-to-b from-orange-400 to-orange-600 border-b-4 border-orange-800 shadow-xl flex items-center justify-center font-black text-xl text-white scale-110">
+            8
+          </div>
+          <div class="w-12 h-11 rounded-2xl bg-gradient-to-b from-amber-400 to-amber-600 border-b-4 border-amber-800 shadow-lg flex items-center justify-center font-black text-lg text-white">
+            64
+          </div>
+          <div class="w-14 h-12 rounded-2xl bg-gradient-to-b from-yellow-300 to-yellow-500 border-b-4 border-amber-700 shadow-xl flex items-center justify-center font-black text-sm text-amber-950 scale-110">
+            🍉 2048
+          </div>
+        </div>
+
+        <h1 class="text-4xl sm:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-sky-300 via-amber-300 to-pink-400 tracking-tight drop-shadow-md">
+          2048 MERGE
+        </h1>
+        <p class="text-xs sm:text-sm font-extrabold text-sky-200/90 tracking-widest uppercase mt-1 mb-6 flex items-center gap-1.5">
+          <span class="twinkle-star text-amber-300">✨</span>
+          <span>NUMBERS & MATH PUZZLE</span>
+          <span class="twinkle-star text-amber-300">✨</span>
+        </p>
+
+        <div class="w-full max-w-xs flex flex-col gap-3">
+          <button id="btn-play-game" type="button" class="w-full py-4 rounded-2xl font-black text-xl text-white btn-tactile btn-3d-cyan tracking-wide flex items-center justify-center gap-2 cursor-pointer">
+            <span>PLAY NOW</span>
+            <span class="text-xl">▶</span>
+          </button>
+
+          <button id="btn-open-difficulty" type="button" class="w-full py-3.5 rounded-2xl font-black text-base text-white btn-tactile btn-3d-orange tracking-wide flex items-center justify-center gap-2 cursor-pointer">
+            <span>DIFFICULTY (EASY • MEDIUM • HARD)</span>
+            <span class="text-lg">⚙️</span>
+          </button>
+
+          <button id="btn-open-tutorial" type="button" class="w-full py-3 rounded-2xl font-bold text-sm text-sky-200 card-pseudo-3d btn-tactile flex items-center justify-center gap-2 cursor-pointer">
+            <span>HOW TO PLAY</span>
+            <span>❓</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div id="screen-difficulty-select" class="hidden absolute inset-0 bg-slate-950/90 backdrop-blur-md flex flex-col p-6 z-30" style="display: none;">
+      <div class="flex items-center justify-between mb-3">
+        <button class="btn-back-to-menu w-10 h-10 rounded-xl bg-sky-900/60 border border-sky-400/30 flex items-center justify-center btn-tactile text-sky-200">
+          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7" />
+          </svg>
+        </button>
+        <h2 class="text-xl font-black text-white">DIFFICULTY</h2>
+        <div class="w-10"></div>
+      </div>
+
+      <p class="text-xs text-sky-200/80 mb-4 text-center font-bold">
+        Difficulty changes the board size and available space:
+      </p>
+
+      <div id="difficulty-cards-container" class="flex-1 flex flex-col justify-center gap-3.5 overflow-y-auto py-2"></div>
+
+      <button class="btn-back-to-menu w-full py-3.5 rounded-2xl font-black text-base text-white btn-tactile btn-3d-cyan mt-3">
+        BACK TO MENU
+      </button>
+    </div>
+
+    <div id="screen-how-to-play" class="hidden absolute inset-0 bg-slate-950/90 backdrop-blur-md flex flex-col p-6 z-30" style="display: none;">
+      <div class="flex items-center justify-between mb-4">
+        <button class="btn-back-to-menu w-10 h-10 rounded-xl bg-sky-900/60 border border-sky-400/30 flex items-center justify-center btn-tactile text-sky-200">
+          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7" />
+          </svg>
+        </button>
+        <h2 class="text-xl font-black text-white">HOW TO PLAY</h2>
+        <div class="w-10"></div>
+      </div>
+
+      <div class="flex-1 flex flex-col gap-3 justify-center">
+        <div class="card-pseudo-3d rounded-2xl p-4 flex items-center gap-3.5 border border-sky-400/20">
+          <div class="w-12 h-12 rounded-xl bg-sky-500/30 border border-sky-400 flex items-center justify-center text-2xl shrink-0">
+            👆
+          </div>
+          <div>
+            <div class="text-xs font-black text-sky-300 uppercase tracking-wide">1. DROP INTO COLUMN</div>
+            <p class="text-sm font-bold text-white mt-0.5">
+              Tap or drag the tile into your desired column. Gravity pulls the numbers down!
+            </p>
+          </div>
+        </div>
+
+        <div class="card-pseudo-3d rounded-2xl p-4 flex items-center gap-3.5 border border-amber-400/20">
+          <div class="w-12 h-12 rounded-xl bg-amber-500/30 border border-amber-400 flex items-center justify-center text-2xl shrink-0">
+            🍉
+          </div>
+          <div>
+            <div class="text-xs font-black text-amber-300 uppercase tracking-wide">2. THE GOAL: 2048</div>
+            <p class="text-sm font-bold text-white mt-0.5">
+              Identical numbers merge together: 2+2=4, 4+4=8... until you create the 2048 tile!
+            </p>
+          </div>
+        </div>
+
+        <div class="card-pseudo-3d rounded-2xl p-4 flex items-center gap-3.5 border border-rose-400/20">
+          <div class="w-12 h-12 rounded-xl bg-rose-500/30 border border-rose-400 flex items-center justify-center text-2xl shrink-0">
+            ⚠️
+          </div>
+          <div>
+            <div class="text-xs font-black text-rose-300 uppercase tracking-wide">3. DANGER LINE (GAME OVER)</div>
+            <p class="text-sm font-bold text-white mt-0.5">
+              Cascading combos trigger automatically. If tiles overflow the dashed Danger Line without merging, game is over!
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <button class="btn-back-to-menu w-full py-3.5 rounded-2xl font-black text-base text-white btn-tactile btn-3d-cyan mt-4">
+        GOT IT, LET'S PLAY!
+      </button>
+    </div>
+
+    <div id="screen-pause-modal" class="hidden absolute inset-0 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-6 z-40" style="display: none;">
+      <div class="card-pseudo-3d rounded-3xl p-6 w-full max-w-xs flex flex-col items-center text-center border border-sky-400/30">
+        <h3 class="text-2xl font-black text-white mb-6">GAME PAUSED</h3>
+        
+        <div class="w-full flex flex-col gap-3">
+          <button id="btn-resume-game" class="w-full py-3.5 rounded-xl font-black text-white btn-tactile btn-3d-cyan">
+            RESUME ▶
+          </button>
+          <button id="btn-restart-from-pause" class="w-full py-3 rounded-xl font-bold text-white bg-slate-800 border border-slate-700 btn-tactile">
+            RESTART 🔄
+          </button>
+          <button class="btn-back-to-menu w-full py-3 rounded-xl font-bold text-sky-300 bg-sky-950/60 border border-sky-800 btn-tactile">
+            MAIN MENU 🏠
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div id="screen-hint-ad" class="hidden absolute inset-0 bg-slate-950/90 backdrop-blur-md flex items-center justify-center p-6 z-40" style="display: none;">
+      <div class="card-pseudo-3d rounded-3xl p-6 w-full max-w-xs flex flex-col items-center text-center border border-amber-400/30">
+        <div class="w-14 h-14 rounded-2xl bg-amber-500/20 border-2 border-amber-400 flex items-center justify-center text-3xl mb-3">
+          💡
+        </div>
+
+        <h3 class="text-xl font-black text-white">SPONSORED HINT</h3>
+        <p class="text-xs text-sky-200/80 font-bold mt-1 mb-4">
+          Wait for the countdown to claim a smart hint or clear a blocking tile!
+        </p>
+
+        <div class="w-full bg-slate-800 rounded-full h-3 overflow-hidden border border-slate-700 mb-2">
+          <div id="ad-progress-bar" class="bg-gradient-to-r from-amber-400 to-amber-500 h-full w-0 transition-all duration-300"></div>
+        </div>
+
+        <span id="ad-countdown-timer" class="text-xs font-black text-amber-300 mb-5">5s</span>
+
+        <div class="w-full flex flex-col gap-2.5">
+          <button id="btn-claim-hint" disabled class="w-full py-3 rounded-xl font-black text-white bg-slate-700 btn-tactile">
+            Please wait...
+          </button>
+          <button id="btn-skip-ad" class="w-full py-2 rounded-xl font-bold text-xs text-slate-400 hover:text-white">
+            Skip (Cancel)
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div id="game-over-modal" class="hidden absolute inset-0 bg-slate-950/90 backdrop-blur-md flex items-center justify-center p-6 z-40" style="display: none;">
+      <div class="card-pseudo-3d rounded-3xl p-6 w-full max-w-xs flex flex-col items-center text-center border border-rose-500/30">
+        <div class="w-16 h-16 rounded-2xl bg-rose-500/20 border-2 border-rose-400 flex items-center justify-center text-3xl mb-3">
+          💥
+        </div>
+
+        <h3 class="text-2xl font-black text-white">OVER THE DEADLINE!</h3>
+        <p id="game-over-reason" class="text-xs font-bold text-rose-300 mt-1 mb-4">
+          The board overflowed the Danger Line with no valid moves left.
+        </p>
+
+        <div class="bg-slate-950/80 border border-slate-700 rounded-xl px-4 py-3 w-full mb-5">
+          <span class="text-xs font-bold text-slate-400 block uppercase">FINAL SCORE</span>
+          <span id="final-score" class="text-2xl font-black text-amber-300">0</span>
+        </div>
+
+        <div class="w-full flex flex-col gap-2.5">
+          <button id="btn-restart-game" class="w-full py-3.5 rounded-xl font-black text-white btn-tactile btn-3d-cyan">
+            TRY AGAIN 🔄
+          </button>
+          <button class="btn-back-to-menu w-full py-3 rounded-xl font-bold text-sky-300 bg-sky-950/60 border border-sky-800 btn-tactile">
+            MAIN MENU 🏠
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div id="victory-banner" class="hidden absolute inset-0 bg-slate-950/90 backdrop-blur-md flex items-center justify-center p-6 z-40" style="display: none;">
+      <div class="card-pseudo-3d rounded-3xl p-6 w-full max-w-xs flex flex-col items-center text-center border-2 border-amber-400 shadow-2xl">
+        <div class="w-16 h-16 rounded-2xl bg-amber-400/20 border-2 border-amber-300 flex items-center justify-center text-3xl mb-3 animate-bounce">
+          🍉
+        </div>
+
+        <h3 class="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-300 to-yellow-100">
+          2048 GOAL REACHED!
+        </h3>
+        <p class="text-xs font-bold text-sky-200 mt-1 mb-4">
+          Congratulations! You created the 2048 tile!
+        </p>
+
+        <div class="grid grid-cols-2 gap-2 w-full mb-5">
+          <div class="bg-slate-950/80 border border-sky-800 rounded-xl p-2">
+            <span class="text-[10px] font-bold text-sky-400 uppercase block">TIME</span>
+            <span id="victory-time" class="text-lg font-black text-white">0s</span>
+          </div>
+          <div class="bg-slate-950/80 border border-amber-800 rounded-xl p-2">
+            <span class="text-[10px] font-bold text-amber-400 uppercase block">SCORE</span>
+            <span id="victory-score" class="text-lg font-black text-amber-300">0</span>
+          </div>
+        </div>
+
+        <div class="w-full flex flex-col gap-2.5">
+          <button id="btn-next-level" class="w-full py-3.5 rounded-xl font-black text-white btn-tactile btn-3d-orange">
+            CONTINUE (GOAL 4096) ▶
+          </button>
+          <button class="btn-back-to-menu w-full py-2.5 rounded-xl font-bold text-xs text-sky-300">
+            Back to Menu
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script type="module" src="./game.js"></script>
+</body>
+</html>
