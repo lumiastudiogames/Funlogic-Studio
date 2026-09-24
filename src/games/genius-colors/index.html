@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Genius Colors — Casual Memory</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    body {
+      background: #0B0F19;
+      color: #FFFFFF;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      width: 100vw;
+      overflow: hidden;
+      padding: 16px;
+    }
+    .game-card {
+      background: #151D2E;
+      border: 2px solid #233148;
+      border-radius: 28px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+      max-width: 460px;
+      width: 100%;
+    }
+    .header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .title {
+      font-size: 24px;
+      font-weight: 900;
+      letter-spacing: -0.5px;
+      color: #FFFFFF;
+    }
+    .subtitle {
+      font-size: 13px;
+      color: #94A3B8;
+      margin-top: 4px;
+      font-weight: 600;
+    }
+    .stats {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 20px;
+      width: 100%;
+      justify-content: center;
+    }
+    .stat-pill {
+      background: #1E293B;
+      padding: 8px 18px;
+      border-radius: 14px;
+      font-size: 14px;
+      font-weight: 800;
+      border: 1px solid #334155;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .stat-pill span {
+      color: #58CC02;
+    }
+    .board {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      max-width: 320px;
+      margin-bottom: 24px;
+    }
+    .color-btn {
+      border: none;
+      border-radius: 22px;
+      cursor: pointer;
+      transition: transform 0.1s, filter 0.15s, opacity 0.15s;
+      outline: none;
+      box-shadow: 0 8px 0 rgba(0,0,0,0.3);
+      position: relative;
+    }
+    .color-btn:active {
+      transform: translateY(4px);
+      box-shadow: 0 4px 0 rgba(0,0,0,0.3);
+    }
+    .btn-green  { background: #22C55E; border-bottom: 4px solid #15803D; }
+    .btn-red    { background: #EF4444; border-bottom: 4px solid #B91C1C; }
+    .btn-yellow { background: #EAB308; border-bottom: 4px solid #A16207; }
+    .btn-blue   { background: #3B82F6; border-bottom: 4px solid #1D4ED8; }
+
+    .color-btn.active {
+      filter: brightness(1.7) drop-shadow(0 0 16px white);
+      transform: scale(0.96);
+    }
+
+    .action-btn {
+      background: #58CC02;
+      color: #FFFFFF;
+      font-size: 16px;
+      font-weight: 900;
+      border: none;
+      border-radius: 16px;
+      padding: 14px 28px;
+      cursor: pointer;
+      border-bottom: 4px solid #46A302;
+      transition: all 0.15s ease;
+      width: 100%;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .action-btn:active {
+      transform: translateY(3px);
+      border-bottom-width: 1px;
+    }
+    .action-btn:disabled {
+      background: #475569;
+      border-bottom-color: #334155;
+      cursor: not-allowed;
+      opacity: 0.7;
+    }
+    .status-msg {
+      margin-top: 14px;
+      font-size: 14px;
+      font-weight: 700;
+      color: #38BDF8;
+      min-height: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="game-card">
+    <div class="header">
+      <div class="title">🧠 Genius Color Memory</div>
+      <div class="subtitle">Observe a sequência de luzes e repita na mesma ordem!</div>
+    </div>
+
+    <div class="stats">
+      <div class="stat-pill">Nível: <span id="level-display">1</span></div>
+      <div class="stat-pill">Recorde: <span id="best-display">0</span></div>
+    </div>
+
+    <div class="board">
+      <button class="color-btn btn-green" data-color="0" aria-label="Verde"></button>
+      <button class="color-btn btn-red" data-color="1" aria-label="Vermelho"></button>
+      <button class="color-btn btn-yellow" data-color="2" aria-label="Amarelo"></button>
+      <button class="color-btn btn-blue" data-color="3" aria-label="Azul"></button>
+    </div>
+
+    <button id="btn-start" class="action-btn">Começar Jogo ▶</button>
+    <div id="status-msg" class="status-msg">Toque em Começar para iniciar</div>
+  </div>
+
+  <script>
+    // Web Audio Synthesizer
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const frequencies = [330, 440, 554.37, 659.25];
+
+    function playTone(index, duration = 300) {
+      try {
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(frequencies[index] || 440, audioCtx.currentTime);
+        gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration / 1000);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + duration / 1000);
+      } catch (e) {}
+    }
+
+    // Game state
+    const buttons = document.querySelectorAll('.color-btn');
+    const startBtn = document.getElementById('btn-start');
+    const levelDisplay = document.getElementById('level-display');
+    const bestDisplay = document.getElementById('best-display');
+    const statusMsg = document.getElementById('status-msg');
+
+    let sequence = [];
+    let playerStep = 0;
+    let isPlayingSequence = false;
+    let level = 1;
+    let best = parseInt(localStorage.getItem('genius_best') || '0', 10);
+    let startTime = Date.now();
+    bestDisplay.textContent = best;
+
+    function flashButton(index) {
+      return new Promise((resolve) => {
+        const btn = buttons[index];
+        btn.classList.add('active');
+        playTone(index, 260);
+        setTimeout(() => {
+          btn.classList.remove('active');
+          setTimeout(resolve, 140);
+        }, 280);
+      });
+    }
+
+    async function playSequence() {
+      isPlayingSequence = true;
+      statusMsg.textContent = 'Observe com atenção...';
+      startBtn.disabled = true;
+
+      await new Promise(r => setTimeout(r, 500));
+
+      for (const colorIndex of sequence) {
+        await flashButton(colorIndex);
+      }
+
+      isPlayingSequence = false;
+      playerStep = 0;
+      statusMsg.textContent = 'Sua vez! Repita a sequência.';
+    }
+
+    function nextRound() {
+      levelDisplay.textContent = level;
+      sequence.push(Math.floor(Math.random() * 4));
+      playSequence();
+    }
+
+    function startGame() {
+      sequence = [];
+      level = 1;
+      startTime = Date.now();
+      nextRound();
+    }
+
+    buttons.forEach((btn, index) => {
+      btn.addEventListener('click', () => {
+        if (isPlayingSequence || sequence.length === 0) return;
+
+        flashButton(index);
+
+        if (index === sequence[playerStep]) {
+          playerStep++;
+          if (playerStep === sequence.length) {
+            level++;
+            if (level > best) {
+              best = level;
+              localStorage.setItem('genius_best', best.toString());
+              bestDisplay.textContent = best;
+            }
+
+            // At level 6, trigger victory modal in portal!
+            if (level >= 6) {
+              const elapsedSec = Math.round((Date.now() - startTime) / 1000);
+              window.parent.postMessage({ type: 'win', time: elapsedSec, streak: level }, '*');
+            }
+
+            statusMsg.textContent = 'Parabéns! Próximo nível...';
+            setTimeout(nextRound, 800);
+          }
+        } else {
+          statusMsg.textContent = 'Errou! Toque em Começar para tentar de novo.';
+          startBtn.disabled = false;
+          startBtn.textContent = 'Tentar Novamente ↺';
+          sequence = [];
+        }
+      });
+    });
+
+    startBtn.addEventListener('click', startGame);
+  </script>
+</body>
+</html>

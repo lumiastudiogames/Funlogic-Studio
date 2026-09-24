@@ -132,7 +132,9 @@ class ChessGameApp {
   }
 
   private setupCanvasPointerEvents(canvas: HTMLCanvasElement) {
-    const handlePointerDown = (clientX: number, clientY: number) => {
+    canvas.style.touchAction = 'none';
+
+    const handlePointerDown = (clientX: number, clientY: number, e?: Event) => {
       if (!this.displayManager || !this.renderer || this.gameState.isCompleted()) return;
 
       const coords = this.displayManager.getGameCoordinates(clientX, clientY);
@@ -146,12 +148,14 @@ class ChessGameApp {
       const currentSelected = this.gameState.getSelectedCoord();
       const validDests = this.gameState.getValidDestinations();
       if (currentSelected && validDests.some(d => d.file === square.file && d.rank === square.rank)) {
+        if (e && e.cancelable) e.preventDefault();
         this.gameState.executeMove(currentSelected.file, currentSelected.rank, square.file, square.rank);
         return;
       }
 
       // Check if clicking on an interactive White piece
       if (piece && piece.color === 'w') {
+        if (e && e.cancelable) e.preventDefault();
         this.isDragging = true;
         this.dragOrigin = square;
         this.draggedPiece = piece;
@@ -172,8 +176,9 @@ class ChessGameApp {
       }
     };
 
-    const handlePointerMove = (clientX: number, clientY: number) => {
+    const handlePointerMove = (clientX: number, clientY: number, e?: Event) => {
       if (!this.isDragging || !this.displayManager || !this.renderer || !this.draggedPiece || !this.dragOrigin) return;
+      if (e && e.cancelable) e.preventDefault();
 
       const coords = this.displayManager.getGameCoordinates(clientX, clientY);
       this.renderer.setState({
@@ -187,8 +192,9 @@ class ChessGameApp {
       });
     };
 
-    const handlePointerUp = (clientX: number, clientY: number) => {
+    const handlePointerUp = (clientX: number, clientY: number, e?: Event) => {
       if (!this.isDragging || !this.displayManager || !this.renderer || !this.dragOrigin) return;
+      if (e && e.cancelable) e.preventDefault();
 
       const coords = this.displayManager.getGameCoordinates(clientX, clientY);
       const targetSquare = this.renderer.getSquareAt(coords.x, coords.y);
@@ -207,18 +213,18 @@ class ChessGameApp {
 
     // Mouse events
     canvas.addEventListener('mousedown', (e) => {
-      handlePointerDown(e.clientX, e.clientY);
+      handlePointerDown(e.clientX, e.clientY, e);
     });
 
     window.addEventListener('mousemove', (e) => {
       if (this.isDragging) {
-        handlePointerMove(e.clientX, e.clientY);
+        handlePointerMove(e.clientX, e.clientY, e);
       }
     });
 
     window.addEventListener('mouseup', (e) => {
       if (this.isDragging) {
-        handlePointerUp(e.clientX, e.clientY);
+        handlePointerUp(e.clientX, e.clientY, e);
       }
     });
 
@@ -226,23 +232,23 @@ class ChessGameApp {
     canvas.addEventListener('touchstart', (e) => {
       if (e.touches.length > 0) {
         const t = e.touches[0];
-        handlePointerDown(t.clientX, t.clientY);
+        handlePointerDown(t.clientX, t.clientY, e);
       }
-    }, { passive: true });
+    }, { passive: false });
 
     window.addEventListener('touchmove', (e) => {
       if (this.isDragging && e.touches.length > 0) {
         const t = e.touches[0];
-        handlePointerMove(t.clientX, t.clientY);
+        handlePointerMove(t.clientX, t.clientY, e);
       }
-    }, { passive: true });
+    }, { passive: false });
 
     window.addEventListener('touchend', (e) => {
       if (this.isDragging && e.changedTouches.length > 0) {
         const t = e.changedTouches[0];
-        handlePointerUp(t.clientX, t.clientY);
+        handlePointerUp(t.clientX, t.clientY, e);
       }
-    }, { passive: true });
+    }, { passive: false });
   }
 }
 

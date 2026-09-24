@@ -61,36 +61,118 @@ export class YardRenderer {
   }
 
   private renderGround(ctx: CanvasRenderingContext2D, width: number, height: number) {
-    // Industrial ballast gradient
+    // 1. Underground station terminal base gradient
     const bgGrad = ctx.createLinearGradient(0, 0, 0, height);
-    bgGrad.addColorStop(0, '#0f172a');
-    bgGrad.addColorStop(0.5, '#0b1120');
-    bgGrad.addColorStop(1, '#080c18');
+    bgGrad.addColorStop(0, '#0a0f1d');
+    bgGrad.addColorStop(0.35, '#0f172a');
+    bgGrad.addColorStop(0.7, '#0b1120');
+    bgGrad.addColorStop(1, '#050811');
     ctx.fillStyle = bgGrad;
     ctx.fillRect(0, 0, width, height);
 
-    // Subtle track bed texture grid
-    ctx.strokeStyle = 'rgba(255, 255, 255, 0.02)';
+    // 2. Subway station wall ceramic tile grid pattern
+    const tileW = 28;
+    const tileH = 14;
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.035)';
     ctx.lineWidth = 1;
-    const gridSize = 40;
-    for (let x = 0; x < width; x += gridSize) {
+    for (let y = 0; y < height; y += tileH) {
+      const rowOffset = (Math.floor(y / tileH) % 2 === 0) ? 0 : tileW / 2;
       ctx.beginPath();
-      ctx.moveTo(x, 0);
-      ctx.lineTo(x, height);
+      ctx.moveTo(0, y);
+      ctx.lineTo(width, y);
+      ctx.stroke();
+
+      for (let x = -tileW + rowOffset; x < width; x += tileW) {
+        ctx.beginPath();
+        ctx.moveTo(x, y);
+        ctx.lineTo(x, y + tileH);
+        ctx.stroke();
+      }
+    }
+
+    // 3. Station Ceramic Frieze Banner along the top
+    ctx.save();
+    const bannerH = 22;
+    const bannerGrad = ctx.createLinearGradient(0, 0, width, 0);
+    bannerGrad.addColorStop(0, 'rgba(30, 58, 138, 0.45)');
+    bannerGrad.addColorStop(0.5, 'rgba(14, 116, 144, 0.55)');
+    bannerGrad.addColorStop(1, 'rgba(30, 58, 138, 0.45)');
+    ctx.fillStyle = bannerGrad;
+    ctx.fillRect(0, 2, width, bannerH);
+
+    ctx.strokeStyle = 'rgba(56, 189, 248, 0.3)';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(0, 2, width, bannerH);
+
+    // Station Name Sign
+    ctx.fillStyle = '#e2e8f0';
+    ctx.font = 'bold 9px "Outfit", system-ui, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.letterSpacing = '1.5px';
+    ctx.fillText('METRO CENTRAL TERMINAL  •  PLATFORMS 1 - 4  •  DISPATCH CONTROL', width / 2, 16);
+    ctx.restore();
+
+    // 4. Overhead Industrial Arched Steel Roof Girders
+    ctx.save();
+    ctx.strokeStyle = 'rgba(100, 116, 139, 0.12)';
+    ctx.lineWidth = 3;
+    for (let gx = 60; gx < width; gx += 130) {
+      ctx.beginPath();
+      ctx.moveTo(gx - 20, 0);
+      ctx.lineTo(gx, 28);
+      ctx.lineTo(gx + 20, 0);
       ctx.stroke();
     }
+    ctx.restore();
   }
 
   private renderTrackBeds(ctx: CanvasRenderingContext2D) {
     const { width, tracksY } = this.engine;
 
     tracksY.forEach((y, idx) => {
-      // Ballast gravel strip
-      ctx.fillStyle = 'rgba(30, 41, 59, 0.75)';
+      // 1. Concrete Platform Slab above the track
+      const platformY = y - 32;
+      const platformH = 14;
+      if (platformY > 20) {
+        // Platform concrete deck
+        ctx.fillStyle = '#1e293b';
+        ctx.fillRect(0, platformY, width, platformH);
+
+        // Tactile safety yellow warning strip along platform edge
+        ctx.fillStyle = '#eab308';
+        ctx.fillRect(0, platformY + platformH - 3, width, 3);
+
+        // Tactile studs on yellow strip
+        ctx.fillStyle = '#ca8a04';
+        for (let sx = 8; sx < width; sx += 12) {
+          ctx.fillRect(sx, platformY + platformH - 2.5, 3, 2);
+        }
+
+        // Warning stenciled text on platform
+        if (width > 420) {
+          ctx.fillStyle = 'rgba(148, 163, 184, 0.45)';
+          ctx.font = 'bold 7px system-ui, sans-serif';
+          ctx.textAlign = 'left';
+          ctx.fillText('STAND BEHIND YELLOW LINE', 140, platformY + 9);
+        }
+      }
+
+      // 2. Ballast gravel strip for track bed
+      const ballastGrad = ctx.createLinearGradient(0, y - 18, 0, y + 18);
+      ballastGrad.addColorStop(0, '#1e293b');
+      ballastGrad.addColorStop(0.5, '#0f172a');
+      ballastGrad.addColorStop(1, '#1e293b');
+      ctx.fillStyle = ballastGrad;
       ctx.fillRect(0, y - 18, width, 36);
 
-      // Sleepers / Wooden cross-ties
-      ctx.fillStyle = '#1e293b';
+      // Ballast stone texture speckles
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.05)';
+      for (let bx = 12; bx < width - 60; bx += 22) {
+        ctx.fillRect(bx + (idx * 5) % 11, y - 14, 2, 2);
+        ctx.fillRect(bx + ((idx * 7) % 13), y + 12, 2, 2);
+      }
+
+      // 3. Sleepers / Wooden cross-ties
       const tieSpacing = 16;
       for (let x = 10; x < width - 70; x += tieSpacing) {
         // Dark 3D sleeper
@@ -101,11 +183,43 @@ export class YardRenderer {
         ctx.fillRect(x, y - 15, 6, 2);
       }
 
-      // Track Index Label on the left
-      ctx.fillStyle = '#64748b';
-      ctx.font = 'bold 10px monospace';
+      // 4. Station Column / Pillar at regular intervals
+      const pillarX = 75 + (idx % 2) * 50;
+      if (pillarX < width - 100) {
+        ctx.save();
+        // Pillar shadow
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+        ctx.fillRect(pillarX - 2, y - 36, 12, 22);
+        // Pillar body
+        ctx.fillStyle = '#475569';
+        ctx.fillRect(pillarX, y - 36, 8, 20);
+        // Rivet dots
+        ctx.fillStyle = '#94a3b8';
+        ctx.fillRect(pillarX + 2, y - 34, 2, 2);
+        ctx.fillRect(pillarX + 2, y - 20, 2, 2);
+        // Warm station sconce lamp glow
+        const glow = ctx.createRadialGradient(pillarX + 4, y - 26, 2, pillarX + 4, y - 26, 18);
+        glow.addColorStop(0, 'rgba(251, 191, 36, 0.25)');
+        glow.addColorStop(1, 'rgba(251, 191, 36, 0)');
+        ctx.fillStyle = glow;
+        ctx.beginPath();
+        ctx.arc(pillarX + 4, y - 26, 18, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      }
+
+      // 5. Track Index Station Badge on the left
+      ctx.save();
+      ctx.fillStyle = '#0284c7';
+      ctx.beginPath();
+      ctx.roundRect(8, y - 24, 52, 13, 3);
+      ctx.fill();
+
+      ctx.fillStyle = '#ffffff';
+      ctx.font = 'bold 8px monospace';
       ctx.textAlign = 'left';
-      ctx.fillText(`TRACK ${idx + 1}`, 8, y - 19);
+      ctx.fillText(`LINE ${idx + 1}`, 14, y - 15);
+      ctx.restore();
     });
   }
 

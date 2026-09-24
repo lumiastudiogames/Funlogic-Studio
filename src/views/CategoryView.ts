@@ -19,6 +19,7 @@ export function renderCategoryView(
     title: `${category.label} Games`,
     description: category.description || `Play the best ${category.label} games online free with no download.`,
     keywords: category.keywords,
+    canonicalUrl: `https://funlogic.games/category/${category.id}/`,
     type: 'website',
     faqs: category.faqs
   });
@@ -53,7 +54,7 @@ export function renderCategoryView(
       <div>
         <a href="#home" class="inline-flex items-center gap-2 px-4 py-2 rounded-2xl bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white text-xs font-bold border border-slate-700 shadow-2xs transition group text-decoration-none">
           <span class="text-[#58CC02] font-extrabold group-hover:-translate-x-0.5 transition-transform">←</span>
-          <span>Voltar à Página Inicial</span>
+          <span>Back to Home</span>
         </a>
       </div>
 
@@ -61,7 +62,7 @@ export function renderCategoryView(
       <section class="bg-slate-800/90 p-3.5 sm:p-4 rounded-3xl border border-slate-700/80 shadow-md">
         <div class="flex items-center justify-between gap-2 mb-2.5">
           <div class="flex items-center gap-2">
-            <span class="text-xs font-black uppercase tracking-wider text-[#58CC02]">Todas as Categorias</span>
+            <span class="text-xs font-black uppercase tracking-wider text-[#58CC02]">All Categories</span>
           </div>
           <div class="flex items-center gap-1.5">
             <button 
@@ -113,7 +114,7 @@ export function renderCategoryView(
                 ${category.label}
               </h1>
               <span class="text-xs font-black bg-white text-gray-800 px-2.5 py-1 rounded-full border border-gray-300 shadow-2xs">
-                ${sortedGames.length} ${sortedGames.length === 1 ? 'Jogo' : 'Jogos'}
+                ${sortedGames.length} ${sortedGames.length === 1 ? 'Game' : 'Games'}
               </span>
             </div>
           </div>
@@ -123,28 +124,28 @@ export function renderCategoryView(
         </p>
       </div>
 
-      <!-- Controls & View Mode Switcher (Carrossel vs Grade) -->
+      <!-- Controls & View Mode Switcher (Carousel vs Grid) -->
       <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 bg-white p-3.5 sm:p-4 rounded-2xl border border-slate-200 shadow-xs">
         
         <!-- View Mode Selector -->
         <div class="flex items-center gap-2">
-          <span class="text-xs font-bold text-gray-500">Visualização:</span>
+          <span class="text-xs font-bold text-gray-500">View:</span>
           <div class="flex items-center bg-gray-100 p-1 rounded-xl">
             <button 
               id="btn-mode-carousel"
               class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-black transition cursor-pointer ${currentViewMode === 'carousel' ? 'bg-[#58CC02] text-white shadow-xs' : 'text-gray-600 hover:text-gray-900'}"
-              title="Modo Carrossel (Horizontal / Não estica a tela no celular)"
+              title="Carousel Mode (Horizontal scrolling)"
             >
               <span>🎠</span>
-              <span>Carrossel</span>
+              <span>Carousel</span>
             </button>
             <button 
               id="btn-mode-grid"
               class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-black transition cursor-pointer ${currentViewMode === 'grid' ? 'bg-[#58CC02] text-white shadow-xs' : 'text-gray-600 hover:text-gray-900'}"
-              title="Modo Grade"
+              title="Grid Mode"
             >
               <span>⊞</span>
-              <span>Grade</span>
+              <span>Grid</span>
             </button>
           </div>
         </div>
@@ -152,11 +153,11 @@ export function renderCategoryView(
         <div class="flex flex-wrap items-center justify-between sm:justify-end gap-3">
           <!-- Sort Selector -->
           <div class="flex items-center gap-2 text-xs font-bold text-gray-600">
-            <span>Ordenar:</span>
+            <span>Sort:</span>
             <select id="select-sort" class="bg-gray-100 border border-gray-200 hover:border-gray-300 focus:border-[#58CC02] rounded-xl px-3 py-1.5 text-xs font-bold text-gray-800 focus:outline-none cursor-pointer">
-              <option value="az" ${filterPref.sortBy === 'az' ? 'selected' : ''}>A–Z (Ordem Alfabética)</option>
-              <option value="popular" ${filterPref.sortBy === 'popular' ? 'selected' : ''}>Mais Populares</option>
-              <option value="new" ${filterPref.sortBy === 'new' ? 'selected' : ''}>Mais Recentes</option>
+              <option value="az" ${filterPref.sortBy === 'az' ? 'selected' : ''}>A–Z (Alphabetical)</option>
+              <option value="popular" ${filterPref.sortBy === 'popular' ? 'selected' : ''}>Most Popular</option>
+              <option value="new" ${filterPref.sortBy === 'new' ? 'selected' : ''}>Most Recent</option>
             </select>
           </div>
 
@@ -165,14 +166,14 @@ export function renderCategoryView(
             <div class="flex items-center gap-1.5">
               <button 
                 id="games-carousel-prev" 
-                title="Voltar jogos"
+                title="Previous games"
                 class="w-8 h-8 rounded-xl bg-slate-100 hover:bg-[#58CC02] hover:text-white text-slate-700 flex items-center justify-center text-sm font-black border border-slate-200 shadow-2xs transition active:scale-95 cursor-pointer select-none"
               >
                 ‹
               </button>
               <button 
                 id="games-carousel-next" 
-                title="Avançar jogos"
+                title="Next games"
                 class="w-8 h-8 rounded-xl bg-slate-100 hover:bg-[#58CC02] hover:text-white text-slate-700 flex items-center justify-center text-sm font-black border border-slate-200 shadow-2xs transition active:scale-95 cursor-pointer select-none"
               >
                 ›
@@ -181,14 +182,14 @@ export function renderCategoryView(
           ` : `
             <!-- Show Selector for Grid Mode -->
             <div class="flex items-center gap-2 text-xs font-bold text-gray-600">
-              <span>Mostrar:</span>
+              <span>Show:</span>
               <div class="flex items-center bg-gray-100 p-1 rounded-xl">
                 ${[10, 20, 'all'].map(count => `
                   <button 
                     class="btn-show px-2.5 py-1 rounded-lg transition text-xs ${filterPref.showCount.toString() === count.toString() ? 'bg-white text-emerald-800 shadow-xs font-extrabold' : 'text-gray-600 hover:text-gray-900'}"
                     data-count="${count}"
                   >
-                    ${count === 'all' ? 'Todos' : count}
+                    ${count === 'all' ? 'All' : count}
                   </button>
                 `).join('')}
               </div>
@@ -252,8 +253,8 @@ export function renderCategoryView(
             ${category.icon}
           </div>
           <div>
-            <h2 class="text-lg sm:text-xl font-black text-gray-900">Sobre ${category.label}</h2>
-            <p class="text-xs text-gray-500 font-bold">Guia de jogabilidade e dicas</p>
+            <h2 class="text-lg sm:text-xl font-black text-gray-900">About ${category.label}</h2>
+            <p class="text-xs text-gray-500 font-bold">Gameplay guide and tips</p>
           </div>
         </div>
 
@@ -263,7 +264,7 @@ export function renderCategoryView(
 
         ${category.keywords && category.keywords.length > 0 ? `
           <div>
-            <span class="text-[11px] font-black uppercase text-gray-500 block mb-2">Termos e Palavras-chave</span>
+            <span class="text-[11px] font-black uppercase text-gray-500 block mb-2">Terms & Keywords</span>
             <div class="flex flex-wrap gap-1.5">
               ${category.keywords.map(kw => `
                 <span class="text-xs font-semibold px-2.5 py-1 bg-gray-100 text-gray-700 rounded-lg border border-gray-200/80">
@@ -276,12 +277,12 @@ export function renderCategoryView(
 
         ${category.faqs && category.faqs.length > 0 ? `
           <div class="pt-4 border-t border-gray-100 space-y-3">
-            <h3 class="text-sm font-black text-gray-900 uppercase tracking-wide">Perguntas Frequentes (FAQ)</h3>
+            <h3 class="text-sm font-black text-gray-900 uppercase tracking-wide">Frequently Asked Questions (FAQ)</h3>
             <div class="space-y-2.5">
               ${category.faqs.map(faq => `
                 <div class="bg-gray-50 rounded-2xl p-4 border border-gray-200/60">
                   <h4 class="text-xs sm:text-sm font-extrabold text-gray-900 mb-1 flex items-center gap-2">
-                    <span class="text-[#58CC02] font-black">P:</span> ${faq.q || faq.question}
+                    <span class="text-[#58CC02] font-black">Q:</span> ${faq.q || faq.question}
                   </h4>
                   <p class="text-xs text-gray-600 font-medium leading-relaxed pl-5">
                     ${faq.a || faq.answer}

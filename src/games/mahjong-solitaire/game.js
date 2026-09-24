@@ -277,41 +277,115 @@
 
     initDOM() {
       // Audio toggle
-      this.soundBtn.addEventListener('click', () => {
-        const muted = this.sound.toggle();
-        this.soundIcon.textContent = muted ? '🔇' : '🔊';
-      });
+      if (this.soundBtn) {
+        this.soundBtn.addEventListener('click', () => {
+          const muted = this.sound.toggle();
+          if (this.soundIcon) this.soundIcon.textContent = muted ? '🔇' : '🔊';
+        });
+      }
 
       // Undo
-      this.undoBtn.addEventListener('click', () => this.undo());
+      if (this.undoBtn) {
+        this.undoBtn.addEventListener('click', () => this.undo());
+      }
 
       // Shuffle
-      this.shuffleBtn.addEventListener('click', () => this.shuffleRemaining());
+      if (this.shuffleBtn) {
+        this.shuffleBtn.addEventListener('click', () => this.shuffleRemaining());
+      }
 
       // Hint / Rewarded Ad modal
-      this.hintBtn.addEventListener('click', () => this.openHintModal());
+      if (this.hintBtn) {
+        this.hintBtn.addEventListener('click', () => this.openHintModal());
+      }
+
+      // Menu buttons
+      const btnMenu = document.getElementById('btn-menu');
+      if (btnMenu) {
+        btnMenu.addEventListener('click', () => {
+          this.sound.playClick();
+          const menuModal = document.getElementById('modal-menu');
+          if (menuModal) menuModal.classList.add('active');
+        });
+      }
+
+      const btnStartGame = document.getElementById('btn-start-game');
+      if (btnStartGame) {
+        btnStartGame.addEventListener('click', () => {
+          this.sound.playClick();
+          const menuModal = document.getElementById('modal-menu');
+          if (menuModal) menuModal.classList.remove('active');
+          this.startNewGame();
+        });
+      }
+
+      const btnMenuTut = document.getElementById('btn-menu-tutorial');
+      if (btnMenuTut) {
+        btnMenuTut.addEventListener('click', () => {
+          this.sound.playClick();
+          const tut = document.getElementById('modal-tutorial');
+          if (tut) tut.classList.add('active');
+        });
+      }
+
+      const btnMenuSound = document.getElementById('btn-menu-sound');
+      if (btnMenuSound) {
+        btnMenuSound.addEventListener('click', () => {
+          const muted = this.sound.toggle();
+          const soundIcon = document.getElementById('sound-icon');
+          if (soundIcon) soundIcon.textContent = muted ? '🔇' : '🔊';
+          const menuSoundIcon = document.getElementById('menu-sound-icon');
+          if (menuSoundIcon) menuSoundIcon.textContent = muted ? '🔇 Sound: OFF' : '🔊 Sound: ON';
+        });
+      }
 
       // How to Play
-      this.howToPlayBtn.addEventListener('click', () => {
-        document.getElementById('modal-tutorial').classList.add('active');
-      });
-      document.getElementById('btn-close-tutorial').addEventListener('click', () => {
-        document.getElementById('modal-tutorial').classList.remove('active');
-      });
+      if (this.howToPlayBtn) {
+        this.howToPlayBtn.addEventListener('click', () => {
+          const tut = document.getElementById('modal-tutorial');
+          if (tut) tut.classList.add('active');
+        });
+      }
+      const closeTutBtn = document.getElementById('btn-close-tutorial');
+      if (closeTutBtn) {
+        closeTutBtn.addEventListener('click', () => {
+          const tut = document.getElementById('modal-tutorial');
+          if (tut) tut.classList.remove('active');
+        });
+      }
+
+      // Restart button
+      const restartBtn = document.getElementById('btn-restart');
+      if (restartBtn) {
+        restartBtn.addEventListener('click', () => {
+          this.sound.playClick();
+          this.startNewGame();
+          this.showToast('Game restarted!');
+        });
+      }
 
       // Window resize observer to auto-fit board perfectly
-      const resizeObserver = new ResizeObserver(() => this.scaleBoard());
-      resizeObserver.observe(this.viewportEl);
+      if (this.viewportEl) {
+        const resizeObserver = new ResizeObserver(() => this.scaleBoard());
+        resizeObserver.observe(this.viewportEl);
+      }
+      window.addEventListener('resize', () => this.scaleBoard());
 
       // Rewarded Ad Modal handlers
-      document.getElementById('btn-skip-ad').addEventListener('click', () => this.closeAdModal(false));
-      document.getElementById('btn-claim-hint').addEventListener('click', () => this.closeAdModal(true));
+      const skipAdBtn = document.getElementById('btn-skip-ad');
+      if (skipAdBtn) skipAdBtn.addEventListener('click', () => this.closeAdModal(false));
+      const claimHintBtn = document.getElementById('btn-claim-hint');
+      if (claimHintBtn) claimHintBtn.addEventListener('click', () => this.closeAdModal(true));
 
       // Standalone Win Modal replay
-      document.getElementById('btn-replay').addEventListener('click', () => {
-        document.getElementById('modal-win').classList.remove('active');
-        this.startNewGame();
-      });
+      const replayBtn = document.getElementById('btn-replay');
+      if (replayBtn) {
+        replayBtn.addEventListener('click', () => {
+          const winModal = document.getElementById('modal-win');
+          if (winModal) winModal.classList.remove('active');
+          this.startNewGame();
+        });
+      }
     }
 
     startNewGame() {
@@ -463,15 +537,20 @@
     }
 
     scaleBoard() {
+      if (!this.viewportEl || !this.boardEl) return;
       const vRect = this.viewportEl.getBoundingClientRect();
       const bW = parseFloat(this.boardEl.style.width) || 900;
       const bH = parseFloat(this.boardEl.style.height) || 600;
 
-      const scaleX = (vRect.width - 24) / bW;
-      const scaleY = (vRect.height - 24) / bH;
-      const scale = Math.min(scaleX, scaleY, 1.25);
+      if (vRect.width <= 0 || vRect.height <= 0) {
+        this.boardEl.style.transform = 'scale(0.85)';
+        return;
+      }
 
-      this.boardEl.style.transform = `scale(${scale})`;
+      const scaleX = (vRect.width - 16) / bW;
+      const scaleY = (vRect.height - 16) / bH;
+      const scale = Math.min(scaleX, scaleY, 1.25);
+      this.boardEl.style.transform = `scale(${Math.max(0.2, scale).toFixed(3)})`;
     }
 
     handleTileClick(tile) {
@@ -672,6 +751,7 @@
     }
 
     checkWinCondition() {
+      if (!this.tiles || this.tiles.length === 0) return;
       const remaining = this.tiles.filter((t) => !t.removed).length;
       if (remaining === 0) {
         this.isGameOver = true;
@@ -696,7 +776,12 @@
   }
 
   // Launch on DOM ready
-  window.addEventListener('DOMContentLoaded', () => {
+  function initGame() {
     new MahjongGame();
-  });
+  }
+  if (document.readyState === 'loading') {
+    window.addEventListener('DOMContentLoaded', initGame);
+  } else {
+    initGame();
+  }
 })();

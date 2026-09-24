@@ -1,5 +1,5 @@
 /**
- * 2048 Classic - Pure Vanilla JS
+ * 2048 Classic - Smooth Sliding & Star Particle Merge Engine
  */
 
 class SoundEngine {
@@ -7,20 +7,17 @@ class SoundEngine {
     this.ctx = null;
     this.muted = localStorage.getItem('2048_classic_muted') === 'true';
   }
-
   init() {
     if (!this.ctx) {
       const AudioCtx = window.AudioContext || window.webkitAudioContext;
       if (AudioCtx) this.ctx = new AudioCtx();
     }
   }
-
   toggle() {
     this.muted = !this.muted;
     localStorage.setItem('2048_classic_muted', this.muted);
     return this.muted;
   }
-
   play(type) {
     if (this.muted) return;
     this.init();
@@ -28,35 +25,32 @@ class SoundEngine {
     if (this.ctx.state === 'suspended') this.ctx.resume();
 
     const t = this.ctx.currentTime;
-    const osc = this.ctx.createOscillator();
-    const gain = this.ctx.createGain();
-    osc.connect(gain);
-    gain.connect(this.ctx.destination);
-
     if (type === 'slide') {
-      osc.frequency.setValueAtTime(260, t);
-      osc.frequency.exponentialRampToValueAtTime(380, t + 0.05);
-      gain.gain.setValueAtTime(0.06, t);
-      gain.gain.exponentialRampToValueAtTime(0.001, t + 0.06);
-      osc.start(t);
-      osc.stop(t + 0.06);
+      const o = this.ctx.createOscillator();
+      const g = this.ctx.createGain();
+      o.connect(g);
+      g.connect(this.ctx.destination);
+      o.type = 'sine';
+      o.frequency.setValueAtTime(340, t);
+      o.frequency.exponentialRampToValueAtTime(180, t + 0.05);
+      g.gain.setValueAtTime(0.1, t);
+      g.gain.exponentialRampToValueAtTime(0.001, t + 0.05);
+      o.start(t);
+      o.stop(t + 0.05);
     } else if (type === 'merge') {
-      osc.frequency.setValueAtTime(440, t);
-      osc.frequency.exponentialRampToValueAtTime(659.25, t + 0.08);
-      gain.gain.setValueAtTime(0.12, t);
-      gain.gain.exponentialRampToValueAtTime(0.001, t + 0.1);
-      osc.start(t);
-      osc.stop(t + 0.1);
-    } else if (type === 'over') {
-      osc.type = 'triangle';
-      osc.frequency.setValueAtTime(200, t);
-      osc.frequency.linearRampToValueAtTime(100, t + 0.25);
-      gain.gain.setValueAtTime(0.15, t);
-      gain.gain.exponentialRampToValueAtTime(0.001, t + 0.25);
-      osc.start(t);
-      osc.stop(t + 0.25);
+      const o = this.ctx.createOscillator();
+      const g = this.ctx.createGain();
+      o.connect(g);
+      g.connect(this.ctx.destination);
+      o.type = 'triangle';
+      o.frequency.setValueAtTime(320, t);
+      o.frequency.linearRampToValueAtTime(560, t + 0.1);
+      g.gain.setValueAtTime(0.18, t);
+      g.gain.exponentialRampToValueAtTime(0.001, t + 0.1);
+      o.start(t);
+      o.stop(t + 0.1);
     } else if (type === 'win') {
-      const notes = [392, 523.25, 659.25, 783.99];
+      const notes = [440, 554.37, 659.25, 880];
       notes.forEach((freq, idx) => {
         const o = this.ctx.createOscillator();
         const g = this.ctx.createGain();
@@ -78,7 +72,8 @@ class Game2048 {
     this.sound = new SoundEngine();
     this.score = 0;
     this.bestScore = parseInt(localStorage.getItem('2048_classic_best') || '0', 10);
-    this.grid = this.createEmptyGrid();
+    this.tiles = [];
+    this.tileIdCounter = 1;
     this.previousState = null;
     this.hasWon = false;
     this.keepPlayingAfterWin = false;
@@ -89,10 +84,6 @@ class Game2048 {
     this.cacheDOM();
     this.bindEvents();
     this.restart();
-  }
-
-  createEmptyGrid() {
-    return Array.from({ length: this.size }, () => Array(this.size).fill(0));
   }
 
   cacheDOM() {
@@ -111,60 +102,39 @@ class Game2048 {
   bindEvents() {
     // Keyboard
     window.addEventListener('keydown', (e) => {
-      let moved = false;
-      if (e.key === 'ArrowUp' || e.key === 'w' || e.key === 'W') {
+      let dir = null;
+      if (e.key === 'ArrowUp' || e.key === 'w' || e.key === 'W') dir = 0;
+      else if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') dir = 1;
+      else if (e.key === 'ArrowDown' || e.key === 's' || e.key === 'S') dir = 2;
+      else if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') dir = 3;
+
+      if (dir !== null) {
         e.preventDefault();
-        moved = this.move('up');
-      } else if (e.key === 'ArrowDown' || e.key === 's' || e.key === 'S') {
-        e.preventDefault();
-        moved = this.move('down');
-      } else if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') {
-        e.preventDefault();
-        moved = this.move('left');
-      } else if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') {
-        e.preventDefault();
-        moved = this.move('right');
+        this.move(dir);
       }
-      if (moved) this.afterMove();
     });
 
-    // Touch Swipe
+    // Touch & Pointer Drag / Swipe
     let touchStartX = 0;
     let touchStartY = 0;
     this.boardEl.addEventListener('touchstart', (e) => {
-      if (e.touches.length === 1) {
-        touchStartX = e.touches[0].clientX;
-        touchStartY = e.touches[0].clientY;
-      }
+      touchStartX = e.touches[0].clientX;
+      touchStartY = e.touches[0].clientY;
     }, { passive: true });
 
     this.boardEl.addEventListener('touchend', (e) => {
-      if (e.changedTouches.length === 1) {
-        const dx = e.changedTouches[0].clientX - touchStartX;
-        const dy = e.changedTouches[0].clientY - touchStartY;
-        const absX = Math.abs(dx);
-        const absY = Math.abs(dy);
-        if (Math.max(absX, absY) > 30) {
-          let moved = false;
-          if (absX > absY) {
-            moved = dx > 0 ? this.move('right') : this.move('left');
-          } else {
-            moved = dy > 0 ? this.move('down') : this.move('up');
-          }
-          if (moved) this.afterMove();
+      const dx = e.changedTouches[0].clientX - touchStartX;
+      const dy = e.changedTouches[0].clientY - touchStartY;
+      if (Math.hypot(dx, dy) > 25) {
+        if (Math.abs(dx) > Math.abs(dy)) {
+          this.move(dx > 0 ? 1 : 3);
+        } else {
+          this.move(dy > 0 ? 2 : 0);
         }
       }
     }, { passive: true });
 
-    // On-screen controls
-    document.querySelectorAll('.ctrl-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const dir = btn.dataset.dir;
-        if (this.move(dir)) this.afterMove();
-      });
-    });
-
-    // Header buttons
+    // Buttons
     document.getElementById('btn-restart').addEventListener('click', () => this.restart());
     document.getElementById('btn-undo').addEventListener('click', () => this.undo());
     document.getElementById('btn-sound').addEventListener('click', () => {
@@ -172,7 +142,6 @@ class Game2048 {
       this.soundIcon.textContent = isMuted ? '🔇' : '🔊';
     });
 
-    // Modals
     document.getElementById('btn-howto').addEventListener('click', () => {
       this.modalHowTo.classList.add('open');
     });
@@ -191,6 +160,8 @@ class Game2048 {
       this.modalOver.classList.remove('open');
       this.restart();
     });
+
+    window.addEventListener('resize', () => this.render());
   }
 
   startTimer() {
@@ -206,151 +177,242 @@ class Game2048 {
   }
 
   restart() {
-    this.grid = this.createEmptyGrid();
+    this.tiles = [];
+    this.tileIdCounter = 1;
     this.score = 0;
     this.scoreEl.textContent = '0';
     this.hasWon = false;
     this.keepPlayingAfterWin = false;
     this.previousState = null;
+    document.getElementById('btn-undo').disabled = true;
     this.modalWin.classList.remove('open');
     this.modalOver.classList.remove('open');
-    this.addRandomTile();
-    this.addRandomTile();
+    this.spawnTile();
+    this.spawnTile();
     this.render();
     this.startTimer();
   }
 
   saveState() {
     this.previousState = {
-      grid: this.grid.map(row => [...row]),
+      tiles: this.tiles.map(t => ({ ...t })),
       score: this.score
     };
+    document.getElementById('btn-undo').disabled = false;
   }
 
   undo() {
     if (!this.previousState) return;
-    this.grid = this.previousState.grid.map(row => [...row]);
+    this.tiles = this.previousState.tiles.map(t => ({ ...t }));
     this.score = this.previousState.score;
     this.scoreEl.textContent = this.score;
     this.previousState = null;
+    document.getElementById('btn-undo').disabled = true;
     this.sound.play('slide');
     this.render();
   }
 
-  addRandomTile() {
+  getTileAt(r, c) {
+    return this.tiles.find(t => t.r === r && t.c === c && !t.mergedInto);
+  }
+
+  spawnTile() {
     const emptyCells = [];
     for (let r = 0; r < this.size; r++) {
       for (let c = 0; c < this.size; c++) {
-        if (this.grid[r][c] === 0) emptyCells.push({ r, c });
+        if (!this.getTileAt(r, c)) emptyCells.push({ r, c });
       }
     }
-    if (emptyCells.length === 0) return false;
+    if (emptyCells.length === 0) return null;
     const { r, c } = emptyCells[Math.floor(Math.random() * emptyCells.length)];
-    this.grid[r][c] = Math.random() < 0.9 ? 2 : 4;
-    return { r, c, val: this.grid[r][c] };
+    const val = Math.random() < 0.9 ? 2 : 4;
+    const newTile = {
+      id: this.tileIdCounter++,
+      r,
+      c,
+      val,
+      prevR: r,
+      prevC: c,
+      isNew: true
+    };
+    this.tiles.push(newTile);
+    return newTile;
+  }
+
+  spawnStarParticles(r, c, val) {
+    const containerRect = this.tileLayerEl.getBoundingClientRect();
+    const cellW = (containerRect.width - (this.size - 1) * 10) / this.size;
+    const cellH = (containerRect.height - (this.size - 1) * 10) / this.size;
+    const x = c * (cellW + 10) + cellW / 2;
+    const y = r * (cellH + 10) + cellH / 2;
+
+    const count = 8;
+    const stars = ['✨', '⭐', '🌟', '✦', '★'];
+    const palette = val >= 1024 
+      ? ['#ffd700', '#ff9f43', '#ee5253', '#ffffff'] 
+      : ['#ffd700', '#ffaa00', '#fffb96', '#ffffff', '#74b9ff'];
+
+    for (let i = 0; i < count; i++) {
+      const star = document.createElement('span');
+      star.className = 'star-sparkle';
+      star.textContent = stars[Math.floor(Math.random() * stars.length)];
+
+      const angle = (Math.PI * 2 * i) / count + (Math.random() - 0.5) * 0.6;
+      const distance = 25 + Math.random() * 35;
+      const dx = Math.cos(angle) * distance;
+      const dy = Math.sin(angle) * distance;
+      const color = palette[Math.floor(Math.random() * palette.length)];
+
+      star.style.cssText = `
+        position: absolute;
+        left: ${x}px;
+        top: ${y}px;
+        font-size: ${14 + Math.random() * 8}px;
+        color: ${color};
+        text-shadow: 0 0 8px ${color};
+        pointer-events: none;
+        z-index: 100;
+        transform: translate(-50%, -50%) scale(0.2);
+        opacity: 1;
+        transition: transform 0.4s cubic-bezier(0.1, 0.9, 0.2, 1), opacity 0.4s ease-out;
+      `;
+
+      this.tileLayerEl.appendChild(star);
+
+      requestAnimationFrame(() => {
+        star.style.transform = `translate(calc(-50% + ${dx}px), calc(-50% + ${dy}px)) scale(${0.7 + Math.random() * 0.6}) rotate(${(Math.random() - 0.5) * 140}deg)`;
+        star.style.opacity = '0';
+      });
+
+      setTimeout(() => star.remove(), 420);
+    }
   }
 
   move(direction) {
+    // 0: up, 1: right, 2: down, 3: left
     this.saveState();
+
     let moved = false;
-    let mergedAny = false;
+    let totalScoreAdded = 0;
+    const mergedPositions = [];
 
-    const rotate = (m) => m[0].map((_, i) => m.map(row => row[i]).reverse());
+    const rows = [0, 1, 2, 3];
+    const cols = [0, 1, 2, 3];
+    if (direction === 2) rows.reverse(); // Down
+    if (direction === 1) cols.reverse(); // Right
 
-    // Normalize to moving left
-    let rotations = 0;
-    if (direction === 'up') rotations = 3;
-    else if (direction === 'right') rotations = 2;
-    else if (direction === 'down') rotations = 1;
+    const board = Array.from({ length: this.size }, () => Array(this.size).fill(null));
+    this.tiles.forEach(t => {
+      board[t.r][t.c] = t;
+      t.prevR = t.r;
+      t.prevC = t.c;
+    });
 
-    let tempGrid = this.grid.map(row => [...row]);
-    for (let i = 0; i < rotations; i++) {
-      tempGrid = rotate(tempGrid);
-    }
+    rows.forEach(r => {
+      cols.forEach(c => {
+        const tile = board[r][c];
+        if (!tile) return;
 
-    // Slide and merge left
-    for (let r = 0; r < this.size; r++) {
-      const row = tempGrid[r].filter(val => val !== 0);
-      const newRow = [];
-      for (let c = 0; c < row.length; c++) {
-        if (c + 1 < row.length && row[c] === row[c + 1]) {
-          const mergedVal = row[c] * 2;
-          newRow.push(mergedVal);
-          this.score += mergedVal;
-          mergedAny = true;
-          c++; // skip merged
-        } else {
-          newRow.push(row[c]);
+        let nextR = r;
+        let nextC = c;
+
+        while (true) {
+          const testR = nextR + (direction === 0 ? -1 : direction === 2 ? 1 : 0);
+          const testC = nextC + (direction === 3 ? -1 : direction === 1 ? 1 : 0);
+
+          if (testR < 0 || testR >= this.size || testC < 0 || testC >= this.size) break;
+
+          const target = board[testR][testC];
+          if (!target) {
+            board[nextR][nextC] = null;
+            board[testR][testC] = tile;
+            nextR = testR;
+            nextC = testC;
+            moved = true;
+          } else if (target.val === tile.val && !target.hasMerged && !tile.hasMerged) {
+            board[nextR][nextC] = null;
+            board[testR][testC] = {
+              id: this.tileIdCounter++,
+              r: testR,
+              c: testC,
+              val: tile.val * 2,
+              prevR: r,
+              prevC: c,
+              isMerged: true,
+              hasMerged: true
+            };
+            totalScoreAdded += tile.val * 2;
+            mergedPositions.push({ r: testR, c: testC, val: tile.val * 2 });
+            moved = true;
+            break;
+          } else {
+            break;
+          }
         }
-      }
-      while (newRow.length < this.size) newRow.push(0);
-
-      for (let c = 0; c < this.size; c++) {
-        if (tempGrid[r][c] !== newRow[c]) moved = true;
-        tempGrid[r][c] = newRow[c];
-      }
-    }
-
-    // Rotate back
-    const backRotations = (4 - rotations) % 4;
-    for (let i = 0; i < backRotations; i++) {
-      tempGrid = rotate(tempGrid);
-    }
+      });
+    });
 
     if (moved) {
-      this.grid = tempGrid;
-      if (mergedAny) this.sound.play('merge');
-      else this.sound.play('slide');
-    } else {
-      this.previousState = null; // nothing changed
-    }
-
-    return moved;
-  }
-
-  afterMove() {
-    this.addRandomTile();
-    this.render();
-
-    // Update score displays
-    this.scoreEl.textContent = this.score;
-    if (this.score > this.bestScore) {
-      this.bestScore = this.score;
-      this.bestScoreEl.textContent = this.bestScore;
-      localStorage.setItem('2048_classic_best', this.bestScore);
-    }
-
-    // Check 2048 victory
-    if (!this.hasWon && !this.keepPlayingAfterWin) {
+      const finalTiles = [];
       for (let r = 0; r < this.size; r++) {
         for (let c = 0; c < this.size; c++) {
-          if (this.grid[r][c] >= 2048) {
-            this.hasWon = true;
-            this.sound.play('win');
-            const totalSeconds = Math.max(1, Math.floor((Date.now() - this.startTime) / 1000));
-            try {
-              window.parent.postMessage({ type: 'win', time: totalSeconds }, '*');
-            } catch (e) {}
-            this.modalWin.classList.add('open');
-            return;
+          if (board[r][c]) {
+            board[r][c].r = r;
+            board[r][c].c = c;
+            delete board[r][c].hasMerged;
+            finalTiles.push(board[r][c]);
           }
         }
       }
-    }
+      this.tiles = finalTiles;
 
-    // Check Game Over
-    if (this.isGameOver()) {
-      this.sound.play('over');
-      this.modalOver.classList.add('open');
+      if (totalScoreAdded > 0) {
+        this.sound.play('merge');
+      } else {
+        this.sound.play('slide');
+      }
+
+      this.score += totalScoreAdded;
+      this.scoreEl.textContent = this.score;
+      if (this.score > this.bestScore) {
+        this.bestScore = this.score;
+        this.bestScoreEl.textContent = this.bestScore;
+        localStorage.setItem('2048_classic_best', this.bestScore.toString());
+      }
+
+      this.spawnTile();
+      this.render();
+
+      mergedPositions.forEach(p => {
+        this.spawnStarParticles(p.r, p.c, p.val);
+      });
+
+      if (!this.hasWon && !this.keepPlayingAfterWin && this.tiles.some(t => t.val >= 2048)) {
+        this.hasWon = true;
+        this.sound.play('win');
+        const totalSecs = Math.max(1, Math.floor((Date.now() - this.startTime) / 1000));
+        try {
+          window.parent.postMessage({ type: 'win', time: totalSecs }, '*');
+        } catch (e) {}
+        this.modalWin.classList.add('open');
+      } else if (this.isGameOver()) {
+        this.modalOver.classList.add('open');
+      }
+    } else {
+      this.previousState = null;
+      document.getElementById('btn-undo').disabled = true;
     }
   }
 
   isGameOver() {
+    if (this.tiles.length < this.size * this.size) return false;
+    const grid = Array.from({ length: this.size }, () => Array(this.size).fill(0));
+    this.tiles.forEach(t => grid[t.r][t.c] = t.val);
+
     for (let r = 0; r < this.size; r++) {
       for (let c = 0; c < this.size; c++) {
-        if (this.grid[r][c] === 0) return false;
-        if (c + 1 < this.size && this.grid[r][c] === this.grid[r][c + 1]) return false;
-        if (r + 1 < this.size && this.grid[r][c] === this.grid + 1 ? false : this.grid[r][c] === this.grid[r + 1][c]) return false;
+        if (c + 1 < this.size && grid[r][c] === grid[r][c + 1]) return false;
+        if (r + 1 < this.size && grid[r][c] === grid[r + 1][c]) return false;
       }
     }
     return true;
@@ -358,30 +420,45 @@ class Game2048 {
 
   render() {
     this.tileLayerEl.innerHTML = '';
-    const cellWidthPercent = (100 - (this.size - 1) * 2.8) / this.size;
-    const gapPercent = 2.8;
+    const containerW = this.tileLayerEl.clientWidth;
+    const gap = 10;
+    const cellW = (containerW - (this.size - 1) * gap) / this.size;
 
-    for (let r = 0; r < this.size; r++) {
-      for (let c = 0; c < this.size; c++) {
-        const val = this.grid[r][c];
-        if (val !== 0) {
-          const tile = document.createElement('div');
-          tile.className = `tile tile-${val > 2048 ? 'super' : val}`;
-          tile.textContent = val;
+    this.tiles.forEach(tile => {
+      const el = document.createElement('div');
+      const val = tile.val;
+      const classKey = val <= 2048 ? `tile-${val}` : 'tile-super';
+      el.className = `tile ${classKey}`;
+      if (tile.isNew) el.classList.add('tile-new');
+      if (tile.isMerged) el.classList.add('tile-merged');
 
-          // Position via CSS transform
-          const leftPercent = c * (cellWidthPercent + gapPercent);
-          const topPercent = r * (cellWidthPercent + gapPercent);
-          tile.style.width = `${cellWidthPercent}%`;
-          tile.style.height = `${cellWidthPercent}%`;
-          tile.style.transform = `translate(${leftPercent * 3.4}px, ${topPercent * 3.4}px)`;
-          tile.style.left = `${leftPercent}%`;
-          tile.style.top = `${topPercent}%`;
+      el.textContent = val;
+      el.style.width = `${cellW}px`;
+      el.style.height = `${cellW}px`;
 
-          this.tileLayerEl.appendChild(tile);
-        }
+      const x = tile.c * (cellW + gap);
+      const y = tile.r * (cellW + gap);
+
+      if (tile.prevR !== undefined && (tile.prevR !== tile.r || tile.prevC !== tile.c)) {
+        const prevX = tile.prevC * (cellW + gap);
+        const prevY = tile.prevR * (cellW + gap);
+        el.style.transform = `translate(${prevX}px, ${prevY}px)`;
+        requestAnimationFrame(() => {
+          el.style.transform = `translate(${x}px, ${y}px)`;
+        });
+      } else {
+        el.style.transform = `translate(${x}px, ${y}px)`;
       }
-    }
+
+      this.tileLayerEl.appendChild(el);
+    });
+
+    this.tiles.forEach(t => {
+      t.isNew = false;
+      t.isMerged = false;
+      t.prevR = t.r;
+      t.prevC = t.c;
+    });
   }
 }
 

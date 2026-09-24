@@ -281,11 +281,39 @@
     }
   }, { passive: true });
 
-  // D-pad Buttons
-  document.getElementById('btn-up').addEventListener('click', () => move('up'));
-  document.getElementById('btn-left').addEventListener('click', () => move('left'));
-  document.getElementById('btn-down').addEventListener('click', () => move('down'));
-  document.getElementById('btn-right').addEventListener('click', () => move('right'));
+  // Mouse Drag / Swipe
+  let mouseStartX = 0;
+  let mouseStartY = 0;
+  let isMouseDragging = false;
+
+  boardEl.addEventListener('mousedown', e => {
+    mouseStartX = e.clientX;
+    mouseStartY = e.clientY;
+    isMouseDragging = true;
+  });
+
+  window.addEventListener('mouseup', e => {
+    if (!isMouseDragging) return;
+    isMouseDragging = false;
+    const dx = e.clientX - mouseStartX;
+    const dy = e.clientY - mouseStartY;
+    const absX = Math.abs(dx);
+    const absY = Math.abs(dy);
+
+    if (Math.max(absX, absY) > 20) {
+      if (absX > absY) {
+        move(dx > 0 ? 'right' : 'left');
+      } else {
+        move(dy > 0 ? 'down' : 'up');
+      }
+    }
+  });
+
+  // Optional D-pad Buttons
+  document.getElementById('btn-up')?.addEventListener('click', () => move('up'));
+  document.getElementById('btn-left')?.addEventListener('click', () => move('left'));
+  document.getElementById('btn-down')?.addEventListener('click', () => move('down'));
+  document.getElementById('btn-right')?.addEventListener('click', () => move('right'));
 
   document.getElementById('btn-restart').addEventListener('click', initGame);
   document.getElementById('btn-play-again').addEventListener('click', initGame);

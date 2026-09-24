@@ -11,6 +11,8 @@ export interface SeoOptions {
   canonicalUrl?: string;
   imageUrl?: string;
   type?: 'website' | 'game';
+  categoryName?: string;
+  categoryUrl?: string;
   faqs?: Array<{ q?: string; question?: string; a?: string; answer?: string }>;
   ratingValue?: number;
   ratingCount?: number;
@@ -21,18 +23,30 @@ export function updateHeadSeo(options: SeoOptions): void {
     title,
     description,
     keywords,
-    canonicalUrl = window.location.href,
-    imageUrl = 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=1200&auto=format&fit=crop&q=80',
+    canonicalUrl,
+    imageUrl = 'https://funlogic.games/icon.svg',
     type = 'website',
+    categoryName,
+    categoryUrl,
     faqs,
     ratingValue = 4.8,
     ratingCount = 1250
   } = options;
 
-  // 1. Update Document Title
-  document.title = `${title} | Brain & Puzzle Hub`;
+  // 1. Calculate strictly clean Canonical URL without any hashtag fragments
+  let cleanCanonical = canonicalUrl;
+  if (!cleanCanonical) {
+    const raw = window.location.href.split('#')[0];
+    cleanCanonical = raw.endsWith('/') ? raw : `${raw}/`;
+  } else {
+    cleanCanonical = cleanCanonical.split('#')[0];
+    if (!cleanCanonical.endsWith('/')) cleanCanonical += '/';
+  }
 
-  // 2. Helper to set or update <meta> tag
+  // 2. Update Document Title
+  document.title = title.includes('FunLogic') ? title : `${title} — FunLogic.games`;
+
+  // 3. Helper to set or update <meta> tag
   const setMeta = (nameOrProp: string, value: string, isProp = false) => {
     if (!value) return;
     const attr = isProp ? 'property' : 'name';
@@ -45,7 +59,7 @@ export function updateHeadSeo(options: SeoOptions): void {
     el.content = value;
   };
 
-  // 3. Helper to set or update <link rel="...">
+  // 4. Helper to set or update <link rel="...">
   const setLink = (rel: string, href: string) => {
     let el = document.head.querySelector(`link[rel="${rel}"]`) as HTMLLinkElement | null;
     if (!el) {
@@ -56,28 +70,34 @@ export function updateHeadSeo(options: SeoOptions): void {
     el.href = href;
   };
 
-  // Format keywords string
-  const keywordsStr = Array.isArray(keywords) 
-    ? keywords.join(', ') 
-    : (keywords || 'brain games, logic puzzles, water sort, mahjong, sudoku, 2048, sokoban, pipe connect, free online puzzles');
+  // 5. Format keywords: limit to top 8 to avoid keyword stuffing
+  let keywordsList: string[] = [];
+  if (Array.isArray(keywords)) {
+    keywordsList = keywords.slice(0, 8);
+  } else if (typeof keywords === 'string') {
+    keywordsList = keywords.split(',').map(s => s.trim()).filter(Boolean).slice(0, 8);
+  } else {
+    keywordsList = ['logic puzzle', 'brain game', 'online puzzle', 'free web game', 'casual game'];
+  }
+  const keywordsStr = keywordsList.join(', ');
 
   // Standard Meta Tags
   setMeta('description', description);
   setMeta('keywords', keywordsStr);
-  setMeta('robots', 'index, follow, max-image-preview:large');
-  setLink('canonical', canonicalUrl);
+  setMeta('robots', 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1');
+  setLink('canonical', cleanCanonical);
 
   // Open Graph
-  setMeta('og:title', `${title} - Play Free Online`, true);
+  setMeta('og:title', `${title} — FunLogic.games`, true);
   setMeta('og:description', description, true);
-  setMeta('og:url', canonicalUrl, true);
+  setMeta('og:url', cleanCanonical, true);
   setMeta('og:type', type === 'game' ? 'game' : 'website', true);
   setMeta('og:image', imageUrl, true);
-  setMeta('og:site_name', 'Brain & Puzzle Hub', true);
+  setMeta('og:site_name', 'FunLogic.games', true);
 
   // Twitter Cards
   setMeta('twitter:card', 'summary_large_image');
-  setMeta('twitter:title', `${title} - Play Free Online`);
+  setMeta('twitter:title', `${title} — FunLogic.games`);
   setMeta('twitter:description', description);
   setMeta('twitter:image', imageUrl);
 
@@ -99,7 +119,7 @@ export function updateHeadSeo(options: SeoOptions): void {
       '@type': ['VideoGame', 'WebApplication'],
       'name': title,
       'description': description,
-      'url': canonicalUrl,
+      'url': cleanCanonical,
       'image': imageUrl,
       'genre': ['Puzzle', 'Logic', 'Brain Training'],
       'applicationCategory': 'Game',
@@ -114,7 +134,6 @@ export function updateHeadSeo(options: SeoOptions): void {
       }
     };
 
-    // Google Search Central: Inclui aggregateRating estritamente quando há avaliações reais
     if (ratingCount && ratingCount > 0 && ratingValue && ratingValue > 0) {
       gameSchema.aggregateRating = {
         '@type': 'AggregateRating',
@@ -126,12 +145,50 @@ export function updateHeadSeo(options: SeoOptions): void {
     }
 
     structuredSchemas.push(gameSchema);
+
+    // Schema: BreadcrumbList for Game
+    const breadcrumbList: any = {
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      'itemListElement': [
+        {
+          '@type': 'ListItem',
+          'position': 1,
+          'name': 'Home',
+          'item': 'https://funlogic.games/'
+        }
+      ]
+    };
+
+    if (categoryName && categoryUrl) {
+      breadcrumbList.itemListElement.push({
+        '@type': 'ListItem',
+        'position': 2,
+        'name': categoryName,
+        'item': categoryUrl.endsWith('/') ? categoryUrl : `${categoryUrl}/`
+      });
+      breadcrumbList.itemListElement.push({
+        '@type': 'ListItem',
+        'position': 3,
+        'name': title,
+        'item': cleanCanonical
+      });
+    } else {
+      breadcrumbList.itemListElement.push({
+        '@type': 'ListItem',
+        'position': 2,
+        'name': title,
+        'item': cleanCanonical
+      });
+    }
+    structuredSchemas.push(breadcrumbList);
+
   } else {
     structuredSchemas.push({
       '@context': 'https://schema.org',
       '@type': 'WebSite',
-      'name': 'Brain & Puzzle Hub',
-      'url': canonicalUrl,
+      'name': 'FunLogic.games',
+      'url': cleanCanonical,
       'description': description
     });
   }
@@ -152,5 +209,5 @@ export function updateHeadSeo(options: SeoOptions): void {
     });
   }
 
-  jsonLdEl.textContent = JSON.stringify(structuredSchemas.length === 1 ? structuredSchemas[0] : structuredSchemas, null, 2);
+  jsonLdEl.textContent = JSON.stringify(structuredSchemas, null, 2);
 }

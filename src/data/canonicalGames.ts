@@ -832,6 +832,16 @@ export const CANONICAL_103_GAMES: CanonicalGameDef[] = [
     categoryId: "kids",
     description: "Water to Flower Kids is a simplified 3-pipe connection puzzle for children. Rotate chunky water pipes to guide clear stream water from the tap to help a garden blossom grow."
   },
+  {
+    num: 104,
+    title: "2048 MERGE PUZZLE",
+    slug: "2048-merge-game",
+    categoryLabel: "Numbers & Math",
+    categoryId: "numbers",
+    description: "2048 Merge is a dynamic drop-and-merge puzzle combining physics-based ball dropping with 2048 arithmetic strategy. Drop matching numbered spheres together to merge them into larger values and reach the ultimate 2048 ball."
+  }
 ];
 
+export const CANONICAL_104_GAMES = CANONICAL_103_GAMES;
 export const CANONICAL_SLUG_SET = new Set(CANONICAL_103_GAMES.map(g => g.slug));
+

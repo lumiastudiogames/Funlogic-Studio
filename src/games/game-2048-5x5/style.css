@@ -125,8 +125,9 @@ body {
 }
 
 .board-5x5 {
-  width: min(92vw, 400px);
-  height: min(92vw, 400px);
+  width: min(92vw, calc(100dvh - 140px), 420px);
+  height: min(92vw, calc(100dvh - 140px), 420px);
+  aspect-ratio: 1 / 1;
   background: #4c0519;
   border-radius: 14px;
   padding: 8px;
@@ -134,7 +135,13 @@ body {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   grid-template-rows: repeat(5, 1fr);
-  gap: 8px;
+  gap: 6px;
+  flex-shrink: 0;
+  cursor: grab;
+}
+
+.board-5x5:active {
+  cursor: grabbing;
 }
 
 .cell-bg {

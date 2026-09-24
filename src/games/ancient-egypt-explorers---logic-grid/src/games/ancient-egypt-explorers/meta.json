@@ -2,8 +2,8 @@
   "title": "Ancient Egypt Explorers: Logic Grid",
   "categoryId": "logicgrid",
   "icon": "relic_amphora",
-  "instructions": "Use a matriz de dedução lógica e as pistas históricas para descobrir qual arqueólogo explorou qual tumba faraônica e qual relíquia dourada encontrou.",
-  "description": "Ancient Egypt Explorers é um intrigante jogo de matriz lógica ambientado nas areias do Egito Antigo. Cruze evidências arqueológicas, elimine contradições e confirme associações para desvendar os segredos de Gizé, Sacará e o Vale dos Reis com gráficos 2.5D e áudio procedural.",
+  "instructions": "Use the logical deduction grid and historical clues to discover which archaeologist explored each pharaoh's tomb and which golden relic they found.",
+  "description": "Ancient Egypt Explorers is an intriguing logic matrix puzzle set in the golden sands of Ancient Egypt. Cross-reference archaeological evidence, eliminate contradictions, and confirm associations to uncover the secrets of Giza, Saqqara, and the Valley of the Kings.",
   "keywords": [
     "logic grid",
     "logic grid puzzle",
@@ -130,16 +130,16 @@
   ],
   "faqs": [
     {
-      "q": "Como funciona a matriz lógica do Egito?",
-      "a": "Toque nas células para alternar entre Vazio, Exclusão (X) e Associação Confirmada (V). O jogo propaga automaticamente deduções de linha e coluna."
+      "q": "How does the Egypt logic matrix work?",
+      "a": "Tap cells to cycle between Empty, Elimination (X), and Confirmed Association (O). The game automatically propagates deduction rules across rows and columns."
     },
     {
-      "q": "O que fazer se travar em uma pista?",
-      "a": "Utilize o botão 'DICA' no topo da tela para decifrar um hieróglifo com auxílio de um curto papiro patrocinado."
+      "q": "What should I do if I get stuck on a clue?",
+      "a": "Use the 'HINT' button at the top of the screen to decipher a hieroglyph and reveal a correct grid state."
     },
     {
-      "q": "O jogo salva meu progresso?",
-      "a": "Sim, todas as fases desbloqueadas e melhores tempos de exploração ficam salvos no seu navegador."
+      "q": "Does the game save my progress?",
+      "a": "Yes, all unlocked levels and your best exploration times are saved automatically in your browser."
     }
   ],
   "categoryLabel": "Logic Grid",

@@ -30,6 +30,7 @@ export class ScreenController {
 
     if (screen === 'PLAYING') {
       this.startLevelTimer();
+      sound.startAmbient();
       if (this.displayManager) {
         setTimeout(() => this.displayManager?.resize(), 50);
       }
@@ -161,6 +162,14 @@ export class ScreenController {
       } else {
         this.setScreen('LEVEL_SELECT');
       }
+    });
+
+    // Restart Level button
+    document.getElementById('btn-restart-level')?.addEventListener('click', () => {
+      sound.playClick();
+      game.startLevel(game.currentLevelIndex);
+      this.setScreen('PLAYING');
+      this.renderPlayScreen();
     });
 
     // Window Resize Handler for Responsive Split-View

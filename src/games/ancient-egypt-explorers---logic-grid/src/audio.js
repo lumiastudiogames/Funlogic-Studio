@@ -7,6 +7,8 @@ class SoundSystem {
   constructor() {
     this.ctx = null;
     this.isMuted = false;
+    this.ambientNodes = null;
+    this.ambientInterval = null;
     // Load mute state from localStorage
     const saved = localStorage.getItem('egypt_logic_muted');
     this.isMuted = saved === 'true';
@@ -27,8 +29,108 @@ class SoundSystem {
     localStorage.setItem('egypt_logic_muted', String(this.isMuted));
     if (!this.isMuted) {
       this.playClick();
+      this.startAmbient();
+    } else {
+      this.stopAmbient();
     }
     return this.isMuted;
+  }
+
+  startAmbient() {
+    if (this.isMuted || this.ambientNodes) return;
+    this.initContext();
+    if (!this.ctx) return;
+
+    try {
+      const now = this.ctx.currentTime;
+      const masterGain = this.ctx.createGain();
+      masterGain.gain.setValueAtTime(0.001, now);
+      masterGain.gain.exponentialRampToValueAtTime(0.06, now + 1.5);
+      masterGain.connect(this.ctx.destination);
+
+      // Dual drone oscillators: Root D2 (73.42 Hz) + Fifth A2 (110 Hz)
+      const osc1 = this.ctx.createOscillator();
+      osc1.type = 'sawtooth';
+      osc1.frequency.setValueAtTime(73.42, now);
+
+      const osc2 = this.ctx.createOscillator();
+      osc2.type = 'sine';
+      osc2.frequency.setValueAtTime(110.0, now);
+
+      // Low pass filter
+      const filter = this.ctx.createBiquadFilter();
+      filter.type = 'lowpass';
+      filter.frequency.setValueAtTime(260, now);
+
+      // LFO for slow atmospheric breathing
+      const lfo = this.ctx.createOscillator();
+      lfo.frequency.setValueAtTime(0.08, now);
+      const lfoGain = this.ctx.createGain();
+      lfoGain.gain.setValueAtTime(100, now);
+      lfo.connect(lfoGain);
+      lfoGain.connect(filter.frequency);
+
+      osc1.connect(filter);
+      osc2.connect(filter);
+      filter.connect(masterGain);
+
+      osc1.start();
+      osc2.start();
+      lfo.start();
+
+      this.ambientNodes = { masterGain, osc1, osc2, lfo, filter };
+
+      this.ambientInterval = setInterval(() => {
+        if (!this.isMuted && this.ctx && this.ambientNodes) {
+          this.playMysticNote();
+        }
+      }, 5000);
+    } catch (e) {
+      console.warn('Ambient start failed:', e);
+    }
+  }
+
+  playMysticNote() {
+    if (this.isMuted || !this.ctx) return;
+    const now = this.ctx.currentTime;
+    const scale = [293.66, 349.23, 392.00, 440.00, 523.25];
+    const freq = scale[Math.floor(Math.random() * scale.length)];
+    const osc = this.ctx.createOscillator();
+    const gain = this.ctx.createGain();
+
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(freq, now);
+
+    gain.gain.setValueAtTime(0.001, now);
+    gain.gain.linearRampToValueAtTime(0.02, now + 0.3);
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + 2.2);
+
+    osc.connect(gain);
+    gain.connect(this.ctx.destination);
+    osc.start(now);
+    osc.stop(now + 2.3);
+  }
+
+  stopAmbient() {
+    if (this.ambientInterval) {
+      clearInterval(this.ambientInterval);
+      this.ambientInterval = null;
+    }
+    if (this.ambientNodes) {
+      try {
+        const { masterGain, osc1, osc2, lfo } = this.ambientNodes;
+        const now = this.ctx ? this.ctx.currentTime : 0;
+        masterGain.gain.linearRampToValueAtTime(0.001, now + 0.5);
+        setTimeout(() => {
+          try {
+            osc1.stop();
+            osc2.stop();
+            lfo.stop();
+          } catch (e) {}
+        }, 600);
+      } catch (e) {}
+      this.ambientNodes = null;
+    }
   }
 
   // Stone tap click (UI button)

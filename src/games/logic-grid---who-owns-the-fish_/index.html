@@ -1125,6 +1125,221 @@
         font-size: 11px;
       }
     }
+
+    /* 3-TABS NAVIGATION BAR FOR MOBILE */
+    .logic-tabs-bar {
+      display: none;
+      flex: 0 0 auto;
+      background: rgba(19, 27, 46, 0.96);
+      border-bottom: 1px solid var(--border-color);
+      padding: 4px 6px;
+      gap: 6px;
+      z-index: 15;
+    }
+
+    .logic-tab-btn {
+      flex: 1 1 0;
+      height: 36px;
+      border-radius: 8px;
+      border: 1px solid var(--border-color);
+      background: var(--bg-card);
+      color: var(--text-secondary);
+      font-size: 11px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+
+    .logic-tab-btn:active {
+      transform: scale(0.96);
+    }
+
+    .logic-tab-btn.active {
+      background: linear-gradient(135deg, #f59e0b, #d97706);
+      color: #0b0f19;
+      border-color: #fbbf24;
+      box-shadow: 0 2px 8px rgba(245, 158, 11, 0.35);
+    }
+
+    .tab-badge {
+      font-size: 9px;
+      padding: 1px 5px;
+      border-radius: 10px;
+      background: rgba(0, 0, 0, 0.3);
+      color: inherit;
+      font-weight: 800;
+    }
+
+    /* SUMMARY SECTION / AUTO-SUMMARY */
+    .summary-section {
+      flex: 1 1 auto;
+      background-color: rgba(19, 27, 46, 0.85);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 8px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .summary-header-card {
+      background: rgba(28, 38, 64, 0.6);
+      border: 1px solid rgba(43, 57, 91, 0.5);
+      border-radius: 8px;
+      padding: 8px 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .summary-title-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .summary-title {
+      font-size: 11px;
+      font-weight: 800;
+      color: var(--accent-gold);
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+
+    .summary-status-pill {
+      font-size: 9.5px;
+      padding: 2px 6px;
+      border-radius: 6px;
+      background: rgba(245, 158, 11, 0.15);
+      color: var(--accent-gold);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      font-weight: 700;
+    }
+
+    .summary-grid-cards {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 6px;
+    }
+
+    @media (min-width: 480px) and (max-width: 679px) {
+      .summary-grid-cards {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+
+    .summary-house-card {
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 6px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .summary-house-card.complete {
+      border-color: rgba(16, 185, 129, 0.4);
+      background: rgba(16, 185, 129, 0.08);
+    }
+
+    .summary-house-num {
+      font-size: 10px;
+      font-weight: 800;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding-bottom: 3px;
+    }
+
+    .summary-attr-row {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 10px;
+      color: var(--text-secondary);
+      padding: 1px 0;
+    }
+
+    .summary-attr-val {
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .summary-attr-val.empty {
+      color: var(--text-muted);
+      font-style: italic;
+    }
+
+    .summary-deduction-card {
+      background: linear-gradient(135deg, rgba(245, 158, 11, 0.12), rgba(19, 27, 46, 0.8));
+      border: 1px solid rgba(245, 158, 11, 0.4);
+      border-radius: 8px;
+      padding: 8px 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .summary-fish-icon {
+      font-size: 24px;
+      flex-shrink: 0;
+    }
+
+    .summary-fish-text {
+      font-size: 11px;
+      line-height: 1.35;
+      color: var(--text-primary);
+    }
+
+    .summary-fish-text strong {
+      color: var(--accent-gold);
+    }
+
+    /* RESPONSIVE TOGGLING FOR 3 TABS ON MOBILE */
+    @media (max-width: 679px) {
+      .logic-tabs-bar {
+        display: flex;
+      }
+      .tab-pane {
+        display: none !important;
+      }
+      .tab-pane.active {
+        display: flex !important;
+        flex: 1 1 auto;
+        height: 100%;
+        min-height: 0;
+      }
+      .clues-section {
+        max-height: none !important;
+      }
+      .clues-toggle-text {
+        display: none !important;
+      }
+    }
+
+    @media (min-width: 680px) {
+      .logic-tabs-bar {
+        display: none !important;
+      }
+      .tab-pane {
+        display: flex !important;
+      }
+      .summary-section {
+        display: none !important;
+      }
+    }
   </style>
 
   <script>
@@ -1154,7 +1369,7 @@
       <div class="brand-text">
         <span class="brand-title">Who Owns the Fish?</span>
         <div class="brand-subtitle-row">
-          <span class="brand-subtitle" id="case-badge">Case #1: Rookie Detective</span>
+          <span class="brand-subtitle" id="case-badge">Case #1: Apprentice Sleuth</span>
           <span class="stars-badge" id="header-stars-badge">⭐ 0/18</span>
         </div>
       </div>
@@ -1164,19 +1379,19 @@
       <button class="badge-case-btn" id="case-select-btn" title="Case Progression">
         <span>📜 Cases</span>
       </button>
-      <button class="icon-btn" id="music-btn" title="Toggle Background Music">
+      <button class="icon-btn" id="music-btn" title="Toggle Music">
         <span id="music-icon">🎵</span>
       </button>
-      <button class="icon-btn" id="sound-btn" title="Toggle Sound Effects">
+      <button class="icon-btn" id="sound-btn" title="Toggle Sound FX">
         <span id="sound-icon">🔊</span>
       </button>
       <button class="icon-btn" id="rules-btn" title="How to Play">
         <span>❓</span>
       </button>
-      <button class="icon-btn" id="fullscreen-btn" title="Toggle Fullscreen">
+      <button class="icon-btn" id="fullscreen-btn" title="Fullscreen">
         <span id="fs-icon">⛶</span>
       </button>
-      <button class="icon-btn" id="reset-btn" title="Reset Board">
+      <button class="icon-btn" id="reset-btn" title="Restart Board">
         <span>🔄</span>
       </button>
     </div>
@@ -1192,26 +1407,24 @@
     </div>
   </div>
 
+  <!-- 3-TABS NAVIGATION BAR (MOBILE) -->
+  <div class="logic-tabs-bar" id="logic-tabs-bar">
+    <button class="logic-tab-btn active" id="tab-btn-houses" data-tab="houses">
+      <span>🏠</span><span>Grid</span>
+    </button>
+    <button class="logic-tab-btn" id="tab-btn-clues" data-tab="clues">
+      <span>🔍</span><span>Clues</span>
+      <span class="tab-badge" id="tab-clues-badge">0/8</span>
+    </button>
+    <button class="logic-tab-btn" id="tab-btn-summary" data-tab="summary">
+      <span>📋</span><span>Summary</span>
+    </button>
+  </div>
+
   <!-- MAIN GAME WORKSPACE -->
   <main class="game-workspace">
-    <!-- CLUES ACCORDION/LIST -->
-    <section class="clues-section" id="clues-section">
-      <div class="clues-header" id="clues-header-toggle">
-        <div class="clues-title-wrap">
-          <span>🔎 Detective Clues</span>
-          <span class="clues-count-pill" id="clues-progress">0/8 Verified</span>
-        </div>
-        <div class="clues-toggle-text">
-          <span id="clues-toggle-arrow">▲</span>
-        </div>
-      </div>
-      <div class="clues-list" id="clues-list">
-        <!-- Injected dynamically via JS -->
-      </div>
-    </section>
-
-    <!-- 4 HOUSES GRID -->
-    <section class="houses-grid-container">
+    <!-- TAB PANE 1: 4 HOUSES GRID (GRID) -->
+    <section class="houses-grid-container tab-pane active" id="tab-pane-houses">
       <div class="houses-grid">
         <!-- HOUSE 1 -->
         <div class="house-col" id="house-0" data-house="0">
@@ -1221,11 +1434,11 @@
           <div class="slots-stack">
             <div class="attribute-slot" data-house="0" data-cat="color" id="slot-0-color">
               <span class="slot-type-label">Color</span>
-              <div class="slot-empty-prompt"><span>+ Paint</span></div>
+              <div class="slot-empty-prompt"><span>+ Color</span></div>
             </div>
             <div class="attribute-slot" data-house="0" data-cat="resident" id="slot-0-resident">
               <span class="slot-type-label">Resident</span>
-              <div class="slot-empty-prompt"><span>+ Owner</span></div>
+              <div class="slot-empty-prompt"><span>+ Resident</span></div>
             </div>
             <div class="attribute-slot" data-house="0" data-cat="pet" id="slot-0-pet">
               <span class="slot-type-label">Pet</span>
@@ -1242,11 +1455,11 @@
           <div class="slots-stack">
             <div class="attribute-slot" data-house="1" data-cat="color" id="slot-1-color">
               <span class="slot-type-label">Color</span>
-              <div class="slot-empty-prompt"><span>+ Paint</span></div>
+              <div class="slot-empty-prompt"><span>+ Color</span></div>
             </div>
             <div class="attribute-slot" data-house="1" data-cat="resident" id="slot-1-resident">
               <span class="slot-type-label">Resident</span>
-              <div class="slot-empty-prompt"><span>+ Owner</span></div>
+              <div class="slot-empty-prompt"><span>+ Resident</span></div>
             </div>
             <div class="attribute-slot" data-house="1" data-cat="pet" id="slot-1-pet">
               <span class="slot-type-label">Pet</span>
@@ -1263,11 +1476,11 @@
           <div class="slots-stack">
             <div class="attribute-slot" data-house="2" data-cat="color" id="slot-2-color">
               <span class="slot-type-label">Color</span>
-              <div class="slot-empty-prompt"><span>+ Paint</span></div>
+              <div class="slot-empty-prompt"><span>+ Color</span></div>
             </div>
             <div class="attribute-slot" data-house="2" data-cat="resident" id="slot-2-resident">
               <span class="slot-type-label">Resident</span>
-              <div class="slot-empty-prompt"><span>+ Owner</span></div>
+              <div class="slot-empty-prompt"><span>+ Resident</span></div>
             </div>
             <div class="attribute-slot" data-house="2" data-cat="pet" id="slot-2-pet">
               <span class="slot-type-label">Pet</span>
@@ -1284,11 +1497,11 @@
           <div class="slots-stack">
             <div class="attribute-slot" data-house="3" data-cat="color" id="slot-3-color">
               <span class="slot-type-label">Color</span>
-              <div class="slot-empty-prompt"><span>+ Paint</span></div>
+              <div class="slot-empty-prompt"><span>+ Color</span></div>
             </div>
             <div class="attribute-slot" data-house="3" data-cat="resident" id="slot-3-resident">
               <span class="slot-type-label">Resident</span>
-              <div class="slot-empty-prompt"><span>+ Owner</span></div>
+              <div class="slot-empty-prompt"><span>+ Resident</span></div>
             </div>
             <div class="attribute-slot" data-house="3" data-cat="pet" id="slot-3-pet">
               <span class="slot-type-label">Pet</span>
@@ -1298,18 +1511,58 @@
         </div>
       </div>
     </section>
+
+    <!-- TAB PANE 2: CLUES ACCORDION/LIST (CLUES) -->
+    <section class="clues-section tab-pane" id="tab-pane-clues">
+      <div class="clues-header" id="clues-header-toggle">
+        <div class="clues-title-wrap">
+          <span>🔎 Case Clues</span>
+          <span class="clues-count-pill" id="clues-progress">0/8 Verified</span>
+        </div>
+        <div class="clues-toggle-text">
+          <span id="clues-toggle-arrow">▲</span>
+        </div>
+      </div>
+      <div class="clues-list" id="clues-list">
+        <!-- Injected dynamically via JS -->
+      </div>
+    </section>
+
+    <!-- TAB PANE 3: AUTO-SUMMARY -->
+    <section class="summary-section tab-pane" id="tab-pane-summary">
+      <div class="summary-header-card">
+        <div class="summary-title-row">
+          <span class="summary-title">📋 Deductions Summary</span>
+          <span class="summary-status-pill" id="summary-badge-status">Investigating</span>
+        </div>
+        <div style="font-size: 10px; color: var(--text-secondary);">
+          Live synchronized overview of each house's resident, color, and pet.
+        </div>
+      </div>
+
+      <div class="summary-deduction-card" id="summary-deduction-card">
+        <span class="summary-fish-icon">🐟</span>
+        <div class="summary-fish-text" id="summary-fish-text">
+          Still deducing who owns the <strong>Golden Fish</strong>...
+        </div>
+      </div>
+
+      <div class="summary-grid-cards" id="summary-grid-cards">
+        <!-- Generated by JS -->
+      </div>
+    </section>
   </main>
 
   <!-- BOTTOM FOOTER -->
   <footer>
     <button class="secondary-action-btn" id="check-logic-btn">
-      <span>✔️ Verify</span>
+      <span>✔️ Check Logic</span>
     </button>
     <button class="mystery-action-btn" id="guess-fish-btn">
-      <span>🐟 Who Has The Fish?</span>
+      <span>🐟 Who Owns the Fish?</span>
     </button>
     <button class="secondary-action-btn" id="clear-all-btn">
-      <span>🗑️ Clear</span>
+      <span>🗑️ Clear All</span>
     </button>
   </footer>
 </div>
@@ -1320,7 +1573,7 @@
     <div class="modal-header">
       <div class="modal-title-box">
         <span id="picker-title-icon">🎨</span>
-        <span class="modal-title" id="picker-title">Assign Attribute</span>
+        <span class="modal-title" id="picker-title">Assign Item</span>
       </div>
       <button class="modal-close-btn" id="picker-close-btn">✕</button>
     </div>
@@ -1344,7 +1597,7 @@
       <button class="modal-close-btn" id="fish-close-btn">✕</button>
     </div>
     <p style="font-size: 11px; color: var(--text-secondary); line-height: 1.4;">
-      Based on your deduction grid, choose who owns the fish:
+      Based on your logical deductions, select who owns the fish:
     </p>
     <div class="picker-grid" id="fish-candidates-grid">
       <!-- Injected by JS -->
@@ -1359,12 +1612,12 @@
     <div class="modal-header">
       <div class="modal-title-box">
         <span>📜</span>
-        <span class="modal-title">Case Progression</span>
+        <span class="modal-title">Investigation Cases</span>
       </div>
       <button class="modal-close-btn" id="cases-close-btn">✕</button>
     </div>
     <div style="font-size: 11px; color: var(--text-secondary);">
-      Solve cases in sequence to unlock higher detective ranks!
+      Solve cases in sequence to rise through the Detective Ranks!
     </div>
     <div style="display: flex; flex-direction: column; gap: 6px;" id="cases-list-container">
       <!-- Cases injected by JS -->
@@ -1378,19 +1631,20 @@
     <div class="modal-header">
       <div class="modal-title-box">
         <span>💡</span>
-        <span class="modal-title">Detective's Rulebook</span>
+        <span class="modal-title">Detective Handbook</span>
       </div>
       <button class="modal-close-btn" id="rules-close-btn">✕</button>
     </div>
     <div style="font-size: 12px; color: var(--text-secondary); line-height: 1.45; display: flex; flex-direction: column; gap: 8px;">
-      <p><strong style="color: #fff;">Objective:</strong> Discover which resident owns the fish through deductive reasoning across 6 progressive mystery cases.</p>
+      <p><strong style="color: #fff;">Objective:</strong> Discover which resident owns the golden fish using logical deduction across 6 progressive cases.</p>
       <div style="background: rgba(28, 38, 64, 0.6); padding: 8px; border-radius: 8px; border-left: 3px solid var(--accent-gold);">
-        <strong style="color: var(--accent-gold);">Rules:</strong>
+        <strong style="color: var(--accent-gold);">Core Rules:</strong>
         <ul style="padding-left: 14px; margin-top: 4px; display: flex; flex-direction: column; gap: 3px;">
           <li>Each house has exactly 1 Color, 1 Resident, and 1 Pet.</li>
-          <li>No duplicates exist on the street.</li>
-          <li>Tap a clue to cross it out once verified.</li>
-          <li>Complete each case to unlock the next level and earn detective stars!</li>
+          <li>No attributes repeat on the same street.</li>
+          <li>Tap any clue to cross it off as you confirm it.</li>
+          <li>Use the mobile tabs (Grid, Clues, Summary) for fast navigation.</li>
+          <li>Identify who owns the fish to crack the case!</li>
         </ul>
       </div>
     </div>
@@ -1401,8 +1655,8 @@
 <div class="modal-overlay" id="victory-modal">
   <div class="modal-card" style="text-align: center; align-items: center;">
     <div style="font-size: 48px; margin-top: 4px; filter: drop-shadow(0 4px 10px rgba(245, 158, 11, 0.5));">🏆</div>
-    <div style="font-size: 18px; font-weight: 900; color: #fff;">CASE CRACKED!</div>
-    <div style="font-size: 13px; color: var(--accent-gold); font-weight: 700;" id="victory-fish-revealed">Boris is the owner of the Fish!</div>
+    <div style="font-size: 18px; font-weight: 900; color: #fff;">CASE SOLVED!</div>
+    <div style="font-size: 13px; color: var(--accent-gold); font-weight: 700;" id="victory-fish-revealed">Boris owns the Fish!</div>
     
     <div style="font-size: 22px; letter-spacing: 4px; margin: 4px 0;" id="victory-stars-display">⭐⭐⭐</div>
 
@@ -1426,7 +1680,7 @@
         <span id="victory-next-text">Next Case ➔</span>
       </button>
       <button class="secondary-action-btn" id="victory-replay-btn">
-        <span>Replay</span>
+        <span>Restart</span>
       </button>
     </div>
   </div>
@@ -1437,7 +1691,7 @@
 (() => {
   'use strict';
 
-  // 1. ATTRIBUTE DEFINITIONS
+  // 1. ATTRIBUTE DEFINITIONS (English)
   const ATTRIBUTES = {
     color: [
       { id: 'red', name: 'Red', icon: '🔴', cssClass: 'color-red', hex: '#b91c1c' },
@@ -1453,17 +1707,17 @@
     ],
     pet: [
       { id: 'dog', name: 'Dog', icon: '🐶', desc: 'Loyal Companion' },
-      { id: 'cat', name: 'Cat', icon: '🐱', desc: 'Midnight Prowler' },
-      { id: 'bird', name: 'Bird', icon: '🦜', desc: 'Melodic Songbird' },
+      { id: 'cat', name: 'Cat', icon: '🐱', desc: 'Nocturnal Feline' },
+      { id: 'bird', name: 'Bird', icon: '🦜', desc: 'Melodic Singer' },
       { id: 'fish', name: 'Fish', icon: '🐟', desc: 'The Golden Fish' }
     ]
   };
 
-  // 2. 6 PROGRESSIVE MYSTERY CASES (Handcrafted & Verified Unique Solutions)
+  // 2. 6 PROGRESSIVE MYSTERY CASES (Handcrafted & Verified Unique Solutions in English)
   const CASES = [
     {
       id: 1,
-      title: 'Case #1: Rookie Detective',
+      title: 'Case #1: Apprentice Sleuth',
       rank: 'Apprentice',
       difficulty: 'Introductory',
       solution: [
@@ -1475,7 +1729,7 @@
       clues: [
         { text: "Arthur lives in House #1.", check: (b) => b[0].resident === 'arthur' },
         { text: "The resident of the Green house owns the Fish.", check: (b) => b.some(h => h.color === 'green' && h.pet === 'fish') },
-        { text: "Clara lives in the Blue house and owns a Dog.", check: (b) => b.some(h => h.resident === 'clara' && h.color === 'blue' && h.pet === 'dog') },
+        { text: "Clara lives in the Blue house and has a Dog.", check: (b) => b.some(h => h.resident === 'clara' && h.color === 'blue' && h.pet === 'dog') },
         { text: "The Red house is immediately to the left of the Green house.", check: (b) => {
             const r = b.findIndex(h => h.color === 'red');
             const g = b.findIndex(h => h.color === 'green');
@@ -1488,7 +1742,7 @@
         }},
         { text: "The Cat lives in the Yellow house.", check: (b) => b.some(h => h.color === 'yellow' && h.pet === 'cat') },
         { text: "Boris lives in House #4.", check: (b) => b[3].resident === 'boris' },
-        { text: "The Bird owner lives in the Red house.", check: (b) => b.some(h => h.color === 'red' && h.pet === 'bird') }
+        { text: "The Bird's owner lives in the Red house.", check: (b) => b.some(h => h.color === 'red' && h.pet === 'bird') }
       ]
     },
     {
@@ -1505,7 +1759,7 @@
       clues: [
         { text: "David lives in House #1 (the leftmost house).", check: (b) => b[0].resident === 'david' },
         { text: "The Bird lives in the Green house.", check: (b) => b.some(h => h.color === 'green' && h.pet === 'bird') },
-        { text: "The Dog owner lives immediately next to the Bird owner.", check: (b) => {
+        { text: "The Dog's owner lives next to the Bird's owner.", check: (b) => {
             const bi = b.findIndex(h => h.pet === 'bird');
             const di = b.findIndex(h => h.pet === 'dog');
             return bi !== -1 && di !== -1 && Math.abs(bi - di) === 1;
@@ -1514,7 +1768,7 @@
         { text: "Boris lives in the Yellow house.", check: (b) => b.some(h => h.resident === 'boris' && h.color === 'yellow') },
         { text: "Arthur lives in the Blue house.", check: (b) => b.some(h => h.resident === 'arthur' && h.color === 'blue') },
         { text: "The Cat lives in the Red house.", check: (b) => b.some(h => h.color === 'red' && h.pet === 'cat') },
-        { text: "The Fish owner lives between the Dog and the Cat.", check: (b) => {
+        { text: "The Fish's owner lives between the Dog and the Cat.", check: (b) => {
             const fi = b.findIndex(h => h.pet === 'fish');
             const di = b.findIndex(h => h.pet === 'dog');
             const ci = b.findIndex(h => h.pet === 'cat');
@@ -1524,7 +1778,7 @@
     },
     {
       id: 3,
-      title: 'Case #3: Emerald Row',
+      title: 'Case #3: Emerald Alley',
       rank: 'Inspector',
       difficulty: 'Medium',
       solution: [
@@ -1534,7 +1788,7 @@
         { house: 3, color: 'yellow', resident: 'david', pet: 'bird' }
       ],
       clues: [
-        { text: "Boris lives in the Blue house in House #1.", check: (b) => b[0].resident === 'boris' && b[0].color === 'blue' },
+        { text: "Boris lives in the Blue house at House #1.", check: (b) => b[0].resident === 'boris' && b[0].color === 'blue' },
         { text: "Clara lives immediately to the left of the Green house.", check: (b) => {
             const c = b.findIndex(h => h.resident === 'clara');
             const g = b.findIndex(h => h.color === 'green');
@@ -1549,12 +1803,12 @@
         }},
         { text: "The Dog lives in House #1.", check: (b) => b[0].pet === 'dog' },
         { text: "David's house is Yellow and has a Bird.", check: (b) => b.some(h => h.resident === 'david' && h.color === 'yellow' && h.pet === 'bird') },
-        { text: "Clara lives in the Red house and cares for the Fish.", check: (b) => b.some(h => h.resident === 'clara' && h.color === 'red' && h.pet === 'fish') }
+        { text: "Clara lives in the Red house and takes care of the Fish.", check: (b) => b.some(h => h.resident === 'clara' && h.color === 'red' && h.pet === 'fish') }
       ]
     },
     {
       id: 4,
-      title: 'Case #4: Baker Street Intrigue',
+      title: 'Case #4: Flora Street Mystery',
       rank: 'Senior Detective',
       difficulty: 'Challenging',
       solution: [
@@ -1571,7 +1825,7 @@
             const d = b.findIndex(h => h.resident === 'david');
             return a !== -1 && d !== -1 && d === a + 1;
         }},
-        { text: "The Cat owner lives in the Green house.", check: (b) => b.some(h => h.color === 'green' && h.pet === 'cat') },
+        { text: "The Cat's owner lives in the Green house.", check: (b) => b.some(h => h.color === 'green' && h.pet === 'cat') },
         { text: "Boris lives in the Blue house with his Dog.", check: (b) => b.some(h => h.resident === 'boris' && h.color === 'blue' && h.pet === 'dog') },
         { text: "The Green house is immediately to the right of the Red house.", check: (b) => {
             const r = b.findIndex(h => h.color === 'red');
@@ -1579,13 +1833,13 @@
             return r !== -1 && g !== -1 && g === r + 1;
         }},
         { text: "David lives in the Yellow house.", check: (b) => b.some(h => h.resident === 'david' && h.color === 'yellow') },
-        { text: "The Fish owner lives in House #3.", check: (b) => b[2].pet === 'fish' }
+        { text: "The Fish's owner lives in House #3.", check: (b) => b[2].pet === 'fish' }
       ]
     },
     {
       id: 5,
       title: 'Case #5: The Golden Aquarium',
-      rank: 'Chief Superintendent',
+      rank: 'Superintendent',
       difficulty: 'Advanced',
       solution: [
         { house: 0, color: 'yellow', resident: 'arthur', pet: 'dog' },
@@ -1594,7 +1848,7 @@
         { house: 3, color: 'blue', resident: 'clara', pet: 'bird' }
       ],
       clues: [
-        { text: "The Dog owner lives in the Yellow house in House #1.", check: (b) => b[0].color === 'yellow' && b[0].pet === 'dog' },
+        { text: "The Dog's owner lives in the Yellow house at House #1.", check: (b) => b[0].color === 'yellow' && b[0].pet === 'dog' },
         { text: "Boris lives in the Red house and owns the Fish.", check: (b) => b.some(h => h.resident === 'boris' && h.color === 'red' && h.pet === 'fish') },
         { text: "Clara lives in House #4 and keeps a Bird.", check: (b) => b[3].resident === 'clara' && b[3].pet === 'bird' },
         { text: "David lives in the Green house immediately to the right of Arthur.", check: (b) => {
@@ -1604,8 +1858,8 @@
         }},
         { text: "The Cat lives in House #2.", check: (b) => b[1].pet === 'cat' },
         { text: "Arthur lives in House #1.", check: (b) => b[0].resident === 'arthur' },
-        { text: "The Blue house is House #4.", check: (b) => b[3].color === 'blue' },
-        { text: "The Red house is located between the Green and Blue houses.", check: (b) => {
+        { text: "The Blue house is at House #4.", check: (b) => b[3].color === 'blue' },
+        { text: "The Red house is between the Green and Blue houses.", check: (b) => {
             const r = b.findIndex(h => h.color === 'red');
             const g = b.findIndex(h => h.color === 'green');
             const bl = b.findIndex(h => h.color === 'blue');
@@ -1615,8 +1869,8 @@
     },
     {
       id: 6,
-      title: "Case #6: Einstein's Ultimate Riddle",
-      rank: 'Master of Deduction',
+      title: "Case #6: Einstein's Grand Enigma",
+      rank: 'Master of Logic',
       difficulty: 'Master',
       solution: [
         { house: 0, color: 'blue', resident: 'david', pet: 'cat' },
@@ -1626,8 +1880,8 @@
       ],
       clues: [
         { text: "David lives in House #1 in the Blue house.", check: (b) => b[0].resident === 'david' && b[0].color === 'blue' },
-        { text: "The Cat lives in the leftmost house.", check: (b) => b[0].pet === 'cat' },
-        { text: "Clara lives in the Green house and owns a Dog.", check: (b) => b.some(h => h.resident === 'clara' && h.color === 'green' && h.pet === 'dog') },
+        { text: "The Cat lives in the leftmost house (House #1).", check: (b) => b[0].pet === 'cat' },
+        { text: "Clara lives in the Green house and has a Dog.", check: (b) => b.some(h => h.resident === 'clara' && h.color === 'green' && h.pet === 'dog') },
         { text: "The Yellow house is immediately to the left of the Green house.", check: (b) => {
             const y = b.findIndex(h => h.color === 'yellow');
             const g = b.findIndex(h => h.color === 'green');
@@ -2025,6 +2279,7 @@
   let movesCount = 0;
   let startTime = Date.now();
   let activeSlotTarget = null;
+  let currentMobileTab = 'houses';
 
   // DOM Elements
   const caseBadge = document.getElementById('case-badge');
@@ -2048,6 +2303,18 @@
   const cluesToggleArrow = document.getElementById('clues-toggle-arrow');
   const cluesProgress = document.getElementById('clues-progress');
   const cluesList = document.getElementById('clues-list');
+
+  // Mobile Tabs Elements
+  const tabBtnHouses = document.getElementById('tab-btn-houses');
+  const tabBtnClues = document.getElementById('tab-btn-clues');
+  const tabBtnSummary = document.getElementById('tab-btn-summary');
+  const tabPaneHouses = document.getElementById('tab-pane-houses');
+  const tabPaneClues = document.getElementById('tab-pane-clues');
+  const tabPaneSummary = document.getElementById('tab-pane-summary');
+  const tabCluesBadge = document.getElementById('tab-clues-badge');
+  const summaryBadgeStatus = document.getElementById('summary-badge-status');
+  const summaryFishText = document.getElementById('summary-fish-text');
+  const summaryGridCards = document.getElementById('summary-grid-cards');
 
   // Modals
   const pickerModal = document.getElementById('picker-modal');
@@ -2079,7 +2346,117 @@
   const victoryNextText = document.getElementById('victory-next-text');
   const victoryReplayBtn = document.getElementById('victory-replay-btn');
 
-  // 6. PROGRESSION TOP BAR RENDERING
+  // 6. MOBILE TAB SWITCHER
+  function switchMobileTab(tab) {
+    currentMobileTab = tab;
+    const tabBtns = [
+      { id: 'houses', btn: tabBtnHouses, pane: tabPaneHouses },
+      { id: 'clues', btn: tabBtnClues, pane: tabPaneClues },
+      { id: 'summary', btn: tabBtnSummary, pane: tabPaneSummary }
+    ];
+
+    tabBtns.forEach(t => {
+      if (t.btn && t.pane) {
+        if (t.id === tab) {
+          t.btn.classList.add('active');
+          t.pane.classList.add('active');
+        } else {
+          t.btn.classList.remove('active');
+          t.pane.classList.remove('active');
+        }
+      }
+    });
+
+    if (tab === 'summary') {
+      renderSummary();
+    }
+  }
+
+  if (tabBtnHouses) tabBtnHouses.addEventListener('click', () => { SoundFX.tap(); switchMobileTab('houses'); });
+  if (tabBtnClues) tabBtnClues.addEventListener('click', () => { SoundFX.tap(); switchMobileTab('clues'); });
+  if (tabBtnSummary) tabBtnSummary.addEventListener('click', () => { SoundFX.tap(); switchMobileTab('summary'); });
+
+  // 7. AUTO-SUMMARY RENDERER
+  function renderSummary() {
+    if (!summaryGridCards) return;
+    summaryGridCards.innerHTML = '';
+
+    let totalFilled = 0;
+    let fishOwnerName = null;
+    let fishHouseNum = null;
+
+    for (let h = 0; h < 4; h++) {
+      const data = boardState[h];
+      const card = document.createElement('div');
+      card.className = 'summary-house-card';
+
+      const colorObj = ATTRIBUTES.color.find(c => c.id === data.color);
+      const resObj = ATTRIBUTES.resident.find(r => r.id === data.resident);
+      const petObj = ATTRIBUTES.pet.find(p => p.id === data.pet);
+
+      const isComplete = data.color && data.resident && data.pet;
+      if (isComplete) card.classList.add('complete');
+
+      if (data.color) totalFilled++;
+      if (data.resident) totalFilled++;
+      if (data.pet) totalFilled++;
+
+      if (data.pet === 'fish') {
+        fishHouseNum = h + 1;
+        if (resObj) fishOwnerName = resObj.name;
+      }
+
+      card.innerHTML = `
+        <div class="summary-house-num">
+          <span>🏠 House #${h + 1}</span>
+          <span style="font-size: 8.5px; opacity: 0.8;">${isComplete ? '✓ 100%' : `${[data.color, data.resident, data.pet].filter(Boolean).length}/3`}</span>
+        </div>
+        <div class="summary-attr-row">
+          <span>🎨</span>
+          <span class="summary-attr-val ${colorObj ? '' : 'empty'}">${colorObj ? colorObj.name : '(Empty)'}</span>
+        </div>
+        <div class="summary-attr-row">
+          <span>👤</span>
+          <span class="summary-attr-val ${resObj ? '' : 'empty'}">${resObj ? resObj.name : '(Empty)'}</span>
+        </div>
+        <div class="summary-attr-row">
+          <span>🐾</span>
+          <span class="summary-attr-val ${petObj ? '' : 'empty'}">${petObj ? `${petObj.icon} ${petObj.name}` : '(Empty)'}</span>
+        </div>
+      `;
+
+      card.addEventListener('click', () => {
+        SoundFX.tap();
+        switchMobileTab('houses');
+      });
+
+      summaryGridCards.appendChild(card);
+    }
+
+    if (summaryBadgeStatus) {
+      if (totalFilled === 12) {
+        summaryBadgeStatus.textContent = 'Grid Complete (12/12)';
+        summaryBadgeStatus.style.color = 'var(--accent-green)';
+        summaryBadgeStatus.style.borderColor = 'rgba(16, 185, 129, 0.4)';
+      } else {
+        summaryBadgeStatus.textContent = `${totalFilled}/12 Attributes`;
+        summaryBadgeStatus.style.color = 'var(--accent-gold)';
+        summaryBadgeStatus.style.borderColor = 'rgba(245, 158, 11, 0.3)';
+      }
+    }
+
+    if (summaryFishText) {
+      if (fishOwnerName && fishHouseNum) {
+        summaryFishText.innerHTML = `🐟 Fish located in House #${fishHouseNum} with <strong>${fishOwnerName}</strong>!`;
+      } else if (fishHouseNum) {
+        summaryFishText.innerHTML = `🐟 Fish located in House #${fishHouseNum}. Resident still being deduced...`;
+      } else {
+        summaryFishText.innerHTML = `Still investigating who owns the <strong>Golden Fish</strong>...`;
+      }
+    }
+  }
+
+  // 8. PROGRESSION TOP BAR RENDERING
   function renderProgressionTrack() {
     stageStepsTrack.innerHTML = '';
     CASES.forEach((c, idx) => {
@@ -2099,7 +2476,7 @@
     headerStarsBadge.textContent = `⭐ ${getTotalStars()}/${CASES.length * 3}`;
   }
 
-  // 7. BOARD & CASE LOADER
+  // 9. BOARD & CASE LOADER
   function loadCase(index) {
     if (index >= userProgress.unlockedMaxLevel) {
       index = 0; // fallback if locked
@@ -2116,12 +2493,13 @@
     movesCount = 0;
     startTime = Date.now();
 
-    caseBadge.textContent = `Case #${currentCaseIndex + 1}`;
+    caseBadge.textContent = `${currentCase.title}`;
     caseBadge.title = currentCase.title;
     renderProgressionTrack();
     renderClues();
     renderBoard();
     updateCluesValidation();
+    renderSummary();
   }
 
   function renderClues() {
@@ -2173,7 +2551,9 @@
       }
     });
 
-    cluesProgress.textContent = `${satisfiedCount}/${currentCase.clues.length} Verified`;
+    const statusText = `${satisfiedCount}/${currentCase.clues.length} Verified`;
+    if (cluesProgress) cluesProgress.textContent = statusText;
+    if (tabCluesBadge) tabCluesBadge.textContent = `${satisfiedCount}/${currentCase.clues.length}`;
   }
 
   function renderBoard() {
@@ -2188,6 +2568,8 @@
         roof.style.backgroundColor = '#1e293b';
       }
 
+      const catLabels = { color: 'Color', resident: 'Resident', pet: 'Pet' };
+
       ['color', 'resident', 'pet'].forEach(cat => {
         const slotEl = document.getElementById(`slot-${h}-${cat}`);
         const val = houseData[cat];
@@ -2197,13 +2579,13 @@
 
         const typeLabel = document.createElement('span');
         typeLabel.className = 'slot-type-label';
-        typeLabel.textContent = cat;
+        typeLabel.textContent = catLabels[cat];
         slotEl.appendChild(typeLabel);
 
         if (!val) {
           const emptyPrompt = document.createElement('div');
           emptyPrompt.className = 'slot-empty-prompt';
-          emptyPrompt.innerHTML = `<span>+ ${cat.charAt(0).toUpperCase() + cat.slice(1)}</span>`;
+          emptyPrompt.innerHTML = `<span>+ ${catLabels[cat]}</span>`;
           slotEl.appendChild(emptyPrompt);
         } else {
           slotEl.classList.add('filled');
@@ -2239,6 +2621,7 @@
             movesCount++;
             renderBoard();
             updateCluesValidation();
+            renderSummary();
           });
           slotEl.appendChild(clearBtn);
         }
@@ -2246,7 +2629,7 @@
     }
   }
 
-  // 8. SLOT INTERACTION & ATTRIBUTE PICKER
+  // 10. SLOT INTERACTION & ATTRIBUTE PICKER
   document.querySelectorAll('.attribute-slot').forEach(slot => {
     slot.addEventListener('click', () => {
       SoundFX.tap();
@@ -2258,7 +2641,8 @@
 
   function openPicker(houseIndex, category) {
     activeSlotTarget = { houseIndex, category };
-    pickerTitle.textContent = `House #${houseIndex + 1}: Select ${category.charAt(0).toUpperCase() + category.slice(1)}`;
+    const catLabels = { color: 'Color', resident: 'Resident', pet: 'Pet' };
+    pickerTitle.textContent = `House #${houseIndex + 1}: Select ${catLabels[category]}`;
     pickerTitleIcon.textContent = category === 'color' ? '🎨' : category === 'resident' ? '👤' : '🐾';
     pickerOptionsGrid.innerHTML = '';
 
@@ -2286,7 +2670,7 @@
 
       const sub = document.createElement('span');
       sub.className = 'picker-card-sub';
-      sub.textContent = usedInHouse !== -1 ? `At House #${usedInHouse + 1}` : (item.desc || 'Available');
+      sub.textContent = usedInHouse !== -1 ? `In House #${usedInHouse + 1}` : (item.desc || 'Available');
 
       textBox.appendChild(label);
       textBox.appendChild(sub);
@@ -2303,6 +2687,7 @@
         closeModal(pickerModal);
         renderBoard();
         updateCluesValidation();
+        renderSummary();
         checkAutoVictory();
       });
 
@@ -2321,10 +2706,11 @@
       closeModal(pickerModal);
       renderBoard();
       updateCluesValidation();
+      renderSummary();
     }
   });
 
-  // 9. AUTOMATIC VICTORY / FULL BOARD VALIDATION
+  // 11. AUTOMATIC VICTORY / FULL BOARD VALIDATION
   function isBoardFullySolved() {
     for (let h = 0; h < 4; h++) {
       if (!boardState[h].color || !boardState[h].resident || !boardState[h].pet) {
@@ -2340,7 +2726,7 @@
     }
   }
 
-  // 10. WHO OWNS THE FISH (ACCUSATION)
+  // 12. WHO OWNS THE FISH (ACCUSATION)
   function openFishDeductionModal() {
     SoundFX.tap();
     fishCandidatesGrid.innerHTML = '';
@@ -2396,11 +2782,11 @@
       fishFeedback.style.border = '1px solid var(--accent-red)';
       fishFeedback.style.color = '#fca5a5';
       const accusedName = ATTRIBUTES.resident.find(r => r.id === residentId).name;
-      fishFeedback.textContent = `❌ Incorrect! Clues do not point to ${accusedName}. Check your grid!`;
+      fishFeedback.textContent = `❌ Incorrect! The clues do not point to ${accusedName}. Double check your grid!`;
     }
   }
 
-  // 11. VICTORY CELEBRATION & PROGRESSION ADVANCEMENT
+  // 13. VICTORY CELEBRATION & PROGRESSION ADVANCEMENT
   function triggerVictoryCelebration() {
     SoundFX.victory();
     const solFishHouse = currentCase.solution.find(h => h.pet === 'fish');
@@ -2448,12 +2834,13 @@
       victoryUnlockStatus.textContent = unlockedNew ? `Level ${nextLevelIndex + 1} Unlocked!` : `Next Level Available`;
       victoryNextText.textContent = `Case #${nextLevelIndex + 1} ➔`;
     } else {
-      victoryUnlockStatus.textContent = 'All Cases Mastered!';
-      victoryNextText.textContent = 'All Done 🏆';
+      victoryUnlockStatus.textContent = 'All Cases Completed!';
+      victoryNextText.textContent = 'Master Sleuth 🏆';
     }
 
     openModal(victoryModal);
     launchConfetti();
+    triggerPlatformWin(elapsedSec);
   }
 
   victoryNextBtn.addEventListener('click', () => {
@@ -2462,7 +2849,6 @@
     if (nextIdx < CASES.length) {
       loadCase(nextIdx);
     } else {
-      // Re-open case selector if finished all
       openCasesModal();
     }
   });
@@ -2472,7 +2858,7 @@
     loadCase(currentCaseIndex);
   });
 
-  // 12. CASE SELECTOR MODAL (LEVEL SELECT)
+  // 14. CASE SELECTOR MODAL (LEVEL SELECT)
   function openCasesModal() {
     SoundFX.tap();
     casesListContainer.innerHTML = '';
@@ -2506,7 +2892,7 @@
       if (isUnlocked) {
         meta.textContent = `${c.rank} • ${c.difficulty}`;
       } else {
-        meta.textContent = `Clear Case #${idx} to unlock`;
+        meta.textContent = `Complete Case #${idx} to unlock`;
       }
 
       info.appendChild(title);
@@ -2664,6 +3050,7 @@
     movesCount++;
     renderBoard();
     updateCluesValidation();
+    renderSummary();
   });
 
   checkLogicBtn.addEventListener('click', () => {

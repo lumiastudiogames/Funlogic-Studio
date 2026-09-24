@@ -306,10 +306,11 @@ class SudokuGame {
 
         if (isGiven) {
           cell.classList.add('given');
-          cell.textContent = val;
+          cell.innerHTML = `<span class="cell-digit">${val}</span>`;
         } else if (val !== 0) {
           cell.classList.add('user-filled');
-          cell.textContent = val;
+          const isSlide = this.lastPlaced && this.lastPlaced.r === r && this.lastPlaced.c === c;
+          cell.innerHTML = `<span class="cell-digit ${isSlide ? 'digit-slide' : ''}">${val}</span>`;
           if (val !== this.solution[r][c]) {
             cell.classList.add('error');
           }
@@ -421,9 +422,35 @@ class SudokuGame {
       this.sound.play('place');
     }
 
+    this.lastPlaced = { r, c };
     this.renderBoard();
+    if (digit === this.solution[r][c]) {
+      this.spawnCellStars(r, c);
+    }
+    this.lastPlaced = null;
     this.updateDigitButtons();
     this.checkWin();
+  }
+
+  spawnCellStars(r, c) {
+    const cell = this.gridEl.querySelector(`.cell[data-row="${r}"][data-col="${c}"]`);
+    if (!cell) return;
+    const colors = ['#f59e0b', '#fbbf24', '#facc15', '#3b82f6', '#10b981', '#ec4899'];
+    for (let i = 0; i < 14; i++) {
+      const p = document.createElement('div');
+      p.className = 'star-particle';
+      p.textContent = i % 2 === 0 ? '✦' : '★';
+      p.style.color = colors[Math.floor(Math.random() * colors.length)];
+      const angle = (Math.PI * 2 / 14) * i + (Math.random() - 0.5) * 0.4;
+      const dist = Math.random() * 26 + 16;
+      const dx = Math.cos(angle) * dist;
+      const dy = Math.sin(angle) * dist;
+      p.style.setProperty('--dx', `${dx}px`);
+      p.style.setProperty('--dy', `${dy}px`);
+      p.style.setProperty('--rot', `${(Math.random() - 0.5) * 260}deg`);
+      cell.appendChild(p);
+      setTimeout(() => p.remove(), 600);
+    }
   }
 
   eraseCell() {

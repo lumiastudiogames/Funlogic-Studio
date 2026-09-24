@@ -128,17 +128,62 @@
     if (el) el.textContent = text;
   }
 
+  function spawnStarParticles(targetTubeIdx) {
+    const container = document.getElementById('tubes-container');
+    const tubeWrappers = container.getElementsByClassName('tube-wrapper');
+    if (!tubeWrappers || !tubeWrappers[targetTubeIdx]) return;
+    const rect = tubeWrappers[targetTubeIdx].getBoundingClientRect();
+    const stageRect = document.getElementById('game-stage').getBoundingClientRect();
+    const cx = rect.left + rect.width / 2 - stageRect.left;
+    const cy = rect.top + rect.height / 3 - stageRect.top;
+
+    const stars = ['✨', '⭐', '🌟', '💫', '🎉', '💖'];
+    for (let i = 0; i < 14; i++) {
+      const p = document.createElement('span');
+      p.textContent = stars[i % stars.length];
+      p.style.position = 'absolute';
+      p.style.left = `${cx}px`;
+      p.style.top = `${cy}px`;
+      p.style.fontSize = `${18 + Math.floor(Math.random() * 12)}px`;
+      p.style.transform = 'translate(-50%, -50%) scale(0.4)';
+      p.style.pointerEvents = 'none';
+      p.style.zIndex = '100';
+      p.style.transition = 'transform 0.65s cubic-bezier(0.1, 0.9, 0.2, 1), opacity 0.65s ease-out';
+      p.style.opacity = '1';
+      document.getElementById('game-stage').appendChild(p);
+
+      const angle = (i / 14) * Math.PI * 2 + (Math.random() * 0.4 - 0.2);
+      const dist = 45 + Math.random() * 55;
+      const tx = Math.cos(angle) * dist;
+      const ty = Math.sin(angle) * dist;
+
+      requestAnimationFrame(() => {
+        p.style.transform = `translate(calc(-50% + ${tx}px), calc(-50% + ${ty}px)) scale(1.4)`;
+        p.style.opacity = '0';
+      });
+
+      setTimeout(() => {
+        if (p.parentNode) p.parentNode.removeChild(p);
+      }, 700);
+    }
+  }
+
   function render() {
     const container = document.getElementById('tubes-container');
     container.innerHTML = '';
 
     tubes.forEach((tube, idx) => {
+      const wrapperEl = document.createElement('div');
+      wrapperEl.className = 'tube-wrapper';
+      if (selectedTubeIdx === idx) wrapperEl.classList.add('selected');
+      if (isTubeComplete(tube)) wrapperEl.classList.add('completed');
+
+      const lipEl = document.createElement('div');
+      lipEl.className = 'tube-lip';
+      wrapperEl.appendChild(lipEl);
+
       const tubeEl = document.createElement('div');
       tubeEl.className = 'tube';
-      if (selectedTubeIdx === idx) tubeEl.classList.add('selected');
-      if (isTubeComplete(tube)) tubeEl.classList.add('completed');
-
-      tubeEl.addEventListener('click', () => handleTubeClick(idx));
 
       tube.forEach(animalKey => {
         const slotEl = document.createElement('div');
@@ -148,7 +193,9 @@
         tubeEl.appendChild(slotEl);
       });
 
-      container.appendChild(tubeEl);
+      wrapperEl.appendChild(tubeEl);
+      wrapperEl.addEventListener('click', () => handleTubeClick(idx));
+      container.appendChild(wrapperEl);
     });
   }
 
@@ -206,10 +253,12 @@
         // Save history for undo
         history.push(JSON.parse(JSON.stringify(tubes)));
         targetTube.push(sourceTube.pop());
+        const destIdx = idx;
         selectedTubeIdx = null;
         playSound('pour');
         updateHint('Great jump! 🌟');
         render();
+        spawnStarParticles(destIdx);
 
         if (checkWin()) {
           handleWin();

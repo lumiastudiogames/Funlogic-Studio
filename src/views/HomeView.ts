@@ -11,12 +11,13 @@ export function renderHomeView(container: HTMLElement): void {
 
   // Dynamic SEO Injection for Home View
   updateHeadSeo({
-    title: 'Free Online Logic & Puzzle Games - No Download',
-    description: 'Play the best free online logic puzzles, water sort, mahjong, sudoku 2048, sokoban box push, pipe connect, and brain training games directly in your browser.',
+    title: 'Casual Logic & Reasoning Games — FunLogic.games',
+    description: 'Play the best free online logic puzzles, water sort, mahjong, sudoku, 2048, sokoban box push, pipe connect, and brain training games directly in your browser with no download.',
     keywords: [
       'brain games', 'logic puzzles', 'water sort online', 'mahjong solitaire',
       'sudoku free', '2048 game', 'sokoban online', 'pipe connect', 'unblocked games'
     ],
+    canonicalUrl: 'https://funlogic.games/',
     type: 'website'
   });
 

@@ -2,6 +2,7 @@
 (() => {
   const startTime = Date.now();
   let player = { r: 0, c: 0 };
+  let playerFacing = 'down';
   const goal = { r: 8, c: 8 };
   let visited = new Set();
   let moveCount = 0;
@@ -142,8 +143,82 @@
 
         if (player.r === r && player.c === c) {
           const marker = document.createElement('div');
-          marker.className = 'player-marker';
-          marker.textContent = '🚶‍♂️';
+          marker.className = `player-marker facing-${playerFacing} walk-step-${moveCount % 2}`;
+          
+          if (playerFacing === 'down') {
+            marker.innerHTML = `
+              <svg width="28" height="28" viewBox="0 0 32 32" fill="none">
+                <!-- Head -->
+                <circle cx="16" cy="7" r="4.5" fill="#fbcfe8" stroke="#be185d" stroke-width="1.2"/>
+                <!-- Hair / Cap -->
+                <path d="M12 5.5 C12 3 20 3 20 5.5" stroke="#0f766e" stroke-width="2" stroke-linecap="round"/>
+                <!-- Smiling Face Eyes -->
+                <circle cx="14.5" cy="7" r="0.7" fill="#0f172a"/>
+                <circle cx="17.5" cy="7" r="0.7" fill="#0f172a"/>
+                <path d="M15 9 Q16 10 17 9" stroke="#be185d" stroke-width="0.8" stroke-linecap="round"/>
+                <!-- Body -->
+                <rect x="12" y="12" width="8" height="9" rx="3" fill="#0d9488" stroke="#0f766e" stroke-width="1.2"/>
+                <!-- Arms -->
+                <path d="M11 14 L9 18" stroke="#0f766e" stroke-width="2" stroke-linecap="round"/>
+                <path d="M21 14 L23 18" stroke="#0f766e" stroke-width="2" stroke-linecap="round"/>
+                <!-- Legs (Walking) -->
+                ${(moveCount % 2 === 0) 
+                  ? '<path d="M14 21 L13 28 M18 21 L19 28" stroke="#0f172a" stroke-width="2.2" stroke-linecap="round"/>' 
+                  : '<path d="M14 21 L12 27 M18 21 L20 27" stroke="#0f172a" stroke-width="2.2" stroke-linecap="round"/>'}
+              </svg>
+            `;
+          } else if (playerFacing === 'up') {
+            marker.innerHTML = `
+              <svg width="28" height="28" viewBox="0 0 32 32" fill="none">
+                <!-- Back of Head / Cap -->
+                <circle cx="16" cy="7" r="4.5" fill="#0f766e" stroke="#042f2e" stroke-width="1.2"/>
+                <!-- Body Back -->
+                <rect x="12" y="12" width="8" height="9" rx="3" fill="#0d9488" stroke="#0f766e" stroke-width="1.2"/>
+                <!-- Arms Upward -->
+                <path d="M11 15 L10 12" stroke="#0f766e" stroke-width="2" stroke-linecap="round"/>
+                <path d="M21 15 L22 12" stroke="#0f766e" stroke-width="2" stroke-linecap="round"/>
+                <!-- Legs -->
+                ${(moveCount % 2 === 0)
+                  ? '<path d="M14 21 L14 28 M18 21 L18 28" stroke="#0f172a" stroke-width="2.2" stroke-linecap="round"/>'
+                  : '<path d="M14 21 L12 28 M18 21 L20 28" stroke="#0f172a" stroke-width="2.2" stroke-linecap="round"/>'}
+              </svg>
+            `;
+          } else if (playerFacing === 'right') {
+            marker.innerHTML = `
+              <svg width="28" height="28" viewBox="0 0 32 32" fill="none">
+                <!-- Head Profile -->
+                <circle cx="17" cy="7" r="4.5" fill="#fbcfe8" stroke="#be185d" stroke-width="1.2"/>
+                <path d="M13 5 C15 3 20 4 21 6" stroke="#0f766e" stroke-width="2" stroke-linecap="round"/>
+                <circle cx="19" cy="7" r="0.7" fill="#0f172a"/>
+                <!-- Body -->
+                <rect x="13" y="12" width="7" height="9" rx="3" fill="#0d9488" stroke="#0f766e" stroke-width="1.2"/>
+                <!-- Arm Swing Right -->
+                <path d="M16 14 L20 18" stroke="#0f766e" stroke-width="2" stroke-linecap="round"/>
+                <!-- Legs Walking Right -->
+                ${(moveCount % 2 === 0)
+                  ? '<path d="M15 21 L12 28 M17 21 L22 28" stroke="#0f172a" stroke-width="2.2" stroke-linecap="round"/>'
+                  : '<path d="M15 21 L20 28 M17 21 L13 28" stroke="#0f172a" stroke-width="2.2" stroke-linecap="round"/>'}
+              </svg>
+            `;
+          } else { // left
+            marker.innerHTML = `
+              <svg width="28" height="28" viewBox="0 0 32 32" fill="none" style="transform: scaleX(-1);">
+                <!-- Head Profile -->
+                <circle cx="17" cy="7" r="4.5" fill="#fbcfe8" stroke="#be185d" stroke-width="1.2"/>
+                <path d="M13 5 C15 3 20 4 21 6" stroke="#0f766e" stroke-width="2" stroke-linecap="round"/>
+                <circle cx="19" cy="7" r="0.7" fill="#0f172a"/>
+                <!-- Body -->
+                <rect x="13" y="12" width="7" height="9" rx="3" fill="#0d9488" stroke="#0f766e" stroke-width="1.2"/>
+                <!-- Arm Swing -->
+                <path d="M16 14 L20 18" stroke="#0f766e" stroke-width="2" stroke-linecap="round"/>
+                <!-- Legs Walking -->
+                ${(moveCount % 2 === 0)
+                  ? '<path d="M15 21 L12 28 M17 21 L22 28" stroke="#0f172a" stroke-width="2.2" stroke-linecap="round"/>'
+                  : '<path d="M15 21 L20 28 M17 21 L13 28" stroke="#0f172a" stroke-width="2.2" stroke-linecap="round"/>'}
+              </svg>
+            `;
+          }
+
           cell.appendChild(marker);
         } else if (goal.r === r && goal.c === c) {
           const goalMarker = document.createElement('div');
@@ -177,15 +252,19 @@
     let isBlocked = false;
 
     if (direction === 'UP') {
+      playerFacing = 'up';
       if (walls[0] || r === 0) isBlocked = true;
       else targetR--;
     } else if (direction === 'RIGHT') {
+      playerFacing = 'right';
       if (walls[1] || c === 8) isBlocked = true;
       else targetC++;
     } else if (direction === 'DOWN') {
+      playerFacing = 'down';
       if (walls[2] || r === 8) isBlocked = true;
       else targetR++;
     } else if (direction === 'LEFT') {
+      playerFacing = 'left';
       if (walls[3] || c === 0) isBlocked = true;
       else targetC--;
     }

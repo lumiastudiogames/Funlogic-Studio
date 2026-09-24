@@ -1,5 +1,5 @@
 (() => {
-  // metro-subway-train-yard/src/levels.ts
+  // src/games/metro-subway-train-yard/src/levels.ts
   var LEVELS = [
     // --- ACT 1: DEPOT APPRENTICE (Levels 1 - 5) ---
     {
@@ -811,7 +811,7 @@
     }
   ];
 
-  // metro-subway-train-yard/src/state.ts
+  // src/games/metro-subway-train-yard/src/state.ts
   var STORAGE_KEY = "metro_subway_yard_save_v1";
   var GameStateManager = class {
     // initial free hints
@@ -885,7 +885,7 @@
   };
   var gameState = new GameStateManager();
 
-  // metro-subway-train-yard/src/audio.ts
+  // src/games/metro-subway-train-yard/src/audio.ts
   var SoundManager = class {
     constructor() {
       this.ctx = null;
@@ -1110,7 +1110,7 @@
   };
   var audio = new SoundManager();
 
-  // metro-subway-train-yard/src/engine.ts
+  // src/games/metro-subway-train-yard/src/engine.ts
   var YardEngine = class {
     constructor(level, width, height) {
       this.width = 800;
@@ -1733,7 +1733,7 @@
     }
   };
 
-  // metro-subway-train-yard/src/types.ts
+  // src/games/metro-subway-train-yard/src/types.ts
   var METRO_COLORS = {
     red: {
       id: "red",
@@ -1800,7 +1800,7 @@
     }
   };
 
-  // metro-subway-train-yard/src/renderer.ts
+  // src/games/metro-subway-train-yard/src/renderer.ts
   var YardRenderer = class {
     constructor(ctx, engine) {
       this.showHintRoutes = false;
@@ -1832,27 +1832,90 @@
     }
     renderGround(ctx, width, height) {
       const bgGrad = ctx.createLinearGradient(0, 0, 0, height);
-      bgGrad.addColorStop(0, "#0f172a");
-      bgGrad.addColorStop(0.5, "#0b1120");
-      bgGrad.addColorStop(1, "#080c18");
+      bgGrad.addColorStop(0, "#0a0f1d");
+      bgGrad.addColorStop(0.35, "#0f172a");
+      bgGrad.addColorStop(0.7, "#0b1120");
+      bgGrad.addColorStop(1, "#050811");
       ctx.fillStyle = bgGrad;
       ctx.fillRect(0, 0, width, height);
-      ctx.strokeStyle = "rgba(255, 255, 255, 0.02)";
+      const tileW = 28;
+      const tileH = 14;
+      ctx.strokeStyle = "rgba(255, 255, 255, 0.035)";
       ctx.lineWidth = 1;
-      const gridSize = 40;
-      for (let x = 0; x < width; x += gridSize) {
+      for (let y = 0; y < height; y += tileH) {
+        const rowOffset = Math.floor(y / tileH) % 2 === 0 ? 0 : tileW / 2;
         ctx.beginPath();
-        ctx.moveTo(x, 0);
-        ctx.lineTo(x, height);
+        ctx.moveTo(0, y);
+        ctx.lineTo(width, y);
+        ctx.stroke();
+        for (let x = -tileW + rowOffset; x < width; x += tileW) {
+          ctx.beginPath();
+          ctx.moveTo(x, y);
+          ctx.lineTo(x, y + tileH);
+          ctx.stroke();
+        }
+      }
+      ctx.save();
+      const bannerH = 22;
+      const bannerGrad = ctx.createLinearGradient(0, 0, width, 0);
+      bannerGrad.addColorStop(0, "rgba(30, 58, 138, 0.45)");
+      bannerGrad.addColorStop(0.5, "rgba(14, 116, 144, 0.55)");
+      bannerGrad.addColorStop(1, "rgba(30, 58, 138, 0.45)");
+      ctx.fillStyle = bannerGrad;
+      ctx.fillRect(0, 2, width, bannerH);
+      ctx.strokeStyle = "rgba(56, 189, 248, 0.3)";
+      ctx.lineWidth = 1;
+      ctx.strokeRect(0, 2, width, bannerH);
+      ctx.fillStyle = "#e2e8f0";
+      ctx.font = 'bold 9px "Outfit", system-ui, sans-serif';
+      ctx.textAlign = "center";
+      ctx.letterSpacing = "1.5px";
+      ctx.fillText("METRO CENTRAL TERMINAL  \u2022  PLATFORMS 1 - 4  \u2022  DISPATCH CONTROL", width / 2, 16);
+      ctx.restore();
+      ctx.save();
+      ctx.strokeStyle = "rgba(100, 116, 139, 0.12)";
+      ctx.lineWidth = 3;
+      for (let gx = 60; gx < width; gx += 130) {
+        ctx.beginPath();
+        ctx.moveTo(gx - 20, 0);
+        ctx.lineTo(gx, 28);
+        ctx.lineTo(gx + 20, 0);
         ctx.stroke();
       }
+      ctx.restore();
     }
     renderTrackBeds(ctx) {
       const { width, tracksY } = this.engine;
       tracksY.forEach((y, idx) => {
-        ctx.fillStyle = "rgba(30, 41, 59, 0.75)";
+        const platformY = y - 32;
+        const platformH = 14;
+        if (platformY > 20) {
+          ctx.fillStyle = "#1e293b";
+          ctx.fillRect(0, platformY, width, platformH);
+          ctx.fillStyle = "#eab308";
+          ctx.fillRect(0, platformY + platformH - 3, width, 3);
+          ctx.fillStyle = "#ca8a04";
+          for (let sx = 8; sx < width; sx += 12) {
+            ctx.fillRect(sx, platformY + platformH - 2.5, 3, 2);
+          }
+          if (width > 420) {
+            ctx.fillStyle = "rgba(148, 163, 184, 0.45)";
+            ctx.font = "bold 7px system-ui, sans-serif";
+            ctx.textAlign = "left";
+            ctx.fillText("STAND BEHIND YELLOW LINE", 140, platformY + 9);
+          }
+        }
+        const ballastGrad = ctx.createLinearGradient(0, y - 18, 0, y + 18);
+        ballastGrad.addColorStop(0, "#1e293b");
+        ballastGrad.addColorStop(0.5, "#0f172a");
+        ballastGrad.addColorStop(1, "#1e293b");
+        ctx.fillStyle = ballastGrad;
         ctx.fillRect(0, y - 18, width, 36);
-        ctx.fillStyle = "#1e293b";
+        ctx.fillStyle = "rgba(255, 255, 255, 0.05)";
+        for (let bx = 12; bx < width - 60; bx += 22) {
+          ctx.fillRect(bx + idx * 5 % 11, y - 14, 2, 2);
+          ctx.fillRect(bx + idx * 7 % 13, y + 12, 2, 2);
+        }
         const tieSpacing = 16;
         for (let x = 10; x < width - 70; x += tieSpacing) {
           ctx.fillStyle = "#334155";
@@ -1860,10 +1923,35 @@
           ctx.fillStyle = "#475569";
           ctx.fillRect(x, y - 15, 6, 2);
         }
-        ctx.fillStyle = "#64748b";
-        ctx.font = "bold 10px monospace";
+        const pillarX = 75 + idx % 2 * 50;
+        if (pillarX < width - 100) {
+          ctx.save();
+          ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
+          ctx.fillRect(pillarX - 2, y - 36, 12, 22);
+          ctx.fillStyle = "#475569";
+          ctx.fillRect(pillarX, y - 36, 8, 20);
+          ctx.fillStyle = "#94a3b8";
+          ctx.fillRect(pillarX + 2, y - 34, 2, 2);
+          ctx.fillRect(pillarX + 2, y - 20, 2, 2);
+          const glow = ctx.createRadialGradient(pillarX + 4, y - 26, 2, pillarX + 4, y - 26, 18);
+          glow.addColorStop(0, "rgba(251, 191, 36, 0.25)");
+          glow.addColorStop(1, "rgba(251, 191, 36, 0)");
+          ctx.fillStyle = glow;
+          ctx.beginPath();
+          ctx.arc(pillarX + 4, y - 26, 18, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.restore();
+        }
+        ctx.save();
+        ctx.fillStyle = "#0284c7";
+        ctx.beginPath();
+        ctx.roundRect(8, y - 24, 52, 13, 3);
+        ctx.fill();
+        ctx.fillStyle = "#ffffff";
+        ctx.font = "bold 8px monospace";
         ctx.textAlign = "left";
-        ctx.fillText(`TRACK ${idx + 1}`, 8, y - 19);
+        ctx.fillText(`LINE ${idx + 1}`, 14, y - 15);
+        ctx.restore();
       });
     }
     renderSwitchTurnouts(ctx) {
@@ -2375,7 +2463,7 @@
     }
   };
 
-  // metro-subway-train-yard/src/display.ts
+  // src/games/metro-subway-train-yard/src/display.ts
   var DisplayManager = class {
     constructor(canvas, onResize) {
       this.dpr = 1;
@@ -2419,7 +2507,7 @@
     }
   };
 
-  // metro-subway-train-yard/src/ui.ts
+  // src/games/metro-subway-train-yard/src/ui.ts
   var UIController = class {
     constructor(root) {
       this.currentScreen = "MAIN_MENU";
@@ -2667,8 +2755,9 @@
         </div>
 
         <!-- Modal: Level Victory -->
-        <div id="modal-level-win" class="hidden absolute inset-0 bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-4 z-40">
-          <div class="bg-slate-900 border border-emerald-500/40 rounded-3xl p-5 sm:p-6 max-w-sm w-full max-h-[96dvh] overflow-y-auto shadow-2xl flex flex-col items-center text-center">
+        <div id="modal-level-win" class="hidden absolute inset-0 bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-4 z-40" onclick="event.stopPropagation()">
+          <div class="bg-slate-900 border border-emerald-500/40 rounded-3xl p-5 sm:p-6 max-w-sm w-full max-h-[96dvh] overflow-y-auto shadow-2xl flex flex-col items-center text-center relative" onclick="event.stopPropagation()">
+            <button id="btn-win-close" aria-label="Close" class="absolute top-3 right-3 w-8 h-8 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-400 font-bold flex items-center justify-center text-sm active:scale-90 transition-all cursor-pointer">\u2715</button>
             <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-2xl sm:text-3xl mb-2 animate-bounce">
               \u{1F389}
             </div>
@@ -2698,7 +2787,7 @@
               </button>
               <div class="flex gap-2">
                 <button id="btn-win-retry" class="btn-tactile flex-1 py-2.5 rounded-xl bg-slate-800 border border-slate-700 text-xs font-bold text-slate-300">
-                  Replay
+                  Restart
                 </button>
                 <button id="btn-win-menu" class="btn-tactile flex-1 py-2.5 rounded-xl bg-slate-800 border border-slate-700 text-xs font-bold text-slate-300">
                   Levels
@@ -2709,8 +2798,9 @@
         </div>
 
         <!-- Modal: Crash / Level Failed -->
-        <div id="modal-crash" class="hidden absolute inset-0 bg-slate-950/90 backdrop-blur-md flex items-center justify-center p-3 sm:p-4 z-40">
-          <div class="bg-slate-900 border border-red-500/40 rounded-3xl p-5 sm:p-6 max-w-sm w-full max-h-[96dvh] overflow-y-auto shadow-2xl flex flex-col items-center text-center">
+        <div id="modal-crash" class="hidden absolute inset-0 bg-slate-950/90 backdrop-blur-md flex items-center justify-center p-3 sm:p-4 z-40" onclick="event.stopPropagation()">
+          <div class="bg-slate-900 border border-red-500/40 rounded-3xl p-5 sm:p-6 max-w-sm w-full max-h-[96dvh] overflow-y-auto shadow-2xl flex flex-col items-center text-center relative" onclick="event.stopPropagation()">
+            <button id="btn-crash-close" aria-label="Close" class="absolute top-3 right-3 w-8 h-8 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-400 font-bold flex items-center justify-center text-sm active:scale-90 transition-all cursor-pointer">\u2715</button>
             <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-red-500/20 border border-red-500/40 flex items-center justify-center text-2xl sm:text-3xl mb-2">
               \u{1F4A5}
             </div>
@@ -2721,7 +2811,7 @@
 
             <div class="flex flex-col gap-2 w-full mt-2 sm:mt-3">
               <button id="btn-crash-retry" class="btn-tactile w-full py-2.5 sm:py-3 rounded-xl bg-gradient-to-r from-red-600 to-amber-600 text-white font-black text-xs sm:text-sm uppercase tracking-wide shadow-lg shadow-red-600/30">
-                \u21BA Try Again
+                \u21BA Restart
               </button>
               <button id="btn-crash-menu" class="btn-tactile w-full py-2.5 rounded-xl bg-slate-800 border border-slate-700 text-xs font-bold text-slate-300">
                 Level Select
@@ -2973,6 +3063,11 @@
         this.closeAllModals();
         if (this.onActivateHint) this.onActivateHint();
       });
+      document.getElementById("btn-win-close")?.addEventListener("click", (e) => {
+        e.stopPropagation();
+        audio.playClick();
+        this.closeAllModals();
+      });
       document.getElementById("btn-win-next")?.addEventListener("click", () => {
         audio.playClick();
         this.closeAllModals();
@@ -2986,6 +3081,11 @@
       document.getElementById("btn-win-menu")?.addEventListener("click", () => {
         audio.playClick();
         this.setScreen("LEVEL_SELECT");
+      });
+      document.getElementById("btn-crash-close")?.addEventListener("click", (e) => {
+        e.stopPropagation();
+        audio.playClick();
+        this.closeAllModals();
       });
       document.getElementById("btn-crash-retry")?.addEventListener("click", () => {
         audio.playClick();
@@ -3016,7 +3116,7 @@
     }
   };
 
-  // metro-subway-train-yard/src/main.ts
+  // src/games/metro-subway-train-yard/src/main.ts
   var MetroSubwayGame = class {
     constructor(root, onWin) {
       this.engine = null;

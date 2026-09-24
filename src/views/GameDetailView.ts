@@ -38,6 +38,9 @@ export function renderGameDetailView(container: HTMLElement, gameId: string): vo
     description: fullDescription,
     keywords: game.keywords || game.tags,
     imageUrl: game.coverImage,
+    canonicalUrl: `https://funlogic.games/game/${game.id}/`,
+    categoryName: category.label,
+    categoryUrl: `https://funlogic.games/category/${game.categoryId}/`,
     type: 'game',
     faqs: gameFaqs,
     ratingValue: stats.ratingValue,
@@ -124,21 +127,27 @@ export function renderGameDetailView(container: HTMLElement, gameId: string): vo
                 ${game.title}
               </h1>
 
-              <!-- Live Organic Rating, Reviews and Plays Stats (Google Compliant) -->
+              <!-- Organic Rating, Reviews and Plays Stats (Google Compliant) -->
               <div class="flex items-center gap-3 text-xs font-bold text-slate-400 mb-3 flex-wrap">
                 <div class="flex items-center gap-1.5 bg-slate-800/80 px-3 py-1.5 rounded-xl border border-slate-700" id="detail-rating-box">
                   ${stats.isNew 
-                    ? '<span class="bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded-lg text-xs font-black">✨ Novo jogo</span><span class="text-slate-400 text-xs">Sem avaliações ainda</span>' 
-                    : `<span class="text-amber-400 font-black text-sm">★ ${stats.ratingValue.toFixed(1)}</span><span class="text-slate-400 font-medium">(${stats.ratingCount} ${stats.ratingCount === 1 ? 'avaliação' : 'avaliações'})</span>`
+                    ? '<span class="bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded-lg text-xs font-black">✨ Verified Web App</span><span class="text-slate-400 text-xs">Direct Play</span>' 
+                    : `<span class="text-amber-400 font-black text-sm">★ ${stats.ratingValue.toFixed(1)}</span><span class="text-slate-400 font-medium">(${stats.ratingCount} ${stats.ratingCount === 1 ? 'rating' : 'ratings'})</span>`
                   }
                 </div>
-                <span>•</span>
-                <div class="flex items-center gap-1.5 text-emerald-400 font-black bg-emerald-950/30 px-3 py-1.5 rounded-xl border border-emerald-800/40">
-                  <span>▶ ${stats.playsCount} ${stats.playsCount === 1 ? 'Jogada' : 'Jogadas'}</span>
-                </div>
+                ${stats.playsCount > 0 ? `
+                  <span>•</span>
+                  <div class="flex items-center gap-1.5 text-emerald-400 font-black bg-emerald-950/30 px-3 py-1.5 rounded-xl border border-emerald-800/40">
+                    <span>▶ ${stats.playsCount} ${stats.playsCount === 1 ? 'Play' : 'Plays'}</span>
+                  </div>
+                ` : ''}
                 <span>•</span>
                 <span class="text-slate-300">
                   ⚡ Instant Web Play
+                </span>
+                <span>•</span>
+                <span class="text-slate-300">
+                  🔒 100% Free & No Ads
                 </span>
               </div>
 

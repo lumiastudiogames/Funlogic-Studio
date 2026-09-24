@@ -4,7 +4,357 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
     <title>Big Tile Match 60+</title>
-    <link rel="stylesheet" href="./style.css" />
+    <style>
+      /* Big Tile Match 60+ Stylesheet */
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        -webkit-tap-highlight-color: transparent;
+        touch-action: manipulation;
+        user-select: none;
+        -webkit-user-select: none;
+      }
+
+      body {
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        background-color: #fdf4ff;
+        color: #1e1b4b;
+        min-height: 100vh;
+        min-height: 100dvh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+      }
+
+      #game-stage {
+        width: 100%;
+        max-width: 860px;
+        height: 100dvh;
+        max-height: 850px;
+        background: #ffffff;
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.1);
+      }
+
+      @media (min-width: 640px) {
+        #game-stage {
+          height: 90vh;
+          border-radius: 24px;
+          border: 1px solid #f3e8ff;
+        }
+      }
+
+      .game-header {
+        height: 60px;
+        padding: 0 16px;
+        background: #faf5ff;
+        border-bottom: 2px solid #f3e8ff;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        flex-shrink: 0;
+      }
+
+      .title-badge {
+        font-size: 15px;
+        font-weight: 800;
+        color: #701a75;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        max-width: 180px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      @media (min-width: 640px) {
+        .title-badge {
+          font-size: 17px;
+          max-width: none;
+        }
+      }
+
+      .stats-bar {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-shrink: 0;
+      }
+
+      .stat-chip {
+        background: #ffffff;
+        border: 2px solid #e9d5ff;
+        border-radius: 12px;
+        padding: 4px 12px;
+        font-weight: 700;
+        font-size: 15px;
+        color: #581c87;
+      }
+
+      .btn-tactile {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        border: 2px solid #e9d5ff;
+        background: #ffffff;
+        color: #581c87;
+        font-weight: 700;
+        font-size: 15px;
+        border-radius: 14px;
+        padding: 8px 14px;
+        cursor: pointer;
+        transition: all 0.12s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+        flex-shrink: 0;
+      }
+
+      .btn-tactile:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 6px 10px -2px rgba(112, 26, 117, 0.15), inset 0 1px 0 #ffffff;
+        background-color: #fdf4ff;
+      }
+
+      .btn-tactile:active {
+        transform: translateY(1px);
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+      }
+
+      .btn-tactile.btn-primary {
+        background: #9333ea;
+        color: #ffffff;
+        border-color: #7e22ce;
+      }
+
+      .btn-tactile.btn-primary:hover {
+        background: #7e22ce;
+      }
+
+      .board-area {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 12px;
+        position: relative;
+        background: radial-gradient(circle at 50% 40%, #faf5ff 0%, #fdf4ff 100%);
+        overflow-y: auto;
+      }
+
+      .instructions-banner {
+        font-size: 15px;
+        font-weight: 700;
+        color: #6b21a8;
+        text-align: center;
+        margin-bottom: 12px;
+        padding: 6px 18px;
+        background: #ffffff;
+        border-radius: 9999px;
+        border: 1px solid #e9d5ff;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      }
+
+      /* 3D Mahjong Arena Container */
+      .mahjong-arena {
+        position: relative;
+        width: min(92vw, 440px);
+        height: min(92vw, 440px);
+        background: linear-gradient(145deg, #f5f3ff, #ede9fe);
+        border-radius: 28px;
+        border: 4px solid #ddd6fe;
+        box-shadow: 
+          0 20px 40px -10px rgba(109, 40, 217, 0.2),
+          inset 0 2px 6px rgba(255, 255, 255, 0.8),
+          inset 0 -4px 10px rgba(109, 40, 217, 0.1);
+        padding: 12px;
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        grid-template-rows: repeat(4, 1fr);
+        gap: 8px;
+      }
+
+      @media (max-width: 420px) {
+        .mahjong-arena {
+          width: 320px;
+          height: 320px;
+          padding: 8px;
+          gap: 6px;
+          border-radius: 20px;
+        }
+      }
+
+      /* Mahjong 3D Tile Component */
+      .mahjong-tile {
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(180deg, #ffffff 0%, #faf5ff 60%, #f3e8ff 100%);
+        border-radius: 14px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        position: relative;
+        transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease, opacity 0.25s ease;
+        user-select: none;
+      }
+
+      /* Layer 0 (Base Level) */
+      .mahjong-tile.layer-0 {
+        z-index: 1;
+        border: 2px solid #d8b4fe;
+        border-bottom: 6px solid #a855f7;
+        box-shadow: 
+          0 4px 8px rgba(107, 33, 168, 0.15),
+          inset 0 2px 0 rgba(255, 255, 255, 1),
+          inset 0 -1px 2px rgba(168, 85, 247, 0.2);
+      }
+
+      .mahjong-tile.layer-0:hover:not(.blocked) {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 14px rgba(107, 33, 168, 0.25), 0 6px 0 #9333ea;
+      }
+
+      /* Layer 1 (Elevated Top Tier) */
+      .mahjong-tile.layer-1 {
+        z-index: 10;
+        background: linear-gradient(180deg, #ffffff 0%, #fdf4ff 50%, #fae8ff 100%);
+        border: 3px solid #c084fc;
+        border-bottom: 12px solid #7e22ce;
+        border-right: 3px solid #9333ea;
+        border-left: 3px solid #e9d5ff;
+        transform: translateY(-6px);
+        box-shadow: 
+          0 16px 28px rgba(88, 28, 135, 0.45),
+          0 10px 0 #6b21a8,
+          0 0 12px rgba(192, 132, 252, 0.6),
+          inset 0 2px 2px rgba(255, 255, 255, 1);
+      }
+
+      .mahjong-tile.layer-1:hover:not(.blocked) {
+        transform: translateY(-10px) scale(1.04);
+        box-shadow: 
+          0 22px 34px rgba(88, 28, 135, 0.5),
+          0 12px 0 #581c87,
+          0 0 18px rgba(168, 85, 247, 0.8);
+      }
+
+      .tier-badge {
+        position: absolute;
+        top: 3px;
+        right: 4px;
+        font-size: 9px;
+        font-weight: 900;
+        background: #7e22ce;
+        color: #fef08a;
+        padding: 1px 5px;
+        border-radius: 6px;
+        letter-spacing: 0.5px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        pointer-events: none;
+      }
+
+      .mahjong-tile.blocked {
+        opacity: 0.5;
+        filter: grayscale(0.4) brightness(0.9);
+        cursor: not-allowed;
+      }
+
+      .mahjong-tile.selected {
+        border-color: #ec4899 !important;
+        background: linear-gradient(180deg, #fdf2f8 0%, #fce7f3 100%) !important;
+        box-shadow: 
+          0 0 0 4px #ec4899,
+          0 18px 30px rgba(236, 72, 153, 0.45),
+          0 12px 0 #be185d !important;
+        transform: translateY(-12px) scale(1.06) !important;
+        z-index: 50 !important;
+      }
+
+      .mahjong-tile.hinted {
+        animation: pulse-hint 1s infinite alternate ease-in-out;
+      }
+
+      @keyframes pulse-hint {
+        from {
+          box-shadow: 0 0 0 2px #ec4899, 0 10px 20px rgba(236, 72, 153, 0.3);
+        }
+        to {
+          box-shadow: 0 0 0 8px #f472b6, 0 16px 30px rgba(236, 72, 153, 0.6);
+        }
+      }
+
+      .mahjong-tile.matched {
+        opacity: 0;
+        transform: scale(0.4) rotate(15deg);
+        pointer-events: none;
+      }
+
+      .tile-icon {
+        font-size: 34px;
+        line-height: 1;
+        filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.15));
+      }
+
+      @media (max-width: 420px) {
+        .tile-icon {
+          font-size: 26px;
+        }
+      }
+
+      .tile-label {
+        font-size: 11px;
+        font-weight: 800;
+        color: #6b21a8;
+        margin-top: 3px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      @media (max-width: 420px) {
+        .tile-label {
+          font-size: 9px;
+        }
+      }
+
+      .match-star {
+        position: absolute;
+        pointer-events: none;
+        z-index: 100;
+        animation: star-burst 0.9s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+      }
+
+      @keyframes star-burst {
+        0% {
+          transform: translate(0, 0) scale(0.4) rotate(0deg);
+          opacity: 1;
+        }
+        100% {
+          transform: translate(var(--dx), var(--dy)) scale(1.3) rotate(360deg);
+          opacity: 0;
+        }
+      }
+
+      .game-footer {
+        height: 64px;
+        background: #faf5ff;
+        border-top: 2px solid #f3e8ff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 16px;
+        padding: 0 16px;
+        flex-shrink: 0;
+      }
+    </style>
   
   
   
@@ -100,61 +450,12 @@
     </div>
     <script src="./game.js"></script>
   
-  <!-- PWA & Initial Screen Fullscreen UI -->
-  <button id="fl-fullscreen-btn" aria-label="Fullscreen" title="Toggle Fullscreen" style="
-    position: fixed;
-    top: 14px;
-    right: 14px;
-    z-index: 99999;
-    background: rgba(15, 23, 42, 0.75);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    color: #ffffff;
-    width: 42px;
-    height: 42px;
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    font-size: 18px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-    transition: transform 0.15s ease, background 0.2s ease;
-    user-select: none;
-    -webkit-tap-highlight-color: transparent;
-  " onmouseover="this.style.transform='scale(1.08)'" onmouseout="this.style.transform='scale(1)'">
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/>
-    </svg>
-  </button>
-
   <script>
     (function() {
       // Register PWA Service Worker
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
           navigator.serviceWorker.register('./sw.js').catch(() => {});
-        });
-      }
-
-      // Initial Screen Fullscreen Handler
-      const fsBtn = document.getElementById('fl-fullscreen-btn');
-      if (fsBtn) {
-        fsBtn.addEventListener('click', function(e) {
-          e.stopPropagation();
-          if (!document.fullscreenElement && !document.webkitFullscreenElement && !document.mozFullScreenElement && !document.msFullscreenElement) {
-            const el = document.documentElement;
-            if (el.requestFullscreen) el.requestFullscreen().catch(()=>{});
-            else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
-            else if (el.mozRequestFullScreen) el.mozRequestFullScreen();
-            else if (el.msRequestFullscreen) el.msRequestFullscreen();
-          } else {
-            if (document.exitFullscreen) document.exitFullscreen().catch(()=>{});
-            else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
-            else if (document.mozCancelFullScreen) document.mozCancelFullScreen();
-            else if (document.msExitFullscreen) document.msExitFullscreen();
-          }
         });
       }
     })();

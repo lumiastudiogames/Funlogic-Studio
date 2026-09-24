@@ -150,20 +150,38 @@
     else if (dc === -1) { a.walls[3] = false; b.walls[1] = false; }
   }
 
+  let animFrameId = null;
+  let visualPlayer = { x: 0, y: 0 };
+  let animTime = 0;
+
   function initGame() {
     generateMaze();
     player = { r: 0, c: 0 };
     goal = { r: ROWS - 1, c: COLS - 1 };
+    visualPlayer = { x: 0, y: 0 };
     visitedPath = [{ r: 0, c: 0 }];
     isWon = false;
     startTime = Date.now();
     document.getElementById('win-modal').classList.remove('active');
+    
+    if (!animFrameId) {
+      animLoop();
+    }
+  }
+
+  function animLoop() {
+    animTime += 0.04;
+    // Smoothly interpolate visual player to actual grid position
+    visualPlayer.x += (player.c - visualPlayer.x) * 0.25;
+    visualPlayer.y += (player.r - visualPlayer.y) * 0.25;
+
     draw();
+    animFrameId = requestAnimationFrame(animLoop);
   }
 
   function draw() {
     const dpr = window.devicePixelRatio || 1;
-    const size = 308;
+    const size = 320;
     canvas.width = size * dpr;
     canvas.height = size * dpr;
     ctx.resetTransform();
@@ -172,29 +190,43 @@
     const cellW = size / COLS;
     const cellH = size / ROWS;
 
-    // Grass / background
-    ctx.fillStyle = '#fef08a';
-    ctx.fillRect(0, 0, size, size);
+    // Grass / background with subtle 3D lawn tiles
+    for (let r = 0; r < ROWS; r++) {
+      for (let c = 0; c < COLS; c++) {
+        ctx.fillStyle = (r + c) % 2 === 0 ? '#bbf7d0' : '#86efac';
+        ctx.fillRect(c * cellW, r * cellH, cellW, cellH);
+      }
+    }
 
-    // Visited trail (cute paw prints / soft yellow glow)
-    ctx.fillStyle = '#ffffff';
+    // Visited trail (cute soft white stepping stones)
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.65)';
     visitedPath.forEach(p => {
       ctx.beginPath();
-      ctx.arc(p.c * cellW + cellW / 2, p.r * cellH + cellH / 2, cellW * 0.38, 0, Math.PI * 2);
+      ctx.ellipse(p.c * cellW + cellW / 2, p.r * cellH + cellH / 2 + 2, cellW * 0.32, cellH * 0.24, 0, 0, Math.PI * 2);
       ctx.fill();
     });
 
-    // Draw walls
-    ctx.strokeStyle = '#15803d';
-    ctx.lineWidth = 6;
-    ctx.lineCap = 'round';
-
+    // Draw 3D Maze Hedge Walls (dark green shadow + vibrant hedge top)
     for (let r = 0; r < ROWS; r++) {
       for (let c = 0; c < COLS; c++) {
         const x = c * cellW;
         const y = r * cellH;
         const walls = grid[r][c].walls;
 
+        // Shadow pass
+        ctx.strokeStyle = 'rgba(20, 83, 45, 0.4)';
+        ctx.lineWidth = 7;
+        ctx.lineCap = 'round';
+        ctx.beginPath();
+        if (walls[0]) { ctx.moveTo(x, y + 2); ctx.lineTo(x + cellW, y + 2); }
+        if (walls[1]) { ctx.moveTo(x + cellW, y + 2); ctx.lineTo(x + cellW, y + cellH + 2); }
+        if (walls[2]) { ctx.moveTo(x, y + cellH + 2); ctx.lineTo(x + cellW, y + cellH + 2); }
+        if (walls[3]) { ctx.moveTo(x, y + 2); ctx.lineTo(x, y + cellH + 2); }
+        ctx.stroke();
+
+        // Main Hedge Top
+        ctx.strokeStyle = '#15803d';
+        ctx.lineWidth = 6;
         ctx.beginPath();
         if (walls[0]) { ctx.moveTo(x, y); ctx.lineTo(x + cellW, y); }
         if (walls[1]) { ctx.moveTo(x + cellW, y); ctx.lineTo(x + cellW, y + cellH); }
@@ -204,18 +236,38 @@
       }
     }
 
-    // Draw Goal (Carrot 🥕)
+    // Draw Floating Goal (Carrot 🥕) with 3D shadow and bobbing
+    const carrotFloat = Math.sin(animTime * 3) * 5;
     const goalX = goal.c * cellW + cellW / 2;
-    const goalY = goal.r * cellH + cellH / 2 + 8;
+    const goalY = goal.r * cellH + cellH / 2;
+
+    // Carrot Shadow (shrinks when floating up)
+    const shadowScale = 1 - (carrotFloat + 5) * 0.04;
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
+    ctx.beginPath();
+    ctx.ellipse(goalX, goalY + 12, cellW * 0.28 * shadowScale, cellH * 0.14 * shadowScale, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Carrot Emoji
     ctx.font = `${Math.floor(cellW * 0.72)}px sans-serif`;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.fillText('🥕', goalX, goalY);
+    ctx.fillText('🥕', goalX, goalY + carrotFloat);
 
-    // Draw Player (Bunny 🐰)
-    const playerX = player.c * cellW + cellW / 2;
-    const playerY = player.r * cellH + cellH / 2 + 8;
-    ctx.fillText('🐰', playerX, playerY);
+    // Draw Floating Bunny 🐰 with 3D shadow and hop/float bobbing
+    const bunnyHop = Math.sin(animTime * 4) * 4;
+    const px = visualPlayer.x * cellW + cellW / 2;
+    const py = visualPlayer.y * cellH + cellH / 2;
+
+    // Bunny Shadow
+    const bShadowScale = 1 - (bunnyHop + 4) * 0.05;
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.22)';
+    ctx.beginPath();
+    ctx.ellipse(px, py + 12, cellW * 0.32 * bShadowScale, cellH * 0.16 * bShadowScale, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Bunny Emoji
+    ctx.fillText('🐰', px, py + bunnyHop);
   }
 
   function tryMove(dir) {
@@ -281,17 +333,24 @@
     else if (e.key === 'ArrowLeft') { e.preventDefault(); tryMove('left'); }
   });
 
-  // Touch Swipe on Canvas
-  let touchStartX = 0;
-  let touchStartY = 0;
+  // Touch & Mouse Drag / Swipe on Canvas
+  let dragStartX = 0;
+  let dragStartY = 0;
+  let isDragging = false;
+
   canvas.addEventListener('touchstart', e => {
-    touchStartX = e.touches[0].clientX;
-    touchStartY = e.touches[0].clientY;
+    if (e.touches.length > 0) {
+      dragStartX = e.touches[0].clientX;
+      dragStartY = e.touches[0].clientY;
+      isDragging = true;
+    }
   }, { passive: true });
 
   canvas.addEventListener('touchend', e => {
-    const dx = e.changedTouches[0].clientX - touchStartX;
-    const dy = e.changedTouches[0].clientY - touchStartY;
+    if (!isDragging || !e.changedTouches.length) return;
+    isDragging = false;
+    const dx = e.changedTouches[0].clientX - dragStartX;
+    const dy = e.changedTouches[0].clientY - dragStartY;
     const absX = Math.abs(dx);
     const absY = Math.abs(dy);
 
@@ -304,11 +363,34 @@
     }
   }, { passive: true });
 
-  // D-pad
-  document.getElementById('btn-up').addEventListener('click', () => tryMove('up'));
-  document.getElementById('btn-left').addEventListener('click', () => tryMove('left'));
-  document.getElementById('btn-down').addEventListener('click', () => tryMove('down'));
-  document.getElementById('btn-right').addEventListener('click', () => tryMove('right'));
+  canvas.addEventListener('mousedown', e => {
+    dragStartX = e.clientX;
+    dragStartY = e.clientY;
+    isDragging = true;
+  });
+
+  window.addEventListener('mouseup', e => {
+    if (!isDragging) return;
+    isDragging = false;
+    const dx = e.clientX - dragStartX;
+    const dy = e.clientY - dragStartY;
+    const absX = Math.abs(dx);
+    const absY = Math.abs(dy);
+
+    if (Math.max(absX, absY) > 20) {
+      if (absX > absY) {
+        tryMove(dx > 0 ? 'right' : 'left');
+      } else {
+        tryMove(dy > 0 ? 'down' : 'up');
+      }
+    }
+  });
+
+  // Optional D-pad fallback
+  document.getElementById('btn-up')?.addEventListener('click', () => tryMove('up'));
+  document.getElementById('btn-left')?.addEventListener('click', () => tryMove('left'));
+  document.getElementById('btn-down')?.addEventListener('click', () => tryMove('down'));
+  document.getElementById('btn-right')?.addEventListener('click', () => tryMove('right'));
 
   document.getElementById('btn-restart').addEventListener('click', initGame);
   document.getElementById('btn-play-again').addEventListener('click', initGame);

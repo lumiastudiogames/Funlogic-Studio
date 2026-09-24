@@ -24,12 +24,12 @@
   let timerInterval = null;
   let soundEnabled = true;
   let isWon = false;
+  let isPouring = false;
 
   // 3D rotation state
   let currentRotation = 0;
   let isDragging = false;
   let lastMouseX = 0;
-  let momentum = 0;
 
   // Audio Context
   let audioCtx = null;
@@ -76,17 +76,33 @@
         osc.start(now);
         osc.stop(now + 0.1);
       } else if (type === 'pour') {
+        // Multi-tone bubbling liquid pour sound
+        for (let i = 0; i < 3; i++) {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'sine';
+          const freq = 450 + Math.random() * 200;
+          osc.frequency.setValueAtTime(freq, now + i * 0.07);
+          osc.frequency.exponentialRampToValueAtTime(freq + 150, now + i * 0.07 + 0.1);
+          gain.gain.setValueAtTime(0.12, now + i * 0.07);
+          gain.gain.linearRampToValueAtTime(0.01, now + i * 0.07 + 0.1);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(now + i * 0.07);
+          osc.stop(now + i * 0.07 + 0.1);
+        }
+      } else if (type === 'complete') {
         const osc = ctx.createOscillator();
         const gain = ctx.createGain();
         osc.type = 'triangle';
-        osc.frequency.setValueAtTime(580, now);
-        osc.frequency.exponentialRampToValueAtTime(300, now + 0.2);
+        osc.frequency.setValueAtTime(659.25, now);
+        osc.frequency.setValueAtTime(880, now + 0.1);
         gain.gain.setValueAtTime(0.2, now);
-        gain.gain.linearRampToValueAtTime(0.01, now + 0.2);
+        gain.gain.linearRampToValueAtTime(0.01, now + 0.3);
         osc.connect(gain);
         gain.connect(ctx.destination);
         osc.start(now);
-        osc.stop(now + 0.2);
+        osc.stop(now + 0.3);
       } else if (type === 'win') {
         [523.25, 659.25, 783.99, 1046.5].forEach((freq, i) => {
           const osc = ctx.createOscillator();
@@ -132,6 +148,7 @@
     history = [];
     moves = 0;
     isWon = false;
+    isPouring = false;
     currentRotation = 0;
     startTime = Date.now();
 
@@ -164,6 +181,53 @@
   function isTubeLocked(tube) {
     if (tube.length !== TUBE_CAPACITY) return false;
     return tube.every(c => c === tube[0]);
+  }
+
+  function spawnTubeStars(targetEl) {
+    if (!targetEl) return;
+    const rect = targetEl.getBoundingClientRect();
+    const count = 12;
+    const emojis = ['✨', '⭐', '🌟', '💎'];
+
+    for (let i = 0; i < count; i++) {
+      const star = document.createElement('span');
+      star.className = 'tube-star';
+      star.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+
+      const startX = rect.left + rect.width / 2;
+      const startY = rect.top + rect.height / 2;
+      star.style.left = `${startX}px`;
+      star.style.top = `${startY}px`;
+
+      const angle = (Math.PI * 2 * i) / count;
+      const dist = 30 + Math.random() * 40;
+      const dx = Math.cos(angle) * dist;
+      const dy = Math.sin(angle) * dist;
+
+      star.style.setProperty('--dx', `${dx}px`);
+      star.style.setProperty('--dy', `${dy}px`);
+      star.style.fontSize = `${16 + Math.random() * 10}px`;
+
+      document.body.appendChild(star);
+      setTimeout(() => star.remove(), 950);
+    }
+  }
+
+  function spawnBubbles(container) {
+    if (!container) return;
+    for (let i = 0; i < 8; i++) {
+      setTimeout(() => {
+        const b = document.createElement('div');
+        b.className = 'liquid-bubble';
+        const size = 4 + Math.random() * 6;
+        b.style.width = `${size}px`;
+        b.style.height = `${size}px`;
+        b.style.left = `${10 + Math.random() * 28}px`;
+        b.style.bottom = `${8 + Math.random() * 20}px`;
+        container.appendChild(b);
+        setTimeout(() => b.remove(), 850);
+      }, i * 40);
+    }
   }
 
   function render3DTubes() {
@@ -201,19 +265,30 @@
         itemEl.classList.add('locked');
       }
 
-      // Shadow
+      // Shadow on floor
       const shadowEl = document.createElement('div');
       shadowEl.className = 'tube-shadow';
       itemEl.appendChild(shadowEl);
+
+      // Unified Assembly: Both Rim/Mouth and Cylinder live inside this group and animate together!
+      const assemblyEl = document.createElement('div');
+      assemblyEl.className = 'tube-assembly';
+
+      // Glass Mouth / Lip (Solidly fixed at the top of assembly)
+      const rimEl = document.createElement('div');
+      rimEl.className = 'tube-rim';
+      assemblyEl.appendChild(rimEl);
 
       // Glass Cylinder
       const cylEl = document.createElement('div');
       cylEl.className = 'tube-cylinder';
 
-      const rimEl = document.createElement('div');
-      rimEl.className = 'tube-rim';
-      itemEl.appendChild(rimEl);
+      // Bubbles Container
+      const bubblesEl = document.createElement('div');
+      bubblesEl.className = 'bubbles-container';
+      cylEl.appendChild(bubblesEl);
 
+      // Liquid Layers
       tube.forEach(colorIdx => {
         const layerEl = document.createElement('div');
         layerEl.className = 'liquid-layer';
@@ -221,7 +296,8 @@
         cylEl.appendChild(layerEl);
       });
 
-      itemEl.appendChild(cylEl);
+      assemblyEl.appendChild(cylEl);
+      itemEl.appendChild(assemblyEl);
 
       itemEl.addEventListener('click', (e) => {
         e.stopPropagation();
@@ -233,7 +309,7 @@
   }
 
   function handleTubeClick(idx) {
-    if (isWon) return;
+    if (isWon || isPouring) return;
     const tube = tubes[idx];
 
     if (isTubeLocked(tube)) {
@@ -271,27 +347,101 @@
   }
 
   function executePour(srcIdx, dstIdx) {
+    isPouring = true;
     history.push(JSON.parse(JSON.stringify(tubes)));
 
     const src = tubes[srcIdx];
     const dst = tubes[dstIdx];
-    const col = src[src.length - 1];
+    const colorIdx = src[src.length - 1];
+    const colorDef = COLORS[colorIdx];
 
-    while (src.length > 0 && src[src.length - 1] === col && dst.length < TUBE_CAPACITY) {
-      dst.push(src.pop());
+    const srcItem = document.querySelector(`.tube-3d-item[data-idx="${srcIdx}"]`);
+    const dstItem = document.querySelector(`.tube-3d-item[data-idx="${dstIdx}"]`);
+
+    // Determine tilt direction based on relative position
+    const diff = (dstIdx - srcIdx + NUM_TUBES) % NUM_TUBES;
+    const tiltClass = (diff <= 4) ? 'tilting-right' : 'tilting-left';
+
+    if (srcItem) {
+      srcItem.classList.remove('selected');
+      srcItem.classList.add(tiltClass);
     }
 
-    moves++;
-    selectedTubeIdx = null;
+    // Play bubbling pour audio
     playSound('pour');
 
-    updateHUD();
-    render3DTubes();
-    checkWinCondition();
+    // Create dynamic SVG pouring stream
+    let streamSvg = null;
+    if (srcItem && dstItem) {
+      const srcRect = srcItem.getBoundingClientRect();
+      const dstRect = dstItem.getBoundingClientRect();
+
+      streamSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      streamSvg.setAttribute('class', 'pour-stream-svg');
+      streamSvg.style.position = 'fixed';
+      streamSvg.style.inset = '0';
+      streamSvg.style.width = '100vw';
+      streamSvg.style.height = '100vh';
+      streamSvg.style.pointerEvents = 'none';
+      streamSvg.style.zIndex = '99999';
+
+      const x1 = srcRect.left + srcRect.width / 2 + (tiltClass === 'tilting-right' ? 25 : -25);
+      const y1 = srcRect.top + 20;
+      const x2 = dstRect.left + dstRect.width / 2;
+      const y2 = dstRect.top + 20;
+
+      const ctrlX = (x1 + x2) / 2;
+      const ctrlY = Math.min(y1, y2) - 40;
+
+      const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      path.setAttribute('d', `M ${x1} ${y1} Q ${ctrlX} ${ctrlY} ${x2} ${y2}`);
+      path.setAttribute('class', 'stream-path');
+      path.setAttribute('stroke', colorDef.hex);
+      path.setAttribute('stroke-width', '8');
+      path.style.color = colorDef.hex;
+
+      streamSvg.appendChild(path);
+      document.body.appendChild(streamSvg);
+    }
+
+    // Spawn bubbles in destination tube
+    if (dstItem) {
+      const bubblesContainer = dstItem.querySelector('.bubbles-container');
+      spawnBubbles(bubblesContainer);
+    }
+
+    setTimeout(() => {
+      // Transfer balls
+      while (src.length > 0 && src[src.length - 1] === colorIdx && dst.length < TUBE_CAPACITY) {
+        dst.push(src.pop());
+      }
+
+      if (streamSvg) streamSvg.remove();
+      if (srcItem) {
+        srcItem.classList.remove(tiltClass);
+      }
+
+      moves++;
+      selectedTubeIdx = null;
+      isPouring = false;
+
+      updateHUD();
+      render3DTubes();
+
+      // Check if destination is now locked
+      const updatedDst = tubes[dstIdx];
+      if (isTubeLocked(updatedDst)) {
+        playSound('complete');
+        const newDstItem = document.querySelector(`.tube-3d-item[data-idx="${dstIdx}"]`);
+        spawnTubeStars(newDstItem);
+      }
+
+      checkWinCondition();
+    }, 380);
   }
 
   function undoMove() {
-    if (history.length === 0 || isWon) return;
+    if (history.length === 0 || isWon || isPouring) return;
     tubes = history.pop();
     selectedTubeIdx = null;
     moves = Math.max(0, moves - 1);
@@ -349,11 +499,9 @@
     if (!stage) return;
 
     let startX = 0;
-    let isMoving = false;
 
     const onPointerDown = (e) => {
       isDragging = true;
-      isMoving = false;
       startX = e.clientX || (e.touches && e.touches[0].clientX) || 0;
       lastMouseX = startX;
     };
@@ -363,10 +511,6 @@
       const clientX = e.clientX || (e.touches && e.touches[0].clientX) || 0;
       const deltaX = clientX - lastMouseX;
       lastMouseX = clientX;
-
-      if (Math.abs(clientX - startX) > 5) {
-        isMoving = true;
-      }
 
       currentRotation += deltaX * 0.45;
       render3DTubes();

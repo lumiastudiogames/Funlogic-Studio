@@ -224,8 +224,9 @@ export class ScreenController {
         </div>
 
         <!-- Victory celebration banner overlay -->
-        <div id="victory-banner" class="${isCompleted ? 'flex' : 'hidden'} absolute inset-0 bg-slate-900/60 backdrop-blur-xs flex-col items-center justify-center p-4 z-40 animate-fade-in">
-          <div class="bg-white rounded-3xl p-6 sm:p-8 max-w-xs w-full shadow-2xl border border-slate-100 text-center flex flex-col items-center">
+        <div id="victory-banner" class="${isCompleted ? 'flex' : 'hidden'} absolute inset-0 bg-slate-900/60 backdrop-blur-xs flex-col items-center justify-center p-4 z-40 animate-fade-in" onclick="event.stopPropagation()">
+          <div class="bg-white rounded-3xl p-6 sm:p-8 max-w-xs w-full shadow-2xl border border-slate-100 text-center flex flex-col items-center relative" onclick="event.stopPropagation()">
+            <button id="btn-victory-close" aria-label="Close" class="absolute top-3 right-3 w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 font-bold flex items-center justify-center text-sm active:scale-90 transition-all cursor-pointer">✕</button>
             <div class="w-16 h-16 rounded-2xl bg-amber-100 text-amber-600 text-3xl flex items-center justify-center mb-3 shadow-inner">
               👑
             </div>
@@ -235,10 +236,10 @@ export class ScreenController {
               ${'⭐'.repeat(save.stars[puzzle.id] || 3)}
             </div>
             <div class="flex gap-2 w-full">
-              <button id="btn-victory-replay" class="btn-tactile flex-1 py-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs active:scale-95">
-                RETRY
+              <button id="btn-victory-replay" class="btn-tactile flex-1 py-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs active:scale-95 cursor-pointer">
+                RESTART
               </button>
-              <button id="btn-victory-next" class="btn-tactile-primary flex-1 py-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-extrabold text-xs active:scale-95 shadow-md shadow-blue-500/30">
+              <button id="btn-victory-next" class="btn-tactile-primary flex-1 py-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-extrabold text-xs active:scale-95 shadow-md shadow-blue-500/30 cursor-pointer">
                 NEXT PUZZLE
               </button>
             </div>
@@ -290,14 +291,22 @@ export class ScreenController {
     });
 
     // Victory banner buttons
-    container.querySelector('#btn-victory-replay')?.addEventListener('click', () => {
+    container.querySelector('#btn-victory-close')?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      sound.playClick();
+      this.hideVictoryModal();
+    });
+
+    container.querySelector('#btn-victory-replay')?.addEventListener('click', (e) => {
+      e.stopPropagation();
       sound.playClick();
       this.hideVictoryModal();
       this.gameState.restartLevel();
       this.updatePlayingHud();
     });
 
-    container.querySelector('#btn-victory-next')?.addEventListener('click', () => {
+    container.querySelector('#btn-victory-next')?.addEventListener('click', (e) => {
+      e.stopPropagation();
       sound.playClick();
       this.hideVictoryModal();
       this.gameState.nextLevel();
@@ -380,12 +389,20 @@ export class ScreenController {
 
     document.body.appendChild(modal);
 
+    modal.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (e.target === modal) {
+        this.closeAdModal();
+      }
+    });
+
     const progressBar = modal.querySelector('#ad-progress-bar') as HTMLElement;
     const badge = modal.querySelector('#ad-counter-badge') as HTMLElement;
     const claimBtn = modal.querySelector('#btn-claim-hint') as HTMLButtonElement;
     const skipBtn = modal.querySelector('#btn-skip-ad') as HTMLButtonElement;
 
-    skipBtn.addEventListener('click', () => {
+    skipBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
       this.closeAdModal();
     });
 

@@ -133,38 +133,113 @@
     }
 
     initDOM() {
-      document.getElementById('btn-sound-toggle').addEventListener('click', () => {
-        const muted = this.sound.toggle();
-        const soundIcon = document.getElementById('sound-icon');
-        if (soundIcon) soundIcon.textContent = muted ? '🔇' : '🔊';
-      });
+      // Menu buttons
+      const btnMenu = document.getElementById('btn-menu');
+      if (btnMenu) {
+        btnMenu.addEventListener('click', () => {
+          this.sound.playClick();
+          const menuModal = document.getElementById('modal-menu');
+          if (menuModal) menuModal.classList.add('active');
+        });
+      }
 
-      this.undoBtn.addEventListener('click', () => this.undoLastTile());
-      document.getElementById('btn-hint').addEventListener('click', () => this.openHintModal());
-      document.getElementById('btn-shuffle').addEventListener('click', () => this.shuffleBoard());
+      const btnStartGame = document.getElementById('btn-start-game');
+      if (btnStartGame) {
+        btnStartGame.addEventListener('click', () => {
+          this.sound.playClick();
+          const menuModal = document.getElementById('modal-menu');
+          if (menuModal) menuModal.classList.remove('active');
+          this.startNewGame();
+        });
+      }
 
-      document.getElementById('btn-how-to-play').addEventListener('click', () => {
-        document.getElementById('modal-tutorial').classList.add('active');
-      });
-      document.getElementById('btn-close-tutorial').addEventListener('click', () => {
-        document.getElementById('modal-tutorial').classList.remove('active');
-      });
+      const btnMenuTut = document.getElementById('btn-menu-tutorial');
+      if (btnMenuTut) {
+        btnMenuTut.addEventListener('click', () => {
+          this.sound.playClick();
+          const tut = document.getElementById('modal-tutorial');
+          if (tut) tut.classList.add('active');
+        });
+      }
 
-      document.getElementById('btn-skip-ad').addEventListener('click', () => this.closeAdModal(false));
-      document.getElementById('btn-claim-hint').addEventListener('click', () => this.closeAdModal(true));
+      const btnMenuSound = document.getElementById('btn-menu-sound');
+      if (btnMenuSound) {
+        btnMenuSound.addEventListener('click', () => {
+          const muted = this.sound.toggle();
+          const soundIcon = document.getElementById('sound-icon');
+          if (soundIcon) soundIcon.textContent = muted ? '🔇' : '🔊';
+          const menuSoundIcon = document.getElementById('menu-sound-icon');
+          if (menuSoundIcon) menuSoundIcon.textContent = muted ? '🔇 Sound: OFF' : '🔊 Sound: ON';
+        });
+      }
 
-      document.getElementById('btn-replay').addEventListener('click', () => {
-        document.getElementById('modal-win').classList.remove('active');
-        this.startNewGame();
-      });
+      const restartBtn = document.getElementById('btn-restart');
+      if (restartBtn) {
+        restartBtn.addEventListener('click', () => {
+          this.sound.playClick();
+          this.startNewGame();
+          this.showToast('Game restarted!');
+        });
+      }
 
-      document.getElementById('btn-retry-loss').addEventListener('click', () => {
-        document.getElementById('modal-loss').classList.remove('active');
-        this.startNewGame();
-      });
+      const soundBtn = document.getElementById('btn-sound-toggle');
+      if (soundBtn) {
+        soundBtn.addEventListener('click', () => {
+          const muted = this.sound.toggle();
+          const soundIcon = document.getElementById('sound-icon');
+          if (soundIcon) soundIcon.textContent = muted ? '🔇' : '🔊';
+        });
+      }
+
+      if (this.undoBtn) {
+        this.undoBtn.addEventListener('click', () => this.undoLastTile());
+      }
+      const hintBtn = document.getElementById('btn-hint');
+      if (hintBtn) hintBtn.addEventListener('click', () => this.highlightHintTrio());
+      const shuffleBtn = document.getElementById('btn-shuffle');
+      if (shuffleBtn) shuffleBtn.addEventListener('click', () => this.shuffleBoard());
+
+      const howToPlayBtn = document.getElementById('btn-how-to-play');
+      if (howToPlayBtn) {
+        howToPlayBtn.addEventListener('click', () => {
+          const tut = document.getElementById('modal-tutorial');
+          if (tut) tut.classList.add('active');
+        });
+      }
+      const closeTutBtn = document.getElementById('btn-close-tutorial');
+      if (closeTutBtn) {
+        closeTutBtn.addEventListener('click', () => {
+          const tut = document.getElementById('modal-tutorial');
+          if (tut) tut.classList.remove('active');
+        });
+      }
+
+      const skipAd = document.getElementById('btn-skip-ad');
+      if (skipAd) skipAd.addEventListener('click', () => this.closeAdModal(false));
+      const claimHint = document.getElementById('btn-claim-hint');
+      if (claimHint) claimHint.addEventListener('click', () => this.closeAdModal(true));
+
+      const replayBtn = document.getElementById('btn-replay');
+      if (replayBtn) {
+        replayBtn.addEventListener('click', () => {
+          const winModal = document.getElementById('modal-win');
+          if (winModal) winModal.classList.remove('active');
+          this.startNewGame();
+        });
+      }
+
+      const retryLossBtn = document.getElementById('btn-retry-loss');
+      if (retryLossBtn) {
+        retryLossBtn.addEventListener('click', () => {
+          const lossModal = document.getElementById('modal-loss');
+          if (lossModal) lossModal.classList.remove('active');
+          this.startNewGame();
+        });
+      }
 
       const resizeObserver = new ResizeObserver(() => this.scaleBoard());
-      resizeObserver.observe(this.viewportEl);
+      if (this.viewportEl) resizeObserver.observe(this.viewportEl);
+      window.addEventListener('resize', () => this.scaleBoard());
     }
 
     startNewGame() {
@@ -239,11 +314,16 @@
     }
 
     scaleBoard() {
+      if (!this.viewportEl || !this.boardEl) return;
       const vRect = this.viewportEl.getBoundingClientRect();
-      const scaleX = (vRect.width - 20) / 600;
-      const scaleY = (vRect.height - 20) / 440;
-      const scale = Math.min(scaleX, scaleY, 1.15);
-      this.boardEl.style.transform = `scale(${scale})`;
+      if (vRect.width <= 0 || vRect.height <= 0) {
+        this.boardEl.style.transform = 'scale(0.85)';
+        return;
+      }
+      const scaleX = (vRect.width - 16) / 600;
+      const scaleY = (vRect.height - 16) / 440;
+      const scale = Math.min(scaleX, scaleY, 1.25);
+      this.boardEl.style.transform = `scale(${Math.max(0.25, scale).toFixed(3)})`;
     }
 
     renderBoard() {
@@ -508,7 +588,7 @@
 
     checkWinCondition() {
       const remaining = this.tiles.filter((t) => !t.collected).length;
-      if (remaining === 0 && this.tray.length === 0) {
+      if (this.tiles && this.tiles.length > 0 && remaining === 0 && this.tray.length === 0) {
         this.isGameOver = true;
         clearInterval(this.timerInterval);
         this.sound.playWin();
@@ -528,7 +608,12 @@
     }
   }
 
-  window.addEventListener('DOMContentLoaded', () => {
+  function initGame() {
     new TripleGame();
-  });
+  }
+  if (document.readyState === 'loading') {
+    window.addEventListener('DOMContentLoaded', initGame);
+  } else {
+    initGame();
+  }
 })();

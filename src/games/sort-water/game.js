@@ -137,6 +137,7 @@
       const tubeEl = document.createElement('div');
       tubeEl.className = 'tube';
       tubeEl.dataset.idx = idx;
+      tubeEl.setAttribute('draggable', tube.length > 0 && !isTubeComplete(tube) ? 'true' : 'false');
 
       if (selectedTubeIdx === idx) {
         tubeEl.classList.add('selected');
@@ -150,6 +151,15 @@
         layerEl.className = 'liquid-layer';
         layerEl.style.background = COLORS[colorIdx].gradient;
 
+        // Add subtle floating air bubbles
+        if (layerIdx % 2 === 0) {
+          const bubble = document.createElement('div');
+          bubble.className = 'bubble';
+          bubble.style.left = `${15 + (layerIdx * 18) % 65}%`;
+          bubble.style.animationDelay = `${(layerIdx * 0.7)}s`;
+          layerEl.appendChild(bubble);
+        }
+
         if (layerIdx === tube.length - 1) {
           const surf = document.createElement('div');
           surf.className = 'liquid-surface';
@@ -159,7 +169,33 @@
         tubeEl.appendChild(layerEl);
       });
 
+      // Click / Tap support
       tubeEl.addEventListener('click', () => handleTubeClick(idx));
+
+      // Drag and Drop support
+      tubeEl.addEventListener('dragstart', (e) => {
+        if (tube.length === 0 || isTubeComplete(tube)) {
+          e.preventDefault();
+          return;
+        }
+        selectedTubeIdx = idx;
+        e.dataTransfer.setData('text/plain', String(idx));
+        renderTubes();
+      });
+
+      tubeEl.addEventListener('dragover', (e) => {
+        e.preventDefault();
+      });
+
+      tubeEl.addEventListener('drop', (e) => {
+        e.preventDefault();
+        const srcIdx = parseInt(e.dataTransfer.getData('text/plain'), 10);
+        if (!isNaN(srcIdx) && srcIdx !== idx) {
+          selectedTubeIdx = srcIdx;
+          handleTubeClick(idx);
+        }
+      });
+
       targetRow.appendChild(tubeEl);
     });
   }

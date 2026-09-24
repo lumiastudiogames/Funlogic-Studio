@@ -1,12 +1,12 @@
 <!doctype html>
-<html lang="pt-BR">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>The Lost Keys - Logic Puzzle</title>
-    <meta name="description" content="Quebra-cabeça de lógica com história de detetive: deduza a ordem correta das 4 chaves para destrancar a porta secreta usando as pistas do diário." />
+    <meta name="description" content="Detective story logic puzzle: deduce the exact 4-key sequence to unlock the secret vault using clues from the investigator diary." />
     <meta property="og:title" content="The Lost Keys - Logic Puzzle" />
-    <meta property="og:description" content="Quebra-cabeça de lógica com história de detetive: deduza a ordem correta das 4 chaves para destrancar a porta secreta usando as pistas do diário." />
+    <meta property="og:description" content="Detective story logic puzzle: deduce the exact 4-key sequence to unlock the secret vault using clues from the investigator diary." />
     <meta property="og:type" content="website" />
     <meta name="twitter:card" content="summary_large_image" />
 
@@ -1220,22 +1220,22 @@
 
       <!-- Header Controls & Clues Button -->
       <div class="header-controls">
-        <button class="clue-hint-btn" id="btn-open-diary" title="Diário com Pistas">
+        <button class="clue-hint-btn" id="btn-open-diary" title="Diary with Clues">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
             <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
             <line x1="8" y1="6" x2="16" y2="6"></line>
             <line x1="8" y1="10" x2="14" y2="10"></line>
           </svg>
-          <span>Pistas</span>
+          <span>Clues</span>
         </button>
-        <button id="btn-sound" class="icon-btn" title="Alternar Som" aria-label="Som">
+        <button id="btn-sound" class="icon-btn" title="Toggle Sound" aria-label="Sound">
           <svg id="icon-sound-on" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
             <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
           </svg>
         </button>
-        <button id="btn-fullscreen" class="icon-btn" title="Tela Cheia" aria-label="Tela Cheia">
+        <button id="btn-fullscreen" class="icon-btn" title="Fullscreen" aria-label="Fullscreen">
           <svg id="icon-fullscreen-enter" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
           </svg>
@@ -1252,15 +1252,15 @@
         <!-- Chamber Subpanel: 4 Safe Tumbler Slots -->
         <div class="chamber-subpanel">
           <div class="vault-sub-header">
-            <span class="vault-sub-label">Fechaduras do Mecanismo</span>
-            <span class="vault-sub-hint">Ordem: I &rarr; IV</span>
+            <span class="vault-sub-label">Mechanism Locks</span>
+            <span class="vault-sub-hint">Order: I &rarr; IV</span>
           </div>
 
           <div class="slots-grid" id="slots-container">
             <!-- Slot 1 -->
             <div class="slot-wrapper">
               <span class="slot-roman">I</span>
-              <div class="key-slot" id="slot-0" data-slot-index="0" aria-label="Fechadura I">
+              <div class="key-slot" id="slot-0" data-slot-index="0" aria-label="Lock I">
                 <div class="slot-placeholder">
                   <svg class="slot-empty-icon" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M12 2a5 5 0 0 0-5 5c0 1.96 1.13 3.65 2.78 4.47L9 15v2h2v2h2v-2h1v-2h-1v-1.53c1.65-.82 2.78-2.51 2.78-4.47a5 5 0 0 0-5-5zm0 3a2 2 0 1 1 0 4 2 2 0 0 1 0-4z"/>
@@ -1272,7 +1272,7 @@
             <!-- Slot 2 -->
             <div class="slot-wrapper">
               <span class="slot-roman">II</span>
-              <div class="key-slot" id="slot-1" data-slot-index="1" aria-label="Fechadura II">
+              <div class="key-slot" id="slot-1" data-slot-index="1" aria-label="Lock II">
                 <div class="slot-placeholder">
                   <svg class="slot-empty-icon" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M12 2a5 5 0 0 0-5 5c0 1.96 1.13 3.65 2.78 4.47L9 15v2h2v2h2v-2h1v-2h-1v-1.53c1.65-.82 2.78-2.51 2.78-4.47a5 5 0 0 0-5-5zm0 3a2 2 0 1 1 0 4 2 2 0 0 1 0-4z"/>
@@ -1284,7 +1284,7 @@
             <!-- Slot 3 -->
             <div class="slot-wrapper">
               <span class="slot-roman">III</span>
-              <div class="key-slot" id="slot-2" data-slot-index="2" aria-label="Fechadura III">
+              <div class="key-slot" id="slot-2" data-slot-index="2" aria-label="Lock III">
                 <div class="slot-placeholder">
                   <svg class="slot-empty-icon" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M12 2a5 5 0 0 0-5 5c0 1.96 1.13 3.65 2.78 4.47L9 15v2h2v2h2v-2h1v-2h-1v-1.53c1.65-.82 2.78-2.51 2.78-4.47a5 5 0 0 0-5-5zm0 3a2 2 0 1 1 0 4 2 2 0 0 1 0-4z"/>
@@ -1296,7 +1296,7 @@
             <!-- Slot 4 -->
             <div class="slot-wrapper">
               <span class="slot-roman">IV</span>
-              <div class="key-slot" id="slot-3" data-slot-index="3" aria-label="Fechadura IV">
+              <div class="key-slot" id="slot-3" data-slot-index="3" aria-label="Lock IV">
                 <div class="slot-placeholder">
                   <svg class="slot-empty-icon" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M12 2a5 5 0 0 0-5 5c0 1.96 1.13 3.65 2.78 4.47L9 15v2h2v2h2v-2h1v-2h-1v-1.53c1.65-.82 2.78-2.51 2.78-4.47a5 5 0 0 0-5-5zm0 3a2 2 0 1 1 0 4 2 2 0 0 1 0-4z"/>
@@ -1335,31 +1335,31 @@
                   <path d="m11.5 11.5 3 3"></path>
                   <path d="m14.5 8.5 2 2"></path>
                 </svg>
-                <span>Girar Chaves</span>
+                <span>Turn Keys</span>
               </button>
               <button class="btn-secondary" id="btn-clear-slots">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
                   <path d="M3 3v5h5"></path>
                 </svg>
-                <span>Recolher</span>
+                <span>Clear</span>
               </button>
             </div>
           </div>
 
           <!-- Compact Message Status Box -->
           <div class="message-box" id="feedback-msg">
-            Arraste ou toque nas chaves para posicioná-las nas 4 fechaduras.
+            Drag or tap keys to place them into the 4 locks.
           </div>
         </div>
 
         <!-- Keys Inventory Tray -->
         <div class="chamber-subpanel" id="inventory-section">
           <div class="vault-sub-header">
-            <span class="vault-sub-label">Porta-Chaves do Investigador</span>
-            <span class="vault-sub-hint">Toque ou arraste</span>
+            <span class="vault-sub-label">Investigator Key Rack</span>
+            <span class="vault-sub-hint">Tap or drag</span>
           </div>
-          <div class="keys-rack" id="keys-rack" aria-label="Chaves disponíveis">
+          <div class="keys-rack" id="keys-rack" aria-label="Available keys">
             <!-- Rendered by JS -->
           </div>
         </div>
@@ -1375,15 +1375,15 @@
               <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
               <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
             </svg>
-            <h3 id="diary-modal-title">Diário do Investigador</h3>
+            <h3 id="diary-modal-title">Investigator Journal</h3>
           </div>
-          <button class="modal-close-btn" id="btn-close-diary" aria-label="Fechar diário">&times;</button>
+          <button class="modal-close-btn" id="btn-close-diary" aria-label="Close diary">&times;</button>
         </div>
 
         <div class="journal-body">
           <div class="journal-story-quote" id="diary-story-quote">
-            "Encontrei estas quatro chaves antigas espalhadas pelo escritório de lorde Alistair. 
-            Suas notas pessoais revelam a única sequência capaz de girar os cilindros sem ativar a armadilha..."
+            "I found these four antique keys scattered across Lord Alistair's study. 
+            His journal notes reveal the only sequence able to turn the tumblers safely..."
           </div>
 
           <div class="clues-list" id="clues-container">
@@ -1392,11 +1392,11 @@
 
           <!-- Deduction Scratchpad Matrix (Deduction Aid) -->
           <div class="scratchpad-area">
-            <div class="scratchpad-title">Tabela de Dedução do Detetive (Toque para marcar ✓ ou ✗):</div>
+            <div class="scratchpad-title">Detective Deduction Matrix (Tap to mark ✓ or ✗):</div>
             <table class="scratchpad-grid" id="deduction-matrix">
               <thead>
                 <tr>
-                  <th>Chave</th>
+                  <th>Key</th>
                   <th>Pos. I</th>
                   <th>Pos. II</th>
                   <th>Pos. III</th>
@@ -1421,33 +1421,33 @@
             <polyline points="22 4 12 14.01 9 11.01"></polyline>
           </svg>
         </div>
-        <h2 class="victory-title">Cofre Destrancado!</h2>
-        <div class="victory-rank" id="victory-rank-badge">Mestre da Dedução</div>
+        <h2 class="victory-title">Vault Unlocked!</h2>
+        <div class="victory-rank" id="victory-rank-badge">Deduction Master</div>
         <p style="font-size: 0.85rem; color: #cbd5e1; line-height: 1.4;">
-          O mecanismo cedeu com um clique solene. As quatro chaves giraram em perfeita harmonia lógica. O segredo foi revelado!
+          The mechanism clicked open with a solemn turn. All four keys rotated in flawless logical harmony!
         </p>
 
         <div class="victory-stats-grid">
           <div class="v-stat">
             <div class="v-stat-num" id="v-stat-time">00:45</div>
-            <div class="v-stat-sub">Tempo</div>
+            <div class="v-stat-sub">Time</div>
           </div>
           <div class="v-stat">
-            <div class="v-stat-num" id="v-stat-score">9.450</div>
-            <div class="v-stat-sub">Pontos</div>
+            <div class="v-stat-num" id="v-stat-score">9,450</div>
+            <div class="v-stat-sub">Score</div>
           </div>
           <div class="v-stat">
-            <div class="v-stat-num" id="v-stat-attempts">1ª Tentativa</div>
-            <div class="v-stat-sub">Precisão</div>
+            <div class="v-stat-num" id="v-stat-attempts">1st Attempt</div>
+            <div class="v-stat-sub">Accuracy</div>
           </div>
         </div>
 
         <div style="display: flex; gap: 10px; width: 100%; margin-top: 6px;">
           <button class="btn-primary" id="btn-next-case" style="flex: 1;">
-            Próximo Caso
+            Next Case
           </button>
           <button class="btn-secondary" id="btn-replay-case" style="flex: 1;">
-            Jogar Novamente
+            Replay Case
           </button>
         </div>
       </div>
@@ -1468,11 +1468,11 @@
         const KEYS_DATA = {
           sun: {
             id: 'sun',
-            name: 'Chave Solar',
+            name: 'Sun Key',
             color: '#f59e0b',
             accent: '#fbbf24',
             gem: '#fef08a',
-            lore: 'Ouro Forjado & Citrino',
+            lore: 'Forged Gold & Citrine',
             svg: `<svg viewBox="0 0 100 140" fill="none" xmlns="http://www.w3.org/2000/svg">
               <defs>
                 <linearGradient id="gold-grad" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -1503,11 +1503,11 @@
           },
           moon: {
             id: 'moon',
-            name: 'Chave Lunar',
+            name: 'Moon Key',
             color: '#38bdf8',
             accent: '#93c5fd',
             gem: '#e0f2fe',
-            lore: 'Prata Mística & Safira',
+            lore: 'Mystic Silver & Sapphire',
             svg: `<svg viewBox="0 0 100 140" fill="none" xmlns="http://www.w3.org/2000/svg">
               <defs>
                 <linearGradient id="silver-grad" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -1536,11 +1536,11 @@
           },
           serpent: {
             id: 'serpent',
-            name: 'Chave Esmeralda',
+            name: 'Emerald Key',
             color: '#10b981',
             accent: '#34d399',
             gem: '#a7f3d0',
-            lore: 'Bronze Antigo & Esmeralda',
+            lore: 'Antique Bronze & Emerald',
             svg: `<svg viewBox="0 0 100 140" fill="none" xmlns="http://www.w3.org/2000/svg">
               <defs>
                 <linearGradient id="bronze-grad" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -1571,11 +1571,11 @@
           },
           skull: {
             id: 'skull',
-            name: 'Chave Sombria',
+            name: 'Shadow Key',
             color: '#c084fc',
             accent: '#e879f9',
             gem: '#f3e8ff',
-            lore: 'Ferro Negro & Ametista',
+            lore: 'Black Iron & Amethyst',
             svg: `<svg viewBox="0 0 100 140" fill="none" xmlns="http://www.w3.org/2000/svg">
               <defs>
                 <linearGradient id="iron-grad" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -1608,54 +1608,54 @@
         const PRESET_CASES = [
           {
             id: 1,
-            title: "Caso I: O Segredo de Blackwood",
-            subtitle: "Dedução Básica",
-            lore: "O testamento do Lorde Blackwood repousa atrás deste aço temperado. Suas anotações no diário revelam a ordem precisa das quatro chaves herdadas.",
+            title: "Case I: The Blackwood Secret",
+            subtitle: "Basic Deduction",
+            lore: "Lord Blackwood's testament lies behind this tempered steel. His journal notes reveal the exact sequence of the four ancestral keys.",
             solution: ['moon', 'sun', 'serpent', 'skull'],
             clues: [
-              "A Chave Solar deve ser inserida imediatamente depois da Chave Lunar.",
-              "A Chave Sombria é a última da sequência, ocupando a 4ª fechadura.",
-              "A Chave Esmeralda deve ser colocada em uma fechadura ímpar.",
-              "A Chave Lunar ocupa a primeira fechadura da esquerda (Posição I)."
+              "The Sun Key must be inserted immediately after the Moon Key.",
+              "The Shadow Key is the last key in sequence, occupying the 4th lock.",
+              "The Emerald Key must be placed into an odd-numbered lock.",
+              "The Moon Key occupies the first lock from the left (Position I)."
             ]
           },
           {
             id: 2,
-            title: "Caso II: A Cripta do Relojoeiro",
-            subtitle: "Dedução Relativa",
-            lore: "O mestre relojoeiro usava engrenagens astronômicas. Quem tentar a ordem errada travará a fechadura perpetuamente.",
+            title: "Case II: The Clockmaker's Crypt",
+            subtitle: "Relative Deduction",
+            lore: "The master clockmaker used astronomical gears. Any wrong combination permanently jams the tumblers.",
             solution: ['serpent', 'skull', 'sun', 'moon'],
             clues: [
-              "A Chave Esmeralda abre a primeira fechadura (Posição I).",
-              "A Chave Lunar não pode estar em nenhuma das três primeiras posições.",
-              "A Chave Solar fica exatamente à direita da Chave Sombria.",
-              "A Chave Sombria precede a Chave Solar."
+              "The Emerald Key opens the first lock (Position I).",
+              "The Moon Key cannot be in any of the first three positions.",
+              "The Sun Key is placed immediately to the right of the Shadow Key.",
+              "The Shadow Key precedes the Sun Key."
             ]
           },
           {
             id: 3,
-            title: "Caso III: O Gabinete Proibido",
-            subtitle: "Dedução Complexa",
-            lore: "Nas profundezas da biblioteca oculta, um enigma de alquimia liga o Sol, a Lua, a Serpente e a Sombra.",
+            title: "Case III: The Forbidden Cabinet",
+            subtitle: "Complex Deduction",
+            lore: "Deep within the hidden library, an alchemical riddle binds the Sun, Moon, Serpent, and Shadow.",
             solution: ['skull', 'serpent', 'moon', 'sun'],
             clues: [
-              "A Chave Solar encerra o mecanismo (Posição IV).",
-              "A Chave Lunar está em uma posição imediatamente anterior à Chave Solar.",
-              "A Chave Esmeralda fica entre a Chave Sombria e a Chave Lunar.",
-              "A Chave Sombria não pode estar nos cilindros pares (II ou IV)."
+              "The Sun Key concludes the mechanism (Position IV).",
+              "The Moon Key is placed immediately before the Sun Key.",
+              "The Emerald Key sits between the Shadow Key and the Moon Key.",
+              "The Shadow Key cannot be in even-numbered cylinders (II or IV)."
             ]
           },
           {
             id: 4,
-            title: "Caso IV: O Mistério da Rosa de Ouro",
-            subtitle: "Dedução Avançada",
-            lore: "Um cofre ancestral cujo mecanismo requer calma e estrita lógica dedutiva.",
+            title: "Case IV: The Golden Rose Mystery",
+            subtitle: "Advanced Deduction",
+            lore: "An ancient vault whose mechanism requires patience and strict deductive reasoning.",
             solution: ['sun', 'skull', 'serpent', 'moon'],
             clues: [
-              "A Chave Solar inicia o mecanismo na Posição I.",
-              "A Chave Lunar fica no extremo oposto da Chave Solar (Posição IV).",
-              "A Chave Esmeralda fica imediatamente à direita da Chave Sombria.",
-              "A Chave Sombria ocupa a segunda fechadura (Posição II)."
+              "The Sun Key initiates the mechanism at Position I.",
+              "The Moon Key is at the opposite end from the Sun Key (Position IV).",
+              "The Emerald Key sits immediately to the right of the Shadow Key.",
+              "The Shadow Key occupies the second lock (Position II)."
             ]
           }
         ];
@@ -1672,31 +1672,31 @@
             [solution[i], solution[j]] = [solution[j], solution[i]];
           }
 
-          const posName = ['1ª (Posição I)', '2ª (Posição II)', '3ª (Posição III)', '4ª (Posição IV)'];
+          const posName = ['1st (Position I)', '2nd (Position II)', '3rd (Position III)', '4th (Position IV)'];
           const clues = [];
 
           // Generate clear, unambiguous clues
           // Clue 1: Absolute position of one key
           const pick1 = solution[0];
-          clues.push(`${KEYS_DATA[pick1].name} deve ser colocada na ${posName[0]}.`);
+          clues.push(`The ${KEYS_DATA[pick1].name} must be placed in the ${posName[0]}.`);
 
           // Clue 2: Last key
           const pickLast = solution[3];
-          clues.push(`${KEYS_DATA[pickLast].name} é a chave final da sequência (Posição IV).`);
+          clues.push(`The ${KEYS_DATA[pickLast].name} is the final key in sequence (Position IV).`);
 
           // Clue 3: Relative relation between position 1 & 2
           const pickMid1 = solution[1];
           const pickMid2 = solution[2];
-          clues.push(`${KEYS_DATA[pickMid1].name} deve ser posicionada imediatamente antes da ${KEYS_DATA[pickMid2].name}.`);
+          clues.push(`The ${KEYS_DATA[pickMid1].name} must be positioned immediately before the ${KEYS_DATA[pickMid2].name}.`);
 
           // Clue 4: Confirmation rule
-          clues.push(`A ${KEYS_DATA[pickMid2].name} ocupa uma fechadura ímpar (Posição III).`);
+          clues.push(`The ${KEYS_DATA[pickMid2].name} occupies an odd lock (Position III).`);
 
           return {
             id: caseNumber,
-            title: `Caso #${caseNumber}: O Enigma Desconhecido`,
-            subtitle: "Mistério Procedural",
-            lore: "Um novo cofre foi descoberto no porão da mansão. As anotações recém-encontradas revelam um padrão único.",
+            title: `Case #${caseNumber}: The Unknown Enigma`,
+            subtitle: "Procedural Mystery",
+            lore: "A newly discovered vault deep in the manor cellar. Freshly recovered notes reveal a unique pattern.",
             solution: solution,
             clues: clues
           };
@@ -2299,14 +2299,14 @@
             // Tapping a placed key removes it back to inventory
             returnKeyToInventory(keyId);
             selectedKeyId = null;
-            setFeedback(`${KEYS_DATA[keyId].name} recolhida para o porta-chaves.`, 'normal');
+            setFeedback(`${KEYS_DATA[keyId].name} returned to key rack.`, 'normal');
           } else {
             // Tapping a key in the inventory
             if (selectedKeyId === keyId) {
               // Deselect
               selectedKeyId = null;
               renderInventory();
-              setFeedback("Seleção desfeita.", "normal");
+              setFeedback("Selection cleared.", "normal");
             } else {
               selectedKeyId = keyId;
               playKeyPickupSound();
@@ -2314,9 +2314,9 @@
               // Find first empty slot
               const firstEmpty = slots.indexOf(null);
               if (firstEmpty !== -1) {
-                setFeedback(`${KEYS_DATA[keyId].name} selecionada. Toque na fechadura desejada (ex: Pos. ${firstEmpty + 1}).`, 'normal');
+                setFeedback(`${KEYS_DATA[keyId].name} selected. Tap a lock to place it (e.g. Pos. ${firstEmpty + 1}).`, 'normal');
               } else {
-                setFeedback(`${KEYS_DATA[keyId].name} selecionada. Toque em uma fechadura para substituir.`, 'normal');
+                setFeedback(`${KEYS_DATA[keyId].name} selected. Tap a lock to swap.`, 'normal');
               }
             }
           }
@@ -2345,9 +2345,9 @@
 
           const allFilled = slots.every(k => k !== null);
           if (allFilled) {
-            setFeedback("Todas as 4 fechaduras estão preenchidas! Pressione 'Girar Chaves' para testar.", "normal");
+            setFeedback("All 4 locks are filled! Press 'Turn Keys' to test the sequence.", "normal");
           } else {
-            setFeedback(`${KEYS_DATA[keyId].name} inserida na Fechadura ${targetSlotIndex + 1}.`, "normal");
+            setFeedback(`${KEYS_DATA[keyId].name} inserted into Lock ${targetSlotIndex + 1}.`, "normal");
           }
         }
 
@@ -2368,7 +2368,7 @@
             playKeyDropSound();
             renderSlots();
             renderInventory();
-            setFeedback("Todas as chaves foram recolhidas para o porta-chaves.", "normal");
+            setFeedback("All keys returned to the rack.", "normal");
           }
         }
 
@@ -2381,7 +2381,7 @@
           // Ensure all 4 slots are occupied
           const missingIndex = slots.indexOf(null);
           if (missingIndex !== -1) {
-            setFeedback(`Atenção: A Fechadura ${missingIndex + 1} ainda está vazia! Coloque todas as 4 chaves.`, "error");
+            setFeedback(`Warning: Lock ${missingIndex + 1} is still empty! Place all 4 keys.`, "error");
             playErrorSound();
             return;
           }
@@ -2442,11 +2442,11 @@
           startVictoryParticles();
 
           // Determine Detective Rank
-          let rank = "Mestre da Dedução ⭐⭐⭐";
+          let rank = "Master of Deduction ⭐⭐⭐";
           if (attemptsCount > 3 || timerSeconds > 180) {
-            rank = "Investigador Persistente ⭐";
+            rank = "Persistent Investigator ⭐";
           } else if (attemptsCount > 1 || timerSeconds > 90) {
-            rank = "Detetive Perito ⭐⭐";
+            rank = "Expert Detective ⭐⭐";
           }
 
           // Update Victory Modal
@@ -2455,11 +2455,11 @@
           const statTime = document.getElementById('v-stat-time');
           if (statTime && typeof timerDisplay !== 'undefined' && timerDisplay) statTime.textContent = timerDisplay.textContent;
           const statScore = document.getElementById('v-stat-score');
-          if (statScore) statScore.textContent = currentScore.toLocaleString('pt-BR');
+          if (statScore) statScore.textContent = currentScore.toLocaleString('en-US');
           const statAttempts = document.getElementById('v-stat-attempts');
-          if (statAttempts) statAttempts.textContent = attemptsCount === 1 ? "1ª Tentativa (Perfeito!)" : `${attemptsCount} Tentativas`;
+          if (statAttempts) statAttempts.textContent = attemptsCount === 1 ? "1st Attempt (Flawless!)" : `${attemptsCount} Attempts`;
 
-          setFeedback("SEGREDO REVELADO! A porta do cofre foi destrancada com sucesso!", "success");
+          setFeedback("SECRET REVEALED! The vault door unlocked smoothly!", "success");
 
           setTimeout(() => {
             openVictoryModal();
@@ -2483,11 +2483,11 @@
             if (card) card.classList.remove('turn-key-anim');
           });
 
-          let feedbackText = "O mecanismo travou! As chaves não acionaram os pinos na ordem correta.";
+          let feedbackText = "The tumblers jammed! The keys did not engage in the correct order.";
           if (correctCount === 2) {
-            feedbackText = "O mecanismo rangeu: Exatamente 2 chaves estão certas, mas 2 estão trocadas!";
+            feedbackText = "The lock creaked: Exactly 2 keys are correct, but 2 are swapped!";
           } else if (correctCount === 0) {
-            feedbackText = "Nenhuma das chaves está na posição correta. Releia as pistas no diário!";
+            feedbackText = "None of the keys are in the correct position. Check the journal clues!";
           }
 
           setFeedback(feedbackText, "error");

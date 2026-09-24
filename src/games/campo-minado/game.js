@@ -307,7 +307,7 @@
   btnFlagToggle.addEventListener('click', function () {
     flagMode = !flagMode;
     this.classList.toggle('active', flagMode);
-    this.textContent = flagMode ? '🚩 BANDEIRA: LIGADA' : '⛏️ MODO ESCAVAR';
+    this.textContent = flagMode ? '🚩 FLAG: ON' : '⛏️ DIG MODE';
   });
 
   faceBtn.addEventListener('click', () => initGame(currentDiff));

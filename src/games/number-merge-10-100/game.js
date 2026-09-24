@@ -1,5 +1,5 @@
 /**
- * Number Merge: 10 to 100 - Pure Vanilla JS
+ * Number Merge: 10 to 100 - Smooth Sliding & Star Particle Merge Engine
  */
 
 class SoundEngine {
@@ -38,7 +38,6 @@ class SoundEngine {
       osc.start(t);
       osc.stop(t + 0.05);
     } else if (type === 'pop') {
-      // Bubble pop effect
       osc.type = 'sine';
       osc.frequency.setValueAtTime(400, t);
       osc.frequency.exponentialRampToValueAtTime(800, t + 0.08);
@@ -46,14 +45,6 @@ class SoundEngine {
       gain.gain.exponentialRampToValueAtTime(0.001, t + 0.09);
       osc.start(t);
       osc.stop(t + 0.09);
-    } else if (type === 'over') {
-      osc.type = 'sawtooth';
-      osc.frequency.setValueAtTime(160, t);
-      osc.frequency.linearRampToValueAtTime(80, t + 0.2);
-      gain.gain.setValueAtTime(0.15, t);
-      gain.gain.exponentialRampToValueAtTime(0.001, t + 0.2);
-      osc.start(t);
-      osc.stop(t + 0.2);
     } else if (type === 'win') {
       [400, 500, 600, 800, 1000].forEach((f, i) => {
         const o = this.ctx.createOscillator();
@@ -75,21 +66,19 @@ class NumberMergeGame {
     this.size = 4;
     this.sound = new SoundEngine();
     this.score = 0;
-    this.bestScore = parseInt(localStorage.getItem('number_merge_best') || '0', 10);
-    this.grid = this.createEmptyGrid();
+    this.bestScore = parseInt(localStorage.getItem('num_merge_best') || '0', 10);
+    this.tiles = [];
+    this.tileIdCounter = 1;
     this.previousState = null;
     this.hasWon = false;
     this.keepPlaying = false;
     this.startTime = Date.now();
+    this.timerInterval = null;
     this.elapsedSeconds = 0;
 
     this.cacheDOM();
     this.bindEvents();
     this.restart();
-  }
-
-  createEmptyGrid() {
-    return Array.from({ length: this.size }, () => Array(this.size).fill(0));
   }
 
   cacheDOM() {
@@ -107,47 +96,55 @@ class NumberMergeGame {
 
   bindEvents() {
     window.addEventListener('keydown', (e) => {
-      let moved = false;
-      if (['ArrowUp', 'w', 'W'].includes(e.key)) { e.preventDefault(); moved = this.move('up'); }
-      else if (['ArrowDown', 's', 'S'].includes(e.key)) { e.preventDefault(); moved = this.move('down'); }
-      else if (['ArrowLeft', 'a', 'A'].includes(e.key)) { e.preventDefault(); moved = this.move('left'); }
-      else if (['ArrowRight', 'd', 'D'].includes(e.key)) { e.preventDefault(); moved = this.move('right'); }
-      if (moved) this.afterMove();
+      let dir = null;
+      if (e.key === 'ArrowUp' || e.key === 'w' || e.key === 'W') dir = 0;
+      else if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') dir = 1;
+      else if (e.key === 'ArrowDown' || e.key === 's' || e.key === 'S') dir = 2;
+      else if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') dir = 3;
+
+      if (dir !== null) {
+        e.preventDefault();
+        this.move(dir);
+      }
     });
 
-    let touchStartX = 0, touchStartY = 0;
-    this.boardEl.addEventListener('touchstart', (e) => {
-      if (e.touches.length === 1) {
-        touchStartX = e.touches[0].clientX;
-        touchStartY = e.touches[0].clientY;
-      }
+    let isPointerDown = false;
+    let startX = 0;
+    let startY = 0;
+    const MIN_DRAG = 20;
+
+    this.boardEl.addEventListener('pointerdown', (e) => {
+      isPointerDown = true;
+      startX = e.clientX;
+      startY = e.clientY;
+      this.boardEl.setPointerCapture?.(e.pointerId);
     }, { passive: true });
 
-    this.boardEl.addEventListener('touchend', (e) => {
-      if (e.changedTouches.length === 1) {
-        const dx = e.changedTouches[0].clientX - touchStartX;
-        const dy = e.changedTouches[0].clientY - touchStartY;
-        const absX = Math.abs(dx);
-        const absY = Math.abs(dy);
-        if (Math.max(absX, absY) > 25) {
-          const moved = absX > absY ? (dx > 0 ? this.move('right') : this.move('left')) : (dy > 0 ? this.move('down') : this.move('up'));
-          if (moved) this.afterMove();
+    this.boardEl.addEventListener('pointerup', (e) => {
+      if (!isPointerDown) return;
+      isPointerDown = false;
+      const dx = e.clientX - startX;
+      const dy = e.clientY - startY;
+      if (Math.hypot(dx, dy) >= MIN_DRAG) {
+        if (Math.abs(dx) > Math.abs(dy)) {
+          this.move(dx > 0 ? 1 : 3);
+        } else {
+          this.move(dy > 0 ? 2 : 0);
         }
       }
     }, { passive: true });
 
-    document.querySelectorAll('.ctrl-btn').forEach(b => {
-      b.addEventListener('click', () => {
-        if (this.move(b.dataset.dir)) this.afterMove();
-      });
-    });
+    this.boardEl.addEventListener('pointercancel', () => {
+      isPointerDown = false;
+    }, { passive: true });
 
     document.getElementById('btn-restart').addEventListener('click', () => this.restart());
     document.getElementById('btn-undo').addEventListener('click', () => this.undo());
     document.getElementById('btn-sound').addEventListener('click', () => {
-      const muted = this.sound.toggle();
-      this.soundIcon.textContent = muted ? '🔇' : '🔊';
+      const isMuted = this.sound.toggle();
+      this.soundIcon.textContent = isMuted ? '🔇' : '🔊';
     });
+
     document.getElementById('btn-howto').addEventListener('click', () => this.modalHowTo.classList.add('open'));
     document.getElementById('btn-close-howto').addEventListener('click', () => this.modalHowTo.classList.remove('open'));
     document.getElementById('btn-continue-win').addEventListener('click', () => {
@@ -162,6 +159,8 @@ class NumberMergeGame {
       this.modalOver.classList.remove('open');
       this.restart();
     });
+
+    window.addEventListener('resize', () => this.render());
   }
 
   startTimer() {
@@ -177,146 +176,239 @@ class NumberMergeGame {
   }
 
   restart() {
-    this.grid = this.createEmptyGrid();
+    this.tiles = [];
+    this.tileIdCounter = 1;
     this.score = 0;
     this.scoreEl.textContent = '0';
     this.hasWon = false;
     this.keepPlaying = false;
     this.previousState = null;
+    document.getElementById('btn-undo').disabled = true;
     this.modalWin.classList.remove('open');
     this.modalOver.classList.remove('open');
-    this.addRandomBall();
-    this.addRandomBall();
+    this.spawnTile();
+    this.spawnTile();
     this.render();
     this.startTimer();
   }
 
   saveState() {
     this.previousState = {
-      grid: this.grid.map(row => [...row]),
+      tiles: this.tiles.map(t => ({ ...t })),
       score: this.score
     };
+    document.getElementById('btn-undo').disabled = false;
   }
 
   undo() {
     if (!this.previousState) return;
-    this.grid = this.previousState.grid.map(row => [...row]);
+    this.tiles = this.previousState.tiles.map(t => ({ ...t }));
     this.score = this.previousState.score;
     this.scoreEl.textContent = this.score;
     this.previousState = null;
+    document.getElementById('btn-undo').disabled = true;
     this.sound.play('slide');
     this.render();
   }
 
-  addRandomBall() {
+  getTileAt(r, c) {
+    return this.tiles.find(t => t.r === r && t.c === c);
+  }
+
+  spawnTile() {
     const emptyCells = [];
     for (let r = 0; r < this.size; r++) {
       for (let c = 0; c < this.size; c++) {
-        if (this.grid[r][c] === 0) emptyCells.push({ r, c });
+        if (!this.getTileAt(r, c)) emptyCells.push({ r, c });
       }
     }
-    if (emptyCells.length === 0) return false;
+    if (emptyCells.length === 0) return null;
     const { r, c } = emptyCells[Math.floor(Math.random() * emptyCells.length)];
-    // Spawn 10 or occasionally 20
-    this.grid[r][c] = Math.random() < 0.8 ? 10 : 20;
-    return true;
+    const val = Math.random() < 0.85 ? 10 : 20;
+    const newTile = {
+      id: this.tileIdCounter++,
+      r,
+      c,
+      val,
+      prevR: r,
+      prevC: c,
+      isNew: true
+    };
+    this.tiles.push(newTile);
+    return newTile;
   }
 
-  // Next value progression: 10 -> 20 -> 30 -> 40 -> 50 -> 60 -> 70 -> 80 -> 90 -> 100
-  getNextValue(val) {
-    if (val < 100) return val + 10;
-    return val + 10;
-  }
+  spawnStarParticles(r, c, val) {
+    const containerRect = this.tileLayerEl.getBoundingClientRect();
+    const cellW = (containerRect.width - (this.size - 1) * 10) / this.size;
+    const cellH = (containerRect.height - (this.size - 1) * 10) / this.size;
+    const x = c * (cellW + 10) + cellW / 2;
+    const y = r * (cellH + 10) + cellH / 2;
 
-  move(dir) {
-    this.saveState();
-    let moved = false;
-    let mergedAny = false;
+    const count = 8;
+    const stars = ['✨', '⭐', '🌟', '✦', '★'];
+    const palette = ['#ffd700', '#ff9f43', '#10b981', '#6366f1', '#ffffff'];
 
-    const rotate = (m) => m[0].map((_, i) => m.map(row => row[i]).reverse());
-    let rotations = 0;
-    if (dir === 'up') rotations = 3;
-    else if (dir === 'right') rotations = 2;
-    else if (dir === 'down') rotations = 1;
+    for (let i = 0; i < count; i++) {
+      const star = document.createElement('span');
+      star.className = 'star-sparkle';
+      star.textContent = stars[Math.floor(Math.random() * stars.length)];
 
-    let temp = this.grid.map(r => [...r]);
-    for (let i = 0; i < rotations; i++) temp = rotate(temp);
+      const angle = (Math.PI * 2 * i) / count + (Math.random() - 0.5) * 0.6;
+      const distance = 20 + Math.random() * 32;
+      const dx = Math.cos(angle) * distance;
+      const dy = Math.sin(angle) * distance;
+      const color = palette[Math.floor(Math.random() * palette.length)];
 
-    for (let r = 0; r < this.size; r++) {
-      const row = temp[r].filter(v => v !== 0);
-      const newRow = [];
-      for (let c = 0; c < row.length; c++) {
-        if (c + 1 < row.length && row[c] === row[c + 1]) {
-          const mVal = this.getNextValue(row[c]);
-          newRow.push(mVal);
-          this.score += mVal;
-          mergedAny = true;
-          c++;
-        } else {
-          newRow.push(row[c]);
-        }
-      }
-      while (newRow.length < this.size) newRow.push(0);
-      for (let c = 0; c < this.size; c++) {
-        if (temp[r][c] !== newRow[c]) moved = true;
-        temp[r][c] = newRow[c];
-      }
+      star.style.cssText = `
+        position: absolute;
+        left: ${x}px;
+        top: ${y}px;
+        font-size: ${12 + Math.random() * 8}px;
+        color: ${color};
+        text-shadow: 0 0 8px ${color};
+        pointer-events: none;
+        z-index: 100;
+        transform: translate(-50%, -50%) scale(0.2);
+        opacity: 1;
+        transition: transform 0.4s cubic-bezier(0.1, 0.9, 0.2, 1), opacity 0.4s ease-out;
+      `;
+
+      this.tileLayerEl.appendChild(star);
+
+      requestAnimationFrame(() => {
+        star.style.transform = `translate(calc(-50% + ${dx}px), calc(-50% + ${dy}px)) scale(${0.7 + Math.random() * 0.6}) rotate(${(Math.random() - 0.5) * 140}deg)`;
+        star.style.opacity = '0';
+      });
+
+      setTimeout(() => star.remove(), 420);
     }
+  }
 
-    const backRotations = (4 - rotations) % 4;
-    for (let i = 0; i < backRotations; i++) temp = rotate(temp);
+  move(direction) {
+    this.saveState();
+
+    let moved = false;
+    let totalScoreAdded = 0;
+    const mergedPositions = [];
+
+    const rows = [0, 1, 2, 3];
+    const cols = [0, 1, 2, 3];
+    if (direction === 2) rows.reverse();
+    if (direction === 1) cols.reverse();
+
+    const board = Array.from({ length: this.size }, () => Array(this.size).fill(null));
+    this.tiles.forEach(t => {
+      board[t.r][t.c] = t;
+      t.prevR = t.r;
+      t.prevC = t.c;
+    });
+
+    rows.forEach(r => {
+      cols.forEach(c => {
+        const tile = board[r][c];
+        if (!tile) return;
+
+        let nextR = r;
+        let nextC = c;
+
+        while (true) {
+          const testR = nextR + (direction === 0 ? -1 : direction === 2 ? 1 : 0);
+          const testC = nextC + (direction === 3 ? -1 : direction === 1 ? 1 : 0);
+
+          if (testR < 0 || testR >= this.size || testC < 0 || testC >= this.size) break;
+
+          const target = board[testR][testC];
+          if (!target) {
+            board[nextR][nextC] = null;
+            board[testR][testC] = tile;
+            nextR = testR;
+            nextC = testC;
+            moved = true;
+          } else if (target.val === tile.val && !target.hasMerged && !tile.hasMerged) {
+            board[nextR][nextC] = null;
+            board[testR][testC] = {
+              id: this.tileIdCounter++,
+              r: testR,
+              c: testC,
+              val: tile.val * 2,
+              prevR: r,
+              prevC: c,
+              isMerged: true,
+              hasMerged: true
+            };
+            totalScoreAdded += tile.val * 2;
+            mergedPositions.push({ r: testR, c: testC, val: tile.val * 2 });
+            moved = true;
+            break;
+          } else {
+            break;
+          }
+        }
+      });
+    });
 
     if (moved) {
-      this.grid = temp;
-      if (mergedAny) this.sound.play('pop');
-      else this.sound.play('slide');
-    } else {
-      this.previousState = null;
-    }
-    return moved;
-  }
-
-  afterMove() {
-    this.addRandomBall();
-    this.render();
-
-    this.scoreEl.textContent = this.score;
-    if (this.score > this.bestScore) {
-      this.bestScore = this.score;
-      this.bestScoreEl.textContent = this.bestScore;
-      localStorage.setItem('number_merge_best', this.bestScore);
-    }
-
-    // Check 100 victory
-    if (!this.hasWon && !this.keepPlaying) {
+      const finalTiles = [];
       for (let r = 0; r < this.size; r++) {
         for (let c = 0; c < this.size; c++) {
-          if (this.grid[r][c] >= 100) {
-            this.hasWon = true;
-            this.sound.play('win');
-            const totalSecs = Math.max(1, Math.floor((Date.now() - this.startTime) / 1000));
-            try {
-              window.parent.postMessage({ type: 'win', time: totalSecs }, '*');
-            } catch (e) {}
-            this.modalWin.classList.add('open');
-            return;
+          if (board[r][c]) {
+            board[r][c].r = r;
+            board[r][c].c = c;
+            delete board[r][c].hasMerged;
+            finalTiles.push(board[r][c]);
           }
         }
       }
-    }
+      this.tiles = finalTiles;
 
-    if (this.isGameOver()) {
-      this.sound.play('over');
-      this.modalOver.classList.add('open');
+      if (totalScoreAdded > 0) {
+        this.sound.play('pop');
+      } else {
+        this.sound.play('slide');
+      }
+
+      this.score += totalScoreAdded;
+      this.scoreEl.textContent = this.score;
+      if (this.score > this.bestScore) {
+        this.bestScore = this.score;
+        this.bestScoreEl.textContent = this.bestScore;
+        localStorage.setItem('num_merge_best', this.bestScore.toString());
+      }
+
+      this.spawnTile();
+      this.render();
+
+      mergedPositions.forEach(p => {
+        this.spawnStarParticles(p.r, p.c, p.val);
+      });
+
+      if (!this.hasWon && !this.keepPlaying && this.tiles.some(t => t.val >= 100)) {
+        this.hasWon = true;
+        this.sound.play('win');
+        const totalSecs = Math.max(1, Math.floor((Date.now() - this.startTime) / 1000));
+        try {
+          window.parent.postMessage({ type: 'win', time: totalSecs }, '*');
+        } catch (e) {}
+        this.modalWin.classList.add('open');
+      } else if (this.isGameOver()) {
+        this.modalOver.classList.add('open');
+      }
+    } else {
+      this.previousState = null;
+      document.getElementById('btn-undo').disabled = true;
     }
   }
 
   isGameOver() {
+    if (this.tiles.length < this.size * this.size) return false;
+    const grid = Array.from({ length: this.size }, () => Array(this.size).fill(0));
+    this.tiles.forEach(t => grid[t.r][t.c] = t.val);
+
     for (let r = 0; r < this.size; r++) {
       for (let c = 0; c < this.size; c++) {
-        if (this.grid[r][c] === 0) return false;
-        if (c + 1 < this.size && this.grid[r][c] === this.grid[r][c + 1]) return false;
-        if (r + 1 < this.size && this.grid[r][c] === this.grid[r + 1][c]) return false;
+        if (c + 1 < this.size && grid[r][c] === grid[r][c + 1]) return false;
+        if (r + 1 < this.size && grid[r][c] === grid[r + 1][c]) return false;
       }
     }
     return true;
@@ -324,28 +416,45 @@ class NumberMergeGame {
 
   render() {
     this.tileLayerEl.innerHTML = '';
-    const gap = 2.8;
-    const cellSize = (100 - gap * (this.size - 1)) / this.size;
+    const containerW = this.tileLayerEl.clientWidth;
+    const gap = 10;
+    const cellW = (containerW - (this.size - 1) * gap) / this.size;
 
-    for (let r = 0; r < this.size; r++) {
-      for (let c = 0; c < this.size; c++) {
-        const val = this.grid[r][c];
-        if (val !== 0) {
-          const ball = document.createElement('div');
-          ball.className = `ball-tile ball-${val > 100 ? '100' : val}`;
-          ball.textContent = val;
+    this.tiles.forEach(tile => {
+      const el = document.createElement('div');
+      const val = tile.val;
+      const classKey = `tile-${val}`;
+      el.className = `tile ${classKey}`;
+      if (tile.isNew) el.classList.add('tile-new');
+      if (tile.isMerged) el.classList.add('tile-merged');
 
-          const left = c * (cellSize + gap);
-          const top = r * (cellSize + gap);
-          ball.style.width = `${cellSize}%`;
-          ball.style.height = `${cellSize}%`;
-          ball.style.left = `${left}%`;
-          ball.style.top = `${top}%`;
+      el.textContent = val;
+      el.style.width = `${cellW}px`;
+      el.style.height = `${cellW}px`;
 
-          this.tileLayerEl.appendChild(ball);
-        }
+      const x = tile.c * (cellW + gap);
+      const y = tile.r * (cellW + gap);
+
+      if (tile.prevR !== undefined && (tile.prevR !== tile.r || tile.prevC !== tile.c)) {
+        const prevX = tile.prevC * (cellW + gap);
+        const prevY = tile.prevR * (cellW + gap);
+        el.style.transform = `translate(${prevX}px, ${prevY}px)`;
+        requestAnimationFrame(() => {
+          el.style.transform = `translate(${x}px, ${y}px)`;
+        });
+      } else {
+        el.style.transform = `translate(${x}px, ${y}px)`;
       }
-    }
+
+      this.tileLayerEl.appendChild(el);
+    });
+
+    this.tiles.forEach(t => {
+      t.isNew = false;
+      t.isMerged = false;
+      t.prevR = t.r;
+      t.prevC = t.c;
+    });
   }
 }
 

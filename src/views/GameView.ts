@@ -9,6 +9,27 @@ import { recordGamePlay } from '../utils/gameStats';
 export function renderGameView(container: HTMLElement, gameId: string): void {
   const game = GAMES.find(g => g.id === gameId) || GAMES[0];
 
+  // Clean up any active, conflicting game-level sub-path service workers
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.getRegistrations().then(registrations => {
+      for (const reg of registrations) {
+        const scopePath = new URL(reg.scope).pathname;
+        if (scopePath !== '/' && scopePath !== '/funlogic.games/') {
+          reg.unregister().then(() => {
+            console.log('Unregistered conflicting game-level service worker:', reg.scope);
+          });
+        }
+      }
+    }).catch(err => console.warn('Error clearing service workers:', err));
+  }
+
+  // Purge legacy/legacy game-level PWA cache that caused style sheet collisions
+  if ('caches' in window) {
+    caches.delete('game-pwa-v1').then(deleted => {
+      if (deleted) console.log('Successfully purged legacy game PWA cache.');
+    }).catch(err => console.warn('Error purging legacy cache:', err));
+  }
+
   // Increment real play counter
   recordGamePlay(game.id);
 
@@ -23,46 +44,46 @@ export function renderGameView(container: HTMLElement, gameId: string): void {
   });
 
   container.innerHTML = `
-    <div id="fullscreen-game-root" class="w-full h-screen flex flex-col bg-[#0b0f19] text-white overflow-hidden select-none border-0 p-0 m-0">
+    <div id="fullscreen-game-root" class="w-full h-[100dvh] flex flex-col bg-[#0b0f19] text-white overflow-hidden select-none border-0 p-0 m-0">
       
-      <!-- Top Game Bar (Compact Console Header - Borderless & Responsive) -->
-      <header class="h-12 sm:h-14 bg-[#0F172A] px-3 sm:px-5 flex items-center justify-between gap-2 sm:gap-3 shrink-0 z-30 shadow-md border-0">
+      <!-- Top Game Bar (Compact Console Header - Borderless & Ultra-Responsive) -->
+      <header class="h-12 sm:h-14 bg-[#0F172A] px-2 sm:px-4 flex items-center justify-between gap-1.5 sm:gap-3 shrink-0 z-30 shadow-md border-0 w-full overflow-hidden">
         
         <!-- Left: Back Navigation & Game Identity -->
-        <div class="flex items-center gap-2 sm:gap-3 min-w-0">
+        <div class="flex items-center gap-1.5 sm:gap-2.5 min-w-0 flex-1">
           <a 
             href="#game/${game.id}" 
             id="btn-back-portal" 
-            class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white text-xs font-black transition cursor-pointer text-decoration-none shrink-0 shadow-xs border-0"
-            title="Back to Game Details"
+            class="h-8 w-8 sm:w-auto sm:h-9 sm:px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white text-xs font-black transition cursor-pointer text-decoration-none shrink-0 shadow-xs border-0 flex items-center justify-center gap-1"
+            title="Back to Details"
           >
-            <span class="text-sm">←</span>
-            <span class="hidden sm:inline">Details</span>
+            <span class="text-sm font-bold">←</span>
+            <span class="hidden md:inline">Details</span>
           </a>
           
-          <div class="h-5 w-px bg-slate-800 hidden sm:block"></div>
+          <div class="h-5 w-px bg-slate-800 hidden sm:block shrink-0"></div>
 
-          <div class="flex items-center gap-2 min-w-0">
+          <div class="flex items-center gap-1.5 sm:gap-2 min-w-0 flex-1">
             <span class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center p-1 shrink-0 filter drop-shadow-xs" style="background-color: ${game.coverBg};">
               ${game.iconSvg}
             </span>
-            <div class="min-w-0">
+            <div class="min-w-0 flex-1">
               <h1 class="text-xs sm:text-sm font-black text-white truncate leading-tight">${game.title}</h1>
-              <p class="text-[10px] text-slate-400 font-bold hidden sm:block truncate">${game.categoryLabel}</p>
+              <p class="text-[10px] text-slate-400 font-bold hidden md:block truncate">${game.categoryLabel}</p>
             </div>
           </div>
         </div>
 
-        <!-- Right: Actions (Info/FAQ, New Tab, Reload, Fullscreen) -->
-        <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
+        <!-- Right: Actions (Info/FAQ, New Tab, Fullscreen) -->
+        <div class="flex items-center gap-1 sm:gap-1.5 shrink-0">
           
           <button 
             id="btn-game-info" 
-            title="Game Info & FAQs" 
-            class="h-8 sm:h-9 px-2.5 sm:px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white text-xs font-bold flex items-center gap-1.5 border-0 transition cursor-pointer active:scale-95 shadow-xs"
+            title="Info & Help" 
+            class="w-8 h-8 sm:w-auto sm:h-9 sm:px-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white text-xs font-bold flex items-center justify-center gap-1 border-0 transition cursor-pointer active:scale-95 shadow-xs"
           >
             <span>ℹ️</span>
-            <span class="hidden md:inline">Info & FAQ</span>
+            <span class="hidden lg:inline">Help</span>
           </button>
 
           ${game.htmlUrl ? `
@@ -71,36 +92,27 @@ export function renderGameView(container: HTMLElement, gameId: string): void {
               target="_blank" 
               rel="noopener noreferrer" 
               title="Open in new tab" 
-              class="h-8 sm:h-9 px-2.5 sm:px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white text-xs font-bold flex items-center gap-1.5 border-0 transition text-decoration-none shadow-xs"
+              class="w-8 h-8 sm:w-auto sm:h-9 sm:px-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white text-xs font-bold flex items-center justify-center gap-1 border-0 transition text-decoration-none shadow-xs"
             >
               <span>↗</span>
-              <span class="hidden md:inline">New Tab</span>
+              <span class="hidden lg:inline">Tab</span>
             </a>
           ` : ''}
 
           <button 
-            id="btn-game-reload" 
-            title="Restart Game" 
-            class="h-8 sm:h-9 px-2.5 sm:px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white text-xs font-bold flex items-center gap-1.5 border-0 transition cursor-pointer active:scale-95 shadow-xs"
-          >
-            <span>🔄</span>
-            <span class="hidden md:inline">Restart</span>
-          </button>
-
-          <button 
             id="btn-fullscreen-toggle" 
-            class="h-8 sm:h-9 px-3 sm:px-4 rounded-xl bg-[#58CC02] hover:bg-[#4EBA02] active:scale-95 text-white font-black text-xs flex items-center gap-1.5 shadow-sm transition cursor-pointer border-0"
+            class="h-8 sm:h-9 px-2.5 sm:px-3.5 rounded-xl bg-[#58CC02] hover:bg-[#4EBA02] active:scale-95 text-white font-black text-xs flex items-center justify-center gap-1 shadow-sm transition cursor-pointer border-0"
             title="Toggle Fullscreen"
           >
             <span id="fullscreen-icon">⛶</span>
-            <span id="fullscreen-text" class="hidden xs:inline">Fullscreen</span>
+            <span id="fullscreen-text" class="hidden sm:inline">Fullscreen</span>
           </button>
 
         </div>
       </header>
 
       <!-- Main Game Display Stage: 100% Full Screen Viewport - Completely Borderless & Responsive -->
-      <main id="game-stage-screen" class="flex-1 w-full h-[calc(100vh-48px)] sm:h-[calc(100vh-56px)] bg-black relative flex items-center justify-center overflow-hidden border-0 p-0 m-0">
+      <main id="game-stage-screen" class="flex-1 w-full h-[calc(100dvh-48px)] sm:h-[calc(100dvh-56px)] bg-black relative flex items-center justify-center overflow-hidden border-0 p-0 m-0">
         <div id="game-canvas-area" class="w-full h-full flex items-center justify-center relative overflow-hidden border-0 p-0 m-0">
           <!-- Game Engine or Iframe mounts here with 100% full screen dimensions -->
         </div>
@@ -169,7 +181,6 @@ export function renderGameView(container: HTMLElement, gameId: string): void {
   const fullscreenBtn = container.querySelector('#btn-fullscreen-toggle') as HTMLButtonElement;
   const fullscreenIcon = container.querySelector('#fullscreen-icon') as HTMLElement;
   const fullscreenText = container.querySelector('#fullscreen-text') as HTMLElement;
-  const reloadBtn = container.querySelector('#btn-game-reload') as HTMLButtonElement;
   const infoBtn = container.querySelector('#btn-game-info') as HTMLButtonElement;
   const closeInfoBtn = container.querySelector('#btn-close-info') as HTMLButtonElement;
   const infoOverlay = container.querySelector('#game-info-overlay') as HTMLElement;
@@ -221,8 +232,11 @@ export function renderGameView(container: HTMLElement, gameId: string): void {
       timeSeconds,
       streak,
       gameId: game.id,
-      onClose: () => {
+      onRestart: () => {
         mountEngine();
+      },
+      onClose: () => {
+        // Modal closed
       }
     });
   };
@@ -244,23 +258,64 @@ export function renderGameView(container: HTMLElement, gameId: string): void {
         <iframe 
           id="game-active-frame"
           src="${game.htmlUrl}" 
-          class="w-full h-full border-0 outline-none block bg-black m-0 p-0" 
-          style="border: 0; outline: none; margin: 0; padding: 0; width: 100%; height: 100%; display: block;"
-          allow="autoplay; fullscreen; gamepad; focus-without-user-activation; clipboard-write; xr-spatial-tracking; encrypted-media; screen-wake-lock"
-          allowfullscreen>
+          class="w-full h-full border-0 outline-none block bg-slate-900 m-0 p-0" 
+          style="border: 0; outline: none; margin: 0; padding: 0; width: 100%; height: 100%; display: block; background: #0f172a;"
+          allow="autoplay; fullscreen; gamepad; clipboard-write; xr-spatial-tracking; encrypted-media; screen-wake-lock">
         </iframe>
       `;
+
+      // Block iframe-level service worker registration to prevent cache collisions & unstyled reload bugs
+      const frame = canvasArea.querySelector('#game-active-frame') as HTMLIFrameElement;
+      if (frame) {
+        const blockSWAndInjectCSS = () => {
+          try {
+            const win = frame.contentWindow;
+            if (win && (win as any).ServiceWorkerContainer) {
+              (win as any).ServiceWorkerContainer.prototype.register = function() {
+                return Promise.resolve(new Object());
+              };
+            }
+          } catch (e) {}
+
+          try {
+            const doc = frame.contentDocument || frame.contentWindow?.document;
+            if (doc) {
+              const style = doc.createElement('style');
+              style.textContent = `
+                #fl-fullscreen-btn, 
+                .fl-fullscreen-btn,
+                [id*="fullscreen-btn"],
+                [class*="fullscreen-btn"] {
+                  display: none !important;
+                  visibility: hidden !important;
+                  pointer-events: none !important;
+                }
+              `;
+              doc.head.appendChild(style);
+            }
+          } catch (e) {}
+        };
+        blockSWAndInjectCSS();
+        frame.addEventListener('load', blockSWAndInjectCSS);
+      }
 
       let timerSeconds = 0;
       const interval = setInterval(() => timerSeconds++, 1000);
 
       const onMessage = (event: MessageEvent) => {
+        // Prevent spurious messages from extensions, other frames, or outside sources
+        if (frame && frame.contentWindow && event.source !== frame.contentWindow) {
+          return;
+        }
+
         if (event.data === 'win' || event.data?.type === 'win' || event.data?.action === 'win') {
           clearInterval(interval);
-          handleWin(event.data.time || timerSeconds, event.data.streak);
+          const winTime = typeof event.data?.time === 'number' && event.data.time > 0 
+            ? event.data.time 
+            : timerSeconds;
+          handleWin(winTime, event.data?.streak);
         } else if (event.data?.type === 'reward_request') {
           // Handle Rewarded Ad trigger from game
-          const frame = container.querySelector('#game-active-frame') as HTMLIFrameElement;
           setTimeout(() => {
             frame?.contentWindow?.postMessage({ type: 'reward_granted', reward: event.data.reward || 'hint' }, '*');
           }, 1000);
@@ -318,11 +373,6 @@ export function renderGameView(container: HTMLElement, gameId: string): void {
   } else {
     mountEngine();
   }
-
-  // Reload button resets the game
-  reloadBtn?.addEventListener('click', () => {
-    mountEngine();
-  });
 
   // Attach cleanup to container
   (container as any)._cleanup = () => {

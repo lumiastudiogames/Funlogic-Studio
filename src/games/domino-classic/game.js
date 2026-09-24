@@ -150,7 +150,7 @@
     }
 
     // Render Boneyard Count
-    boneyardCountEl.textContent = `DORME: ${deck.length}`;
+    boneyardCountEl.textContent = `BONEYARD: ${deck.length}`;
 
     // Render Player Hand
     playerHandEl.innerHTML = '';
@@ -170,19 +170,19 @@
       playerHandEl.appendChild(tileEl);
     });
 
-    // Action button state (Comprar / Passar)
+    // Action button state (Draw / Pass)
     if (currentTurn === 'PLAYER' && !gameOver) {
       if (!canPlayAny) {
         if (deck.length > 0) {
           btnAction.disabled = false;
-          btnAction.textContent = 'COMPRAR';
+          btnAction.textContent = 'DRAW';
         } else {
           btnAction.disabled = false;
-          btnAction.textContent = 'PASSAR';
+          btnAction.textContent = 'PASS';
         }
       } else {
         btnAction.disabled = true;
-        btnAction.textContent = 'SUA VEZ';
+        btnAction.textContent = 'YOUR TURN';
       }
     } else {
       btnAction.disabled = true;
@@ -237,7 +237,7 @@
 
     if (!gameOver) {
       currentTurn = byWhom === 'PLAYER' ? 'AI' : 'PLAYER';
-      statusEl.textContent = currentTurn === 'PLAYER' ? 'Sua vez de jogar' : 'Robô pensando...';
+      statusEl.textContent = currentTurn === 'PLAYER' ? 'Your turn to play' : 'Bot thinking...';
       if (currentTurn === 'AI') {
         setTimeout(playAiTurn, 800);
       }
@@ -276,7 +276,7 @@
         // AI passes
         consecutivePasses++;
         currentTurn = 'PLAYER';
-        statusEl.textContent = 'Robô passou a vez! Sua vez.';
+        statusEl.textContent = 'Bot passed! Your turn.';
         renderAll();
         checkGameOver();
       }
@@ -301,14 +301,14 @@
 
     if (playerWon) {
       gameOver = true;
-      statusEl.textContent = '🎉 Você Bateu! VICTORY!';
+      statusEl.textContent = '🎉 You Won! VICTORY!';
       AudioEngine.playWin();
       const TIME = Math.max(1, Math.floor((Date.now() - startTime) / 1000));
       // Golden rule platform win notification
       window.parent.postMessage({ type: 'win', time: TIME }, '*');
     } else if (aiWon) {
       gameOver = true;
-      statusEl.textContent = 'Robô venceu a partida.';
+      statusEl.textContent = 'Bot won this round.';
     }
   }
 
@@ -329,7 +329,7 @@
     }
   });
 
-  // Action button (Comprar / Passar)
+  // Action button (Draw / Pass)
   btnAction.addEventListener('click', () => {
     if (currentTurn !== 'PLAYER' || gameOver) return;
     if (deck.length > 0) {
@@ -339,7 +339,7 @@
       // Pass
       consecutivePasses++;
       currentTurn = 'AI';
-      statusEl.textContent = 'Você passou. Robô pensando...';
+      statusEl.textContent = 'You passed. Bot thinking...';
       renderAll();
       checkGameOver();
       if (!gameOver) {

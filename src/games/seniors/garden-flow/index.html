@@ -79,16 +79,29 @@
       <!-- Main Board -->
       <main class="board-area">
         <div id="status-msg" class="instructions-banner">
-          Tap tiles to rotate pipes and flow water to flowers 🌸.
+          Tap pipes to connect the <strong>🚰 Water Faucet</strong> to the <strong>🌸 Blooming Garden</strong>!
         </div>
 
         <div class="pipe-grid-wrapper">
-          <div class="endpoints-bar">
-            <span>🚰 Tap</span>
-            <span>🌸 Garden</span>
+          <!-- Flow Indicators and Source/Destination Decor -->
+          <div class="flow-start-indicator">
+            <div class="faucet-box">
+              <span class="faucet-icon">🚰</span>
+              <span class="faucet-label">WATER SOURCE</span>
+            </div>
+            <div class="water-arrow-down">💧 ⬇️</div>
           </div>
+
           <div id="pipe-grid" class="pipe-grid">
             <!-- Rendered via game.js -->
+          </div>
+
+          <div class="flow-end-indicator">
+            <div id="water-arrow-out" class="water-arrow-out dry">💧 ⬇️</div>
+            <div id="garden-box" class="garden-box wilted">
+              <span id="garden-icon" class="garden-icon">🥀 🥀 🥀</span>
+              <span id="garden-label" class="garden-label">THIRSTY FLOWERS (Wilted)</span>
+            </div>
           </div>
         </div>
       </main>
@@ -103,61 +116,12 @@
     </div>
     <script src="./game.js"></script>
   
-  <!-- PWA & Initial Screen Fullscreen UI -->
-  <button id="fl-fullscreen-btn" aria-label="Fullscreen" title="Toggle Fullscreen" style="
-    position: fixed;
-    top: 14px;
-    right: 14px;
-    z-index: 99999;
-    background: rgba(15, 23, 42, 0.75);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    color: #ffffff;
-    width: 42px;
-    height: 42px;
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    font-size: 18px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-    transition: transform 0.15s ease, background 0.2s ease;
-    user-select: none;
-    -webkit-tap-highlight-color: transparent;
-  " onmouseover="this.style.transform='scale(1.08)'" onmouseout="this.style.transform='scale(1)'">
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/>
-    </svg>
-  </button>
-
   <script>
     (function() {
       // Register PWA Service Worker
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
           navigator.serviceWorker.register('./sw.js').catch(() => {});
-        });
-      }
-
-      // Initial Screen Fullscreen Handler
-      const fsBtn = document.getElementById('fl-fullscreen-btn');
-      if (fsBtn) {
-        fsBtn.addEventListener('click', function(e) {
-          e.stopPropagation();
-          if (!document.fullscreenElement && !document.webkitFullscreenElement && !document.mozFullScreenElement && !document.msFullscreenElement) {
-            const el = document.documentElement;
-            if (el.requestFullscreen) el.requestFullscreen().catch(()=>{});
-            else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
-            else if (el.mozRequestFullScreen) el.mozRequestFullScreen();
-            else if (el.msRequestFullscreen) el.msRequestFullscreen();
-          } else {
-            if (document.exitFullscreen) document.exitFullscreen().catch(()=>{});
-            else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
-            else if (document.mozCancelFullScreen) document.mozCancelFullScreen();
-            else if (document.msExitFullscreen) document.msExitFullscreen();
-          }
         });
       }
     })();

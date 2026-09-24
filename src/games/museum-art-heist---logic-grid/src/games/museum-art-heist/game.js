@@ -7,21 +7,21 @@
   const LEVELS = [
     {
       id: 1,
-      title: "Nível 1: O Mistério da Galeria Norte",
+      title: "Level 1: The North Gallery Mystery",
       detectives: [
         { id: "sarah", name: "Det. Sarah", icon: "🔍" },
         { id: "charles", name: "Insp. Charles", icon: "🕵️‍♂️" },
-        { id: "elena", name: "Agente Elena", icon: "🕶️" }
+        { id: "elena", name: "Agent Elena", icon: "🕶️" }
       ],
       paintings: [
-        { id: "starry", name: "Noite Estrelada", icon: "🌌" },
+        { id: "starry", name: "Starry Night", icon: "🌌" },
         { id: "mona", name: "Mona Lisa", icon: "🎨" },
-        { id: "sunflower", name: "Girassol", icon: "🌻" }
+        { id: "sunflower", name: "Sunflowers", icon: "🌻" }
       ],
       clues: [
-        { id: "glove", name: "Luva Veludo", icon: "🧤" },
-        { id: "footprint", name: "Pegada nº 42", icon: "👞" },
-        { id: "card", name: "Cartão Coringa", icon: "🃏" }
+        { id: "glove", name: "Velvet Glove", icon: "🧤" },
+        { id: "footprint", name: "Footprint #42", icon: "👞" },
+        { id: "card", name: "Joker Card", icon: "🃏" }
       ],
       solution: [
         { detectiveId: "sarah", paintingId: "starry", clueId: "glove" },
@@ -29,32 +29,32 @@
         { detectiveId: "elena", paintingId: "mona", clueId: "card" }
       ],
       cluesText: [
-        "1. Sarah Vance NÃO encontrou a Pegada de Lamaçal nem o Cartão do Coringa.",
-        "2. O caso da 'Noite Estrelada' foi atribuído diretamente a Sarah Vance.",
-        "3. O roubo da 'Mona Lisa' deixou como evidência o Cartão do Coringa.",
-        "4. O Inspetor Charles NÃO está com o caso da 'Mona Lisa'."
+        "1. Sarah Vance did NOT find the Muddy Footprint or the Joker Card.",
+        "2. The 'Starry Night' theft was directly assigned to Sarah Vance.",
+        "3. The 'Mona Lisa' crime scene left behind the Joker Card.",
+        "4. Inspector Charles is NOT assigned to the 'Mona Lisa' case."
       ]
     },
     {
       id: 2,
-      title: "Nível 2: A Sala das Relíquias Barrocas",
+      title: "Level 2: The Baroque Relics Chamber",
       detectives: [
         { id: "sarah", name: "Det. Sarah", icon: "🔍" },
         { id: "charles", name: "Insp. Charles", icon: "🕵️‍♂️" },
-        { id: "elena", name: "Agente Elena", icon: "🕶️" },
-        { id: "kenji", name: "Perito Kenji", icon: "🔬" }
+        { id: "elena", name: "Agent Elena", icon: "🕶️" },
+        { id: "kenji", name: "Forensic Kenji", icon: "🔬" }
       ],
       paintings: [
-        { id: "portrait", name: "Retrato Real", icon: "👑" },
-        { id: "lady", name: "Dama Arminho", icon: "🦔" },
-        { id: "scream", name: "Grito Meia-Noite", icon: "😱" },
-        { id: "boat", name: "Barco Luar", icon: "⛵" }
+        { id: "portrait", name: "Royal Portrait", icon: "👑" },
+        { id: "lady", name: "Lady with Ermine", icon: "🦔" },
+        { id: "scream", name: "Midnight Scream", icon: "😱" },
+        { id: "boat", name: "Moonlit Boat", icon: "⛵" }
       ],
       clues: [
-        { id: "glove", name: "Fibra Luva", icon: "🧤" },
-        { id: "laser", name: "Fita Laser", icon: "⚡" },
-        { id: "perfume", name: "Perfume Francês", icon: "🧪" },
-        { id: "key", name: "Chave Mestra", icon: "🗝️" }
+        { id: "glove", name: "Glove Fiber", icon: "🧤" },
+        { id: "laser", name: "Broken Laser", icon: "⚡" },
+        { id: "perfume", name: "French Perfume", icon: "🧪" },
+        { id: "key", name: "Master Key", icon: "🗝️" }
       ],
       solution: [
         { detectiveId: "sarah", paintingId: "lady", clueId: "glove" },
@@ -63,11 +63,11 @@
         { detectiveId: "kenji", paintingId: "scream", clueId: "key" }
       ],
       cluesText: [
-        "1. A Agente Elena Vega encontrou no seu caso a Fita Laser Rompida.",
-        "2. O caso do quadro 'Grito Meia-Noite' tem como pista a Chave Mestra.",
-        "3. Kenji Sato NÃO investiga 'Barco Luar' nem 'Retrato Real', e sua pista foi a Chave Mestra.",
-        "4. 'Dama com Arminho' está com Sarah Vance, que não encontrou Laser nem Perfume.",
-        "5. O Inspetor Charles localizou o Perfume Francês, mas não investiga o 'Retrato Real'."
+        "1. Agent Elena Vega discovered the Broken Laser Tripwire in her case.",
+        "2. The 'Midnight Scream' crime scene clue was the Master Key.",
+        "3. Kenji Sato does NOT investigate 'Moonlit Boat' or 'Royal Portrait', and his clue was the Master Key.",
+        "4. 'Lady with Ermine' is investigated by Sarah Vance, who found neither the Laser nor the Perfume.",
+        "5. Inspector Charles located the French Perfume, but is not investigating the 'Royal Portrait'."
       ]
     }
   ];
@@ -108,8 +108,8 @@
             
           </div>
           <div style="display: flex; gap: 6px; flex-shrink: 0;">
-            <button id="btn-reset" class="btn-tactile" style="background: #1e293b; color: #cbd5e1; padding: 6px 10px; border-radius: 8px; font-size: 11px; font-weight: bold;">Limpar</button>
-            <button id="btn-next" class="btn-tactile" style="background: #eab308; color: #020617; padding: 6px 12px; border-radius: 8px; font-size: 11px; font-weight: bold;">${currentLevelIdx < LEVELS.length - 1 ? 'Próxima Fase' : 'Reiniciar'}</button>
+            <button id="btn-reset" class="btn-tactile" style="background: #1e293b; color: #cbd5e1; padding: 6px 10px; border-radius: 8px; font-size: 11px; font-weight: bold;">Clear</button>
+            <button id="btn-next" class="btn-tactile" style="background: #eab308; color: #020617; padding: 6px 12px; border-radius: 8px; font-size: 11px; font-weight: bold;">${currentLevelIdx < LEVELS.length - 1 ? 'Next Level' : 'Restart'}</button>
           </div>
         </div>
 
@@ -119,7 +119,7 @@
           <!-- Subgrid 1: Detectives x Paintings -->
           <div style="flex: 1 1 280px; max-width: 400px; background: #0f172a; border: 1px solid #1e293b; border-radius: 12px; padding: 8px;">
             <div style="font-size: 11px; font-weight: bold; color: #38bdf8; margin-bottom: 6px; display: flex; justify-content: space-between;">
-              <span>🕵️ Investigadores × 🎨 Obras</span>
+              <span>🕵️ Detectives × 🎨 Artworks</span>
               <span style="color: #64748b;">1/3</span>
             </div>
             <div style="display: flex; justify-content: center;">
@@ -152,7 +152,7 @@
           <!-- Subgrid 2: Detectives x Clues -->
           <div style="flex: 1 1 280px; max-width: 400px; background: #0f172a; border: 1px solid #1e293b; border-radius: 12px; padding: 8px;">
             <div style="font-size: 11px; font-weight: bold; color: #f43f5e; margin-bottom: 6px; display: flex; justify-content: space-between;">
-              <span>🕵️ Investigadores × 🔬 Pistas</span>
+              <span>🕵️ Detectives × 🔬 Clues</span>
               <span style="color: #64748b;">2/3</span>
             </div>
             <div style="display: flex; justify-content: center;">
@@ -185,7 +185,7 @@
           <!-- Subgrid 3: Paintings x Clues -->
           <div style="flex: 1 1 280px; max-width: 400px; background: #0f172a; border: 1px solid #1e293b; border-radius: 12px; padding: 8px;">
             <div style="font-size: 11px; font-weight: bold; color: #facc15; margin-bottom: 6px; display: flex; justify-content: space-between;">
-              <span>🎨 Obras × 🔬 Pistas Forenses</span>
+              <span>🎨 Artworks × 🔬 Forensic Clues</span>
               <span style="color: #64748b;">3/3</span>
             </div>
             <div style="display: flex; justify-content: center;">
@@ -219,7 +219,7 @@
 
         <!-- Clues List -->
         <div style="background: #0f172a; border: 1px solid #1e293b; border-radius: 10px; padding: 10px; flex-shrink: 0;">
-          <div style="font-size: 11px; font-weight: bold; color: #facc15; margin-bottom: 4px;">📜 Pistas do Caso:</div>
+          <div style="font-size: 11px; font-weight: bold; color: #facc15; margin-bottom: 4px;">📜 Case Clues:</div>
           ${lvl.cluesText.map(t => `<div style="font-size: 11px; color: #cbd5e1; margin-bottom: 3px;">• ${t}</div>`).join('')}
         </div>
       </div>

@@ -148,6 +148,40 @@
   const statusMsg = document.getElementById('status-msg');
   const soundBtn = document.getElementById('btn-sound');
   const resetBtn = document.getElementById('btn-reset');
+  const gardenBox = document.getElementById('garden-box');
+  const gardenIcon = document.getElementById('garden-icon');
+  const gardenLabel = document.getElementById('garden-label');
+  const waterArrowOut = document.getElementById('water-arrow-out');
+
+  function spawnStarCelebration() {
+    if (!gardenBox) return;
+    const rect = gardenBox.getBoundingClientRect();
+    const count = 24;
+    const emojis = ['✨', '⭐', '🌟', '✦', '★', '🌸', '🌺', '💧', '🌻'];
+
+    for (let i = 0; i < count; i++) {
+      const star = document.createElement('span');
+      star.className = 'star-sparkle';
+      star.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+
+      const startX = rect.left + rect.width / 2;
+      const startY = rect.top + rect.height / 2;
+      star.style.left = `${startX}px`;
+      star.style.top = `${startY}px`;
+
+      const angle = (Math.PI * 2 * i) / count + (Math.random() - 0.5) * 0.5;
+      const dist = 40 + Math.random() * 80;
+      const dx = Math.cos(angle) * dist;
+      const dy = Math.sin(angle) * dist - 20;
+
+      star.style.setProperty('--dx', `${dx}px`);
+      star.style.setProperty('--dy', `${dy}px`);
+      star.style.fontSize = `${16 + Math.random() * 14}px`;
+
+      document.body.appendChild(star);
+      setTimeout(() => star.remove(), 1100);
+    }
+  }
 
   function updateFlow() {
     // Reset flowing flags
@@ -215,8 +249,22 @@
 
     // Check if water reached (3,3) and exits through Bottom
     const endOpen = getOpenings(grid[3][3].type, grid[3][3].currentRot);
-    if (grid[3][3].isFlowing && endOpen[2] === 1 && !isWon) {
-      handleWin();
+    const reachedGarden = grid[3][3].isFlowing && endOpen[2] === 1;
+
+    if (reachedGarden) {
+      if (gardenBox) gardenBox.className = 'garden-box bloomed';
+      if (gardenIcon) gardenIcon.textContent = '🌸 🌺 🌻 🌷';
+      if (gardenLabel) gardenLabel.textContent = 'BLOOMING GARDEN! ✨';
+      if (waterArrowOut) waterArrowOut.className = 'water-arrow-out flowing';
+
+      if (!isWon) {
+        handleWin();
+      }
+    } else {
+      if (gardenBox) gardenBox.className = 'garden-box wilted';
+      if (gardenIcon) gardenIcon.textContent = '🥀 🥀 🥀';
+      if (gardenLabel) gardenLabel.textContent = 'THIRSTY FLOWERS (Wilted)';
+      if (waterArrowOut) waterArrowOut.className = 'water-arrow-out dry';
     }
   }
 
@@ -246,6 +294,10 @@
           d = 'M 50 0 Q 50 50 100 50';
         }
 
+        const pathShadow = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        pathShadow.setAttribute('d', d);
+        pathShadow.setAttribute('class', 'pipe-path-shadow');
+
         const pathBg = document.createElementNS('http://www.w3.org/2000/svg', 'path');
         pathBg.setAttribute('d', d);
         pathBg.setAttribute('class', 'pipe-path-bg');
@@ -254,8 +306,45 @@
         pathWater.setAttribute('d', d);
         pathWater.setAttribute('class', 'pipe-path-water');
 
+        svg.appendChild(pathShadow);
         svg.appendChild(pathBg);
         svg.appendChild(pathWater);
+
+        // Add animated floating water bubbles inside flowing pipes
+        if (cell.isFlowing) {
+          if (cell.type === 'line') {
+            const b1 = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+            b1.setAttribute('cx', '50');
+            b1.setAttribute('cy', '30');
+            b1.setAttribute('r', '3.5');
+            b1.setAttribute('class', 'bubble-particle');
+
+            const b2 = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+            b2.setAttribute('cx', '50');
+            b2.setAttribute('cy', '70');
+            b2.setAttribute('r', '2.5');
+            b2.setAttribute('class', 'bubble-particle');
+
+            svg.appendChild(b1);
+            svg.appendChild(b2);
+          } else {
+            const b1 = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+            b1.setAttribute('cx', '54');
+            b1.setAttribute('cy', '30');
+            b1.setAttribute('r', '3');
+            b1.setAttribute('class', 'bubble-particle');
+
+            const b2 = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+            b2.setAttribute('cx', '75');
+            b2.setAttribute('cy', '52');
+            b2.setAttribute('r', '2.5');
+            b2.setAttribute('class', 'bubble-particle');
+
+            svg.appendChild(b1);
+            svg.appendChild(b2);
+          }
+        }
+
         tileEl.appendChild(svg);
 
         tileEl.addEventListener('click', () => {
@@ -276,8 +365,12 @@
   function handleWin() {
     isWon = true;
     playFlowSound();
+    spawnStarCelebration();
+    setTimeout(spawnStarCelebration, 300);
+    setTimeout(spawnStarCelebration, 600);
+
     const elapsed = Math.max(1, Math.floor((Date.now() - startTime) / 1000));
-    statusMsg.textContent = '🎉 Splendid! Fresh water is flowing to the garden!';
+    statusMsg.textContent = '🎉 Splendid! Fresh water reached the flowers and they bloomed beautifully!';
     statusMsg.style.color = '#15803d';
 
     try {

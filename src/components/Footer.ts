@@ -43,9 +43,10 @@ export function renderFooter(container: HTMLElement): void {
               Legal & Info
             </h4>
             <ul class="space-y-2 text-xs font-bold text-slate-300 mb-5">
-              <li><a href="#sitemap" class="hover:text-white transition text-decoration-none">Privacy Policy</a></li>
-              <li><a href="#sitemap" class="hover:text-white transition text-decoration-none">Terms of Service</a></li>
-              <li><a href="#sitemap" class="hover:text-white transition text-decoration-none">Contact Lumia Studio</a></li>
+              <li><a href="#privacy" class="hover:text-white transition text-decoration-none">Privacy Policy</a></li>
+              <li><a href="#terms" class="hover:text-white transition text-decoration-none">Terms of Service</a></li>
+              <li><a href="#about" class="hover:text-white transition text-decoration-none">About Lumia Studio</a></li>
+              <li><a href="#contact" class="hover:text-white transition text-decoration-none">Contact Us</a></li>
             </ul>
             
             <!-- PWA Installation Button -->

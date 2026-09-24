@@ -100,7 +100,7 @@
     won = false;
     startTime = Date.now();
     btnUndo.disabled = true;
-    statusMsg.textContent = 'Toque em uma bolinha para ver seus saltos possíveis.';
+    statusMsg.textContent = 'Tap a peg to see valid jumps.';
 
     updatePegCount();
     renderBoard();
@@ -118,7 +118,7 @@
 
   function updatePegCount() {
     const count = getPegCount();
-    countBadge.textContent = `${count} PINOS`;
+    countBadge.textContent = `${count} PEGS`;
   }
 
   function getMovesForPeg(r, c) {
@@ -154,6 +154,45 @@
     return false;
   }
 
+  function spawnStarParticles(targetEl) {
+    if (!targetEl) return;
+    const rect = targetEl.getBoundingClientRect();
+    const boardRect = boardEl.getBoundingClientRect();
+    const cx = rect.left + rect.width / 2 - boardRect.left;
+    const cy = rect.top + rect.height / 2 - boardRect.top;
+
+    const stars = ['✨', '⭐', '💫', '✦'];
+    for (let i = 0; i < 8; i++) {
+      const particle = document.createElement('span');
+      particle.textContent = stars[i % stars.length];
+      particle.style.position = 'absolute';
+      particle.style.left = `${cx}px`;
+      particle.style.top = `${cy}px`;
+      particle.style.transform = 'translate(-50%, -50%) scale(0.5)';
+      particle.style.pointerEvents = 'none';
+      particle.style.fontSize = '18px';
+      particle.style.zIndex = '100';
+      particle.style.transition = 'transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.5s ease-out';
+      particle.style.opacity = '1';
+      boardEl.style.position = 'relative';
+      boardEl.appendChild(particle);
+
+      const angle = (i / 8) * Math.PI * 2 + (Math.random() * 0.4 - 0.2);
+      const distance = 35 + Math.random() * 25;
+      const tx = Math.cos(angle) * distance;
+      const ty = Math.sin(angle) * distance;
+
+      requestAnimationFrame(() => {
+        particle.style.transform = `translate(calc(-50% + ${tx}px), calc(-50% + ${ty}px)) scale(1.2)`;
+        particle.style.opacity = '0';
+      });
+
+      setTimeout(() => {
+        if (particle.parentNode) particle.parentNode.removeChild(particle);
+      }, 550);
+    }
+  }
+
   function renderBoard() {
     boardEl.innerHTML = '';
     for (let r = 0; r < 7; r++) {
@@ -169,6 +208,7 @@
 
         const hole = document.createElement('div');
         hole.className = 'hole';
+        hole.id = `hole-${r}-${c}`;
 
         const isTarget = validMoves.some((m) => m.toR === r && m.toC === c);
         if (isTarget) {
@@ -233,6 +273,11 @@
 
     updatePegCount();
     renderBoard();
+
+    // Trigger star particles on target cell
+    const targetHole = document.getElementById(`hole-${toR}-${toC}`);
+    if (targetHole) spawnStarParticles(targetHole);
+
     checkGameOver();
   }
 
@@ -244,7 +289,7 @@
     validMoves = [];
     if (history.length === 0) btnUndo.disabled = true;
     updatePegCount();
-    statusMsg.textContent = 'Movimento desfeito.';
+    statusMsg.textContent = 'Move undone.';
     renderBoard();
   }
 
@@ -252,15 +297,15 @@
     const count = getPegCount();
     if (count === 1) {
       won = true;
-      statusMsg.textContent = '🏆 PERFEITO! Restou apenas 1 pino! Você venceu!';
+      statusMsg.textContent = '🏆 FLAWLESS! Only 1 peg left! You won!';
       AudioEngine.playWin();
       const elapsed = Math.max(1, Math.floor((Date.now() - startTime) / 1000));
       // Golden rule platform win notification
       window.parent.postMessage({ type: 'win', time: elapsed }, '*');
     } else if (!hasAnyMoveLeft()) {
-      statusMsg.textContent = `Sem MOVES possíveis! Restaram ${count} pinos.`;
+      statusMsg.textContent = `No moves left! ${count} pegs remaining.`;
     } else {
-      statusMsg.textContent = `Restam ${count} pinos no tabuleiro.`;
+      statusMsg.textContent = `${count} pegs left on the board.`;
     }
   }
 

@@ -5,61 +5,457 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
     <title>Mahjong Dimensions 3D - Cube Puzzle</title>
     
-    <link rel="stylesheet" href="./style.css" />
-  
-  
-  
-  
-  
+    <meta name="description" content="Mahjong Dimensions 3D brings the classic matching puzzle into three dimensions. Rotate a floating 3D cube of tiles in 360 degrees, discover unblocked matching pairs, and chain fast combos before the countdown expires." />
+    <meta name="theme-color" content="#1e1333" />
+    <link rel="apple-touch-icon" href="cover.svg" />
 
-  
-  
-  
-  
+    <style>
+      /* Mahjong Dimensions 3D - Inline Guaranteed Stylesheet */
+      * {
+        box-sizing: border-box;
+        -webkit-tap-highlight-color: transparent;
+        touch-action: manipulation;
+        user-select: none;
+        -webkit-user-select: none;
+        margin: 0;
+        padding: 0;
+      }
 
-  <meta name="description" content="Mahjong Dimensions 3D brings the classic matching puzzle into three dimensions. Rotate a floating 3D cube of tiles in 360 degrees, discover unblocked matching pairs, and chain fast combos before the countdown expires." />
-  <meta name="keywords" content="mahjong 3d, mahjong dimensions, 3d cube puzzle, cube mahjong, rotate mahjong, 3d matching, dimensions game, spatial puzzle, 3d block matching" />
-  <meta name="game-tags" content="mahjong dimensions 3d, mahjong dimensions 3d cube, mahjong, mahjong solitaire, mahjong tiles, mahjong puzzle, mahjong game, mahjong online, mahjong free, mahjong classic, mahjong solitaire free, mahjong solitaire online, mahjong tiles match, tile match, tile matching, tile match puzzle, mahjong connect, mahjong connect free, mahjong matching, chinese mahjong, mahjong chinese tiles, mahjong board, mahjong board game, mahjong zen, mahjong relax, mahjong brain, mahjong logic, mahjong 3d, mahjong dimensions, mahjong dark, mahjong light, mahjong deluxe, mahjong mania, mahjong master, mahjong pro, mahjong expert, mahjong challenge, mahjong levels, mahjong easy, mahjong hard, mahjong kids, mahjong adults, mahjong seniors, mahjong time, mahjong timeless, mahjong clear board, mahjong clear tiles, mahjong pair, mahjong pairs, mahjong pair match, mahjong pair puzzle, mahjong tiles puzzle, mahjong tile puzzle, mahjong puzzle game, mahjong puzzle online, mahjong puzzle free, mahjong connect puzzle, mahjong connect game, mahjong connect tiles, mahjong connect online, mahjong classic free, mahjong classic online, mahjong solitaire classic, mahjong solitaire puzzle, mahjong solitaire game, mahjong solitaire tiles, mahjong tile matching game, tile matching game, mahjong match, mahjong matching game, mahjong matching puzzle, mahjong memory, mahjong memory puzzle, mahjong memory game, mahjong triple, mahjong triple match, mahjong triple tiles, mahjong stack, mahjong stacks, mahjong pyramid, mahjong castle, mahjong tower, mahjong fortune, mahjong fortune tiles, mahjong gold, mahjong butterfly, mahjong butterflies, mahjong animals, mahjong flowers, mahjong seasons, mahjong dragons, mahjong winds, mahjong dots, mahjong bamboos, mahjong characters, mahjong unblocked, mahjong best, mahjong top, mahjong new, mahjong 2024, mahjong 2025, mahjong html5, mahjong mobile, mahjong app, play mahjong, mahjong quest, mahjong journey, mahjong world, mahjong garden, mahjong safari, mahjong chain, mahjong chain connect, mahjong link, mahjong link puzzle, mahjong link game, mahjong link tiles, mahjong onet, mahjong onet connect, mahjong solitaire chain, mahjong tile connect, mahjong tile connect puzzle, mahjong tile stack, mahjong tile clear, mahjong tile board, mahjong tile solitaire, mahjong tile matching puzzle" />
-  <script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    {
-      "@type": "Question",
-      "name": "How do I rotate the 3D cube?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Click and drag across the screen to freely spin the cube in any direction, or tap the Rotate Left / Rotate Right buttons for precise 90-degree turns."
+      body {
+        min-height: 100vh;
+        min-height: 100dvh;
+        background: radial-gradient(circle at 50% 30%, #1e1333 0%, #0c0717 100%);
+        color: #f8fafc;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
       }
-    },
-    {
-      "@type": "Question",
-      "name": "Which tiles can be matched in 3D?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Only tiles with at least two exposed, adjacent sides on the exterior of the structure can be tapped and matched."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "How does the Speed Combo multiplier work?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Match pairs within 4 seconds of each other to increase your combo multiplier from 2x up to 5x points!"
-      }
-    }
-  ]
-}
-  </script>
 
-  <link rel="manifest" href="manifest.json" />
-  <meta name="theme-color" content="#0f172a" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <meta name="apple-mobile-web-app-title" content="Mahjong Dimensions 3D Cube" />
-  <link rel="apple-touch-icon" href="cover.svg" />
-</head>
+      #game-stage {
+        width: 100%;
+        max-width: 960px;
+        height: 100dvh;
+        max-height: 900px;
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        overflow: hidden;
+        background: #0f0b1d;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.85);
+      }
+
+      @media (min-width: 640px) {
+        #game-stage {
+          height: 94vh;
+          border-radius: 24px;
+          border: 1px solid rgba(192, 132, 252, 0.2);
+        }
+      }
+
+      /* Header HUD */
+      header {
+        height: 56px;
+        background: rgba(23, 13, 40, 0.9);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border-bottom: 1px solid rgba(192, 132, 252, 0.15);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 12px;
+        flex-shrink: 0;
+        z-index: 20;
+        gap: 6px;
+      }
+
+      .hud-group {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        flex-shrink: 0;
+      }
+
+      .metric-pill {
+        background: rgba(35, 19, 64, 0.6);
+        border: 1px solid rgba(192, 132, 252, 0.2);
+        border-radius: 8px;
+        padding: 3px 8px;
+        text-align: center;
+        min-width: 48px;
+      }
+
+      .metric-label {
+        font-size: 8px;
+        font-weight: 800;
+        color: #c084fc;
+        text-transform: uppercase;
+        display: block;
+      }
+
+      .metric-value {
+        font-size: 13px;
+        font-weight: 900;
+        color: #ffffff;
+        line-height: 1.1;
+      }
+
+      .combo-badge {
+        display: none;
+        padding: 3px 8px;
+        border-radius: 9999px;
+        background: linear-gradient(135deg, #ef4444, #f59e0b);
+        color: #ffffff;
+        font-size: 10px;
+        font-weight: 900;
+        letter-spacing: 0.5px;
+        box-shadow: 0 0 12px rgba(245, 158, 11, 0.6);
+        animation: comboPulse 0.6s infinite alternate ease-in-out;
+      }
+
+      .combo-badge.active {
+        display: inline-block;
+      }
+
+      @keyframes comboPulse {
+        0% { transform: scale(1); }
+        100% { transform: scale(1.08); }
+      }
+
+      /* Buttons */
+      .btn-tactile {
+        appearance: none;
+        border: none;
+        outline: none;
+        cursor: pointer;
+        border-radius: 9px;
+        font-weight: 700;
+        font-size: 12px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+        padding: 6px 10px;
+        background: #23143c;
+        color: #f8fafc;
+        border: 1px solid rgba(192, 132, 252, 0.25);
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+        transition: all 0.12s cubic-bezier(0.4, 0, 0.2, 1);
+        flex-shrink: 0;
+      }
+
+      .btn-tactile:hover:not(:disabled) {
+        transform: translateY(-1px);
+        background: #361f5c;
+        box-shadow: 0 6px 10px -2px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+      }
+
+      .btn-tactile:active:not(:disabled) {
+        transform: translateY(1px);
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4), inset 0 2px 4px rgba(0, 0, 0, 0.4);
+      }
+
+      .btn-icon-only {
+        width: 36px;
+        height: 36px;
+        padding: 0;
+      }
+
+      @media (min-width: 640px) {
+        .btn-icon-only {
+          width: 38px;
+          height: 38px;
+        }
+      }
+
+      .btn-purple {
+        background: linear-gradient(180deg, #9333ea 0%, #7e22ce 100%);
+        border-color: #c084fc;
+        color: #ffffff;
+      }
+
+      .btn-gold {
+        background: linear-gradient(180deg, #f59e0b 0%, #d97706 100%);
+        border-color: #fbbf24;
+        color: #ffffff;
+      }
+
+      @media (max-width: 500px) {
+        .hidden-mobile {
+          display: none !important;
+        }
+      }
+
+      /* 3D Viewport Arena */
+      #viewport-3d {
+        flex: 1;
+        position: relative;
+        perspective: 900px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        cursor: grab;
+        touch-action: none;
+      }
+
+      #viewport-3d:active {
+        cursor: grabbing;
+      }
+
+      #cube-world {
+        position: absolute;
+        width: 0;
+        height: 0;
+        transform-style: preserve-3d;
+        transition: transform 0.08s linear;
+      }
+
+      /* 3D Mahjong Tile Cubes */
+      .tile-3d {
+        position: absolute;
+        width: 54px;
+        height: 64px;
+        margin-left: -27px;
+        margin-top: -32px;
+        transform-style: preserve-3d;
+        cursor: pointer;
+        transition: filter 0.15s ease, opacity 0.3s ease;
+      }
+
+      .tile-3d.blocked {
+        filter: brightness(0.65) saturate(0.7);
+        cursor: not-allowed;
+      }
+
+      .tile-3d.free:hover .face-front {
+        filter: brightness(1.15);
+        box-shadow: 0 0 14px rgba(192, 132, 252, 0.8);
+      }
+
+      .tile-3d.selected .face-front {
+        background: #fffbeb !important;
+        box-shadow: 0 0 0 3px #f59e0b, 0 0 20px #f59e0b !important;
+      }
+
+      .tile-3d.hinted .face-front {
+        animation: pulseHint3d 0.8s infinite alternate;
+      }
+
+      @keyframes pulseHint3d {
+        from { box-shadow: 0 0 0 2px #38bdf8, 0 0 10px #38bdf8; }
+        to { box-shadow: 0 0 0 4px #0284c7, 0 0 22px #0284c7; }
+      }
+
+      .tile-3d.matched {
+        animation: match3dExplode 0.4s ease forwards;
+        pointer-events: none;
+      }
+
+      @keyframes match3dExplode {
+        0% { transform: scale3d(1, 1, 1); opacity: 1; }
+        50% { transform: scale3d(1.4, 1.4, 1.4); opacity: 0.8; filter: brightness(2); }
+        100% { transform: scale3d(0, 0, 0); opacity: 0; }
+      }
+
+      /* 3D Tile Faces */
+      .tile-face {
+        position: absolute;
+        inset: 0;
+        border-radius: 6px;
+        backface-visibility: visible;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .face-front {
+        background: linear-gradient(135deg, #ffffff 0%, #faf5ff 60%, #e9d5ff 100%);
+        border: 1px solid #d8b4fe;
+        transform: translateZ(12px);
+        box-shadow: inset 0 1px 1px #ffffff;
+      }
+
+      .face-back {
+        background: #581c87;
+        transform: rotateY(180deg) translateZ(12px);
+        border: 1px solid #3b0764;
+      }
+
+      .face-right {
+        width: 24px;
+        left: 42px;
+        background: #6b21a8;
+        transform: rotateY(90deg) translateZ(12px);
+        border: 1px solid #4c1d95;
+      }
+
+      .face-left {
+        width: 24px;
+        left: -12px;
+        background: #7e22ce;
+        transform: rotateY(-90deg) translateZ(12px);
+        border: 1px solid #581c87;
+      }
+
+      .face-top {
+        height: 24px;
+        top: -12px;
+        background: #9333ea;
+        transform: rotateX(90deg) translateZ(12px);
+        border: 1px solid #6b21a8;
+      }
+
+      .face-bottom {
+        height: 24px;
+        top: 52px;
+        background: #4c1d95;
+        transform: rotateX(-90deg) translateZ(12px);
+        border: 1px solid #3b0764;
+      }
+
+      .tile-symbol {
+        font-size: 32px;
+        line-height: 1;
+      }
+
+      .tile-badge {
+        font-size: 10px;
+        font-weight: 800;
+        margin-top: 1px;
+      }
+
+      .suit-wan { color: #dc2626; }
+      .suit-sou { color: #059669; }
+      .suit-pin { color: #2563eb; }
+      .suit-wind { color: #334155; }
+      .suit-dragon { color: #dc2626; }
+
+      /* 3D Orbit Controls Floating Bar */
+      #controls-3d {
+        position: absolute;
+        bottom: 16px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(18, 7, 34, 0.85);
+        backdrop-filter: blur(8px);
+        padding: 6px 12px;
+        border-radius: 14px;
+        border: 1px solid rgba(192, 132, 252, 0.3);
+        z-index: 20;
+      }
+
+      /* Modals */
+      .modal-overlay {
+        position: absolute;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.85);
+        backdrop-filter: blur(6px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 16px;
+        z-index: 50;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.2s ease;
+      }
+
+      .modal-overlay.active {
+        opacity: 1;
+        pointer-events: auto;
+      }
+
+      .modal-card {
+        width: 100%;
+        max-width: 420px;
+        background: #17092c;
+        border: 1px solid rgba(192, 132, 252, 0.3);
+        border-radius: 18px;
+        padding: 24px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8);
+        transform: translateY(12px) scale(0.97);
+        transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+
+      .modal-overlay.active .modal-card {
+        transform: translateY(0) scale(1);
+      }
+
+      .modal-title {
+        font-size: 18px;
+        font-weight: 800;
+        color: #f8fafc;
+        margin-bottom: 12px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .tutorial-step {
+        display: flex;
+        gap: 12px;
+        margin-bottom: 14px;
+        background: rgba(255, 255, 255, 0.04);
+        padding: 10px;
+        border-radius: 10px;
+        border-left: 3px solid #c084fc;
+      }
+
+      .step-number {
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        background: #9333ea;
+        color: #ffffff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 800;
+        font-size: 12px;
+        flex-shrink: 0;
+      }
+
+      .step-text {
+        font-size: 13px;
+        line-height: 1.4;
+        color: #cbd5e1;
+      }
+
+      .step-text strong {
+        color: #f8fafc;
+      }
+
+      #toast {
+        position: absolute;
+        top: 70px;
+        left: 50%;
+        transform: translateX(-50%) translateY(-20px);
+        background: #1e1333;
+        border: 1px solid rgba(192, 132, 252, 0.3);
+        color: #f8fafc;
+        padding: 8px 18px;
+        border-radius: 20px;
+        font-size: 13px;
+        font-weight: 700;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+        opacity: 0;
+        pointer-events: none;
+        transition: all 0.25s ease;
+        z-index: 40;
+      }
+
+      #toast.show {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+      }
+    </style>
+  </head>
   <body>
     <div id="game-stage">
       <!-- Header HUD -->
@@ -67,6 +463,10 @@
         <div class="hud-group">
           <button id="btn-how-to-play" class="btn-tactile btn-icon-only" title="How to Play" aria-label="How to Play">
             <span style="font-size: 16px;">📖</span>
+          </button>
+          <button id="btn-restart" class="btn-tactile btn-purple" title="Restart Cube">
+            <span>🔄</span>
+            <span class="hidden-mobile">Restart</span>
           </button>
           <div class="metric-pill">
             <span class="metric-label">TILES</span>
@@ -132,7 +532,7 @@
           <div class="tutorial-step">
             <div class="step-number">1</div>
             <div class="step-text">
-              <strong>Drag or Rotate:</strong> Swipe anywhere across the screen or tap the Left/Right buttons to spin the 3D cube and inspect all faces.
+              <strong>Drag or Rotate:</strong> Drag / swipe across the screen or tap the Left/Right buttons to spin the 3D cube in any direction.
             </div>
           </div>
           <div class="tutorial-step">
@@ -150,26 +550,6 @@
           <button id="btn-close-tutorial" class="btn-tactile btn-purple" style="width: 100%; margin-top: 10px;">
             Enter 3D Cube!
           </button>
-        </div>
-      </div>
-
-      <!-- Rewarded Ad Modal -->
-      <div id="modal-ad" class="modal-overlay">
-        <div class="modal-card">
-          <h2 class="modal-title">💡 Free Hint Sponsor</h2>
-          <p style="font-size: 13px; color: #94a3b8; line-height: 1.4;">
-            Watch this sponsor showcase to illuminate an accessible 3D pair.
-          </p>
-          <div class="ad-progress-bar">
-            <div id="ad-progress-fill" class="ad-progress-fill"></div>
-          </div>
-          <p id="ad-timer" style="font-size: 13px; font-weight: 700; color: #c084fc; text-align: center; margin-bottom: 16px;">
-            Reward unlocked in 5s...
-          </p>
-          <div style="display: flex; gap: 10px;">
-            <button id="btn-skip-ad" class="btn-tactile" style="flex: 1;">Skip</button>
-            <button id="btn-claim-hint" class="btn-tactile btn-gold" style="flex: 1;" disabled>Claim Hint! 💡</button>
-          </div>
         </div>
       </div>
 
@@ -191,307 +571,13 @@
               <span id="win-score" style="font-size: 20px; font-weight: 800; color: #facc15;">9,600</span>
             </div>
           </div>
-          <button id="btn-replay" class="btn-tactile btn-purple" style="width: 100%;">
-            Play Again
+          <button id="btn-replay" class="btn-tactile btn-purple" style="width: 100%; padding: 12px; font-size: 14px;">
+            🔄 Play Again
           </button>
         </div>
       </div>
     </div>
 
     <script src="./game.js"></script>
-  
-  <!-- PWA & Initial Screen Fullscreen UI -->
-  <button id="fl-fullscreen-btn" aria-label="Fullscreen" title="Toggle Fullscreen" style="
-    position: fixed;
-    top: 14px;
-    right: 14px;
-    z-index: 99999;
-    background: rgba(15, 23, 42, 0.75);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    color: #ffffff;
-    width: 42px;
-    height: 42px;
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    font-size: 18px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-    transition: transform 0.15s ease, background 0.2s ease;
-    user-select: none;
-    -webkit-tap-highlight-color: transparent;
-  " onmouseover="this.style.transform='scale(1.08)'" onmouseout="this.style.transform='scale(1)'">
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/>
-    </svg>
-  </button>
-
-  <script>
-    (function() {
-      // Register PWA Service Worker
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-          navigator.serviceWorker.register('./sw.js').catch(() => {});
-        });
-      }
-
-      // Initial Screen Fullscreen Handler
-      const fsBtn = document.getElementById('fl-fullscreen-btn');
-      if (fsBtn) {
-        fsBtn.addEventListener('click', function(e) {
-          e.stopPropagation();
-          if (!document.fullscreenElement && !document.webkitFullscreenElement && !document.mozFullScreenElement && !document.msFullscreenElement) {
-            const el = document.documentElement;
-            if (el.requestFullscreen) el.requestFullscreen().catch(()=>{});
-            else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
-            else if (el.mozRequestFullScreen) el.mozRequestFullScreen();
-            else if (el.msRequestFullscreen) el.msRequestFullscreen();
-          } else {
-            if (document.exitFullscreen) document.exitFullscreen().catch(()=>{});
-            else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
-            else if (document.mozCancelFullScreen) document.mozCancelFullScreen();
-            else if (document.msExitFullscreen) document.msExitFullscreen();
-          }
-        });
-      }
-    })();
-  </script>
-
-  <!-- 5-Second Hint Ad Modal System -->
-  <div id="fl-hint-modal-overlay" style="
-    display: none;
-    position: fixed;
-    inset: 0;
-    z-index: 999999;
-    background: rgba(10, 15, 30, 0.85);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    align-items: center;
-    justify-content: center;
-    font-family: system-ui, -apple-system, sans-serif;
-    padding: 16px;
-    box-sizing: border-box;
-  ">
-    <div style="
-      background: linear-gradient(145deg, #1e293b, #0f172a);
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      box-shadow: 0 20px 50px rgba(0,0,0,0.6), 0 0 30px rgba(245, 158, 11, 0.2);
-      border-radius: 20px;
-      max-width: 420px;
-      width: 100%;
-      padding: 24px;
-      text-align: center;
-      color: #f8fafc;
-      position: relative;
-      animation: flModalPop 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    ">
-      <!-- Close Button -->
-      <button id="fl-hint-close-btn" style="
-        position: absolute;
-        top: 14px;
-        right: 14px;
-        background: rgba(255,255,255,0.08);
-        border: none;
-        color: #94a3b8;
-        width: 32px;
-        height: 32px;
-        border-radius: 50%;
-        cursor: pointer;
-        font-size: 16px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: all 0.2s;
-      " onmouseover="this.style.color='#fff';this.style.background='rgba(255,255,255,0.15)'" onmouseout="this.style.color='#94a3b8';this.style.background='rgba(255,255,255,0.08)'">✕</button>
-
-      <!-- Icon -->
-      <div style="
-        width: 56px;
-        height: 56px;
-        background: rgba(245, 158, 11, 0.15);
-        border: 1px solid rgba(245, 158, 11, 0.3);
-        border-radius: 16px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 28px;
-        margin: 0 auto 14px auto;
-      ">💡</div>
-
-      <!-- Title & Subtitle -->
-      <h3 style="margin: 0 0 6px 0; font-size: 19px; font-weight: 800; color: #fbbf24;">Unlocking Hint</h3>
-      <p style="margin: 0 0 18px 0; font-size: 13px; color: #94a3b8; line-height: 1.4;">
-        Short sponsor break (max 5s) to support free puzzles!
-      </p>
-
-      <!-- Ad / Sponsor Banner Box -->
-      <div id="fl-hint-ad-box" style="
-        background: rgba(0, 0, 0, 0.35);
-        border: 1px dashed rgba(255, 255, 255, 0.12);
-        border-radius: 12px;
-        height: 100px;
-        margin-bottom: 18px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        gap: 6px;
-        color: #64748b;
-        font-size: 12px;
-      ">
-        <span style="font-weight: 700; color: #e2e8f0; font-size: 13px;">FunLogic Sponsor Ad</span>
-        <span>Ad space placeholder (300x100)</span>
-      </div>
-
-      <!-- Progress Bar & Countdown -->
-      <div style="margin-bottom: 16px;">
-        <div style="display: flex; justify-content: space-between; font-size: 12px; font-weight: 700; color: #cbd5e1; margin-bottom: 6px;">
-          <span>Hint ready in:</span>
-          <span id="fl-hint-timer-txt" style="color: #f59e0b;">5s</span>
-        </div>
-        <div style="width: 100%; height: 8px; background: rgba(255,255,255,0.1); border-radius: 4px; overflow: hidden;">
-          <div id="fl-hint-progress-bar" style="width: 0%; height: 100%; background: linear-gradient(90deg, #f59e0b, #10b981); border-radius: 4px; transition: width 0.1s linear;"></div>
-        </div>
-      </div>
-
-      <!-- Action Button -->
-      <button id="fl-hint-claim-btn" disabled style="
-        width: 100%;
-        padding: 12px;
-        border-radius: 12px;
-        border: none;
-        background: #334155;
-        color: #64748b;
-        font-size: 14px;
-        font-weight: 800;
-        cursor: not-allowed;
-        transition: all 0.2s;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-      ">Please wait 5s...</button>
-    </div>
-  </div>
-
-  <style>
-    @keyframes flModalPop {
-      0% { transform: scale(0.85); opacity: 0; }
-      100% { transform: scale(1); opacity: 1; }
-    }
-  </style>
-
-  <script>
-    (function() {
-      let countdownTimer = null;
-      let originalHintCallback = null;
-
-      const overlay = document.getElementById('fl-hint-modal-overlay');
-      const timerTxt = document.getElementById('fl-hint-timer-txt');
-      const progressBar = document.getElementById('fl-hint-progress-bar');
-      const claimBtn = document.getElementById('fl-hint-claim-btn');
-      const closeBtn = document.getElementById('fl-hint-close-btn');
-
-      function showHintAdModal(callback) {
-        if (!overlay) return;
-        originalHintCallback = callback;
-        overlay.style.display = 'flex';
-        
-        let timeLeft = 50; // 5.0 seconds (50 x 100ms)
-        claimBtn.disabled = true;
-        claimBtn.style.background = '#334155';
-        claimBtn.style.color = '#64748b';
-        claimBtn.style.cursor = 'not-allowed';
-        claimBtn.textContent = 'Please wait 5s...';
-        progressBar.style.width = '0%';
-        timerTxt.textContent = '5s';
-
-        // Notify parent portal
-        try {
-          if (window.parent && window.parent !== window) {
-            window.parent.postMessage({ type: 'hint_ad_started', duration: 5 }, '*');
-          }
-        } catch(e) {}
-
-        clearInterval(countdownTimer);
-        countdownTimer = setInterval(() => {
-          timeLeft--;
-          const percent = ((50 - timeLeft) / 50) * 100;
-          progressBar.style.width = percent + '%';
-          const secondsRemaining = Math.ceil(timeLeft / 10);
-          timerTxt.textContent = secondsRemaining + 's';
-          claimBtn.textContent = 'Please wait ' + secondsRemaining + 's...';
-
-          if (timeLeft <= 0) {
-            clearInterval(countdownTimer);
-            timerTxt.textContent = 'Ready!';
-            timerTxt.style.color = '#10b981';
-            claimBtn.disabled = false;
-            claimBtn.style.background = 'linear-gradient(90deg, #f59e0b, #10b981)';
-            claimBtn.style.color = '#0f172a';
-            claimBtn.style.cursor = 'pointer';
-            claimBtn.textContent = '✨ Get Hint Now';
-
-            try {
-              if (window.parent && window.parent !== window) {
-                window.parent.postMessage({ type: 'hint_ad_completed' }, '*');
-              }
-            } catch(e) {}
-          }
-        }, 100);
-      }
-
-      function closeHintModal() {
-        clearInterval(countdownTimer);
-        if (overlay) overlay.style.display = 'none';
-      }
-
-      function claimHint() {
-        closeHintModal();
-        if (typeof originalHintCallback === 'function') {
-          originalHintCallback();
-        }
-      }
-
-      if (closeBtn) closeBtn.addEventListener('click', closeHintModal);
-      if (claimBtn) claimBtn.addEventListener('click', claimHint);
-
-      // Expose globally for game engines
-      window.showHintWith5sAd = showHintAdModal;
-
-      // Automatically hook into any existing hint button in the DOM
-      window.addEventListener('DOMContentLoaded', () => {
-        setTimeout(() => {
-          const hintSelectors = [
-            '#btn-hint', '#hint-btn', '#button-hint', '#hint',
-            '.btn-hint', '.hint-btn', '[data-action="hint"]',
-            'button[title*="Hint" i]', 'button[aria-label*="Hint" i]'
-          ];
-
-          hintSelectors.forEach(selector => {
-            document.querySelectorAll(selector).forEach(btn => {
-              if (!btn.getAttribute('data-fl-hooked')) {
-                btn.setAttribute('data-fl-hooked', 'true');
-                btn.addEventListener('click', function(e) {
-                  // If modal not already claimed in this click
-                  if (!this.hasAttribute('data-hint-approved')) {
-                    e.stopImmediatePropagation();
-                    e.preventDefault();
-                    showHintAdModal(() => {
-                      this.setAttribute('data-hint-approved', 'true');
-                      this.click();
-                      setTimeout(() => this.removeAttribute('data-hint-approved'), 500);
-                    });
-                  }
-                }, true); // Capture phase to intercept first
-              }
-            });
-          });
-        }, 300);
-      });
-    })();
-  </script>
-
-</body>
+  </body>
 </html>

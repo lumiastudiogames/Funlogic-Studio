@@ -264,8 +264,9 @@ export class UIController {
         </div>
 
         <!-- Modal: Level Victory -->
-        <div id="modal-level-win" class="hidden absolute inset-0 bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-4 z-40">
-          <div class="bg-slate-900 border border-emerald-500/40 rounded-3xl p-5 sm:p-6 max-w-sm w-full max-h-[96dvh] overflow-y-auto shadow-2xl flex flex-col items-center text-center">
+        <div id="modal-level-win" class="hidden absolute inset-0 bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-4 z-40" onclick="event.stopPropagation()">
+          <div class="bg-slate-900 border border-emerald-500/40 rounded-3xl p-5 sm:p-6 max-w-sm w-full max-h-[96dvh] overflow-y-auto shadow-2xl flex flex-col items-center text-center relative" onclick="event.stopPropagation()">
+            <button id="btn-win-close" aria-label="Close" class="absolute top-3 right-3 w-8 h-8 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-400 font-bold flex items-center justify-center text-sm active:scale-90 transition-all cursor-pointer">✕</button>
             <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-2xl sm:text-3xl mb-2 animate-bounce">
               🎉
             </div>
@@ -295,7 +296,7 @@ export class UIController {
               </button>
               <div class="flex gap-2">
                 <button id="btn-win-retry" class="btn-tactile flex-1 py-2.5 rounded-xl bg-slate-800 border border-slate-700 text-xs font-bold text-slate-300">
-                  Replay
+                  Restart
                 </button>
                 <button id="btn-win-menu" class="btn-tactile flex-1 py-2.5 rounded-xl bg-slate-800 border border-slate-700 text-xs font-bold text-slate-300">
                   Levels
@@ -306,8 +307,9 @@ export class UIController {
         </div>
 
         <!-- Modal: Crash / Level Failed -->
-        <div id="modal-crash" class="hidden absolute inset-0 bg-slate-950/90 backdrop-blur-md flex items-center justify-center p-3 sm:p-4 z-40">
-          <div class="bg-slate-900 border border-red-500/40 rounded-3xl p-5 sm:p-6 max-w-sm w-full max-h-[96dvh] overflow-y-auto shadow-2xl flex flex-col items-center text-center">
+        <div id="modal-crash" class="hidden absolute inset-0 bg-slate-950/90 backdrop-blur-md flex items-center justify-center p-3 sm:p-4 z-40" onclick="event.stopPropagation()">
+          <div class="bg-slate-900 border border-red-500/40 rounded-3xl p-5 sm:p-6 max-w-sm w-full max-h-[96dvh] overflow-y-auto shadow-2xl flex flex-col items-center text-center relative" onclick="event.stopPropagation()">
+            <button id="btn-crash-close" aria-label="Close" class="absolute top-3 right-3 w-8 h-8 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-400 font-bold flex items-center justify-center text-sm active:scale-90 transition-all cursor-pointer">✕</button>
             <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-red-500/20 border border-red-500/40 flex items-center justify-center text-2xl sm:text-3xl mb-2">
               💥
             </div>
@@ -318,7 +320,7 @@ export class UIController {
 
             <div class="flex flex-col gap-2 w-full mt-2 sm:mt-3">
               <button id="btn-crash-retry" class="btn-tactile w-full py-2.5 sm:py-3 rounded-xl bg-gradient-to-r from-red-600 to-amber-600 text-white font-black text-xs sm:text-sm uppercase tracking-wide shadow-lg shadow-red-600/30">
-                ↺ Try Again
+                ↺ Restart
               </button>
               <button id="btn-crash-menu" class="btn-tactile w-full py-2.5 rounded-xl bg-slate-800 border border-slate-700 text-xs font-bold text-slate-300">
                 Level Select
@@ -627,6 +629,12 @@ export class UIController {
     });
 
     // Win Modal
+    document.getElementById('btn-win-close')?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      audio.playClick();
+      this.closeAllModals();
+    });
+
     document.getElementById('btn-win-next')?.addEventListener('click', () => {
       audio.playClick();
       this.closeAllModals();
@@ -645,6 +653,12 @@ export class UIController {
     });
 
     // Crash Modal
+    document.getElementById('btn-crash-close')?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      audio.playClick();
+      this.closeAllModals();
+    });
+
     document.getElementById('btn-crash-retry')?.addEventListener('click', () => {
       audio.playClick();
       this.closeAllModals();

@@ -19,6 +19,7 @@
 
   // Initial Positions (Just 1 Box!)
   let player = { r: 2, c: 2 };
+  let playerFacing = 'down';
   let box = { r: 3, c: 3 };
   const goal = { r: 3, c: 4 };
 
@@ -119,7 +120,7 @@
           }
 
           if (isPlayer) {
-            cellEl.textContent = '🧑‍🌾';
+            cellEl.innerHTML = `<span class="player-marker facing-${playerFacing}">🧑‍🌾</span>`;
           } else if (isBox) {
             cellEl.textContent = '📦';
             if (isGoal) {
@@ -147,10 +148,10 @@
 
     let dr = 0;
     let dc = 0;
-    if (direction === 'UP') dr = -1;
-    if (direction === 'DOWN') dr = 1;
-    if (direction === 'LEFT') dc = -1;
-    if (direction === 'RIGHT') dc = 1;
+    if (direction === 'UP') { dr = -1; playerFacing = 'up'; }
+    if (direction === 'DOWN') { dr = 1; playerFacing = 'down'; }
+    if (direction === 'LEFT') { dc = -1; playerFacing = 'left'; }
+    if (direction === 'RIGHT') { dc = 1; playerFacing = 'right'; }
 
     const nextPlayerR = player.r + dr;
     const nextPlayerC = player.c + dc;

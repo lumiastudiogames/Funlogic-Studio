@@ -147,9 +147,48 @@
     btnUndo.disabled = false;
   }
 
+  function spawnStarParticles(colIdx) {
+    const colEl = tableauEl.children[colIdx];
+    if (!colEl) return;
+    const rect = colEl.getBoundingClientRect();
+    const stageRect = document.getElementById('game-stage').getBoundingClientRect();
+    const cx = rect.left + rect.width / 2 - stageRect.left;
+    const cy = rect.top + rect.height / 2 - stageRect.top;
+
+    const stars = ['✨', '⭐', '💫', '👑', '✦'];
+    for (let i = 0; i < 12; i++) {
+      const particle = document.createElement('span');
+      particle.textContent = stars[i % stars.length];
+      particle.style.position = 'absolute';
+      particle.style.left = `${cx}px`;
+      particle.style.top = `${cy}px`;
+      particle.style.transform = 'translate(-50%, -50%) scale(0.5)';
+      particle.style.pointerEvents = 'none';
+      particle.style.fontSize = '20px';
+      particle.style.zIndex = '1000';
+      particle.style.transition = 'transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.6s ease-out';
+      particle.style.opacity = '1';
+      document.getElementById('game-stage').appendChild(particle);
+
+      const angle = (i / 12) * Math.PI * 2 + (Math.random() * 0.4 - 0.2);
+      const distance = 40 + Math.random() * 40;
+      const tx = Math.cos(angle) * distance;
+      const ty = Math.sin(angle) * distance;
+
+      requestAnimationFrame(() => {
+        particle.style.transform = `translate(calc(-50% + ${tx}px), calc(-50% + ${ty}px)) scale(1.3)`;
+        particle.style.opacity = '0';
+      });
+
+      setTimeout(() => {
+        if (particle.parentNode) particle.parentNode.removeChild(particle);
+      }, 650);
+    }
+  }
+
   function updateHUD() {
-    movesBadge.textContent = `${moves} MOVS`;
-    setsBadge.textContent = `${completedSets}/8 JOGOS`;
+    movesBadge.textContent = `${moves} MOVES`;
+    setsBadge.textContent = `${completedSets}/8 SETS`;
     stockCountEl.textContent = stock.length / 10;
 
     if (stock.length === 0) {
@@ -325,6 +364,7 @@
       }
       completedSets++;
       AudioEngine.playSequenceCleared();
+      spawnStarParticles(colIdx);
       updateHUD();
     }
   }

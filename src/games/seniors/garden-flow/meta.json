@@ -293,5 +293,6 @@
   ],
   "isSeniors": true,
   "isKids": false,
-  "is3D": false
+  "is3D": false,
+  "coverImage": "./cover.webp"
 }

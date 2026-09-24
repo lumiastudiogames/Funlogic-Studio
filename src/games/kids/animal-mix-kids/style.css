@@ -15,7 +15,7 @@ body {
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  background: #fdf2f8;
+  background: radial-gradient(circle at center, #fdf2f8 0%, #fce7f3 100%);
   font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   color: #334155;
 }
@@ -30,19 +30,21 @@ body {
   flex-direction: column;
   position: relative;
   overflow: hidden;
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 20px 35px -5px rgba(244, 63, 94, 0.15), 0 10px 15px -5px rgba(0, 0, 0, 0.08);
 }
 
 @media (min-width: 640px) {
   #game-stage {
     height: 94vh;
     border-radius: 28px;
+    border: 2px solid rgba(251, 113, 133, 0.2);
   }
 }
 
 .header {
-  height: 56px;
-  background: rgba(255, 255, 255, 0.95);
+  height: 58px;
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(8px);
   border-bottom: 2px solid #f1f5f9;
   padding: 0 16px;
   display: flex;
@@ -64,15 +66,15 @@ body {
   align-items: center;
   justify-content: center;
   gap: 6px;
-  border-radius: 12px;
+  border-radius: 14px;
   border: 1px solid #e2e8f0;
   background: #ffffff;
   color: #475569;
   font-size: 13px;
-  font-weight: 700;
+  font-weight: 800;
   cursor: pointer;
-  height: 38px;
-  padding: 0 12px;
+  height: 40px;
+  padding: 0 14px;
   flex-shrink: 0;
   box-shadow: 0 3px 0 #cbd5e1, 0 4px 6px -1px rgba(0, 0, 0, 0.05);
   transition: transform 0.1s ease, box-shadow 0.1s ease;
@@ -89,19 +91,19 @@ body {
 }
 
 .btn-icon {
-  width: 38px;
+  width: 40px;
   padding: 0;
 }
 
 .btn-primary {
-  background: #f43f5e;
+  background: linear-gradient(135deg, #fb7185, #f43f5e);
   border-color: #e11d48;
   color: #ffffff;
-  box-shadow: 0 3px 0 #be123c, 0 4px 6px -1px rgba(244, 63, 94, 0.3);
+  box-shadow: 0 3px 0 #be123c, 0 4px 10px rgba(244, 63, 94, 0.35);
 }
 
 .btn-primary:hover {
-  background: #fb7185;
+  background: linear-gradient(135deg, #f43f5e, #e11d48);
   box-shadow: 0 4px 0 #be123c;
 }
 
@@ -125,7 +127,7 @@ body {
   justify-content: center;
   padding: 16px;
   position: relative;
-  background: linear-gradient(180deg, #fff1f2 0%, #fef2f2 100%);
+  background: radial-gradient(circle at 50% 30%, #fff1f2 0%, #ffe4e6 60%, #fecdd3 100%);
 }
 
 .tubes-container {
@@ -134,42 +136,117 @@ body {
   justify-content: center;
   gap: 16px;
   width: 100%;
-  max-width: 440px;
-  height: 340px;
+  max-width: 460px;
+  height: 350px;
   margin-bottom: 20px;
+  position: relative;
+}
+
+/* 3D Glass Tube Styling */
+.tube-wrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
+  cursor: pointer;
+}
+
+.tube-wrapper.selected {
+  transform: translateY(-22px);
+}
+
+.tube-lip {
+  width: 82px;
+  height: 12px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.95), rgba(203, 213, 225, 0.7));
+  border: 3px solid rgba(148, 163, 184, 0.8);
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.08), inset 0 1px 2px #fff;
+  z-index: 5;
+  margin-bottom: -4px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.tube-wrapper.selected .tube-lip {
+  border-color: #f43f5e;
+  box-shadow: 0 0 12px rgba(244, 63, 94, 0.5), inset 0 1px 2px #fff;
+}
+
+.tube-wrapper.completed .tube-lip {
+  border-color: #10b981;
+  box-shadow: 0 0 12px rgba(16, 185, 129, 0.5), inset 0 1px 2px #fff;
 }
 
 .tube {
-  width: 76px;
+  width: 74px;
   height: 250px;
-  background: rgba(255, 255, 255, 0.85);
-  border: 4px solid #cbd5e1;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.75) 0%, rgba(241, 245, 249, 0.5) 50%, rgba(255, 255, 255, 0.65) 100%);
+  border: 3.5px solid rgba(148, 163, 184, 0.7);
   border-top: none;
-  border-bottom-left-radius: 38px;
-  border-bottom-right-radius: 38px;
+  border-bottom-left-radius: 37px;
+  border-bottom-right-radius: 37px;
   position: relative;
   display: flex;
   flex-direction: column-reverse;
   align-items: center;
   padding-bottom: 8px;
-  cursor: pointer;
-  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), border-color 0.2s;
-  box-shadow: inset 0 -6px 12px rgba(0, 0, 0, 0.05), 0 8px 16px rgba(0, 0, 0, 0.06);
+  box-shadow: 
+    inset 4px 0 8px rgba(255, 255, 255, 0.8),
+    inset -4px 0 8px rgba(148, 163, 184, 0.25),
+    inset 0 -8px 12px rgba(148, 163, 184, 0.2),
+    0 12px 24px -6px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  box-sizing: border-box;
+  backdrop-filter: blur(3px);
+  transition: border-color 0.2s, box-shadow 0.2s;
 }
 
-.tube:hover {
+/* Glass Specular Reflection Highlight */
+.tube::before {
+  content: '';
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  bottom: 24px;
+  width: 6px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.2) 100%);
+  border-radius: 3px;
+  pointer-events: none;
+  z-index: 3;
+}
+
+.tube::after {
+  content: '';
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  bottom: 24px;
+  width: 3px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.6) 0%, rgba(255,255,255,0.05) 100%);
+  border-radius: 2px;
+  pointer-events: none;
+  z-index: 3;
+}
+
+.tube-wrapper:hover {
   transform: translateY(-4px);
-  border-color: #94a3b8;
 }
 
-.tube.selected {
-  transform: translateY(-16px);
+.tube-wrapper.selected .tube {
   border-color: #f43f5e;
-  box-shadow: 0 16px 24px -4px rgba(244, 63, 94, 0.3), inset 0 0 12px rgba(244, 63, 94, 0.15);
+  box-shadow: 
+    0 20px 30px -6px rgba(244, 63, 94, 0.35),
+    inset 0 0 16px rgba(244, 63, 94, 0.2),
+    inset 4px 0 8px rgba(255, 255, 255, 0.9);
 }
 
-.tube.completed {
+.tube-wrapper.completed .tube {
   border-color: #10b981;
+  box-shadow: 
+    0 16px 24px -4px rgba(16, 185, 129, 0.35),
+    inset 0 0 14px rgba(16, 185, 129, 0.2),
+    inset 4px 0 8px rgba(255, 255, 255, 0.9);
 }
 
 .animal-slot {
@@ -181,48 +258,56 @@ body {
   align-items: center;
   justify-content: center;
   font-size: 32px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1), inset 0 2px 4px rgba(255, 255, 255, 0.6);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12), inset 0 2px 4px rgba(255, 255, 255, 0.7);
   transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-  animation: popIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  position: relative;
+  z-index: 2;
+  animation: popIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .animal-slot.dog {
-  background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
-  border: 3px solid #d97706;
+  background: linear-gradient(135deg, #fde68a 0%, #f59e0b 50%, #d97706 100%);
+  border: 3px solid #b45309;
 }
 
 .animal-slot.cat {
-  background: linear-gradient(135deg, #f472b6 0%, #ec4899 100%);
-  border: 3px solid #db2777;
+  background: linear-gradient(135deg, #fbcfe8 0%, #f472b6 50%, #db2777 100%);
+  border: 3px solid #be185d;
 }
 
 .animal-slot.bunny {
-  background: linear-gradient(135deg, #38bdf8 0%, #06b6d4 100%);
-  border: 3px solid #0891b2;
+  background: linear-gradient(135deg, #bae6fd 0%, #38bdf8 50%, #0284c7 100%);
+  border: 3px solid #0369a1;
 }
 
-.tube.selected .animal-slot:last-child {
-  transform: translateY(-12px) scale(1.08);
+.tube-wrapper.selected .animal-slot:last-child {
+  transform: translateY(-16px) scale(1.12);
+  box-shadow: 0 10px 18px rgba(244, 63, 94, 0.4), inset 0 2px 5px #fff;
 }
 
 @keyframes popIn {
-  from { transform: scale(0.4); opacity: 0; }
+  from { transform: scale(0.3); opacity: 0; }
   to { transform: scale(1); opacity: 1; }
 }
 
 .hint-bar {
   font-size: 14px;
-  font-weight: 700;
+  font-weight: 800;
   color: #64748b;
   text-align: center;
+  background: rgba(255, 255, 255, 0.75);
+  padding: 8px 18px;
+  border-radius: 16px;
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.03);
 }
 
 /* Modal */
 .modal-overlay {
   position: absolute;
   inset: 0;
-  background: rgba(15, 23, 42, 0.6);
-  backdrop-filter: blur(4px);
+  background: rgba(15, 23, 42, 0.65);
+  backdrop-filter: blur(6px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -230,7 +315,7 @@ body {
   z-index: 50;
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.2s ease;
+  transition: opacity 0.25s ease;
 }
 
 .modal-overlay.active {
@@ -242,8 +327,14 @@ body {
   width: 100%;
   max-width: 360px;
   background: #ffffff;
-  border-radius: 24px;
-  padding: 24px;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  border-radius: 28px;
+  padding: 28px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.3);
   text-align: center;
+  transform: scale(0.9);
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.modal-overlay.active .modal-card {
+  transform: scale(1);
 }

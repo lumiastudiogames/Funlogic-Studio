@@ -159,7 +159,7 @@
         <div class="flex items-center justify-center gap-2 sm:gap-3">
           
           <!-- Reset Button -->
-          <button id="btn-reset" class="btn-tactile flex-1 max-w-[130px] sm:max-w-[150px] py-2 sm:py-2.5 px-3 rounded-xl bg-slate-800/90 hover:bg-slate-700 border border-white/15 text-slate-200 font-bold text-xs sm:text-sm flex items-center justify-center gap-1.5" title="Reiniciar tabuleiro atual">
+          <button id="btn-reset" class="btn-tactile flex-1 max-w-[130px] sm:max-w-[150px] py-2 sm:py-2.5 px-3 rounded-xl bg-slate-800/90 hover:bg-slate-700 border border-white/15 text-slate-200 font-bold text-xs sm:text-sm flex items-center justify-center gap-1.5" title="Reset current board">
             <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
             </svg>
@@ -167,13 +167,13 @@
           </button>
 
           <!-- Hint Button -->
-          <button id="btn-hint" class="btn-tactile flex-1 max-w-[130px] sm:max-w-[150px] py-2 sm:py-2.5 px-3 rounded-xl bg-slate-800/90 hover:bg-slate-700 border border-white/15 text-amber-300 font-bold text-xs sm:text-sm flex items-center justify-center gap-1.5" title="Dica matemática">
+          <button id="btn-hint" class="btn-tactile flex-1 max-w-[130px] sm:max-w-[150px] py-2 sm:py-2.5 px-3 rounded-xl bg-slate-800/90 hover:bg-slate-700 border border-white/15 text-amber-300 font-bold text-xs sm:text-sm flex items-center justify-center gap-1.5" title="Math hint">
             <span class="text-sm">💡</span>
             <span>Hint</span>
           </button>
 
           <!-- New Puzzle Button (Highlighted with blue accent from image) -->
-          <button id="btn-new-puzzle" class="btn-tactile flex-1 max-w-[150px] sm:max-w-[180px] py-2 sm:py-2.5 px-3 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 border border-sky-400/40 text-white font-black text-xs sm:text-sm flex items-center justify-center gap-1.5 shadow-[0_0_15px_rgba(59,130,246,0.35)]" title="Gerar novo quebra-cabeça">
+          <button id="btn-new-puzzle" class="btn-tactile flex-1 max-w-[150px] sm:max-w-[180px] py-2 sm:py-2.5 px-3 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 border border-sky-400/40 text-white font-black text-xs sm:text-sm flex items-center justify-center gap-1.5 shadow-[0_0_15px_rgba(59,130,246,0.35)]" title="Generate new puzzle">
             <span>🎲</span>
             <span>New Puzzle</span>
           </button>
@@ -419,57 +419,7 @@
     <!-- Vanilla JS Application Entry Point (Pure DOM & TS/JS) -->
     <script type="module" src="./src/main.ts"></script>
   
-  <!-- Fullscreen UI -->
-  <button id="fl-fullscreen-btn" aria-label="Fullscreen" title="Toggle Fullscreen" style="
-    position: fixed;
-    top: 14px;
-    right: 14px;
-    z-index: 99999;
-    background: rgba(15, 23, 42, 0.75);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    color: #ffffff;
-    width: 42px;
-    height: 42px;
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    font-size: 18px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-    transition: transform 0.15s ease, background 0.2s ease;
-    user-select: none;
-    -webkit-tap-highlight-color: transparent;
-  " onmouseover="this.style.transform='scale(1.08)'" onmouseout="this.style.transform='scale(1)'">
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/>
-    </svg>
-  </button>
-
-  <script>
-    (function() {
-      const fsBtn = document.getElementById('fl-fullscreen-btn');
-      if (fsBtn) {
-        fsBtn.addEventListener('click', function(e) {
-          e.stopPropagation();
-          if (!document.fullscreenElement && !document.webkitFullscreenElement && !document.mozFullScreenElement && !document.msFullscreenElement) {
-            const el = document.documentElement;
-            if (el.requestFullscreen) el.requestFullscreen().catch(()=>{});
-            else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
-            else if (el.mozRequestFullScreen) el.mozRequestFullScreen();
-            else if (el.msRequestFullscreen) el.msRequestFullscreen();
-          } else {
-            if (document.exitFullscreen) document.exitFullscreen().catch(()=>{});
-            else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
-            else if (document.mozCancelFullScreen) document.mozCancelFullScreen();
-            else if (document.msExitFullscreen) document.msExitFullscreen();
-          }
-        });
-      }
-    })();
-  </script>
+  <!-- PWA Service Worker Registration -->
 
 
   <!-- PWA Service Worker Registration -->

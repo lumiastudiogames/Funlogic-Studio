@@ -12,6 +12,7 @@ import { renderCategoryView } from './views/CategoryView';
 import { renderGameView } from './views/GameView';
 import { renderGameDetailView } from './views/GameDetailView';
 import { renderSitemapView } from './views/SitemapView';
+import { renderLegalView } from './views/LegalView';
 import { getGameLiveStats, recordGamePlay, recordGameRating } from './utils/gameStats';
 import { showVictoryModal } from './components/VictoryModal';
 import { GAMES } from './data/games';
@@ -97,18 +98,28 @@ function initApp(): void {
       (mainContent as any)._cleanup = null;
     }
 
-    const hash = window.location.hash.replace(/^#/, '').trim();
-    window.scrollTo({ top: 0, behavior: 'instant' });
+    // Extract route from either hash or clean pathname
+    let route = window.location.hash.replace(/^#/, '').trim();
+    if (!route) {
+      const pathname = window.location.pathname
+        .replace(/^\/funlogic\.games\//, '/')
+        .replace(/^\//, '')
+        .replace(/\/$/, '')
+        .trim();
+      if (pathname && pathname !== 'index.html') {
+        route = pathname;
+      }
+    }
 
-    // Fullscreen game player mode applies to #play/* and #daily
-    const isGamePlayer = hash.startsWith('play/') || hash === 'daily';
+    // Fullscreen game player mode applies to play/* and daily
+    const isGamePlayer = route.startsWith('play/') || route === 'daily';
     const mobileAnchor = document.querySelector('.mobile-anchor-ad') as HTMLElement;
 
     if (isGamePlayer) {
       headerRoot.style.display = 'none';
       footerRoot.style.display = 'none';
       if (mobileAnchor) mobileAnchor.style.display = 'none';
-      mainWrapper.className = 'w-full h-screen p-0 m-0 max-w-none flex flex-col overflow-hidden';
+      mainWrapper.className = 'w-full h-[100dvh] p-0 m-0 max-w-none flex flex-col overflow-hidden';
       viewportFrame.className = 'w-full h-full p-0 m-0 border-0 rounded-none bg-black flex-1 flex flex-col overflow-hidden shadow-none';
       mainContent.className = 'w-full h-full flex-1 flex flex-col overflow-hidden';
     } else {
@@ -120,39 +131,48 @@ function initApp(): void {
       mainContent.className = '';
     }
 
-    if (!hash || hash === 'home') {
-      document.title = 'FunLogic.games — Casual Logic & Reasoning Games';
+    if (!route || route === 'home') {
+      document.title = 'Casual Logic & Reasoning Games — FunLogic.games';
       renderHomeView(mainContent);
-    } else if (hash === 'daily') {
+    } else if (route === 'daily') {
       document.title = 'Daily Brain Puzzle — FunLogic.games Challenge';
       renderGameView(mainContent, 'daily-brain-challenge');
-    } else if (hash === 'sitemap') {
+    } else if (route === 'sitemap') {
       document.title = 'Human Sitemap — FunLogic.games';
       renderSitemapView(mainContent);
-    } else if (hash.startsWith('category/')) {
-      const parts = hash.split('/');
+    } else if (route === 'privacy') {
+      renderLegalView(mainContent, 'privacy');
+    } else if (route === 'terms') {
+      renderLegalView(mainContent, 'terms');
+    } else if (route === 'about') {
+      renderLegalView(mainContent, 'about');
+    } else if (route === 'contact') {
+      renderLegalView(mainContent, 'contact');
+    } else if (route.startsWith('category/')) {
+      const parts = route.split('/');
       const catId = (parts[1] || 'water-sort') as CategoryId;
       const pageNum = parts[3] ? parseInt(parts[3], 10) : 1;
       document.title = `${catId.toUpperCase()} Logic Games — FunLogic.games`;
       renderCategoryView(mainContent, catId, pageNum);
-    } else if (hash.startsWith('play/')) {
+    } else if (route.startsWith('play/')) {
       // Direct Instant 1-Click Game Engine Mode
-      const parts = hash.split('/');
+      const parts = route.split('/');
       const gameId = parts[1] || 'water-sort-lab';
       renderGameView(mainContent, gameId);
-    } else if (hash.startsWith('game/')) {
+    } else if (route.startsWith('game/')) {
       // Dedicated Individual Game Info & Landing Page
-      const parts = hash.split('/');
+      const parts = route.split('/');
       const gameId = parts[1] || 'water-sort-lab';
       renderGameDetailView(mainContent, gameId);
     } else {
-      document.title = 'FunLogic.games — Casual Logic & Reasoning Games';
+      document.title = 'Casual Logic & Reasoning Games — FunLogic.games';
       renderHomeView(mainContent);
     }
   }
 
-  // Listen for hash changes
+  // Listen for hash and history popstate changes
   window.addEventListener('hashchange', handleNavigation);
+  window.addEventListener('popstate', handleNavigation);
   handleNavigation();
 }
 

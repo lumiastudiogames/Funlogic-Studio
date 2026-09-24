@@ -64,6 +64,7 @@ export class ScreenManager {
     } else if (this.currentScreen === 'PLAYING') {
       document.getElementById('screen-playing')?.classList.remove('hidden');
       this.renderPlayingScreen();
+      soundManager.startAmbient();
       if (window.dispatchEvent) {
         window.dispatchEvent(new Event('resize'));
       }
@@ -503,9 +504,14 @@ export class ScreenManager {
             </div>
 
             <div class="w-full flex flex-col gap-2">
-              <button id="btn-next-level" class="btn-tactile w-full py-2.5 sm:py-3 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-600 text-stone-950 font-black text-xs sm:text-sm uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer">
-                <span>NEXT EXPEDITION</span> ${ICONS.play}
-              </button>
+              <div class="w-full flex gap-2">
+                <button id="btn-next-level" class="btn-tactile flex-1 py-2.5 sm:py-3 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-600 text-stone-950 font-black text-xs sm:text-sm uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer">
+                  <span>NEXT EXPEDITION</span> ${ICONS.play}
+                </button>
+                <button id="btn-win-restart" class="btn-tactile py-2.5 sm:py-3 px-4 rounded-xl bg-stone-800 hover:bg-stone-700 text-amber-300 border border-amber-600/40 font-bold text-xs uppercase tracking-wider cursor-pointer flex items-center justify-center gap-1.5">
+                  <span>Restart</span>
+                </button>
+              </div>
               <button id="btn-win-menu" class="btn-tactile w-full py-2 rounded-xl bg-stone-800 text-amber-200 border border-stone-700 font-bold text-xs uppercase tracking-wider cursor-pointer">
                 RETURN TO MENU
               </button>
@@ -631,6 +637,13 @@ export class ScreenManager {
       } else {
         this.setScreen('LEVEL_SELECT');
       }
+    });
+
+    document.getElementById('btn-win-restart')?.addEventListener('click', () => {
+      soundManager.playClick();
+      document.getElementById('modal-win')?.classList.add('hidden');
+      gameState.startLevel(gameState.currentLevel.id);
+      this.setScreen('PLAYING');
     });
 
     document.getElementById('btn-win-menu')?.addEventListener('click', () => {

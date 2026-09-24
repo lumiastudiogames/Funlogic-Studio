@@ -6,6 +6,9 @@
 class SoundEngine {
   private ctx: AudioContext | null = null;
   private muted: boolean = false;
+  private ambientInterval: number | null = null;
+  private ambientOscs: OscillatorNode[] = [];
+  private ambientMaster: GainNode | null = null;
 
   constructor() {
     // Load mute preference from storage
@@ -32,8 +35,115 @@ class SoundEngine {
     localStorage.setItem('museum_heist_muted', String(this.muted));
     if (!this.muted) {
       this.playClick();
+      this.startAmbient();
+    } else {
+      this.stopAmbient();
     }
     return this.muted;
+  }
+
+  public startAmbient() {
+    if (this.muted || this.ambientMaster) return;
+    this.initCtx();
+    if (!this.ctx) return;
+
+    try {
+      const now = this.ctx.currentTime;
+      const master = this.ctx.createGain();
+      master.gain.setValueAtTime(0.001, now);
+      master.gain.exponentialRampToValueAtTime(0.05, now + 1.5);
+      master.connect(this.ctx.destination);
+      this.ambientMaster = master;
+
+      // Low warm atmospheric noir drone (C2 = 65.41 Hz, G2 = 98.00 Hz)
+      const osc1 = this.ctx.createOscillator();
+      osc1.type = 'sawtooth';
+      osc1.frequency.setValueAtTime(65.41, now);
+
+      const osc2 = this.ctx.createOscillator();
+      osc2.type = 'sine';
+      osc2.frequency.setValueAtTime(98.0, now);
+
+      const filter = this.ctx.createBiquadFilter();
+      filter.type = 'lowpass';
+      filter.frequency.setValueAtTime(220, now);
+
+      // Subtle slow breathing LFO
+      const lfo = this.ctx.createOscillator();
+      lfo.frequency.setValueAtTime(0.07, now);
+      const lfoGain = this.ctx.createGain();
+      lfoGain.gain.setValueAtTime(70, now);
+      lfo.connect(lfoGain);
+      lfoGain.connect(filter.frequency);
+
+      osc1.connect(filter);
+      osc2.connect(filter);
+      filter.connect(master);
+
+      osc1.start();
+      osc2.start();
+      lfo.start();
+      this.ambientOscs = [osc1, osc2, lfo];
+
+      // Periodic subtle detective noir piano chime (Cm9 notes)
+      this.ambientInterval = window.setInterval(() => {
+        if (!this.muted && this.ctx && this.ambientMaster) {
+          this.playNoirNote();
+        }
+      }, 5500);
+    } catch (e) {
+      console.warn('Ambient start failed:', e);
+    }
+  }
+
+  private playNoirNote() {
+    if (this.muted || !this.ctx) return;
+    const now = this.ctx.currentTime;
+    // Noir mystery notes: C, Eb, G, Bb, D
+    const scale = [261.63, 311.13, 392.00, 466.16, 587.33];
+    const freq = scale[Math.floor(Math.random() * scale.length)];
+
+    const osc = this.ctx.createOscillator();
+    const gain = this.ctx.createGain();
+    const filter = this.ctx.createBiquadFilter();
+
+    osc.type = 'triangle';
+    osc.frequency.setValueAtTime(freq, now);
+
+    filter.type = 'lowpass';
+    filter.frequency.setValueAtTime(800, now);
+
+    gain.gain.setValueAtTime(0.001, now);
+    gain.gain.linearRampToValueAtTime(0.02, now + 0.2);
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + 2.4);
+
+    osc.connect(filter);
+    filter.connect(gain);
+    gain.connect(this.ctx.destination);
+
+    osc.start(now);
+    osc.stop(now + 2.5);
+  }
+
+  public stopAmbient() {
+    if (this.ambientInterval) {
+      clearInterval(this.ambientInterval);
+      this.ambientInterval = null;
+    }
+    if (this.ambientMaster) {
+      try {
+        const now = this.ctx ? this.ctx.currentTime : 0;
+        this.ambientMaster.gain.linearRampToValueAtTime(0.001, now + 0.4);
+        const oscs = this.ambientOscs;
+        setTimeout(() => {
+          oscs.forEach(o => {
+            try { o.stop(); } catch (e) {}
+          });
+        }, 500);
+      } catch (e) {}
+      this.ambientMaster = null;
+      this.ambientOscs = [];
+    }
   }
 
   public playClick() {

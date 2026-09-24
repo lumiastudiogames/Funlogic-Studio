@@ -1,0 +1,17 @@
+{
+  "id": "quiz-brasil",
+  "title": "Quiz das Capitais do Brasil",
+  "categoryId": "all-brain",
+  "shortDesc": "Teste seus conhecimentos geográficos e deduções sobre as capitais brasileiras.",
+  "description": "Um quiz de lógica e conhecimentos gerais sobre as capitais dos estados brasileiros. Responda perguntas rápidas com feedback imediato.",
+  "instructions": "Leia a pergunta sobre o estado ou capital e selecione a alternativa correta antes do tempo limite.",
+  "tags": ["quiz", "trivia", "brasil", "geografia", "brain"],
+  "keywords": "quiz brasil, quiz capitais, trivia brasileira, jogo de perguntas, brain quiz",
+  "faqs": [
+    { "q": "Quantas capitais têm no quiz?", "a": "O jogo sorteia perguntas entre todos os 26 estados e o Distrito Federal." },
+    { "q": "Como acumular pontuação máxima?", "a": "Responda corretamente de primeira para acumular bônus de sequência (streak)." }
+  ],
+  "coverBg": "#DCFCE7",
+  "playsCount": "21.5k",
+  "isTrending": true
+}

@@ -60,10 +60,10 @@ export function createGameCardHTML(game: Game): string {
           </div>
           <div class="flex items-center gap-1.5 text-[10px] text-gray-500 font-extrabold shrink-0 ml-auto whitespace-nowrap">
             ${stats.isNew 
-              ? '<span class="bg-emerald-50 text-emerald-700 border border-emerald-200/70 px-2 py-0.5 rounded text-[10px] font-black whitespace-nowrap">Novo</span>' 
+              ? '<span class="bg-emerald-50 text-emerald-700 border border-emerald-200/70 px-2 py-0.5 rounded text-[10px] font-black whitespace-nowrap">✨ New</span>' 
               : `<span class="text-amber-500 font-black whitespace-nowrap">★ ${stats.ratingValue.toFixed(1)}</span>`
             }
-            <span class="text-gray-400 whitespace-nowrap">▶ ${stats.formattedPlaysCount}</span>
+            ${stats.playsCount > 0 ? `<span class="text-gray-400 whitespace-nowrap">▶ ${stats.formattedPlaysCount}</span>` : ''}
           </div>
         </div>
       </div>

@@ -2505,7 +2505,10 @@
           else if (e.key.toLowerCase() === 'm') toggleSound();
           else if (e.key.toLowerCase() === 'f') toggleFullscreen();
           else if (e.key === 'Escape') {
-            document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('active'));
+            const activeModals = Array.from(document.querySelectorAll('.modal-overlay.active'));
+            if (activeModals.length > 0) {
+              activeModals[activeModals.length - 1].classList.remove('active');
+            }
           }
         });
 

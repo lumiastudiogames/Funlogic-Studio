@@ -2,8 +2,8 @@
   "title": "Museum Art Heist Logic Grid",
   "categoryId": "logicgrid",
   "icon": "🕵️‍♂️",
-  "instructions": "Relacione cada investigador à sua pintura roubada e à pista forense deixada na cena do crime usando a grade lógica de dedução.",
-  "description": "Museum Art Heist é um envolvente jogo de puzzle estilo Logic Grid (grade de dedução lógica). Assuma o papel do detetive-chefe e analise as pistas forenses deixadas pelo ladrão para correlacionar os investigadores, as pinturas inestimáveis e os vestígios da cena do crime.",
+  "instructions": "Match each investigator with their stolen painting and forensic clue left at the crime scene using the deduction logic grid.",
+  "description": "Museum Art Heist is an engaging Logic Grid puzzle game. Analyze forensic clues left by the thief to correlate detectives, priceless paintings, and traces found at the crime scene.",
   "keywords": [
     "logic grid",
     "logic grid puzzle",
@@ -130,16 +130,16 @@
   ],
   "faqs": [
     {
-      "q": "Como jogar Museum Art Heist Logic Grid?",
-      "a": "Toque nas células da grade para alternar entre Vazio, ❌ (Falso) e ✔️ (Verdadeiro). Leia as pistas para eliminar combinações impossíveis e confirmar os relacionamentos corretos entre detetives, pinturas e evidências."
+      "q": "How do I play Museum Art Heist Logic Grid?",
+      "a": "Tap grid cells to cycle between Empty, ❌ (False), and ✔️ (True). Read the clues to eliminate impossible combinations and confirm the correct relationships."
     },
     {
-      "q": "O que acontece ao marcar um ✔️ na grade?",
-      "a": "O jogo elimina automaticamente todas as outras opções da mesma linha e coluna dentro daquele subquadrante, poupando seu tempo de anotação."
+      "q": "What happens when I mark a ✔️ in the grid?",
+      "a": "The game automatically eliminates all other options in the same row and column within that subgrid, saving you notation time."
     },
     {
-      "q": "O jogo funciona no celular e computador?",
-      "a": "Sim, o jogo é 100% responsivo, com controles touch otimizados e atalhos táteis para telas de qualquer tamanho."
+      "q": "Does the game work on mobile and desktop?",
+      "a": "Yes, the game is 100% responsive, featuring touch-optimized controls and tactile shortcuts for screens of any size."
     }
   ],
   "categoryLabel": "Logic Grid",

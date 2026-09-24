@@ -23,6 +23,8 @@
   let timerInterval = null;
   let soundEnabled = true;
   let isWon = false;
+  let isAnimating = false;
+  let justLandedPos = null; // { tubeIdx, ballPos }
 
   // Web Audio Context
   let audioCtx = null;
@@ -140,6 +142,8 @@
     history = [];
     moves = 0;
     isWon = false;
+    isAnimating = false;
+    justLandedPos = null;
     startTime = Date.now();
 
     clearInterval(timerInterval);
@@ -173,6 +177,36 @@
     return tube.every(b => b === tube[0]);
   }
 
+  function spawnTubeStars(targetEl) {
+    if (!targetEl) return;
+    const rect = targetEl.getBoundingClientRect();
+    const count = 16;
+    const emojis = ['✨', '⭐', '🌟', '🔮', '💎', '🎉'];
+
+    for (let i = 0; i < count; i++) {
+      const star = document.createElement('span');
+      star.className = 'tube-star';
+      star.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+
+      const startX = rect.left + rect.width / 2;
+      const startY = rect.top + rect.height / 2;
+      star.style.left = `${startX}px`;
+      star.style.top = `${startY}px`;
+
+      const angle = (Math.PI * 2 * i) / count;
+      const dist = 35 + Math.random() * 50;
+      const dx = Math.cos(angle) * dist;
+      const dy = Math.sin(angle) * dist;
+
+      star.style.setProperty('--dx', `${dx}px`);
+      star.style.setProperty('--dy', `${dy}px`);
+      star.style.fontSize = `${16 + Math.random() * 12}px`;
+
+      document.body.appendChild(star);
+      setTimeout(() => star.remove(), 950);
+    }
+  }
+
   function renderTubes() {
     const row1 = document.getElementById('row-1');
     const row2 = document.getElementById('row-2');
@@ -187,10 +221,19 @@
       tubeEl.className = 'tube';
       tubeEl.dataset.idx = idx;
 
+      if (selectedTubeIdx === idx) {
+        tubeEl.classList.add('selected');
+      }
+
       const locked = isTubeLocked(tube);
       if (locked) {
         tubeEl.classList.add('locked');
       }
+
+      // Tube top rim/lip
+      const rimEl = document.createElement('div');
+      rimEl.className = 'tube-rim';
+      tubeEl.appendChild(rimEl);
 
       tube.forEach((colorIdx, ballPos) => {
         const ballEl = document.createElement('div');
@@ -198,9 +241,14 @@
         ballEl.style.background = BALL_COLORS[colorIdx].gradient;
         ballEl.style.color = BALL_COLORS[colorIdx].glow;
 
-        // If this is the selected source tube and this is the top ball, lift it up 20-40px!
+        // If this is the selected source tube and this is the top ball, lift it up completely unobscured
         if (selectedTubeIdx === idx && ballPos === tube.length - 1) {
           ballEl.classList.add('lifted');
+        }
+
+        // If just landed, trigger squash bounce
+        if (justLandedPos && justLandedPos.tubeIdx === idx && justLandedPos.ballPos === ballPos) {
+          ballEl.classList.add('landed');
         }
 
         tubeEl.appendChild(ballEl);
@@ -212,7 +260,7 @@
   }
 
   function handleTubeClick(idx) {
-    if (isWon) return;
+    if (isWon || isAnimating) return;
     const tube = tubes[idx];
 
     // If already locked, ignore
@@ -242,7 +290,7 @@
       const dstIdx = idx;
 
       if (canDropBall(srcIdx, dstIdx)) {
-        executeDropBall(srcIdx, dstIdx);
+        animateAndDropBall(srcIdx, dstIdx);
       } else {
         playSound('error');
         shakeTube(dstIdx);
@@ -265,28 +313,103 @@
     return topSrc === topDst;
   }
 
-  function executeDropBall(srcIdx, dstIdx) {
+  // Smooth Parabolic Arc Flying Ball Animation
+  function animateAndDropBall(srcIdx, dstIdx) {
+    isAnimating = true;
+
     // Save history for undo
     history.push(JSON.parse(JSON.stringify(tubes)));
 
-    const ball = tubes[srcIdx].pop();
-    tubes[dstIdx].push(ball);
+    const ballColorIdx = tubes[srcIdx].pop();
+    const colorDef = BALL_COLORS[ballColorIdx];
 
-    moves++;
+    const srcEl = document.querySelector(`.tube[data-idx="${srcIdx}"]`);
+    const dstEl = document.querySelector(`.tube[data-idx="${dstIdx}"]`);
+
     selectedTubeIdx = null;
-    playSound('drop');
+    renderTubes();
 
-    if (isTubeLocked(tubes[dstIdx])) {
-      setTimeout(() => playSound('lock'), 120);
+    if (!srcEl || !dstEl) {
+      tubes[dstIdx].push(ballColorIdx);
+      isAnimating = false;
+      renderTubes();
+      return;
     }
 
-    updateHUD();
-    renderTubes();
-    checkWinCondition();
+    const srcRect = srcEl.getBoundingClientRect();
+    const dstRect = dstEl.getBoundingClientRect();
+
+    const ballSize = srcRect.width * 0.76;
+    const startX = srcRect.left + (srcRect.width - ballSize) / 2;
+    const startY = srcRect.top - ballSize * 1.1;
+
+    const endX = dstRect.left + (dstRect.width - ballSize) / 2;
+    const endY = dstRect.top + (dstRect.height - (tubes[dstIdx].length + 1) * (ballSize + 2)) - 6;
+
+    const flyingBall = document.createElement('div');
+    flyingBall.className = 'flying-ball';
+    flyingBall.style.width = `${ballSize}px`;
+    flyingBall.style.height = `${ballSize}px`;
+    flyingBall.style.background = colorDef.gradient;
+    flyingBall.style.color = colorDef.glow;
+    flyingBall.style.left = `${startX}px`;
+    flyingBall.style.top = `${startY}px`;
+
+    document.body.appendChild(flyingBall);
+
+    const duration = 280; // ms
+    const animStartTime = performance.now();
+    const peakOffset = 50 + Math.abs(endX - startX) * 0.15;
+
+    function frame(now) {
+      const elapsed = now - animStartTime;
+      const progress = Math.min(1, elapsed / duration);
+      // Ease in-out
+      const t = progress;
+
+      // Parabolic trajectory
+      const curX = startX + (endX - startX) * t;
+      const baseCurY = startY + (endY - startY) * t;
+      const arc = 4 * peakOffset * t * (1 - t);
+      const curY = baseCurY - arc;
+
+      flyingBall.style.left = `${curX}px`;
+      flyingBall.style.top = `${curY}px`;
+
+      if (progress < 1) {
+        requestAnimationFrame(frame);
+      } else {
+        flyingBall.remove();
+        tubes[dstIdx].push(ballColorIdx);
+        moves++;
+        isAnimating = false;
+        justLandedPos = { tubeIdx: dstIdx, ballPos: tubes[dstIdx].length - 1 };
+
+        playSound('drop');
+        updateHUD();
+        renderTubes();
+
+        setTimeout(() => {
+          justLandedPos = null;
+        }, 400);
+
+        if (isTubeLocked(tubes[dstIdx])) {
+          setTimeout(() => {
+            playSound('lock');
+            const lockedTubeEl = document.querySelector(`.tube[data-idx="${dstIdx}"]`);
+            spawnTubeStars(lockedTubeEl);
+          }, 80);
+        }
+
+        checkWinCondition();
+      }
+    }
+
+    requestAnimationFrame(frame);
   }
 
   function undoMove() {
-    if (history.length === 0 || isWon) return;
+    if (history.length === 0 || isWon || isAnimating) return;
     tubes = history.pop();
     selectedTubeIdx = null;
     moves = Math.max(0, moves - 1);
@@ -304,7 +427,7 @@
   }
 
   function provideHint() {
-    if (isWon) return;
+    if (isWon || isAnimating) return;
     for (let i = 0; i < NUM_TUBES; i++) {
       if (tubes[i].length === 0 || isTubeLocked(tubes[i])) continue;
       for (let j = 0; j < NUM_TUBES; j++) {

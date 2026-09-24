@@ -121,43 +121,110 @@
 
     initStorage() {
       const best = localStorage.getItem('mahjong24_best_time');
-      this.bestTimeEl.textContent = best ? `${best}s` : '--';
+      if (this.bestTimeEl) {
+        this.bestTimeEl.textContent = best ? `${best}s` : '--';
+      }
     }
 
     initDOM() {
-      document.getElementById('btn-sound-toggle').addEventListener('click', () => {
-        const muted = this.sound.toggle();
-        const soundIcon = document.getElementById('sound-icon');
-        if (soundIcon) soundIcon.textContent = muted ? '🔇' : '🔊';
-      });
+      // Menu buttons
+      const btnMenu = document.getElementById('btn-menu');
+      if (btnMenu) {
+        btnMenu.addEventListener('click', () => {
+          this.sound.playClick();
+          const menuModal = document.getElementById('modal-menu');
+          if (menuModal) menuModal.classList.add('active');
+        });
+      }
+
+      const btnStartGame = document.getElementById('btn-start-game');
+      if (btnStartGame) {
+        btnStartGame.addEventListener('click', () => {
+          this.sound.playClick();
+          const menuModal = document.getElementById('modal-menu');
+          if (menuModal) menuModal.classList.remove('active');
+          this.startNewGame();
+        });
+      }
+
+      const btnMenuTut = document.getElementById('btn-menu-tutorial');
+      if (btnMenuTut) {
+        btnMenuTut.addEventListener('click', () => {
+          this.sound.playClick();
+          const tut = document.getElementById('modal-tutorial');
+          if (tut) tut.classList.add('active');
+        });
+      }
+
+      const btnMenuSound = document.getElementById('btn-menu-sound');
+      if (btnMenuSound) {
+        btnMenuSound.addEventListener('click', () => {
+          const muted = this.sound.toggle();
+          const soundIcon = document.getElementById('sound-icon');
+          if (soundIcon) soundIcon.textContent = muted ? '🔇' : '🔊';
+          const menuSoundIcon = document.getElementById('menu-sound-icon');
+          if (menuSoundIcon) menuSoundIcon.textContent = muted ? '🔇 Sound: OFF' : '🔊 Sound: ON';
+        });
+      }
+
+      const soundBtn = document.getElementById('btn-sound-toggle');
+      if (soundBtn) {
+        soundBtn.addEventListener('click', () => {
+          const muted = this.sound.toggle();
+          const soundIcon = document.getElementById('sound-icon');
+          if (soundIcon) soundIcon.textContent = muted ? '🔇' : '🔊';
+        });
+      }
 
       // Instant Replay Button in Header
-      document.getElementById('btn-replay-now').addEventListener('click', () => {
-        this.sound.playClick();
-        this.startNewGame();
-        this.showToast('New 24-tile round started!');
-      });
+      const replayBtn = document.getElementById('btn-replay-now');
+      if (replayBtn) {
+        replayBtn.addEventListener('click', () => {
+          this.sound.playClick();
+          this.startNewGame();
+          this.showToast('Game restarted!');
+        });
+      }
 
-      this.undoBtn.addEventListener('click', () => this.undo());
-      document.getElementById('btn-hint').addEventListener('click', () => this.openHintModal());
+      if (this.undoBtn) {
+        this.undoBtn.addEventListener('click', () => this.undo());
+      }
 
-      document.getElementById('btn-how-to-play').addEventListener('click', () => {
-        document.getElementById('modal-tutorial').classList.add('active');
-      });
-      document.getElementById('btn-close-tutorial').addEventListener('click', () => {
-        document.getElementById('modal-tutorial').classList.remove('active');
-      });
+      const hintBtn = document.getElementById('btn-hint');
+      if (hintBtn) {
+        hintBtn.addEventListener('click', () => this.revealHint());
+      }
 
-      document.getElementById('btn-skip-ad').addEventListener('click', () => this.closeAdModal(false));
-      document.getElementById('btn-claim-hint').addEventListener('click', () => this.closeAdModal(true));
+      const howToPlayBtn = document.getElementById('btn-how-to-play');
+      if (howToPlayBtn) {
+        howToPlayBtn.addEventListener('click', () => {
+          const tut = document.getElementById('modal-tutorial');
+          if (tut) tut.classList.add('active');
+        });
+      }
 
-      document.getElementById('btn-replay-win').addEventListener('click', () => {
-        document.getElementById('modal-win').classList.remove('active');
-        this.startNewGame();
-      });
+      const closeTutBtn = document.getElementById('btn-close-tutorial');
+      if (closeTutBtn) {
+        closeTutBtn.addEventListener('click', () => {
+          const tut = document.getElementById('modal-tutorial');
+          if (tut) tut.classList.remove('active');
+        });
+      }
 
-      const resizeObserver = new ResizeObserver(() => this.scaleBoard());
-      resizeObserver.observe(this.viewportEl);
+      const replayWinBtn = document.getElementById('btn-replay-win');
+      if (replayWinBtn) {
+        replayWinBtn.addEventListener('click', () => {
+          const winModal = document.getElementById('modal-win');
+          if (winModal) winModal.classList.remove('active');
+          this.startNewGame();
+        });
+      }
+
+      if (this.viewportEl) {
+        const resizeObserver = new ResizeObserver(() => this.scaleBoard());
+        resizeObserver.observe(this.viewportEl);
+      }
+      window.addEventListener('resize', () => this.scaleBoard());
     }
 
     startNewGame() {
@@ -251,11 +318,16 @@
     }
 
     scaleBoard() {
+      if (!this.viewportEl || !this.boardEl) return;
       const vRect = this.viewportEl.getBoundingClientRect();
-      const scaleX = (vRect.width - 24) / 600;
-      const scaleY = (vRect.height - 24) / 440;
-      const scale = Math.min(scaleX, scaleY, 1.2);
-      this.boardEl.style.transform = `scale(${scale})`;
+      if (vRect.width <= 0 || vRect.height <= 0) {
+        this.boardEl.style.transform = 'scale(0.85)';
+        return;
+      }
+      const scaleX = (vRect.width - 16) / 600;
+      const scaleY = (vRect.height - 16) / 440;
+      const scale = Math.min(scaleX, scaleY, 1.25);
+      this.boardEl.style.transform = `scale(${Math.max(0.25, scale).toFixed(3)})`;
     }
 
     renderBoard() {
@@ -447,52 +519,14 @@
       this.showToast('Tiles reshuffled!');
     }
 
-    openHintModal() {
-      const adModal = document.getElementById('modal-ad');
-      const progressFill = document.getElementById('ad-progress-fill');
-      const claimBtn = document.getElementById('btn-claim-hint');
-      const timerSpan = document.getElementById('ad-timer');
-
-      adModal.classList.add('active');
-      claimBtn.disabled = true;
-      progressFill.style.width = '0%';
-
-      let timeLeft = 5;
-      timerSpan.textContent = `Reward unlocked in ${timeLeft}s...`;
-
-      const startTime = Date.now();
-      const interval = setInterval(() => {
-        const elapsed = (Date.now() - startTime) / 1000;
-        const pct = Math.min(100, (elapsed / 5) * 100);
-        progressFill.style.width = `${pct}%`;
-
-        const rem = Math.max(0, Math.ceil(5 - elapsed));
-        if (rem > 0) {
-          timerSpan.textContent = `Reward unlocked in ${rem}s...`;
-        } else {
-          clearInterval(interval);
-          timerSpan.textContent = 'Reward ready to claim!';
-          claimBtn.disabled = false;
-        }
-      }, 100);
-
-      this.currentAdInterval = interval;
-    }
-
-    closeAdModal(claimReward) {
-      clearInterval(this.currentAdInterval);
-      document.getElementById('modal-ad').classList.remove('active');
-      if (claimReward) this.revealHint();
-    }
-
     revealHint() {
       const pairs = this.getAvailablePairs();
       if (pairs.length > 0) {
         const [t1, t2] = pairs[0];
-        t1.element.classList.add('hinted');
-        t2.element.classList.add('hinted');
+        if (t1.element) t1.element.classList.add('hinted');
+        if (t2.element) t2.element.classList.add('hinted');
         this.sound.playClick();
-        this.showToast('Pair highlighted!');
+        this.showToast('Par destacado!');
       } else {
         this.shuffleRemaining();
       }
@@ -506,17 +540,22 @@
 
     updateScore(val) {
       this.score = val;
-      this.scoreEl.textContent = this.score;
+      if (this.scoreEl) {
+        this.scoreEl.textContent = this.score;
+      }
     }
 
     showToast(msg) {
       const toastEl = document.getElementById('toast');
-      toastEl.textContent = msg;
-      toastEl.classList.add('show');
-      setTimeout(() => toastEl.classList.remove('show'), 2200);
+      if (toastEl) {
+        toastEl.textContent = msg;
+        toastEl.classList.add('show');
+        setTimeout(() => toastEl.classList.remove('show'), 2200);
+      }
     }
 
     checkWinCondition() {
+      if (!this.tiles || this.tiles.length === 0) return;
       const remaining = this.tiles.filter((t) => !t.removed).length;
       if (remaining === 0) {
         this.isGameOver = true;
@@ -530,7 +569,9 @@
         let isNewRecord = false;
         if (!curBest || timeInSeconds < parseInt(curBest, 10)) {
           localStorage.setItem('mahjong24_best_time', String(timeInSeconds));
-          this.bestTimeEl.textContent = `${timeInSeconds}s`;
+          if (this.bestTimeEl) {
+            this.bestTimeEl.textContent = `${timeInSeconds}s`;
+          }
           isNewRecord = true;
         }
 
@@ -546,16 +587,22 @@
         const winNoticeEl = document.getElementById('win-record-notice');
         if (winNoticeEl) {
           winNoticeEl.textContent = isNewRecord
-            ? '🎉 NEW PERSONAL BEST TIME! 🎉'
-            : `Personal Best: ${localStorage.getItem('mahjong24_best_time')}s`;
+            ? '🎉 NEW PERSONAL BEST! 🎉'
+            : `Best Time: ${localStorage.getItem('mahjong24_best_time')}s`;
         }
 
-        document.getElementById('modal-win').classList.add('active');
+        const winModal = document.getElementById('modal-win');
+        if (winModal) winModal.classList.add('active');
       }
     }
   }
 
-  window.addEventListener('DOMContentLoaded', () => {
+  function initGame() {
     new QuickMahjongGame();
-  });
+  }
+  if (document.readyState === 'loading') {
+    window.addEventListener('DOMContentLoaded', initGame);
+  } else {
+    initGame();
+  }
 })();

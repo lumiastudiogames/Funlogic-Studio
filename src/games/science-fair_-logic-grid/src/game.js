@@ -5,6 +5,8 @@
     constructor() {
       this.ctx = null;
       this.isMuted = localStorage.getItem('science_fair_muted') === 'true';
+      this.ambientInterval = null;
+      this.ambientNodes = null;
     }
 
     init() {
@@ -22,7 +24,109 @@
     toggleMute() {
       this.isMuted = !this.isMuted;
       localStorage.setItem('science_fair_muted', this.isMuted);
+      if (!this.isMuted) {
+        this.startAmbient();
+      } else {
+        this.stopAmbient();
+      }
       return this.isMuted;
+    }
+
+    startAmbient() {
+      if (this.isMuted || this.ambientNodes) return;
+      this.init();
+      if (!this.ctx) return;
+
+      try {
+        const now = this.ctx.currentTime;
+        const master = this.ctx.createGain();
+        master.gain.setValueAtTime(0.001, now);
+        master.gain.exponentialRampToValueAtTime(0.05, now + 1.5);
+        master.connect(this.ctx.destination);
+
+        // Soft science lab ambient pad (F3 174.61 Hz + C4 261.63 Hz)
+        const osc1 = this.ctx.createOscillator();
+        osc1.type = 'triangle';
+        osc1.frequency.setValueAtTime(174.61, now);
+
+        const osc2 = this.ctx.createOscillator();
+        osc2.type = 'sine';
+        osc2.frequency.setValueAtTime(261.63, now);
+
+        const filter = this.ctx.createBiquadFilter();
+        filter.type = 'lowpass';
+        filter.frequency.setValueAtTime(400, now);
+
+        const lfo = this.ctx.createOscillator();
+        lfo.frequency.setValueAtTime(0.12, now);
+        const lfoGain = this.ctx.createGain();
+        lfoGain.gain.setValueAtTime(120, now);
+        lfo.connect(lfoGain);
+        lfoGain.connect(filter.frequency);
+
+        osc1.connect(filter);
+        osc2.connect(filter);
+        filter.connect(master);
+
+        osc1.start();
+        osc2.start();
+        lfo.start();
+
+        this.ambientNodes = { master, osc1, osc2, lfo };
+
+        // Subtle gentle synthesizer notes (F major pentatonic: F4, G4, A4, C5, D5)
+        this.ambientInterval = setInterval(() => {
+          if (!this.isMuted && this.ctx && this.ambientNodes) {
+            this.playAmbientPluck();
+          }
+        }, 5000);
+      } catch (e) {
+        console.warn('Ambient start failed:', e);
+      }
+    }
+
+    playAmbientPluck() {
+      if (this.isMuted || !this.ctx) return;
+      const now = this.ctx.currentTime;
+      const scale = [349.23, 392.00, 440.00, 523.25, 587.33];
+      const freq = scale[Math.floor(Math.random() * scale.length)];
+
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(freq, now);
+
+      gain.gain.setValueAtTime(0.001, now);
+      gain.gain.linearRampToValueAtTime(0.02, now + 0.15);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + 2.0);
+
+      osc.connect(gain);
+      gain.connect(this.ctx.destination);
+      osc.start(now);
+      osc.stop(now + 2.1);
+    }
+
+    stopAmbient() {
+      if (this.ambientInterval) {
+        clearInterval(this.ambientInterval);
+        this.ambientInterval = null;
+      }
+      if (this.ambientNodes) {
+        try {
+          const now = this.ctx ? this.ctx.currentTime : 0;
+          this.ambientNodes.master.gain.linearRampToValueAtTime(0.001, now + 0.3);
+          const { osc1, osc2, lfo } = this.ambientNodes;
+          setTimeout(() => {
+            try {
+              osc1.stop();
+              osc2.stop();
+              lfo.stop();
+            } catch (e) {}
+          }, 400);
+        } catch (e) {}
+        this.ambientNodes = null;
+      }
     }
 
     playClick() {
@@ -1366,6 +1470,7 @@
       this.renderClues();
       this.updateNotebookSummary();
       this.setScreen('PLAYING');
+      audio.startAmbient();
       this.startTimer();
     }
 

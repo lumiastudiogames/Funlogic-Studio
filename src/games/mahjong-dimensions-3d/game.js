@@ -216,7 +216,16 @@
       window.addEventListener('touchend', onEnd);
 
       // Buttons
-      document.getElementById('btn-hint').addEventListener('click', () => this.openHintModal());
+      const restartBtn = document.getElementById('btn-restart');
+      if (restartBtn) {
+        restartBtn.addEventListener('click', () => {
+          this.sound.playClick();
+          this.startNewGame();
+          this.showToast('Cube restarted!');
+        });
+      }
+
+      document.getElementById('btn-hint').addEventListener('click', () => this.highlightHintPair());
       document.getElementById('btn-shuffle').addEventListener('click', () => this.shuffleRemaining());
 
       document.getElementById('btn-how-to-play').addEventListener('click', () => {
@@ -226,8 +235,10 @@
         document.getElementById('modal-tutorial').classList.remove('active');
       });
 
-      document.getElementById('btn-skip-ad').addEventListener('click', () => this.closeAdModal(false));
-      document.getElementById('btn-claim-hint').addEventListener('click', () => this.closeAdModal(true));
+      const skipAd = document.getElementById('btn-skip-ad');
+      if (skipAd) skipAd.addEventListener('click', () => this.closeAdModal(false));
+      const claimHint = document.getElementById('btn-claim-hint');
+      if (claimHint) claimHint.addEventListener('click', () => this.closeAdModal(true));
 
       document.getElementById('btn-replay').addEventListener('click', () => {
         document.getElementById('modal-win').classList.remove('active');
@@ -572,7 +583,7 @@
     }
 
     checkWinCondition() {
-      if (this.tilesLeft === 0) {
+      if (this.tiles && this.tiles.length > 0 && this.tilesLeft === 0) {
         this.isGameOver = true;
         clearInterval(this.timerInterval);
         this.sound.playWin();
@@ -592,7 +603,12 @@
     }
   }
 
-  window.addEventListener('DOMContentLoaded', () => {
+  function initGame() {
     new DimensionsGame();
-  });
+  }
+  if (document.readyState === 'loading') {
+    window.addEventListener('DOMContentLoaded', initGame);
+  } else {
+    initGame();
+  }
 })();

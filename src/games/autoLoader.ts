@@ -41,17 +41,7 @@ const gameJsonMetadata = import.meta.glob<Record<string, any>>(
   { eager: true }
 );
 
-// 4. Scan HTML5 standalone games (index.html or game.html)
-const htmlGameUrls = import.meta.glob<{ default: string }>(
-  ['/src/games/**/*.html'],
-  { query: '?url', eager: true }
-);
 
-// 5. Scan raw HTML content for optional metadata extraction
-const htmlGameRawSources = import.meta.glob<string>(
-  ['/src/games/**/*.html'],
-  { query: '?raw', import: 'default', eager: true }
-);
 
 // Mapping of category ID to default friendly label, pastel color, and vector sticker
 export const CATEGORY_DEFAULTS: Record<string, { label: string; icon: string; bg: string }> = {
@@ -118,24 +108,6 @@ for (const canonical of CANONICAL_103_GAMES) {
   gameAssetMap.set(canonical.slug, { slug: canonical.slug });
 }
 
-// 1. Process all HTML files
-for (const [htmlPath, htmlMod] of Object.entries(htmlGameUrls)) {
-  const slug = extractSlug(htmlPath);
-  if (!slug) continue;
-  const record = gameAssetMap.get(slug);
-  if (!record) continue;
-
-  const url = htmlMod.default || htmlPath;
-  // Prefer index.html directly under the game directory
-  if (!record.htmlUrl || htmlPath.endsWith(`/${slug}/index.html`) || htmlPath.endsWith('/index.html')) {
-    record.htmlUrl = url;
-  }
-
-  const rawHtml = (htmlGameRawSources as Record<string, string>)[htmlPath];
-  if (rawHtml && (!record.rawHtml || htmlPath.endsWith('/index.html'))) {
-    record.rawHtml = rawHtml;
-  }
-}
 
 // 2. Process all meta.json files
 for (const [jsonPath, jsonMod] of Object.entries(gameJsonMetadata)) {
@@ -160,12 +132,12 @@ for (const [imgPath, imgMod] of Object.entries(gameFolderImages)) {
   const src = imgMod.default || imgPath;
   const filename = imgPath.split('/').pop() || '';
 
-  // Priorities: cover.svg > cover.png > cover.webp > thumb.* > first image
-  if (/^cover\.svg$/i.test(filename)) {
+  // Priorities: cover.(webp|png|jpg|jpeg) > thumb.* > cover.svg > any image
+  if (/^cover\.(webp|png|jpg|jpeg)$/i.test(filename)) {
     record.coverImage = src;
-  } else if (/^cover\.(png|webp|jpg|jpeg)$/i.test(filename) && (!record.coverImage || !record.coverImage.endsWith('.svg'))) {
+  } else if (/^thumb/i.test(filename) && (!record.coverImage || record.coverImage.endsWith('.svg'))) {
     record.coverImage = src;
-  } else if (/^thumb/i.test(filename) && !record.coverImage) {
+  } else if (/^cover\.svg$/i.test(filename) && !record.coverImage) {
     record.coverImage = src;
   } else if (!record.coverImage) {
     record.coverImage = src;
@@ -184,12 +156,14 @@ for (const [imgPath, imgMod] of Object.entries(assetImages)) {
   }
 }
 
-// 4. Build exactly the 103 canonical games
+// 4. Build all 104 canonical games
+const base = (import.meta.env.BASE_URL || '/').replace(/\/$/, '');
+
 for (const canonical of CANONICAL_103_GAMES) {
   const slug = canonical.slug;
   const record = gameAssetMap.get(slug);
   const metadata = record?.metadata;
-  const htmlUrl = record?.htmlUrl;
+  const htmlUrl = `${base}/games/${slug}/index.html`;
   const coverImage = record?.coverImage;
 
   const catId = canonical.categoryId as CategoryId;
@@ -272,9 +246,9 @@ for (const canonical of CANONICAL_103_GAMES) {
     is3D,
     isHtmlGame: !!htmlUrl,
     htmlUrl: htmlUrl,
-    playsCount: metadata?.playsCount || `${Math.floor(15 + (canonical.num * 7) % 35)}k`,
-    ratingValue: metadata?.ratingValue || 4.8,
-    ratingCount: metadata?.ratingCount || '1.2k',
+    playsCount: metadata?.playsCount,
+    ratingValue: metadata?.ratingValue,
+    ratingCount: metadata?.ratingCount,
     tags,
     keywords: metadata?.keywords,
     faqs: metadata?.faqs

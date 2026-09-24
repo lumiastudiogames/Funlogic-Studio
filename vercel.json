@@ -1,0 +1,13 @@
+{
+  "framework": "vite",
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+  "cleanUrls": true,
+  "trailingSlash": true,
+  "rewrites": [
+    {
+      "source": "/((?!assets/|games/|icon.*|robots.txt|sitemap.xml|404.html|.*\\..*).*)",
+      "destination": "/index.html"
+    }
+  ]
+}

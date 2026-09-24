@@ -120,7 +120,7 @@
     timerBox.classList.remove('active');
     timerBox.textContent = '5.0s';
     toast.style.display = 'flex';
-    toast.textContent = '✏️ Desenhe uma barreira para proteger o cãozinho!';
+    toast.textContent = '✏️ Draw a line to protect the doge!';
     AudioEngine.stopBuzz();
 
     currentLine = [];
@@ -352,7 +352,7 @@
         window.parent.postMessage({ type: 'win', time: TIME }, '*');
 
         toast.style.display = 'flex';
-        toast.textContent = '🎉 Cãozinho a salvo! Parabéns!';
+        toast.textContent = '🎉 Doge is safe! Well done!';
         setTimeout(() => initLevel(currentLevel + 1), 1600);
       }
     }

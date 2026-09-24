@@ -5,120 +5,645 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
     <title>Mahjong Triple - Match 3 (7-Slot Tray)</title>
     
-    <link rel="stylesheet" href="./style.css" />
-  
-  
-  
-  
-  
+    <meta name="description" content="Mahjong Triple merges classic tile matching with modern Match-3 tray mechanics. Choose exposed tiles from the multilayer board and place them in your 7-slot collector bar. Form trios to clear room and survive to clear the entire board." />
+    <meta name="theme-color" content="#150611" />
+    <link rel="apple-touch-icon" href="cover.svg" />
 
-  
-  
-  
-  
+    <style>
+      /* Mahjong Triple - Inline Guaranteed Stylesheet */
+      *, *::before, *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        user-select: none;
+        -webkit-user-select: none;
+        -webkit-tap-highlight-color: transparent;
+      }
 
-  <meta name="description" content="Mahjong Triple merges classic tile matching with modern Match-3 tray mechanics. Choose exposed tiles from the multilayer board and place them in your 7-slot collector bar. Form trios to clear room and survive to clear the entire board." />
-  <meta name="keywords" content="mahjong triple, mahjong match 3, triple tile, tile master, match 3 puzzle, tray matching, trio mahjong, casual tile match, zen match" />
-  <meta name="game-tags" content="mahjong triple, mahjong triple - match 3, mahjong, mahjong solitaire, mahjong tiles, mahjong puzzle, mahjong game, mahjong online, mahjong free, mahjong classic, mahjong solitaire free, mahjong solitaire online, mahjong tiles match, tile match, tile matching, tile match puzzle, mahjong connect, mahjong connect free, mahjong matching, chinese mahjong, mahjong chinese tiles, mahjong board, mahjong board game, mahjong zen, mahjong relax, mahjong brain, mahjong logic, mahjong 3d, mahjong dimensions, mahjong dark, mahjong light, mahjong deluxe, mahjong mania, mahjong master, mahjong pro, mahjong expert, mahjong challenge, mahjong levels, mahjong easy, mahjong hard, mahjong kids, mahjong adults, mahjong seniors, mahjong time, mahjong timeless, mahjong clear board, mahjong clear tiles, mahjong pair, mahjong pairs, mahjong pair match, mahjong pair puzzle, mahjong tiles puzzle, mahjong tile puzzle, mahjong puzzle game, mahjong puzzle online, mahjong puzzle free, mahjong connect puzzle, mahjong connect game, mahjong connect tiles, mahjong connect online, mahjong classic free, mahjong classic online, mahjong solitaire classic, mahjong solitaire puzzle, mahjong solitaire game, mahjong solitaire tiles, mahjong tile matching game, tile matching game, mahjong match, mahjong matching game, mahjong matching puzzle, mahjong memory, mahjong memory puzzle, mahjong memory game, mahjong triple match, mahjong triple tiles, mahjong stack, mahjong stacks, mahjong pyramid, mahjong castle, mahjong tower, mahjong fortune, mahjong fortune tiles, mahjong gold, mahjong butterfly, mahjong butterflies, mahjong animals, mahjong flowers, mahjong seasons, mahjong dragons, mahjong winds, mahjong dots, mahjong bamboos, mahjong characters, mahjong unblocked, mahjong best, mahjong top, mahjong new, mahjong 2024, mahjong 2025, mahjong html5, mahjong mobile, mahjong app, play mahjong, mahjong quest, mahjong journey, mahjong world, mahjong garden, mahjong safari, mahjong chain, mahjong chain connect, mahjong link, mahjong link puzzle, mahjong link game, mahjong link tiles, mahjong onet, mahjong onet connect, mahjong solitaire chain, mahjong tile connect, mahjong tile connect puzzle, mahjong tile stack, mahjong tile clear, mahjong tile board, mahjong tile solitaire, mahjong tile matching puzzle" />
-  <script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    {
-      "@type": "Question",
-      "name": "How does the bottom tray work in Mahjong Triple?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "You have 7 slots in your holding tray. When you tap an unblocked tile, it slides into the tray. Gathering 3 identical tiles instantly removes them."
+      html, body {
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background: #150611;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        color: #f8fafc;
       }
-    },
-    {
-      "@type": "Question",
-      "name": "How can I lose the game?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "If all 7 tray slots are occupied without forming a trio of 3 matching tiles, the tray overflows and the game is lost."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Can I undo a tile placed in the tray?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Yes! Use the Undo button to return the most recently collected tile from the tray back to its original position on the board."
-      }
-    }
-  ]
-}
-  </script>
 
-  <link rel="manifest" href="manifest.json" />
-  <meta name="theme-color" content="#0f172a" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <meta name="apple-mobile-web-app-title" content="Mahjong Triple - Match 3" />
-  <link rel="apple-touch-icon" href="cover.svg" />
-</head>
+      #game-stage {
+        width: 100%;
+        height: 100vh;
+        height: 100dvh;
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        overflow: hidden;
+        background: radial-gradient(circle at 50% 35%, #2a0b22 0%, #170613 55%, #0d030b 100%);
+      }
+
+      header {
+        height: 56px;
+        background: rgba(26, 8, 21, 0.94);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        padding: 0 12px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        border-bottom: 1px solid rgba(251, 113, 133, 0.2);
+        z-index: 30;
+        flex-shrink: 0;
+      }
+
+      @media (min-width: 640px) {
+        header {
+          padding: 0 20px;
+          height: 60px;
+        }
+      }
+
+      .hud-group {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        flex-shrink: 0;
+      }
+
+      .metric-pill {
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 9px;
+        padding: 4px 10px;
+        min-width: 50px;
+        text-align: center;
+        flex-shrink: 0;
+      }
+
+      .metric-label {
+        display: block;
+        font-size: 9px;
+        font-weight: 800;
+        text-transform: uppercase;
+        color: #fda4af;
+        letter-spacing: 0.5px;
+      }
+
+      .metric-value {
+        display: block;
+        font-size: 14px;
+        font-weight: 800;
+        color: #f8fafc;
+        line-height: 1.1;
+        font-variant-numeric: tabular-nums;
+      }
+
+      /* Tactile Buttons */
+      .btn-tactile {
+        appearance: none;
+        border: none;
+        outline: none;
+        cursor: pointer;
+        border-radius: 9px;
+        font-weight: 700;
+        font-size: 12px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        padding: 7px 12px;
+        background: #25091b;
+        color: #f8fafc;
+        border: 1px solid rgba(251, 113, 133, 0.25);
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+        transition: all 0.12s cubic-bezier(0.4, 0, 0.2, 1);
+        flex-shrink: 0;
+      }
+
+      .btn-tactile:hover:not(:disabled) {
+        transform: translateY(-2px);
+        background: #3b112d;
+        box-shadow: 0 6px 10px -2px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+      }
+
+      .btn-tactile:active:not(:disabled) {
+        transform: translateY(1px);
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4), inset 0 2px 4px rgba(0, 0, 0, 0.4);
+      }
+
+      .btn-tactile:disabled {
+        opacity: 0.45;
+        cursor: not-allowed;
+        transform: none;
+      }
+
+      .btn-icon-only {
+        width: 36px;
+        height: 36px;
+        padding: 0;
+      }
+
+      @media (min-width: 640px) {
+        .btn-icon-only {
+          width: 40px;
+          height: 40px;
+        }
+      }
+
+      .btn-rose {
+        background: linear-gradient(180deg, #e11d48 0%, #be123c 100%);
+        border-color: #fb7185;
+        color: #ffffff;
+      }
+
+      .btn-gold {
+        background: linear-gradient(180deg, #f59e0b 0%, #d97706 100%);
+        border-color: #fbbf24;
+        color: #ffffff;
+      }
+
+      .hidden-mobile {
+        display: none;
+      }
+      @media (min-width: 640px) {
+        .hidden-mobile {
+          display: inline;
+        }
+      }
+
+      /* Arena */
+      #board-viewport {
+        flex: 1;
+        width: 100%;
+        height: 100%;
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      #triple-board {
+        position: absolute;
+        width: 600px;
+        height: 440px;
+        transform-origin: center center;
+        transition: transform 0.2s ease-out;
+      }
+
+      /* Overlapping Board Tiles */
+      .triple-tile {
+        position: absolute;
+        width: 50px;
+        height: 68px;
+        border-radius: 8px;
+        background: linear-gradient(135deg, #ffffff 0%, #fff1f2 70%, #fecdd3 100%);
+        border: 1px solid #fda4af;
+        border-bottom: 5px solid #9f1239;
+        border-right: 4px solid #be123c;
+        box-shadow: 2px 5px 10px rgba(0, 0, 0, 0.45), inset 0 1px 1px #ffffff;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: transform 0.15s ease, filter 0.15s ease, opacity 0.25s ease;
+        user-select: none;
+      }
+
+      .triple-tile.blocked {
+        filter: brightness(0.65) saturate(0.7);
+        cursor: not-allowed;
+      }
+
+      .triple-tile.free:hover {
+        transform: translateY(-4px) scale(1.04);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.6), 0 0 12px rgba(251, 113, 133, 0.6);
+        z-index: 900 !important;
+      }
+
+      .triple-tile.hinted {
+        animation: pulseHintTriple 0.8s infinite alternate;
+        z-index: 950 !important;
+      }
+
+      @keyframes pulseHintTriple {
+        from { box-shadow: 0 0 0 2px #facc15, 0 4px 10px rgba(250, 204, 21, 0.6); }
+        to { box-shadow: 0 0 0 4px #eab308, 0 8px 18px rgba(234, 179, 8, 0.9); transform: translateY(-3px); }
+      }
+
+      .tile-symbol {
+        font-size: 28px;
+        line-height: 1;
+      }
+
+      .tile-badge {
+        font-size: 9px;
+        font-weight: 800;
+        margin-top: 1px;
+      }
+
+      .suit-wan { color: #dc2626; }
+      .suit-sou { color: #059669; }
+      .suit-pin { color: #2563eb; }
+      .suit-wind { color: #334155; }
+      .suit-dragon { color: #e11d48; }
+
+      /* Bottom 7-Slot Tray Container */
+      #bottom-tray-container {
+        padding: 12px 16px;
+        background: rgba(22, 5, 16, 0.95);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        border-top: 1px solid rgba(251, 113, 133, 0.25);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+        flex-shrink: 0;
+        z-index: 25;
+      }
+
+      #tray-slots {
+        display: flex;
+        gap: 6px;
+        background: #180311;
+        padding: 8px 12px;
+        border-radius: 14px;
+        border: 2px solid #881337;
+        box-shadow: inset 0 3px 8px rgba(0, 0, 0, 0.8), 0 4px 12px rgba(0, 0, 0, 0.4);
+      }
+
+      .tray-slot {
+        width: 44px;
+        height: 60px;
+        border-radius: 6px;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px dashed rgba(251, 113, 133, 0.3);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+      }
+
+      @media (min-width: 640px) {
+        .tray-slot {
+          width: 50px;
+          height: 68px;
+        }
+      }
+
+      .tray-tile {
+        width: 100%;
+        height: 100%;
+        border-radius: 6px;
+        background: linear-gradient(135deg, #ffffff 0%, #fff1f2 70%, #fecdd3 100%);
+        border: 1px solid #fda4af;
+        border-bottom: 4px solid #9f1239;
+        border-right: 3px solid #be123c;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.4);
+        animation: tileSlideIn 0.18s cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+
+      @keyframes tileSlideIn {
+        from { transform: translateY(-20px) scale(0.8); opacity: 0; }
+        to { transform: translateY(0) scale(1); opacity: 1; }
+      }
+
+      .tray-tile.cleared {
+        animation: trioExplode 0.3s ease forwards;
+        pointer-events: none;
+      }
+
+      @keyframes trioExplode {
+        0% { transform: scale(1); opacity: 1; }
+        50% { transform: scale(1.25); filter: brightness(2); }
+        100% { transform: scale(0); opacity: 0; }
+      }
+
+      /* Modals */
+      .modal-overlay {
+        position: absolute;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.82);
+        backdrop-filter: blur(6px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 16px;
+        z-index: 50;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.2s ease;
+      }
+
+      .modal-overlay.active {
+        opacity: 1;
+        pointer-events: auto;
+      }
+
+      .modal-card {
+        width: 100%;
+        max-width: 420px;
+        background: #25091b;
+        border: 1px solid rgba(251, 113, 133, 0.3);
+        border-radius: 18px;
+        padding: 24px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8);
+        transform: translateY(12px) scale(0.97);
+        transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+
+      .modal-overlay.active .modal-card {
+        transform: translateY(0) scale(1);
+      }
+
+      .modal-title {
+        font-size: 18px;
+        font-weight: 800;
+        color: #f8fafc;
+        margin-bottom: 12px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .tutorial-step {
+        display: flex;
+        gap: 12px;
+        margin-bottom: 14px;
+        background: rgba(255, 255, 255, 0.04);
+        padding: 10px;
+        border-radius: 10px;
+        border-left: 3px solid #fb7185;
+      }
+
+      .step-number {
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        background: #e11d48;
+        color: #ffffff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 800;
+        font-size: 12px;
+        flex-shrink: 0;
+      }
+
+      .step-text {
+        font-size: 13px;
+        line-height: 1.4;
+        color: #cbd5e1;
+      }
+
+      .step-text strong {
+        color: #f8fafc;
+      }
+
+      /* Start Menu Styles */
+      .menu-icon {
+        font-size: 44px;
+        margin-bottom: 6px;
+      }
+
+      .menu-title {
+        font-size: 22px;
+        font-weight: 900;
+        color: #ffffff;
+        letter-spacing: -0.5px;
+        margin-bottom: 4px;
+      }
+
+      .menu-subtitle {
+        font-size: 12px;
+        color: #fda4af;
+        margin-bottom: 16px;
+      }
+
+      .mode-selector-list {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        margin-bottom: 18px;
+        text-align: left;
+      }
+
+      .mode-card {
+        background: rgba(30, 10, 24, 0.8);
+        border: 2px solid rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+        padding: 10px 14px;
+        cursor: pointer;
+        transition: all 0.15s ease;
+        position: relative;
+        color: #f8fafc;
+      }
+
+      .mode-card:hover {
+        border-color: rgba(244, 63, 94, 0.6);
+        background: rgba(45, 15, 35, 0.9);
+      }
+
+      .mode-card.active {
+        border-color: #f43f5e;
+        background: rgba(225, 29, 72, 0.25);
+        box-shadow: 0 0 15px rgba(244, 63, 94, 0.3);
+      }
+
+      .mode-badge {
+        font-size: 9px;
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 2px;
+        color: #fb7185;
+      }
+
+      .mode-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .mode-name {
+        font-size: 14px;
+        font-weight: 800;
+        color: #ffffff;
+      }
+
+      .mode-tag {
+        font-size: 10px;
+        font-weight: 700;
+        background: rgba(255, 255, 255, 0.12);
+        padding: 2px 6px;
+        border-radius: 6px;
+        color: #fecdd3;
+      }
+
+      .mode-desc {
+        font-size: 11px;
+        color: #cbd5e1;
+        margin-top: 2px;
+      }
+
+      .btn-play-main {
+        width: 100%;
+        padding: 13px;
+        font-size: 15px;
+        font-weight: 900;
+        border-radius: 12px;
+        background: linear-gradient(180deg, #f43f5e 0%, #be123c 100%);
+        color: #ffffff;
+        border: 1px solid #fb7185;
+        cursor: pointer;
+        box-shadow: 0 6px 16px rgba(244, 63, 94, 0.4);
+        transition: all 0.15s ease;
+      }
+
+      .btn-play-main:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(244, 63, 94, 0.5);
+      }
+
+      .btn-play-main:active {
+        transform: translateY(1px);
+      }
+
+      .menu-extra-row {
+        display: flex;
+        gap: 8px;
+        margin-top: 10px;
+      }
+
+      .menu-extra-row .btn-tactile {
+        flex: 1;
+        padding: 9px;
+      }
+
+      #toast {
+        position: absolute;
+        top: 70px;
+        left: 50%;
+        transform: translateX(-50%) translateY(-20px);
+        background: #25091b;
+        border: 1px solid rgba(251, 113, 133, 0.4);
+        color: #f8fafc;
+        padding: 8px 18px;
+        border-radius: 20px;
+        font-size: 13px;
+        font-weight: 700;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+        opacity: 0;
+        pointer-events: none;
+        transition: all 0.25s ease;
+        z-index: 60;
+      }
+
+      #toast.show {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+      }
+    </style>
+  </head>
   <body>
     <div id="game-stage">
       <!-- Header HUD -->
       <header>
         <div class="hud-group">
-          <button id="btn-how-to-play" class="btn-tactile btn-icon-only" title="How to Play" aria-label="How to Play">
-            <span style="font-size: 16px;">📖</span>
+          <button id="btn-menu" class="btn-tactile btn-icon-only" title="Main Menu" aria-label="Main Menu">
+            <span style="font-size: 16px;">🏠</span>
           </button>
-          <div class="metric-pill">
-            <span class="metric-label">TILES</span>
-            <span id="tiles-left-counter" class="metric-value">36</span>
-          </div>
+          <button id="btn-restart" class="btn-tactile btn-rose" title="Restart Game">
+            <span>🔄</span>
+            <span class="hidden-mobile">Restart</span>
+          </button>
         </div>
 
         <div class="hud-group">
           <div class="metric-pill">
-            <span class="metric-label">TIME</span>
+            <span class="metric-label">⏱️ TIME</span>
             <span id="timer-counter" class="metric-value">00:00</span>
           </div>
           <div class="metric-pill">
-            <span class="metric-label">SCORE</span>
+            <span class="metric-label">⭐ SCORE</span>
             <span id="score-counter" class="metric-value">0</span>
           </div>
-        </div>
-
-        <div class="hud-group">
-          <button id="btn-undo" class="btn-tactile" title="Undo Last Tray Tile">
-            <span>↩</span>
-            <span class="hidden-mobile">Undo</span>
-          </button>
-          <button id="btn-hint" class="btn-tactile btn-gold" title="Get Hint">
-            <span>💡</span>
-            <span class="hidden-mobile">Hint</span>
-          </button>
-          <button id="btn-shuffle" class="btn-tactile" title="Shuffle Board">
-            <span>🔀</span>
-            <span class="hidden-mobile">Shuffle</span>
-          </button>
-          <button id="btn-sound-toggle" class="btn-tactile btn-icon-only" title="Toggle Sound">
-            <span id="sound-icon">🔊</span>
-          </button>
+          <div class="metric-pill">
+            <span class="metric-label">🀄 TILES</span>
+            <span id="tiles-left-counter" class="metric-value">36</span>
+          </div>
         </div>
       </header>
 
       <!-- Main Layered Board Area -->
       <main id="board-viewport">
         <div id="triple-board"></div>
+
+        <!-- Floating Quick Actions -->
+        <div style="position: absolute; top: 12px; right: 12px; display: flex; gap: 6px; z-index: 25;">
+          <button id="btn-undo" class="btn-tactile" title="Undo" style="border-radius: 20px; padding: 5px 10px; font-size: 11px;">
+            <span>↩ Undo</span>
+          </button>
+          <button id="btn-hint" class="btn-tactile btn-gold" title="Hint" style="border-radius: 20px; padding: 5px 10px; font-size: 11px;">
+            <span>💡 Hint</span>
+          </button>
+          <button id="btn-shuffle" class="btn-tactile" title="Shuffle" style="border-radius: 20px; padding: 5px 10px; font-size: 11px;">
+            <span>🔀</span>
+          </button>
+          <button id="btn-sound-toggle" class="btn-tactile btn-icon-only" title="Sound" style="border-radius: 20px; width: 30px; height: 30px;">
+            <span id="sound-icon">🔊</span>
+          </button>
+        </div>
       </main>
 
       <!-- Bottom 7-Slot Tray -->
       <footer id="bottom-tray-container">
         <div style="font-size: 11px; font-weight: 700; color: #fda4af; letter-spacing: 0.5px;">
-          COLLECTOR TRAY (7 SLOTS MAX)
+          MATCHING TRAY (MAXIMUM 7 SLOTS)
         </div>
         <div id="tray-slots"></div>
       </footer>
 
       <!-- Toast Feedback -->
       <div id="toast"></div>
+
+      <!-- Start Menu Modal (Initial Screen) -->
+      <div id="modal-menu" class="modal-overlay active">
+        <div class="modal-card">
+          <div class="menu-icon">⚡</div>
+          <h1 class="menu-title">Mahjong Triple</h1>
+          <p class="menu-subtitle">Match 3 identical tiles to clear your tray</p>
+
+          <div class="mode-selector-list">
+            <div class="mode-card active">
+              <div class="mode-badge">⚡ CLASSIC TRIPLE MATCH</div>
+              <div class="mode-header">
+                <span class="mode-name">36 Tiles (3 Layers)</span>
+                <span class="mode-tag">7 Slots</span>
+              </div>
+              <div class="mode-desc">Collect 3 matching tiles before your 7 tray slots fill up.</div>
+            </div>
+          </div>
+
+          <button id="btn-start-game" class="btn-play-main">
+            ▶ PLAY NOW
+          </button>
+
+          <div class="menu-extra-row">
+            <button id="btn-menu-tutorial" class="btn-tactile">
+              <span>📖 How to Play</span>
+            </button>
+            <button id="btn-menu-sound" class="btn-tactile">
+              <span id="menu-sound-icon">🔊 Sound: ON</span>
+            </button>
+          </div>
+        </div>
+      </div>
 
       <!-- Tutorial Modal -->
       <div id="modal-tutorial" class="modal-overlay">
@@ -148,26 +673,6 @@
         </div>
       </div>
 
-      <!-- Rewarded Ad Modal -->
-      <div id="modal-ad" class="modal-overlay">
-        <div class="modal-card">
-          <h2 class="modal-title">💡 Free Hint Sponsor</h2>
-          <p style="font-size: 13px; color: #94a3b8; line-height: 1.4;">
-            Watch this sponsor spot to spotlight a matchable trio set.
-          </p>
-          <div class="ad-progress-bar">
-            <div id="ad-progress-fill" class="ad-progress-fill"></div>
-          </div>
-          <p id="ad-timer" style="font-size: 13px; font-weight: 700; color: #fb7185; text-align: center; margin-bottom: 16px;">
-            Reward unlocked in 5s...
-          </p>
-          <div style="display: flex; gap: 10px;">
-            <button id="btn-skip-ad" class="btn-tactile" style="flex: 1;">Skip</button>
-            <button id="btn-claim-hint" class="btn-tactile btn-gold" style="flex: 1;" disabled>Claim Hint! 💡</button>
-          </div>
-        </div>
-      </div>
-
       <!-- Tray Full Loss Modal -->
       <div id="modal-loss" class="modal-overlay">
         <div class="modal-card" style="text-align: center;">
@@ -176,8 +681,8 @@
           <p style="font-size: 14px; color: #cbd5e1; margin-bottom: 20px;">
             All 7 slots are full and no trio could be formed. Don't worry, try again!
           </p>
-          <button id="btn-retry-loss" class="btn-tactile btn-rose" style="width: 100%;">
-            Try Again
+          <button id="btn-retry-loss" class="btn-tactile btn-rose" style="width: 100%; padding: 12px; font-size: 14px;">
+            🔄 Play Again
           </button>
         </div>
       </div>
@@ -200,307 +705,13 @@
               <span id="win-score" style="font-size: 20px; font-weight: 800; color: #facc15;">3,600</span>
             </div>
           </div>
-          <button id="btn-replay" class="btn-tactile btn-rose" style="width: 100%;">
-            Play Again
+          <button id="btn-replay" class="btn-tactile btn-rose" style="width: 100%; padding: 12px; font-size: 14px;">
+            🔄 Play Again
           </button>
         </div>
       </div>
     </div>
 
     <script src="./game.js"></script>
-  
-  <!-- PWA & Initial Screen Fullscreen UI -->
-  <button id="fl-fullscreen-btn" aria-label="Fullscreen" title="Toggle Fullscreen" style="
-    position: fixed;
-    top: 14px;
-    right: 14px;
-    z-index: 99999;
-    background: rgba(15, 23, 42, 0.75);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    color: #ffffff;
-    width: 42px;
-    height: 42px;
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    font-size: 18px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-    transition: transform 0.15s ease, background 0.2s ease;
-    user-select: none;
-    -webkit-tap-highlight-color: transparent;
-  " onmouseover="this.style.transform='scale(1.08)'" onmouseout="this.style.transform='scale(1)'">
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/>
-    </svg>
-  </button>
-
-  <script>
-    (function() {
-      // Register PWA Service Worker
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-          navigator.serviceWorker.register('./sw.js').catch(() => {});
-        });
-      }
-
-      // Initial Screen Fullscreen Handler
-      const fsBtn = document.getElementById('fl-fullscreen-btn');
-      if (fsBtn) {
-        fsBtn.addEventListener('click', function(e) {
-          e.stopPropagation();
-          if (!document.fullscreenElement && !document.webkitFullscreenElement && !document.mozFullScreenElement && !document.msFullscreenElement) {
-            const el = document.documentElement;
-            if (el.requestFullscreen) el.requestFullscreen().catch(()=>{});
-            else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
-            else if (el.mozRequestFullScreen) el.mozRequestFullScreen();
-            else if (el.msRequestFullscreen) el.msRequestFullscreen();
-          } else {
-            if (document.exitFullscreen) document.exitFullscreen().catch(()=>{});
-            else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
-            else if (document.mozCancelFullScreen) document.mozCancelFullScreen();
-            else if (document.msExitFullscreen) document.msExitFullscreen();
-          }
-        });
-      }
-    })();
-  </script>
-
-  <!-- 5-Second Hint Ad Modal System -->
-  <div id="fl-hint-modal-overlay" style="
-    display: none;
-    position: fixed;
-    inset: 0;
-    z-index: 999999;
-    background: rgba(10, 15, 30, 0.85);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    align-items: center;
-    justify-content: center;
-    font-family: system-ui, -apple-system, sans-serif;
-    padding: 16px;
-    box-sizing: border-box;
-  ">
-    <div style="
-      background: linear-gradient(145deg, #1e293b, #0f172a);
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      box-shadow: 0 20px 50px rgba(0,0,0,0.6), 0 0 30px rgba(245, 158, 11, 0.2);
-      border-radius: 20px;
-      max-width: 420px;
-      width: 100%;
-      padding: 24px;
-      text-align: center;
-      color: #f8fafc;
-      position: relative;
-      animation: flModalPop 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    ">
-      <!-- Close Button -->
-      <button id="fl-hint-close-btn" style="
-        position: absolute;
-        top: 14px;
-        right: 14px;
-        background: rgba(255,255,255,0.08);
-        border: none;
-        color: #94a3b8;
-        width: 32px;
-        height: 32px;
-        border-radius: 50%;
-        cursor: pointer;
-        font-size: 16px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: all 0.2s;
-      " onmouseover="this.style.color='#fff';this.style.background='rgba(255,255,255,0.15)'" onmouseout="this.style.color='#94a3b8';this.style.background='rgba(255,255,255,0.08)'">✕</button>
-
-      <!-- Icon -->
-      <div style="
-        width: 56px;
-        height: 56px;
-        background: rgba(245, 158, 11, 0.15);
-        border: 1px solid rgba(245, 158, 11, 0.3);
-        border-radius: 16px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 28px;
-        margin: 0 auto 14px auto;
-      ">💡</div>
-
-      <!-- Title & Subtitle -->
-      <h3 style="margin: 0 0 6px 0; font-size: 19px; font-weight: 800; color: #fbbf24;">Unlocking Hint</h3>
-      <p style="margin: 0 0 18px 0; font-size: 13px; color: #94a3b8; line-height: 1.4;">
-        Short sponsor break (max 5s) to support free puzzles!
-      </p>
-
-      <!-- Ad / Sponsor Banner Box -->
-      <div id="fl-hint-ad-box" style="
-        background: rgba(0, 0, 0, 0.35);
-        border: 1px dashed rgba(255, 255, 255, 0.12);
-        border-radius: 12px;
-        height: 100px;
-        margin-bottom: 18px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        gap: 6px;
-        color: #64748b;
-        font-size: 12px;
-      ">
-        <span style="font-weight: 700; color: #e2e8f0; font-size: 13px;">FunLogic Sponsor Ad</span>
-        <span>Ad space placeholder (300x100)</span>
-      </div>
-
-      <!-- Progress Bar & Countdown -->
-      <div style="margin-bottom: 16px;">
-        <div style="display: flex; justify-content: space-between; font-size: 12px; font-weight: 700; color: #cbd5e1; margin-bottom: 6px;">
-          <span>Hint ready in:</span>
-          <span id="fl-hint-timer-txt" style="color: #f59e0b;">5s</span>
-        </div>
-        <div style="width: 100%; height: 8px; background: rgba(255,255,255,0.1); border-radius: 4px; overflow: hidden;">
-          <div id="fl-hint-progress-bar" style="width: 0%; height: 100%; background: linear-gradient(90deg, #f59e0b, #10b981); border-radius: 4px; transition: width 0.1s linear;"></div>
-        </div>
-      </div>
-
-      <!-- Action Button -->
-      <button id="fl-hint-claim-btn" disabled style="
-        width: 100%;
-        padding: 12px;
-        border-radius: 12px;
-        border: none;
-        background: #334155;
-        color: #64748b;
-        font-size: 14px;
-        font-weight: 800;
-        cursor: not-allowed;
-        transition: all 0.2s;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-      ">Please wait 5s...</button>
-    </div>
-  </div>
-
-  <style>
-    @keyframes flModalPop {
-      0% { transform: scale(0.85); opacity: 0; }
-      100% { transform: scale(1); opacity: 1; }
-    }
-  </style>
-
-  <script>
-    (function() {
-      let countdownTimer = null;
-      let originalHintCallback = null;
-
-      const overlay = document.getElementById('fl-hint-modal-overlay');
-      const timerTxt = document.getElementById('fl-hint-timer-txt');
-      const progressBar = document.getElementById('fl-hint-progress-bar');
-      const claimBtn = document.getElementById('fl-hint-claim-btn');
-      const closeBtn = document.getElementById('fl-hint-close-btn');
-
-      function showHintAdModal(callback) {
-        if (!overlay) return;
-        originalHintCallback = callback;
-        overlay.style.display = 'flex';
-        
-        let timeLeft = 50; // 5.0 seconds (50 x 100ms)
-        claimBtn.disabled = true;
-        claimBtn.style.background = '#334155';
-        claimBtn.style.color = '#64748b';
-        claimBtn.style.cursor = 'not-allowed';
-        claimBtn.textContent = 'Please wait 5s...';
-        progressBar.style.width = '0%';
-        timerTxt.textContent = '5s';
-
-        // Notify parent portal
-        try {
-          if (window.parent && window.parent !== window) {
-            window.parent.postMessage({ type: 'hint_ad_started', duration: 5 }, '*');
-          }
-        } catch(e) {}
-
-        clearInterval(countdownTimer);
-        countdownTimer = setInterval(() => {
-          timeLeft--;
-          const percent = ((50 - timeLeft) / 50) * 100;
-          progressBar.style.width = percent + '%';
-          const secondsRemaining = Math.ceil(timeLeft / 10);
-          timerTxt.textContent = secondsRemaining + 's';
-          claimBtn.textContent = 'Please wait ' + secondsRemaining + 's...';
-
-          if (timeLeft <= 0) {
-            clearInterval(countdownTimer);
-            timerTxt.textContent = 'Ready!';
-            timerTxt.style.color = '#10b981';
-            claimBtn.disabled = false;
-            claimBtn.style.background = 'linear-gradient(90deg, #f59e0b, #10b981)';
-            claimBtn.style.color = '#0f172a';
-            claimBtn.style.cursor = 'pointer';
-            claimBtn.textContent = '✨ Get Hint Now';
-
-            try {
-              if (window.parent && window.parent !== window) {
-                window.parent.postMessage({ type: 'hint_ad_completed' }, '*');
-              }
-            } catch(e) {}
-          }
-        }, 100);
-      }
-
-      function closeHintModal() {
-        clearInterval(countdownTimer);
-        if (overlay) overlay.style.display = 'none';
-      }
-
-      function claimHint() {
-        closeHintModal();
-        if (typeof originalHintCallback === 'function') {
-          originalHintCallback();
-        }
-      }
-
-      if (closeBtn) closeBtn.addEventListener('click', closeHintModal);
-      if (claimBtn) claimBtn.addEventListener('click', claimHint);
-
-      // Expose globally for game engines
-      window.showHintWith5sAd = showHintAdModal;
-
-      // Automatically hook into any existing hint button in the DOM
-      window.addEventListener('DOMContentLoaded', () => {
-        setTimeout(() => {
-          const hintSelectors = [
-            '#btn-hint', '#hint-btn', '#button-hint', '#hint',
-            '.btn-hint', '.hint-btn', '[data-action="hint"]',
-            'button[title*="Hint" i]', 'button[aria-label*="Hint" i]'
-          ];
-
-          hintSelectors.forEach(selector => {
-            document.querySelectorAll(selector).forEach(btn => {
-              if (!btn.getAttribute('data-fl-hooked')) {
-                btn.setAttribute('data-fl-hooked', 'true');
-                btn.addEventListener('click', function(e) {
-                  // If modal not already claimed in this click
-                  if (!this.hasAttribute('data-hint-approved')) {
-                    e.stopImmediatePropagation();
-                    e.preventDefault();
-                    showHintAdModal(() => {
-                      this.setAttribute('data-hint-approved', 'true');
-                      this.click();
-                      setTimeout(() => this.removeAttribute('data-hint-approved'), 500);
-                    });
-                  }
-                }, true); // Capture phase to intercept first
-              }
-            });
-          });
-        }, 300);
-      });
-    })();
-  </script>
-
-</body>
+  </body>
 </html>

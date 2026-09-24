@@ -18,20 +18,42 @@
     { id: 'lantern',icon: '🏮', name: 'Lantern' }
   ];
 
-  // Create 16 tiles (2 of each) in a fixed solvable friendly layout
-  let tiles = [];
-  const baseOrder = [
-    0, 1, 2, 3,
-    4, 5, 6, 7,
-    0, 2, 4, 6,
-    1, 3, 5, 7
+  // 16-Tile Solvable 3D Multi-Layer Configuration
+  // 12 Tiles on Layer 0 (Base perimeter), 4 Tiles on Layer 1 (Top Tier center)
+  const TILE_CONFIGS = [
+    // Layer 0 - Top Row
+    { row: 1, col: 1, layer: 0, pairIdx: 0 },
+    { row: 1, col: 2, layer: 0, pairIdx: 1 },
+    { row: 1, col: 3, layer: 0, pairIdx: 2 },
+    { row: 1, col: 4, layer: 0, pairIdx: 3 },
+
+    // Layer 0 - Middle Edges
+    { row: 2, col: 1, layer: 0, pairIdx: 4 },
+    { row: 2, col: 4, layer: 0, pairIdx: 5 },
+    { row: 3, col: 1, layer: 0, pairIdx: 6 },
+    { row: 3, col: 4, layer: 0, pairIdx: 7 },
+
+    // Layer 0 - Bottom Row
+    { row: 4, col: 1, layer: 0, pairIdx: 0 },
+    { row: 4, col: 2, layer: 0, pairIdx: 2 },
+    { row: 4, col: 3, layer: 0, pairIdx: 4 },
+    { row: 4, col: 4, layer: 0, pairIdx: 6 },
+
+    // Layer 1 - Center Elevated Deck (Top Tier)
+    { row: 2, col: 2, layer: 1, pairIdx: 1 },
+    { row: 2, col: 3, layer: 1, pairIdx: 3 },
+    { row: 3, col: 2, layer: 1, pairIdx: 5 },
+    { row: 3, col: 3, layer: 1, pairIdx: 7 }
   ];
 
-  tiles = baseOrder.map((pairIdx, index) => ({
+  let tiles = TILE_CONFIGS.map((cfg, index) => ({
     uid: index,
-    pairId: TILE_PAIRS[pairIdx].id,
-    icon: TILE_PAIRS[pairIdx].icon,
-    name: TILE_PAIRS[pairIdx].name,
+    row: cfg.row,
+    col: cfg.col,
+    layer: cfg.layer,
+    pairId: TILE_PAIRS[cfg.pairIdx].id,
+    icon: TILE_PAIRS[cfg.pairIdx].icon,
+    name: TILE_PAIRS[cfg.pairIdx].name,
     matched: false
   }));
 
@@ -110,16 +132,46 @@
   const hintBtn = document.getElementById('btn-hint');
   const resetBtn = document.getElementById('btn-reset');
 
-  // In Mahjong, a tile is playable if at least one side (left or right in its row) is free or outer edge
+  // Change tiles-grid class to mahjong-arena
+  if (gridEl) {
+    gridEl.className = 'mahjong-arena';
+  }
+
+  function spawnMatchStars(x, y) {
+    const emojis = ['✨', '⭐', '🌟', '🀄', '🌸'];
+    for (let i = 0; i < 10; i++) {
+      const star = document.createElement('span');
+      star.className = 'match-star';
+      star.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+      star.style.left = `${x}px`;
+      star.style.top = `${y}px`;
+
+      const angle = (Math.PI * 2 * i) / 10;
+      const dist = 30 + Math.random() * 50;
+      const dx = Math.cos(angle) * dist;
+      const dy = Math.sin(angle) * dist;
+      star.style.setProperty('--dx', `${dx}px`);
+      star.style.setProperty('--dy', `${dy}px`);
+      star.style.fontSize = `${16 + Math.random() * 12}px`;
+
+      document.body.appendChild(star);
+      setTimeout(() => star.remove(), 950);
+    }
+  }
+
+  // Mahjong Playability Rules:
+  // 1. Layer 1 (Top Tier) tiles are never covered from above. A layer 1 tile is free if left or right is open.
+  // 2. Layer 0 (Base) tiles: outer corners/edges are open.
   function isTileFree(index) {
     const tile = tiles[index];
     if (tile.matched) return false;
-    const col = index % 4;
 
-    // Outer left edge or left neighbor is matched
-    const leftFree = col === 0 || tiles[index - 1].matched;
-    // Outer right edge or right neighbor is matched
-    const rightFree = col === 3 || tiles[index + 1].matched;
+    // Check same-layer left and right neighbors
+    const leftNeighbor = tiles.find(t => !t.matched && t.layer === tile.layer && t.row === tile.row && t.col === tile.col - 1);
+    const rightNeighbor = tiles.find(t => !t.matched && t.layer === tile.layer && t.row === tile.row && t.col === tile.col + 1);
+
+    const leftFree = !leftNeighbor;
+    const rightFree = !rightNeighbor;
 
     return leftFree || rightFree;
   }
@@ -128,20 +180,29 @@
     gridEl.innerHTML = '';
     tiles.forEach((tile, index) => {
       const tileEl = document.createElement('div');
-      tileEl.className = 'mahjong-tile';
+      tileEl.className = `mahjong-tile layer-${tile.layer}`;
       tileEl.dataset.index = index;
+
+      tileEl.style.gridRow = `${tile.row}`;
+      tileEl.style.gridColumn = `${tile.col}`;
 
       if (tile.matched) {
         tileEl.classList.add('matched');
       } else {
         const free = isTileFree(index);
         if (!free) {
-          tileEl.style.opacity = '0.6';
-          tileEl.style.cursor = 'not-allowed';
+          tileEl.classList.add('blocked');
         }
 
         if (firstSelected === index) {
           tileEl.classList.add('selected');
+        }
+
+        if (tile.layer === 1) {
+          const badge = document.createElement('div');
+          badge.className = 'tier-badge';
+          badge.textContent = 'TOP';
+          tileEl.appendChild(badge);
         }
 
         const icon = document.createElement('div');
@@ -155,7 +216,9 @@
         tileEl.appendChild(icon);
         tileEl.appendChild(label);
 
-        tileEl.addEventListener('click', () => handleTileClick(index));
+        tileEl.addEventListener('click', (e) => {
+          handleTileClick(index, e);
+        });
       }
 
       gridEl.appendChild(tileEl);
@@ -164,13 +227,15 @@
     pairsLeftEl.textContent = 8 - matchesFound;
   }
 
-  function handleTileClick(index) {
+  function handleTileClick(index, event) {
     if (isWon) return;
     const tile = tiles[index];
     if (tile.matched) return;
 
     if (!isTileFree(index)) {
-      statusMsg.textContent = 'This tile is blocked. Choose a tile with a free side!';
+      statusMsg.textContent = tile.layer === 0 
+        ? 'Tile on bottom level is blocked. Free the outer edge first!'
+        : 'Tile is trapped between others. Free one side!';
       statusMsg.style.color = '#b91c1c';
       setTimeout(() => {
         if (!isWon) {
@@ -198,8 +263,12 @@
         tile.matched = true;
         matchesFound++;
         playMatchChime();
-        firstSelected = null;
 
+        if (event && event.clientX) {
+          spawnMatchStars(event.clientX, event.clientY);
+        }
+
+        firstSelected = null;
         renderBoard();
 
         if (matchesFound === 8) {
@@ -217,7 +286,7 @@
     isWon = true;
     playWinFanfare();
     const elapsed = Math.max(1, Math.floor((Date.now() - startTime) / 1000));
-    statusMsg.textContent = '🎉 Wonderful! All 8 pairs matched successfully!';
+    statusMsg.textContent = '🎉 Wonderful! All 8 pairs across both levels matched!';
     statusMsg.style.color = '#15803d';
 
     try {
