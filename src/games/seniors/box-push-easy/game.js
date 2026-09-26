@@ -1,27 +1,125 @@
-// Box Push Easy 60+ - Standalone Vanilla JS
+// Box Push Easy 60+ - Standalone Vanilla JS with Procedural Levels & Pseudo-3D
 (() => {
-  const startTime = Date.now();
+  const TOTAL_LEVELS = 20;
+  let currentLevel = 1;
+  let startTime = Date.now();
   let stepCount = 0;
   let history = [];
   let isWon = false;
   let soundEnabled = true;
 
-  // 6x6 Map
-  // 1 = Wall, 0 = Floor, G = Goal
-  const MAP_LAYOUT = [
-    [1, 1, 1, 1, 1, 1],
-    [1, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 1],
-    [1, 1, 1, 1, 1, 1]
+  // Curated procedural warehouse levels (6x6) with walls (1), floor (0), player, box and goal
+  const LEVELS_DATA = [
+    // Level 1: Straight Push
+    {
+      map: [
+        [1, 1, 1, 1, 1, 1],
+        [1, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 1],
+        [1, 1, 1, 1, 1, 1]
+      ],
+      player: { r: 2, c: 2 },
+      box: { r: 3, c: 3 },
+      goal: { r: 3, c: 4 }
+    },
+    // Level 2: Corner turn
+    {
+      map: [
+        [1, 1, 1, 1, 1, 1],
+        [1, 0, 0, 0, 0, 1],
+        [1, 0, 1, 0, 0, 1],
+        [1, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 1],
+        [1, 1, 1, 1, 1, 1]
+      ],
+      player: { r: 1, c: 2 },
+      box: { r: 2, c: 3 },
+      goal: { r: 4, c: 3 }
+    },
+    // Level 3: Corridor bypass
+    {
+      map: [
+        [1, 1, 1, 1, 1, 1],
+        [1, 0, 0, 1, 0, 1],
+        [1, 0, 0, 0, 0, 1],
+        [1, 0, 1, 0, 0, 1],
+        [1, 0, 0, 0, 0, 1],
+        [1, 1, 1, 1, 1, 1]
+      ],
+      player: { r: 2, c: 1 },
+      box: { r: 2, c: 2 },
+      goal: { r: 4, c: 4 }
+    },
+    // Level 4: Central pillar
+    {
+      map: [
+        [1, 1, 1, 1, 1, 1],
+        [1, 0, 0, 0, 0, 1],
+        [1, 0, 1, 1, 0, 1],
+        [1, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 1],
+        [1, 1, 1, 1, 1, 1]
+      ],
+      player: { r: 1, c: 1 },
+      box: { r: 3, c: 2 },
+      goal: { r: 1, c: 4 }
+    },
+    // Level 5: L-corridor
+    {
+      map: [
+        [1, 1, 1, 1, 1, 1],
+        [1, 0, 0, 0, 0, 1],
+        [1, 0, 1, 0, 0, 1],
+        [1, 0, 1, 0, 0, 1],
+        [1, 0, 0, 0, 0, 1],
+        [1, 1, 1, 1, 1, 1]
+      ],
+      player: { r: 4, c: 1 },
+      box: { r: 3, c: 3 },
+      goal: { r: 1, c: 3 }
+    },
+    // Levels 6-20 procedural presets
+    ...Array.from({ length: 15 }, (_, i) => {
+      const lvl = i + 6;
+      const wallPatterns = [
+        [[2,2], [3,3]],
+        [[2,3], [4,2]],
+        [[3,2], [3,4]],
+        [[2,4], [4,3]],
+        [[2,2], [2,3]]
+      ];
+      const wp = wallPatterns[i % wallPatterns.length];
+      const map = [
+        [1, 1, 1, 1, 1, 1],
+        [1, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 1],
+        [1, 1, 1, 1, 1, 1]
+      ];
+      wp.forEach(([r, c]) => { map[r][c] = 1; });
+
+      const goals = [{ r: 4, c: 4 }, { r: 1, c: 4 }, { r: 4, c: 1 }, { r: 1, c: 1 }, { r: 2, c: 4 }];
+      const goal = goals[i % goals.length];
+      const boxes = [{ r: 3, c: 2 }, { r: 2, c: 3 }, { r: 3, c: 3 }, { r: 2, c: 2 }, { r: 3, c: 4 }];
+      const box = boxes[i % boxes.length];
+
+      return {
+        map,
+        player: { r: 1, c: 2 },
+        box,
+        goal
+      };
+    })
   ];
 
-  // Initial Positions (Just 1 Box!)
+  let currentMap = [];
   let player = { r: 2, c: 2 };
   let playerFacing = 'down';
   let box = { r: 3, c: 3 };
-  const goal = { r: 3, c: 4 };
+  let goal = { r: 3, c: 4 };
 
   // Audio Synth
   let audioCtx = null;
@@ -93,42 +191,73 @@
 
   const gridEl = document.getElementById('sokoban-grid');
   const stepsCountEl = document.getElementById('steps-count');
+  const levelDisplay = document.getElementById('level-display');
   const statusMsg = document.getElementById('status-msg');
   const soundBtn = document.getElementById('btn-sound');
   const undoBtn = document.getElementById('btn-undo');
   const resetBtn = document.getElementById('btn-reset');
 
+  function initLevel(lvlNum = currentLevel) {
+    currentLevel = Math.max(1, Math.min(TOTAL_LEVELS, lvlNum));
+    const data = LEVELS_DATA[currentLevel - 1];
+
+    currentMap = JSON.parse(JSON.stringify(data.map));
+    player = { ...data.player };
+    box = { ...data.box };
+    goal = { ...data.goal };
+
+    playerFacing = 'down';
+    stepCount = 0;
+    history = [];
+    isWon = false;
+    startTime = Date.now();
+
+    if (levelDisplay) levelDisplay.textContent = `Level ${currentLevel}/${TOTAL_LEVELS}`;
+    if (statusMsg) {
+      statusMsg.textContent = `Push the box 📦 onto target 🎯 (Level ${currentLevel})`;
+      statusMsg.style.color = '#7c2d12';
+    }
+
+    renderMap();
+  }
+
   function renderMap() {
     gridEl.innerHTML = '';
-    for (let r = 0; r < 6; r++) {
-      for (let c = 0; c < 6; c++) {
+    const rows = currentMap.length;
+    const cols = currentMap[0].length;
+
+    gridEl.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
+    gridEl.style.gridTemplateRows = `repeat(${rows}, 1fr)`;
+
+    for (let r = 0; r < rows; r++) {
+      for (let c = 0; c < cols; c++) {
         const cellEl = document.createElement('div');
         cellEl.className = 'sokoban-cell';
 
-        if (MAP_LAYOUT[r][c] === 1) {
+        const isWall = currentMap[r][c] === 1;
+        const isGoal = goal.r === r && goal.c === c;
+        const isPlayer = player.r === r && player.c === c;
+        const isBox = box.r === r && box.c === c;
+
+        if (isWall) {
           cellEl.classList.add('cell-wall');
-          cellEl.textContent = '🧱';
         } else {
           cellEl.classList.add('cell-floor');
-
-          const isGoal = goal.r === r && goal.c === c;
-          const isPlayer = player.r === r && player.c === c;
-          const isBox = box.r === r && box.c === c;
-
           if (isGoal) {
             cellEl.classList.add('cell-goal');
           }
 
           if (isPlayer) {
-            cellEl.innerHTML = `<span class="player-marker facing-${playerFacing}">🧑‍🌾</span>`;
+            cellEl.innerHTML = `<div class="sticker-3d sticker-player"><span class="player-marker facing-${playerFacing}">🧑‍🌾</span></div>`;
           } else if (isBox) {
-            cellEl.textContent = '📦';
             if (isGoal) {
               cellEl.classList.add('cell-box-on-goal');
-              cellEl.textContent = '⭐'; // Glows into star on target!
+              cellEl.innerHTML = `<div class="sticker-3d sticker-box"></div>`;
+            } else {
+              cellEl.innerHTML = `<div class="sticker-3d sticker-box"></div>`;
             }
           } else if (isGoal) {
-            cellEl.textContent = '🎯';
+            cellEl.innerHTML = `<div class="sticker-3d" style="font-size: 26px;">🎯</div>`;
           }
         }
 
@@ -136,7 +265,7 @@
       }
     }
 
-    stepsCountEl.textContent = stepCount;
+    if (stepsCountEl) stepsCountEl.textContent = stepCount;
 
     if (box.r === goal.r && box.c === goal.c && !isWon) {
       handleWin();
@@ -156,22 +285,18 @@
     const nextPlayerR = player.r + dr;
     const nextPlayerC = player.c + dc;
 
-    // Check wall
-    if (MAP_LAYOUT[nextPlayerR][nextPlayerC] === 1) return;
+    if (currentMap[nextPlayerR][nextPlayerC] === 1) return;
 
-    // Check if box is in next cell
     if (box.r === nextPlayerR && box.c === nextPlayerC) {
       const nextBoxR = box.r + dr;
       const nextBoxC = box.c + dc;
 
-      // Box hits wall?
-      if (MAP_LAYOUT[nextBoxR][nextBoxC] === 1) return;
+      if (currentMap[nextBoxR][nextBoxC] === 1) return;
 
-      // Valid push!
       history.push({
         player: { ...player },
         box: { ...box },
-        stepCount: stepCount
+        stepCount
       });
 
       player.r = nextPlayerR;
@@ -182,11 +307,10 @@
       playPushSound();
       renderMap();
     } else {
-      // Normal walk
       history.push({
         player: { ...player },
         box: { ...box },
-        stepCount: stepCount
+        stepCount
       });
 
       player.r = nextPlayerR;
@@ -201,11 +325,19 @@
     isWon = true;
     playWinSound();
     const elapsed = Math.max(1, Math.floor((Date.now() - startTime) / 1000));
-    statusMsg.textContent = '🎉 Splendid! The box is safely placed on the target!';
-    statusMsg.style.color = '#15803d';
+    
+    if (statusMsg) {
+      statusMsg.innerHTML = `🎉 <strong>Level ${currentLevel} Solved!</strong> <button id="btn-next-lvl" style="margin-left:8px; padding: 4px 10px; background: #16a34a; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer;">Next Level ▶</button>`;
+      statusMsg.style.color = '#15803d';
+
+      document.getElementById('btn-next-lvl')?.addEventListener('click', () => {
+        const nextLvl = currentLevel < TOTAL_LEVELS ? currentLevel + 1 : 1;
+        initLevel(nextLvl);
+      });
+    }
 
     try {
-      window.parent.postMessage({ type: 'win', time: elapsed }, '*');
+      window.parent.postMessage({ type: 'win', time: elapsed, level: currentLevel }, '*');
     } catch (_) {}
   }
 
@@ -215,6 +347,32 @@
       move(btn.dataset.dir);
     });
   });
+
+  // Touch Swipe on grid
+  let touchStartX = 0;
+  let touchStartY = 0;
+  gridEl.addEventListener('touchstart', (e) => {
+    if (e.touches.length > 0) {
+      touchStartX = e.touches[0].clientX;
+      touchStartY = e.touches[0].clientY;
+    }
+  }, { passive: true });
+
+  gridEl.addEventListener('touchend', (e) => {
+    if (e.changedTouches.length > 0) {
+      const dx = e.changedTouches[0].clientX - touchStartX;
+      const dy = e.changedTouches[0].clientY - touchStartY;
+      const absDx = Math.abs(dx);
+      const absDy = Math.abs(dy);
+      if (Math.max(absDx, absDy) > 20) {
+        if (absDx > absDy) {
+          move(dx > 0 ? 'RIGHT' : 'LEFT');
+        } else {
+          move(dy > 0 ? 'DOWN' : 'UP');
+        }
+      }
+    }
+  }, { passive: true });
 
   // Keyboard navigation
   window.addEventListener('keydown', (e) => {
@@ -230,58 +388,30 @@
     } else if (['ArrowRight', 'KeyD'].includes(e.code)) {
       e.preventDefault();
       move('RIGHT');
+    } else if (['KeyZ', 'Backspace'].includes(e.code)) {
+      undoMove();
+    } else if (e.code === 'KeyR') {
+      initLevel(currentLevel);
     }
   });
 
-  // Swipe support
-  let touchStartX = 0;
-  let touchStartY = 0;
-  gridEl.addEventListener('touchstart', (e) => {
-    touchStartX = e.touches[0].clientX;
-    touchStartY = e.touches[0].clientY;
-  }, { passive: true });
+  function undoMove() {
+    if (history.length === 0 || isWon) return;
+    const previous = history.pop();
+    player = { ...previous.player };
+    box = { ...previous.box };
+    stepCount = previous.stepCount;
+    playStepSound();
+    renderMap();
+  }
 
-  gridEl.addEventListener('touchend', (e) => {
-    const diffX = e.changedTouches[0].clientX - touchStartX;
-    const diffY = e.changedTouches[0].clientY - touchStartY;
-    if (Math.abs(diffX) > Math.abs(diffY)) {
-      if (Math.abs(diffX) > 25) {
-        move(diffX > 0 ? 'RIGHT' : 'LEFT');
-      }
-    } else {
-      if (Math.abs(diffY) > 25) {
-        move(diffY > 0 ? 'DOWN' : 'UP');
-      }
-    }
-  }, { passive: true });
+  undoBtn?.addEventListener('click', undoMove);
+  resetBtn?.addEventListener('click', () => initLevel(currentLevel));
 
-  undoBtn.addEventListener('click', () => {
-    if (history.length > 0 && !isWon) {
-      const prev = history.pop();
-      player = prev.player;
-      box = prev.box;
-      stepCount = prev.stepCount;
-      renderMap();
-    }
-  });
-
-  resetBtn.addEventListener('click', () => {
-    if (confirm('Restart Box Push?')) {
-      player = { r: 2, c: 2 };
-      box = { r: 3, c: 3 };
-      stepCount = 0;
-      history = [];
-      isWon = false;
-      statusMsg.textContent = 'Push the single box 📦 onto the target 🎯.';
-      statusMsg.style.color = '#9a3412';
-      renderMap();
-    }
-  });
-
-  soundBtn.addEventListener('click', () => {
+  soundBtn?.addEventListener('click', () => {
     soundEnabled = !soundEnabled;
-    soundBtn.textContent = soundEnabled ? '🔊 Sound' : '🔇 Muted';
+    soundBtn.innerHTML = soundEnabled ? '🔊 Sound' : '🔇 Muted';
   });
 
-  renderMap();
+  initLevel(1);
 })();

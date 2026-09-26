@@ -1,5 +1,5 @@
 /**
- * Premium SVG Mini-Sticker System for FunLogic.games
+ * Premium SVG Mini-Sticker System for PlayFunLogic.com
  * Replaces raw OS Unicode emojis with beautiful, custom-designed vector mini-stickers
  * featuring glossy highlights, multi-stop gradients, and crisp die-cut borders.
  */

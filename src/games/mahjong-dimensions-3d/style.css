@@ -236,71 +236,91 @@ header {
 }
 
 .tile-3d.matched {
-  animation: match3dExplode 0.4s ease forwards;
+  animation: match3dExplode 0.35s ease forwards;
   pointer-events: none;
 }
 
 @keyframes match3dExplode {
-  0% { transform: scale3d(1, 1, 1); opacity: 1; }
-  50% { transform: scale3d(1.4, 1.4, 1.4); opacity: 0.8; filter: brightness(2); }
-  100% { transform: scale3d(0, 0, 0); opacity: 0; }
+  0% { opacity: 1; filter: brightness(1.2); }
+  50% { opacity: 0.7; filter: brightness(2); }
+  100% { opacity: 0; visibility: hidden; }
 }
 
-/* 3D Tile Faces */
+/* 3D Tile Faces - Perfectly Joined Solid Cuboid (54px x 64px x 24px) */
 .tile-face {
   position: absolute;
-  inset: 0;
-  border-radius: 6px;
-  backface-visibility: visible;
+  box-sizing: border-box;
+  backface-visibility: hidden;
+}
+
+/* Front & Back Faces: 54px W x 64px H */
+.face-front {
+  width: 54px;
+  height: 64px;
+  left: 0;
+  top: 0;
+  border-radius: 4px;
+  background: linear-gradient(135deg, #ffffff 0%, #faf5ff 60%, #e9d5ff 100%);
+  border: 1px solid #d8b4fe;
+  transform: translateZ(12px);
+  box-shadow: inset 0 1px 2px #ffffff;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
 }
 
-.face-front {
-  background: linear-gradient(135deg, #ffffff 0%, #faf5ff 60%, #e9d5ff 100%);
-  border: 1px solid #d8b4fe;
-  transform: translateZ(12px);
-  box-shadow: inset 0 1px 1px #ffffff;
-}
-
 .face-back {
+  width: 54px;
+  height: 64px;
+  left: 0;
+  top: 0;
+  border-radius: 4px;
   background: #581c87;
-  transform: rotateY(180deg) translateZ(12px);
   border: 1px solid #3b0764;
+  transform: rotateY(180deg) translateZ(12px);
 }
 
+/* Side Faces (Left & Right): 24px W x 64px H */
 .face-right {
   width: 24px;
-  left: 42px;
+  height: 64px;
+  left: 15px; /* (54 - 24) / 2 = 15px (centered on X = 27px) */
+  top: 0;
   background: #6b21a8;
-  transform: rotateY(90deg) translateZ(12px);
   border: 1px solid #4c1d95;
+  transform: rotateY(90deg) translateZ(27px);
 }
 
 .face-left {
   width: 24px;
-  left: -12px;
+  height: 64px;
+  left: 15px; /* (54 - 24) / 2 = 15px (centered on X = 27px) */
+  top: 0;
   background: #7e22ce;
-  transform: rotateY(-90deg) translateZ(12px);
   border: 1px solid #581c87;
+  transform: rotateY(-90deg) translateZ(27px);
 }
 
+/* Top & Bottom Faces: 54px W x 24px H */
 .face-top {
+  width: 54px;
   height: 24px;
-  top: -12px;
+  left: 0;
+  top: 20px; /* (64 - 24) / 2 = 20px (centered on Y = 32px) */
   background: #9333ea;
-  transform: rotateX(90deg) translateZ(12px);
   border: 1px solid #6b21a8;
+  transform: rotateX(90deg) translateZ(32px);
 }
 
 .face-bottom {
+  width: 54px;
   height: 24px;
-  top: 52px;
+  left: 0;
+  top: 20px; /* (64 - 24) / 2 = 20px (centered on Y = 32px) */
   background: #4c1d95;
-  transform: rotateX(-90deg) translateZ(12px);
   border: 1px solid #3b0764;
+  transform: rotateX(-90deg) translateZ(32px);
 }
 
 .tile-symbol {

@@ -72,148 +72,83 @@ export function isEquationMathematicallyTrue(eqStr) {
   return false;
 }
 
+import puzzleData from './puzzles-data.json';
+
+export const PROCEDURAL_1_MOVE_PUZZLES = puzzleData.p1;
+export const PROCEDURAL_2_MOVES_PUZZLES = puzzleData.p2;
+
 /**
- * 20 Progressive Handcrafted Levels with exact 1-matchstick moves
+ * Builds 50 progressive procedural levels:
+ * - Levels 1 to 25: 1 Matchstick Move (Easy -> Medium)
+ * - Levels 26 to 50: 2 Matchstick Moves (Hard -> Master)
  */
-export const LEVELS = [
-  {
-    id: 1,
-    title: 'Level 1: The Beginning',
-    initialEquation: '6+4=4',
-    difficulty: 'Easy',
-    hintText: 'Move the middle matchstick from 6 to make it 0 (0 + 4 = 4) or from + to 6 (8 - 4 = 4).',
-  },
-  {
-    id: 2,
-    title: 'Level 2: Balance',
-    initialEquation: '6+3=5',
-    difficulty: 'Easy',
-    hintText: 'Move the bottom-left matchstick from 6 to 5 to make 5 + 3 = 8 or 6 - 3 = 3.',
-  },
-  {
-    id: 3,
-    title: 'Level 3: Subtraction',
-    initialEquation: '8-3=3',
-    difficulty: 'Easy',
-    hintText: 'Move 1 matchstick from 8 to the right 3 to form 9 - 3 = 6 or 6 - 3 = 3.',
-  },
-  {
-    id: 4,
-    title: 'Level 4: Transformation',
-    initialEquation: '5+7=2',
-    difficulty: 'Easy',
-    hintText: 'Move the vertical matchstick from + to the 5 to form 9 - 7 = 2.',
-  },
-  {
-    id: 5,
-    title: 'Level 5: Plus or Minus',
-    initialEquation: '9+3=5',
-    difficulty: 'Easy',
-    hintText: 'Move the vertical bar from + to the 5 to get 9 - 3 = 6.',
-  },
-  {
-    id: 6,
-    title: 'Level 6: Eight to Nine',
-    initialEquation: '8+3=5',
-    difficulty: 'Medium',
-    hintText: 'Move 1 matchstick from 8 to 5 to result in 6 + 3 = 9.',
-  },
-  {
-    id: 7,
-    title: 'Level 7: Magic Seven',
-    initialEquation: '7+1=0',
-    difficulty: 'Medium',
-    hintText: 'Move the vertical matchstick from the + sign to the 0 to create 7 - 1 = 6.',
-  },
-  {
-    id: 8,
-    title: 'Level 8: Inversion',
-    initialEquation: '3+5=2',
-    difficulty: 'Medium',
-    hintText: 'Move the vertical matchstick from + to the 3 to turn it into 8 - 5 = 3.',
-  },
-  {
-    id: 9,
-    title: 'Level 9: The Mysterious Nine',
-    initialEquation: '9-5=9',
-    difficulty: 'Medium',
-    hintText: 'Move the top-left matchstick from the first 9 to the 5 to form 3 + 5 = 8.',
-  },
-  {
-    id: 10,
-    title: 'Level 10: Pure Logic',
-    initialEquation: '6+1=8',
-    difficulty: 'Medium',
-    hintText: 'Move 1 matchstick from 6 to 1 to transform it into 5 + 3 = 8.',
-  },
-  {
-    id: 11,
-    title: 'Level 11: Internal Shift',
-    initialEquation: '0+3=9',
-    difficulty: 'Medium',
-    hintText: 'Move 1 matchstick from 0 to its center to turn it into 6 (6 + 3 = 9).',
-  },
-  {
-    id: 12,
-    title: 'Level 12: Perfect Zero',
-    initialEquation: '5+5=0',
-    difficulty: 'Hard',
-    hintText: 'Move the vertical bar from + to the left 5 to make 6 - 6 = 0.',
-  },
-  {
-    id: 13,
-    title: 'Level 13: Numeric Leap',
-    initialEquation: '2+7=5',
-    difficulty: 'Hard',
-    hintText: 'Move 1 matchstick from 7 to turn it into 3, resulting in 2 + 3 = 5.',
-  },
-  {
-    id: 14,
-    title: 'Level 14: Subtraction Shift',
-    initialEquation: '9-3=8',
-    difficulty: 'Hard',
-    hintText: 'Move 1 matchstick from 8 to 9 to create 5 + 3 = 8 or 9 - 3 = 6.',
-  },
-  {
-    id: 15,
-    title: 'Level 15: Symmetry',
-    initialEquation: '7-8=1',
-    difficulty: 'Hard',
-    hintText: 'Move 1 matchstick from 8 to 7 to transform into 9 - 8 = 1.',
-  },
-  {
-    id: 16,
-    title: 'Level 16: Eight and Six',
-    initialEquation: '8-9=2',
-    difficulty: 'Hard',
-    hintText: 'Move the top-right matchstick from 9 to the bottom-left to make 8 - 6 = 2.',
-  },
-  {
-    id: 17,
-    title: 'Level 17: Multi-Branch',
-    initialEquation: '3+9=2',
-    difficulty: 'Hard',
-    hintText: 'Move 1 matchstick from 9 to turn it into 6 and the 3 into 8: 8 - 6 = 2.',
-  },
-  {
-    id: 18,
-    title: 'Level 18: Double Six',
-    initialEquation: '9+6=6',
-    difficulty: 'Master',
-    hintText: 'Move the center matchstick from 9 to close the 0: 0 + 6 = 6.',
-  },
-  {
-    id: 19,
-    title: 'Level 19: The Grand Puzzle',
-    initialEquation: '5+6=3',
-    difficulty: 'Master',
-    hintText: 'Move 1 matchstick from 6 to the right 3 to form 5 + 3 = 8.',
-  },
-  {
-    id: 20,
-    title: 'Level 20: Matchstick Master',
-    initialEquation: '8-2=7',
-    difficulty: 'Master',
-    hintText: 'Move 1 matchstick from 8 to the right 7 to transform into 9 - 2 = 7.',
-  },
+export const LEVELS = [];
+
+// Populate 25 1-move levels
+const sample1 = [
+  { eq: '6+4=4', sol: '0+4=4' },
+  { eq: '6+3=5', sol: '5+3=8' },
+  { eq: '8-3=3', sol: '6-3=3' },
+  { eq: '5+7=2', sol: '9-7=2' },
+  { eq: '9+3=5', sol: '9-3=6' },
+  { eq: '8+3=5', sol: '6+3=9' },
+  { eq: '7+1=0', sol: '7-1=6' },
+  { eq: '3+5=2', sol: '8-5=3' },
+  { eq: '9-5=9', sol: '3+5=8' },
+  { eq: '6+1=8', sol: '5+3=8' },
+  { eq: '0+3=9', sol: '6+3=9' },
+  { eq: '5+5=0', sol: '6-6=0' },
+  { eq: '2+7=5', sol: '2+3=5' },
+  { eq: '9-3=8', sol: '5+3=8' },
+  { eq: '7-8=1', sol: '9-8=1' },
+  { eq: '8-9=2', sol: '8-6=2' },
+  { eq: '3+9=2', sol: '8-6=2' },
+  { eq: '9+6=6', sol: '0+6=6' },
+  { eq: '5+6=3', sol: '5+3=8' },
+  { eq: '8-2=7', sol: '9-2=7' },
+  ...PROCEDURAL_1_MOVE_PUZZLES.slice(0, 5).map(p => ({ eq: p.initial, sol: p.solution }))
 ];
+
+sample1.forEach((p, idx) => {
+  LEVELS.push({
+    id: idx + 1,
+    title: `Level ${idx + 1}: Shift 1 Match`,
+    initialEquation: p.eq,
+    solution: p.sol,
+    maxMoves: 1,
+    difficulty: idx < 10 ? 'Easy' : (idx < 20 ? 'Medium' : 'Hard'),
+    hintText: `Move 1 matchstick to form: ${p.sol}`,
+  });
+});
+
+// Populate 25 2-moves levels
+const sample2 = PROCEDURAL_2_MOVES_PUZZLES.slice(0, 25);
+sample2.forEach((p, idx) => {
+  const lvlId = 26 + idx;
+  LEVELS.push({
+    id: lvlId,
+    title: `Level ${lvlId}: Double Move (2 Sticks)`,
+    initialEquation: p.initial,
+    solution: p.solution,
+    maxMoves: 2,
+    difficulty: idx < 10 ? 'Hard' : 'Master',
+    hintText: `Move 2 matchsticks to form: ${p.solution}`,
+  });
+});
+
+/**
+ * Procedurally generates a random puzzle from hundreds of valid combinations
+ */
+export function generateProceduralLevel(id = 999, moves = 1) {
+  const pool = moves === 2 ? PROCEDURAL_2_MOVES_PUZZLES : PROCEDURAL_1_MOVE_PUZZLES;
+  const item = pool[Math.floor(Math.random() * pool.length)];
+  return {
+    id,
+    title: `Procedural Lab #${id} (${moves} Move${moves > 1 ? 's' : ''})`,
+    initialEquation: item.initial,
+    solution: item.solution,
+    maxMoves: moves,
+    difficulty: moves === 1 ? 'Medium' : 'Master',
+    hintText: `Move ${moves} stick${moves > 1 ? 's' : ''} to form: ${item.solution}`,
+  };
+}

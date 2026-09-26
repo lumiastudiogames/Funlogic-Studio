@@ -82,23 +82,31 @@
 
     <!-- Game Area -->
     <main class="game-area">
-      <!-- Pipeline Line: Tap -> 3 Pipes -> Flower -->
-      <div class="pipeline-stage">
-        <!-- Water Source -->
-        <div class="source-box" title="Water Tap">
-          <span>💧</span>
+      <div class="pipeline-container">
+        <!-- Top Entry: Water Tap -->
+        <div class="pipeline-header">
+          <div class="source-box" title="Water Tap">
+            <span>💧</span>
+            <small class="box-label">Tap</small>
+          </div>
+          <div class="flow-arrow">➡️</div>
+          <div class="flow-instruction">Connect the pipes to water the garden!</div>
         </div>
 
-        <!-- 3 Interactive Pipes -->
-        <div id="pipes-list" style="display: flex; gap: 8px;"></div>
+        <!-- 3x3 Interactive Board -->
+        <div id="pipes-grid" class="pipes-grid-board"></div>
 
-        <!-- Flower Target -->
-        <div id="flower-box" class="target-box" title="Garden Flower">
-          <span>🌸</span>
+        <!-- Bottom Exit: Flower Target -->
+        <div class="pipeline-footer">
+          <div class="flow-arrow">➡️</div>
+          <div id="flower-box" class="target-box" title="Garden Flower">
+            <span>🌸</span>
+            <small class="box-label">Flower</small>
+          </div>
         </div>
       </div>
 
-      <div class="hint-bar">Tap each pipe to rotate and let the fresh water flow!</div>
+      <div class="hint-bar">Tap each pipe to rotate until sparkling water reaches the flower!</div>
     </main>
 
     <!-- How to Play Modal -->

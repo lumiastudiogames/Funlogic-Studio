@@ -11,31 +11,33 @@ export function renderHomeView(container: HTMLElement): void {
 
   // Dynamic SEO Injection for Home View
   updateHeadSeo({
-    title: 'Casual Logic & Reasoning Games — FunLogic.games',
-    description: 'Play the best free online logic puzzles, water sort, mahjong, sudoku, 2048, sokoban box push, pipe connect, and brain training games directly in your browser with no download.',
+    title: 'Casual Logic & Reasoning Games — PlayFunLogic.com',
+    description: 'Play the best free online logic puzzles, water sort, mahjong, sudoku, sokoban box push, pipe connect, and brain training games directly in your browser with no download.',
     keywords: [
       'brain games', 'logic puzzles', 'water sort online', 'mahjong solitaire',
-      'sudoku free', '2048 game', 'sokoban online', 'pipe connect', 'unblocked games'
+      'sudoku free', 'sokoban online', 'pipe connect', 'unblocked games'
     ],
-    canonicalUrl: 'https://funlogic.games/',
+    canonicalUrl: 'https://playfunlogic.com/',
     type: 'website'
   });
 
   const trendingGames = GAMES.filter(g => g.isTrending).slice(0, 4);
   const kidsGames = GAMES.filter(g => g.isKids || g.categoryId === 'kids');
   const seniorsGames = GAMES.filter(g => g.isSeniors || g.categoryId === 'seniors');
+  const INITIAL_ALL_GAMES_BATCH = 24;
+  const initialAllGames = GAMES.slice(0, INITIAL_ALL_GAMES_BATCH);
 
   container.innerHTML = `
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-6 space-y-8 sm:space-y-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 py-6 space-y-8 sm:space-y-12 safe-padding-x">
       
-      <section class="rounded-3xl border-2 border-[#58CC02] border-b-6 overflow-hidden p-5 sm:p-6 bg-[#E5F9D3] shadow-sm">
+      <section class="rounded-3xl border-2 border-[#58CC02] border-b-6 overflow-hidden p-4 sm:p-6 bg-[#E5F9D3] shadow-sm">
         <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-          <div class="flex items-center gap-4">
+          <div class="flex items-center gap-3.5 sm:gap-4">
             <div class="sticker-2d5-badge sticker-2d5-lg shrink-0 hidden sm:flex items-center justify-center p-3.5">
               ${STICKERS.brain}
             </div>
             <div>
-              <div class="flex items-center gap-2 mb-1.5">
+              <div class="flex items-center gap-2 mb-1.5 flex-wrap">
                 <span class="text-[10px] font-black uppercase tracking-widest text-[#46A302] bg-white border-2 border-[#58CC02] px-3 py-0.5 rounded-full">
                   Daily Challenge
                 </span>
@@ -44,7 +46,7 @@ export function renderHomeView(container: HTMLElement): void {
                   <span>${dailyState.streak} Day Streak</span>
                 </span>
               </div>
-              <h2 class="text-xl sm:text-2xl font-black text-gray-900 leading-snug">
+              <h2 class="text-lg sm:text-2xl font-black text-gray-900 leading-snug">
                 Daily Brain Logic Puzzle
               </h2>
               <p class="text-xs sm:text-sm text-gray-700 font-bold mt-1">
@@ -56,7 +58,7 @@ export function renderHomeView(container: HTMLElement): void {
           <div class="flex items-center gap-3 w-full sm:w-auto justify-end">
             <a 
               href="#game/daily-brain-challenge" 
-              class="h-12 px-7 rounded-2xl btn-duo-green font-black text-base flex items-center justify-center gap-2 text-decoration-none shrink-0"
+              class="h-11 sm:h-12 w-full sm:w-auto px-7 rounded-2xl btn-duo-green font-black text-sm sm:text-base flex items-center justify-center gap-2 text-decoration-none shrink-0"
             >
               <span>Play Now</span>
               <span>→</span>
@@ -80,10 +82,10 @@ export function renderHomeView(container: HTMLElement): void {
           </a>
         </div>
 
-        <div id="trending-strip" class="no-scrollbar flex items-stretch gap-4 sm:gap-6 overflow-x-auto pt-3.5 pb-4 -mx-4 px-4 sm:mx-0 sm:px-0">
+        <div id="trending-strip" class="no-scrollbar flex items-stretch gap-3.5 sm:gap-6 overflow-x-auto pt-2 pb-4">
           ${trendingGames.map(game => `
-            <div class="w-[260px] xs:w-[270px] sm:w-[280px] shrink-0 flex flex-col">
-              ${createGameCardHTML(game)}
+            <div class="w-[240px] xs:w-[260px] sm:w-[280px] shrink-0 flex flex-col">
+              ${createGameCardHTML(game, { isPriority: true })}
             </div>
           `).join('')}
         </div>
@@ -117,7 +119,7 @@ export function renderHomeView(container: HTMLElement): void {
         </div>
 
         <!-- Single Horizontal Carousel Bar containing the 12 main category buttons -->
-        <div id="category-strip" class="no-scrollbar flex items-center gap-2.5 overflow-x-auto pt-1 pb-3 -mx-4 px-4 sm:mx-0 sm:px-0 scroll-smooth">
+        <div id="category-strip" class="no-scrollbar flex items-center gap-2.5 overflow-x-auto pt-1 pb-3 scroll-smooth">
           ${CATEGORIES.map((cat, idx) => {
             const count = getGamesForCategory(cat.id).length;
             return `
@@ -140,7 +142,7 @@ export function renderHomeView(container: HTMLElement): void {
 
       ${createInFeedAdHTML()}
 
-      <section class="rounded-3xl border-2 border-[#1CB0F6] border-b-6 p-5 sm:p-6 bg-[#DDF4FE] shadow-xs">
+      <section class="rounded-3xl border-2 border-[#1CB0F6] border-b-6 p-4 sm:p-6 bg-[#DDF4FE] shadow-xs">
         <div class="flex items-center justify-between mb-4 gap-2">
           <div>
             <div class="flex items-center gap-2.5">
@@ -178,16 +180,16 @@ export function renderHomeView(container: HTMLElement): void {
           </div>
         </div>
 
-        <div id="kids-strip" class="no-scrollbar flex items-stretch gap-4 sm:gap-6 overflow-x-auto scroll-smooth pt-3.5 pb-4 -mx-2 px-2 sm:mx-0 sm:px-0">
+        <div id="kids-strip" class="no-scrollbar flex items-stretch gap-3.5 sm:gap-6 overflow-x-auto scroll-smooth pt-2 pb-4">
           ${kidsGames.map(game => `
-            <div class="w-[260px] xs:w-[270px] sm:w-[280px] shrink-0 flex flex-col">
+            <div class="w-[240px] xs:w-[260px] sm:w-[280px] shrink-0 flex flex-col">
               ${createGameCardHTML(game)}
             </div>
           `).join('')}
         </div>
       </section>
 
-      <section class="rounded-3xl border-2 border-[#FFC800] border-b-6 p-5 sm:p-6 bg-[#FFF8D6] shadow-xs">
+      <section class="rounded-3xl border-2 border-[#FFC800] border-b-6 p-4 sm:p-6 bg-[#FFF8D6] shadow-xs">
         <div class="flex items-center justify-between mb-4 gap-2">
           <div>
             <div class="flex items-center gap-2.5">
@@ -225,9 +227,9 @@ export function renderHomeView(container: HTMLElement): void {
           </div>
         </div>
 
-        <div id="seniors-strip" class="no-scrollbar flex items-stretch gap-4 sm:gap-6 overflow-x-auto scroll-smooth pt-3.5 pb-4 -mx-2 px-2 sm:mx-0 sm:px-0">
+        <div id="seniors-strip" class="no-scrollbar flex items-stretch gap-3.5 sm:gap-6 overflow-x-auto scroll-smooth pt-2 pb-4">
           ${seniorsGames.map(game => `
-            <div class="w-[260px] xs:w-[270px] sm:w-[280px] shrink-0 flex flex-col">
+            <div class="w-[240px] xs:w-[260px] sm:w-[280px] shrink-0 flex flex-col">
               ${createGameCardHTML(game)}
             </div>
           `).join('')}
@@ -236,7 +238,7 @@ export function renderHomeView(container: HTMLElement): void {
 
       ${createInFeedAdHTML()}
 
-      <section id="showcase-section" class="relative bg-slate-900 text-white rounded-3xl p-5 sm:p-7 shadow-md border border-slate-800">
+      <section id="showcase-section" class="relative bg-slate-900 text-white rounded-3xl p-4 sm:p-7 shadow-md border border-slate-800">
         <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-4 border-b border-white/10 pb-4">
           <div>
             <div class="flex items-center gap-2 mb-1">
@@ -270,10 +272,10 @@ export function renderHomeView(container: HTMLElement): void {
         <!-- All Games Horizontal Scrollable Track: Supports Mouse Drag & Touch Swipe -->
         <div 
           id="all-games-strip" 
-          class="no-scrollbar flex items-stretch gap-4 sm:gap-6 overflow-x-auto scroll-smooth pt-2 pb-4 -mx-2 px-2 sm:mx-0 sm:px-0 cursor-grab active:cursor-grabbing select-none"
+          class="no-scrollbar flex items-stretch gap-3.5 sm:gap-6 overflow-x-auto scroll-smooth pt-2 pb-4 cursor-grab active:cursor-grabbing select-none"
         >
-          ${GAMES.map(game => `
-            <div class="w-[260px] xs:w-[270px] sm:w-[280px] shrink-0 flex flex-col">
+          ${initialAllGames.map(game => `
+            <div class="w-[240px] xs:w-[260px] sm:w-[280px] shrink-0 flex flex-col">
               ${createGameCardHTML(game)}
             </div>
           `).join('')}
@@ -322,7 +324,7 @@ export function renderHomeView(container: HTMLElement): void {
     seniorsNext?.addEventListener('click', () => seniorsStrip.scrollBy({ left: 320, behavior: 'smooth' }));
   }
 
-  // All Games: Drag-to-Scroll & Touch Swipe Support
+  // All Games: Drag-to-Scroll & Touch Swipe Support with Progressive Loading
   const allGamesStrip = container.querySelector('#all-games-strip') as HTMLElement;
   const showcasePrev = container.querySelector('#showcase-prev') as HTMLElement;
   const showcaseNext = container.querySelector('#showcase-next') as HTMLElement;
@@ -331,20 +333,42 @@ export function renderHomeView(container: HTMLElement): void {
   if (allGamesStrip) {
     enableDragScroll(allGamesStrip);
 
+    let loadedCount = INITIAL_ALL_GAMES_BATCH;
+    const loadNextBatch = () => {
+      if (loadedCount >= GAMES.length) return;
+      const nextBatch = GAMES.slice(loadedCount, loadedCount + 20);
+      loadedCount += nextBatch.length;
+
+      const fragment = document.createDocumentFragment();
+      nextBatch.forEach(game => {
+        const div = document.createElement('div');
+        div.className = 'w-[260px] xs:w-[270px] sm:w-[280px] shrink-0 flex flex-col';
+        div.innerHTML = createGameCardHTML(game);
+        fragment.appendChild(div);
+      });
+      allGamesStrip.appendChild(fragment);
+    };
+
     showcasePrev?.addEventListener('click', () => {
       allGamesStrip.scrollBy({ left: -340, behavior: 'smooth' });
     });
 
     showcaseNext?.addEventListener('click', () => {
+      if (loadedCount < GAMES.length) {
+        loadNextBatch();
+      }
       allGamesStrip.scrollBy({ left: 340, behavior: 'smooth' });
     });
 
-    // Update dynamic progress bar on scroll
+    // Update dynamic progress bar on scroll & lazily append games when nearing the right edge
     allGamesStrip.addEventListener('scroll', () => {
       const maxScroll = allGamesStrip.scrollWidth - allGamesStrip.clientWidth;
       if (maxScroll > 0 && allGamesProgress) {
         const pct = Math.min(100, Math.max(10, Math.round((allGamesStrip.scrollLeft / maxScroll) * 100)));
         allGamesProgress.style.width = `${pct}%`;
+      }
+      if (allGamesStrip.scrollLeft + allGamesStrip.clientWidth >= allGamesStrip.scrollWidth - 600) {
+        loadNextBatch();
       }
     }, { passive: true });
   }

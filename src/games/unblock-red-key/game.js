@@ -1654,6 +1654,8 @@ function triggerPlatformWin(timeInSeconds) {
           soundManager.playWoodSnap();
           const movesElem = this.container.querySelector("#hud-moves-val");
           if (movesElem) movesElem.textContent = String(this.moves);
+          const btnUndo = this.container.querySelector("#btn-undo");
+          if (btnUndo) btnUndo.disabled = this.history.length === 0;
           const level = this.getCurrentLevel();
           const keyBlock = this.blocks.find((b) => b.isKey);
           if (keyBlock && keyBlock.y === level.exitRow && keyBlock.x + keyBlock.width >= level.cols) {
@@ -1666,8 +1668,6 @@ function triggerPlatformWin(timeInSeconds) {
               }
               this.triggerWin();
             }
-          } else {
-            this.renderMain();
           }
         }
         this.dragState = null;
@@ -1729,7 +1729,7 @@ function triggerPlatformWin(timeInSeconds) {
     renderMain() {
       this.cleanCanvasLoop();
       const stageHTML = `
-      <div id="game-stage" class="w-full max-w-5xl h-[100dvh] sm:h-[92vh] sm:max-h-[880px] mx-auto flex flex-col relative overflow-hidden bg-white sm:rounded-3xl shadow-2xl border border-slate-700/30">
+      <div id="game-stage" class="w-full max-w-5xl h-[100dvh] sm:h-[92vh] sm:max-h-[880px] mx-auto flex flex-col relative overflow-hidden bg-slate-900 sm:rounded-3xl shadow-2xl border border-slate-700/30">
         ${this.currentScreen === "MENU" ? this.renderMenuHTML() : this.renderGameHTML()}
         <div id="modal-container">
           ${this.renderModalHTML()}
@@ -2540,7 +2540,10 @@ function triggerPlatformWin(timeInSeconds) {
       this.moves = Math.max(0, this.moves - 1);
       this.activeHint = null;
       soundManager.playWoodSnap();
-      this.renderMain();
+      const movesElem = this.container.querySelector("#hud-moves-val");
+      if (movesElem) movesElem.textContent = String(this.moves);
+      const btnUndo = this.container.querySelector("#btn-undo");
+      if (btnUndo) btnUndo.disabled = this.history.length === 0;
     }
     handleReset() {
       if (this.isWon) return;

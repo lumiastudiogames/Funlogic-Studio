@@ -174,11 +174,7 @@ class Sudoku6x6Game {
   }
 
   bindEvents() {
-    document.querySelectorAll('.digit-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        this.inputDigit(parseInt(btn.dataset.digit, 10));
-      });
-    });
+    this.initDragAndDrop();
 
     document.getElementById('btn-erase').addEventListener('click', () => this.erase());
     document.getElementById('btn-undo').addEventListener('click', () => this.undo());
@@ -213,6 +209,115 @@ class Sudoku6x6Game {
       else if (e.key === 'Backspace' || e.key === 'Delete') this.erase();
       else if (e.key.toLowerCase() === 'n') this.toggleNotes();
       else if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)) this.moveSelection(e.key);
+    });
+  }
+
+  initDragAndDrop() {
+    let touchDraggingDigit = null;
+    let touchClone = null;
+
+    document.querySelectorAll('.digit-btn').forEach(btn => {
+      btn.setAttribute('draggable', 'true');
+
+      btn.addEventListener('click', () => {
+        this.inputDigit(parseInt(btn.dataset.digit, 10));
+      });
+
+      // Desktop HTML5 drag
+      btn.addEventListener('dragstart', (e) => {
+        if (this.gameWon) return e.preventDefault();
+        const digit = btn.dataset.digit;
+        e.dataTransfer.setData('text/plain', digit);
+        btn.classList.add('dragging');
+      });
+
+      btn.addEventListener('dragend', () => {
+        btn.classList.remove('dragging');
+      });
+
+      // Mobile touch drag & drop
+      btn.addEventListener('pointerdown', (e) => {
+        if (this.gameWon || e.pointerType === 'mouse') return;
+        touchDraggingDigit = parseInt(btn.dataset.digit, 10);
+
+        touchClone = document.createElement('div');
+        touchClone.className = 'tile-3d-num';
+        touchClone.textContent = touchDraggingDigit;
+        touchClone.style.position = 'fixed';
+        touchClone.style.left = `${e.clientX - 24}px`;
+        touchClone.style.top = `${e.clientY - 24}px`;
+        touchClone.style.width = '48px';
+        touchClone.style.height = '48px';
+        touchClone.style.borderRadius = '12px';
+        touchClone.style.zIndex = '9999';
+        touchClone.style.pointerEvents = 'none';
+        touchClone.style.transform = 'scale(1.15)';
+        touchClone.style.background = getComputedStyle(btn).backgroundImage || getComputedStyle(btn).backgroundColor;
+        touchClone.style.color = getComputedStyle(btn).color;
+        touchClone.style.boxShadow = '0 10px 20px rgba(0,0,0,0.3)';
+        document.body.appendChild(touchClone);
+
+        const onPointerMove = (ev) => {
+          if (!touchClone) return;
+          touchClone.style.left = `${ev.clientX - 24}px`;
+          touchClone.style.top = `${ev.clientY - 24}px`;
+
+          const elem = document.elementFromPoint(ev.clientX, ev.clientY);
+          const cell = elem ? elem.closest('.cell') : null;
+          document.querySelectorAll('.cell.drag-over').forEach(c => c.classList.remove('drag-over'));
+          if (cell) cell.classList.add('drag-over');
+        };
+
+        const onPointerUp = (ev) => {
+          window.removeEventListener('pointermove', onPointerMove);
+          window.removeEventListener('pointerup', onPointerUp);
+          if (touchClone) {
+            touchClone.remove();
+            touchClone = null;
+          }
+          document.querySelectorAll('.cell.drag-over').forEach(c => c.classList.remove('drag-over'));
+
+          const elem = document.elementFromPoint(ev.clientX, ev.clientY);
+          const cell = elem ? elem.closest('.cell') : null;
+          if (cell && touchDraggingDigit) {
+            const r = parseInt(cell.dataset.row, 10);
+            const c = parseInt(cell.dataset.col, 10);
+            this.placeDigitAt(r, c, touchDraggingDigit);
+          }
+          touchDraggingDigit = null;
+        };
+
+        window.addEventListener('pointermove', onPointerMove);
+        window.addEventListener('pointerup', onPointerUp);
+      });
+    });
+  }
+
+  spawnSparkles(cellEl) {
+    if (!cellEl) return;
+    const rect = cellEl.getBoundingClientRect();
+    const cx = rect.left + rect.width / 2;
+    const cy = rect.top + rect.height / 2;
+
+    const sparkles = ['✨', '⭐', '🌟', '✦', '✨', '⭐'];
+    sparkles.forEach((char, i) => {
+      const sp = document.createElement('span');
+      sp.className = 'sudoku-sparkle';
+      sp.textContent = char;
+      const angle = (i / sparkles.length) * 2 * Math.PI + (Math.random() - 0.5) * 0.5;
+      const dist = 35 + Math.random() * 35;
+      const dx = Math.cos(angle) * dist;
+      const dy = Math.sin(angle) * dist;
+      const rot = (Math.random() - 0.5) * 180;
+
+      sp.style.setProperty('--dx', `${dx}px`);
+      sp.style.setProperty('--dy', `${dy}px`);
+      sp.style.setProperty('--rot', `${rot}deg`);
+      sp.style.left = `${cx}px`;
+      sp.style.top = `${cy}px`;
+
+      document.body.appendChild(sp);
+      setTimeout(() => sp.remove(), 750);
     });
   }
 
@@ -255,15 +360,25 @@ class Sudoku6x6Game {
         cell.dataset.row = r;
         cell.dataset.col = c;
 
+        // 2x3 Quadrant theme: 0..5
+        const q = Math.floor(r / 2) * 2 + Math.floor(c / 3);
+        cell.classList.add(`block-q${q}`);
+
         const val = this.userGrid[r][c];
         const isGiven = this.puzzle[r][c] !== 0;
 
         if (isGiven) {
           cell.classList.add('given');
-          cell.textContent = val;
+          const tile = document.createElement('div');
+          tile.className = 'tile-3d-num';
+          tile.textContent = val;
+          cell.appendChild(tile);
         } else if (val !== 0) {
           cell.classList.add('user-filled');
-          cell.textContent = val;
+          const tile = document.createElement('div');
+          tile.className = 'tile-3d-num';
+          tile.textContent = val;
+          cell.appendChild(tile);
           if (val !== this.solution[r][c]) cell.classList.add('error');
         } else {
           const cellNotes = this.notes[r][c];
@@ -281,6 +396,29 @@ class Sudoku6x6Game {
         }
 
         cell.addEventListener('click', () => this.selectCell(r, c));
+
+        // Drag & Drop onto cell
+        cell.addEventListener('dragover', (e) => {
+          if (this.puzzle[r][c] !== 0 || this.gameWon) return;
+          e.preventDefault();
+          e.dataTransfer.dropEffect = 'copy';
+          cell.classList.add('drag-over');
+        });
+
+        cell.addEventListener('dragleave', () => {
+          cell.classList.remove('drag-over');
+        });
+
+        cell.addEventListener('drop', (e) => {
+          if (this.puzzle[r][c] !== 0 || this.gameWon) return;
+          e.preventDefault();
+          cell.classList.remove('drag-over');
+          const digit = parseInt(e.dataTransfer.getData('text/plain'), 10);
+          if (digit >= 1 && digit <= 6) {
+            this.placeDigitAt(r, c, digit);
+          }
+        });
+
         this.gridEl.appendChild(cell);
       }
     }
@@ -327,7 +465,11 @@ class Sudoku6x6Game {
   inputDigit(d) {
     if (!this.selectedCell || this.gameWon) return;
     const [r, c] = this.selectedCell;
-    if (this.puzzle[r][c] !== 0) return;
+    this.placeDigitAt(r, c, d);
+  }
+
+  placeDigitAt(r, c, d) {
+    if (this.puzzle[r][c] !== 0 || this.gameWon) return;
 
     if (this.notesMode) {
       if (this.notes[r][c].has(d)) this.notes[r][c].delete(d);
@@ -342,6 +484,9 @@ class Sudoku6x6Game {
     this.moveHistory.push({ r, c, prevVal: this.userGrid[r][c], prevNotes: new Set(this.notes[r][c]) });
     this.userGrid[r][c] = d;
     this.notes[r][c].clear();
+    this.selectedCell = [r, c];
+
+    const cellEl = this.gridEl.children[r * 6 + c];
 
     if (d !== this.solution[r][c]) {
       this.errorsCount++;
@@ -349,6 +494,7 @@ class Sudoku6x6Game {
       this.sound.play('error');
     } else {
       this.sound.play('place');
+      this.spawnSparkles(cellEl);
     }
 
     this.render();

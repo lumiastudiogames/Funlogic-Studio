@@ -101,7 +101,7 @@ export function showVictoryModal(options: {
     });
   });
 
-  const shareText = `Resolvi ${options.title} em ${timeFormatted}! ${options.streak ? `🔥 ${options.streak} dias seguidos!` : ''} Jogue grátis em FunLogic: ${window.location.origin}`;
+  const shareText = `I solved ${options.title} in ${timeFormatted}! ${options.streak ? `🔥 ${options.streak} day streak!` : ''} Play free on PlayFunLogic: ${window.location.origin}`;
 
   const shareBtn = modalOverlay.querySelector('#btn-share');
   shareBtn?.addEventListener('click', async (e) => {
@@ -109,17 +109,17 @@ export function showVictoryModal(options: {
     if (navigator.share) {
       try {
         await navigator.share({
-          title: 'FunLogic Vitória',
+          title: 'PlayFunLogic Victory',
           text: shareText,
           url: window.location.href
         });
       } catch {
         await navigator.clipboard.writeText(shareText);
-        alert('Resultado copiado para a área de transferência!');
+        alert('Result copied to clipboard!');
       }
     } else {
       await navigator.clipboard.writeText(shareText);
-      alert('Resultado copiado para a área de transferência!');
+      alert('Result copied to clipboard!');
     }
   });
 

@@ -338,8 +338,9 @@
       AudioEngine.playCard();
       selected = null;
 
-      // Check for complete King-to-Ace sequence in target column
+      // Check for complete King-to-Ace sequence in both source and target columns
       checkCompleteSequences(toColIdx);
+      checkCompleteSequences(fromColIdx);
 
       updateHUD();
       checkWin();
@@ -350,7 +351,7 @@
 
   function checkCompleteSequences(colIdx) {
     const col = tableau[colIdx];
-    if (col.length < 13) return;
+    if (!col || col.length < 13) return;
 
     // Check if bottom 13 cards are K down to A
     const last13 = col.slice(col.length - 13);
@@ -366,6 +367,7 @@
       AudioEngine.playSequenceCleared();
       spawnStarParticles(colIdx);
       updateHUD();
+      checkCompleteSequences(colIdx);
     }
   }
 

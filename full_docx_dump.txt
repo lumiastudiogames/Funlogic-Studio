@@ -1,0 +1,855 @@
+=== ENTRY 0 (p) ===
+IMAGES (2): ['rId4', 'rId5']
+TEXT: a regra é juntar os números consecutivo e não esta indo
+
+
+
+erro
+/game/ancient-egypt-explorers---logic-grid:1 Banner not shown: beforeinstallpromptevent.preventDefault() called. The page must call beforeinstallpromptevent.prompt() to show the banner.
+a regra é juntar os números consecutivo e não a regra é juntar os números consecutivo e não estaesta indo indo
+
+
+
+erroerro
+/game//game/ancient-egypt-explorersancient-egypt-explorers---logic-grid:1 Banner ---logic-grid:1 Banner notnot  shownshown: : beforeinstallpromptevent.preventDefaultbeforeinstallpromptevent.preventDefault() () calledcalled. The . The pagepage must  must callcall  beforeinstallpromptevent.promptbeforeinstallpromptevent.prompt() () toto show  show thethe banner. banner.
+=== ENTRY 1 (p) ===
+IMAGES (2): ['rId6', 'rId7']
+TEXT: /games/ancient-egypt-explorers---logic-grid/src/index.css:1 Failed to load module script: Expected a JavaScript-or-Wasm module script but the server responded with a MIME type of "text/css". Strict MIME type checking is enforced for module scripts per HTML spec.
+
+
+
+
+mudar foto
+
+
+
+tela preta
+
+index-COlyFim4.js:1560 Unregistered conflicting game-level service worker: https://playfunlogic.vercel.app/games/animal-tictac-kids//games//games/ancient-egypt-explorersancient-egypt-explorers------logiclogic-grid/-grid/srcsrc/index.css:1 /index.css:1 FailedFailed  toto  loadload module script:  module script: ExpectedExpected a  a JavaScript-or-WasmJavaScript-or-Wasm module script  module script butbut  thethe server  server respondedresponded  withwith a MIME  a MIME typetype  ofof " "texttext//csscss". ". StrictStrict MIME  MIME typetype  checkingchecking  isis  enforcedenforced for module scripts per HTML  for module scripts per HTML specspec..
+
+
+
+
+mudar fotomudar foto
+
+
+
+tela pretatela preta
+
+index-COlyFim4.js:1560 index-COlyFim4.js:1560 UnregisteredUnregistered  conflictingconflicting game- game-levellevel  serviceservice  workerworker: https://playfunlogic.vercel.app/games/animal-tictac-kids/: https://playfunlogic.vercel.app/games/animal-tictac-kids/
+=== ENTRY 2 (p) ===
+TEXT: index-COlyFim4.js:1560 Successfully purged legacy game PWA cache.index-COlyFim4.js:1560 index-COlyFim4.js:1560 SuccessfullySuccessfully  purgedpurged  legacylegacy game PWA cache. game PWA cache.
+=== ENTRY 3 (p) ===
+TEXT: ball-bounce-target:1 Banner not shown: beforeinstallpromptevent.preventDefault() called. The page must call beforeinstallpromptevent.prompt() to show the banner.ballball-bounce-target:1 Banner -bounce-target:1 Banner notnot  shownshown: : beforeinstallpromptevent.preventDefaultbeforeinstallpromptevent.preventDefault() () calledcalled. The . The pagepage must  must callcall  beforeinstallpromptevent.promptbeforeinstallpromptevent.prompt() () toto show  show thethe banner. banner.
+=== ENTRY 4 (p) ===
+TEXT: (index):64 cdn.tailwindcss.com should not be used in production. To use Tailwind CSS in production, install it as a PostCSS plugin or use the Tailwind CLI: https://tailwindcss.com/docs/installation((indexindex):64 cdn.tailwindcss.com ):64 cdn.tailwindcss.com shouldshould  notnot  bebe  usedused in  in productionproduction. . ToTo use  use TailwindTailwind CSS in  CSS in productionproduction, , installinstall it as a  it as a PostCSSPostCSS  pluginplugin  oror use  use thethe  TailwindTailwind CLI: https://tailwindcss.com/docs/installation CLI: https://tailwindcss.com/docs/installation
+=== ENTRY 5 (p) ===
+TEXT: (anonymous) @ (index):64((anonymousanonymous) @ (index):64) @ (index):64
+=== ENTRY 6 (p) ===
+TEXT: game.js:3077 Uncaught TypeError: Cannot read properties of undefined (reading 'x')game.js:3077 game.js:3077 UncaughtUncaught  TypeErrorTypeError: : CannotCannot  readread  propertiesproperties  ofof  undefinedundefined ( (readingreading 'x') 'x')
+=== ENTRY 7 (p) ===
+TEXT: at BallBounceGame.drawTrajectory (game.js:3077:20)        atat  BallBounceGame.drawTrajectoryBallBounceGame.drawTrajectory (game.js:3077:20) (game.js:3077:20)
+=== ENTRY 8 (p) ===
+TEXT: at BallBounceGame.render (game.js:2856:14)        atat  BallBounceGame.renderBallBounceGame.render (game.js:2856:14) (game.js:2856:14)
+=== ENTRY 9 (p) ===
+TEXT: at BallBounceGame.loop (game.js:3304:12)        atat  BallBounceGame.loopBallBounceGame.loop (game.js:3304:12) (game.js:3304:12)
+=== ENTRY 10 (p) ===
+IMAGES (4): ['rId8', 'rId9', 'rId10', 'rId11']
+TEXT: at game.js:1908:41
+
+
+
+melhorar css com stickers e  não se ajsuta na tela mobile portrait
+
+
+
+melhorar css, coloca rum sticker  no lucar do personagem e amior, , e verificar solução sempre antes que lanças um cenário, se pudar gráfico pastel colorido
+
+css pseudo 3d
+
+
+t
+
+tela preta, e não redimensionam em mobile portrait
+sem grande erro no console
+
+/game/07-time-paradox-chronos:1 Banner not shown: beforeinstallpromptevent.preventDefault() called. The page must call beforeinstallpromptevent.prompt() to show the banner.
+
+
+
+
+
+sem css, colcoar um css pseudo 3D, 
+/game/city-parking-jam:1 Banner not shown: beforeinstallpromptevent.preventDefault() called. The page must call beforeinstallpromptevent.prompt() to show the banner.        atat game.js:1908:41 game.js:1908:41
+
+
+
+melhorar melhorar csscss com  com stickersstickers e  não se  e  não se ajsutaajsuta na tela mobile  na tela mobile portraitportrait
+
+
+
+melhorar melhorar csscss, coloca rum , coloca rum stickersticker  no   no lucarlucar do personagem e  do personagem e amioramior, , e verificar solução sempre antes que lanças um cenário, se , , e verificar solução sempre antes que lanças um cenário, se pudarpudar gráfico pastel colorido gráfico pastel colorido
+
+csscss  pseudopseudo 3d 3d
+
+
+tt
+
+tela preta, e não redimensionam em mobile tela preta, e não redimensionam em mobile portraitportrait
+sem grande erro no consolesem grande erro no console
+
+/game/07-time-paradox-chronos:1 Banner /game/07-time-paradox-chronos:1 Banner notnot  shownshown: : beforeinstallpromptevent.preventDefaultbeforeinstallpromptevent.preventDefault() () calledcalled. The . The pagepage must  must callcall  beforeinstallpromptevent.promptbeforeinstallpromptevent.prompt() () toto show  show thethe banner. banner.
+
+
+
+
+
+sem sem csscss, , colcoarcolcoar um  um csscss  pseudopseudo 3D,  3D, 
+/game/city-parking-jam:1 Banner /game/city-parking-jam:1 Banner notnot  shownshown: : beforeinstallpromptevent.preventDefaultbeforeinstallpromptevent.preventDefault() () calledcalled. The . The pagepage must  must callcall  beforeinstallpromptevent.promptbeforeinstallpromptevent.prompt() () toto show  show thethe banner. banner.
+=== ENTRY 11 (p) ===
+TEXT: tailwindcss:1  Failed to load resource: the server responded with a status of 404 ()tailwindcsstailwindcss:1  :1  FailedFailed  toto  loadload  resourceresource: : thethe server  server respondedresponded  withwith a status  a status ofof 404 () 404 ()
+=== ENTRY 12 (p) ===
+IMAGES (2): ['rId12', 'rId13']
+TEXT: tailwindcss:1  Failed to load resource: the server responded with a status of 404 ()
+
+
+mudar capa 
+
+esta rodando em loop de iframe, so fica na barra superior e não mostar o jogo
+
+
+
+
+/game/clock-gears---ratio-&-speed-challenge:1 Banner not shown: beforeinstallpromptevent.preventDefault() called. The page must call beforeinstallpromptevent.prompt() to show the banner.tailwindcss:1  tailwindcss:1  FailedFailed  toto  loadload  resourceresource: : thethe server  server respondedresponded  withwith a status  a status ofof 404 () 404 ()
+
+
+mudar capa mudar capa 
+
+estaesta rodando em loop de  rodando em loop de iframeiframe, , soso fica na barra superior e não  fica na barra superior e não mostarmostar o jogo o jogo
+
+
+
+
+/game//game/clock-gearsclock-gears------ratioratio-&-speed-challenge:1 Banner -&-speed-challenge:1 Banner notnot  shownshown: : beforeinstallpromptevent.preventDefaultbeforeinstallpromptevent.preventDefault() () calledcalled. The . The pagepage must  must callcall  beforeinstallpromptevent.promptbeforeinstallpromptevent.prompt() () toto show  show thethe banner. banner.
+=== ENTRY 13 (p) ===
+IMAGES (10): ['rId14', 'rId15', 'rId16', 'rId17', 'rId18', 'rId19', 'rId20', 'rId21', 'rId22', 'rId23']
+TEXT: clock-gears---ratio-&-speed-challenge/:1  Failed to load resource: the server responded with a status of 404 ()
+
+
+
+
+
+colocar em css pseus 3d um papagaio  de verdade estilo chibii 2.5d
+
+
+
+
+o jogo já começa dando tela de victory, e se possível verifica se usa css pseudo 3d , para deixar melhor o gráfico
+
+
+
+
+não acontece nada
+
+
+
+
+nada acontece
+
+
+
+
+cada acontece
+
+
+
+so consigo clicar uma vez, depois não tem açao nenhuma no domino, e precisa ser css pseudo 3d
+
+
+
+esta desconfigurado a hud, não tem efeito de deslize, nem de merge, nem estrelinhas quando merge, em é css pseudo 3d, precisa aquele efeito de desliar e unir, com efeitos bonito.
+
+
+
+
+
+ precisa melhorar o css pseudp3d, e mostar onde é o local para irrigar, ficou parecendo 3 locais possível, devido ao tamanho do cards das flores
+
+
+
+
+
+além de não caber na tela, mobile portrait, 
+eta em ptbr, é so inglês, 
+não da para entender o que é para safe ro objetido e não tem dicar, sem nada, mude para algo logico,  decifrar um código com base em dicas, cálculos de somar e subtração, exemplo, se 1 =a, 2=b, 5=6, 6 = j, 5+4 = k , 5+5 = l , (poude usar varias centrenas de combinações para fomra um nome,  code, bank, four, etc infinitar combinações que dao cada uma letra, e essas letras forma uma palavra passe)
+então abcj910 =?, um sisteminha alfa numérico que a pesso  so precisa usar a logica para descobrir o resultado
+e o usuário digita o código para desbloquear o prpoximo, poderia ser 20 niveis, procedurais com verificação, 
+
+
+
+
+
+não ficou claro o objetivo,  precisa ser drag e drop, com, animação de arraste, e css pseudo 3d, e tem que ser um jogo de encaixar no lugar certo as peças, ae não ser possível encaixar, mude a logica para isso,  o usuário ira receber peças e ele vai enxiar , se preencher tudo de azul ele ganha, mude a logica  e formação das peças para isso, e que seja verificável o resultado, pois se trata de jogo procedural.
+
+clock-gearsclock-gears------ratioratio-&--&-speed-challengespeed-challenge/:1  /:1  FailedFailed  toto  loadload  resourceresource: : thethe server  server respondedresponded  withwith a status  a status ofof 404 () 404 ()
+
+
+
+
+
+colocar em colocar em csscss  pseuspseus 3d um papagaio  de verdade estilo  3d um papagaio  de verdade estilo chibiichibii 2.5d 2.5d
+
+
+
+
+o jogo já começa dando tela de o jogo já começa dando tela de victoryvictory, e se possível verifica se usa , e se possível verifica se usa csscss  pseudopseudo 3d , para deixar melhor o gráfico 3d , para deixar melhor o gráfico
+
+
+
+
+não acontece nadanão acontece nada
+
+
+
+
+nada acontecenada acontece
+
+
+
+
+cada acontececada acontece
+
+
+
+soso consigo clicar uma vez, depois não tem  consigo clicar uma vez, depois não tem açaoaçao nenhuma no domino, e precisa ser  nenhuma no domino, e precisa ser csscss  pseudopseudo 3d 3d
+
+
+
+esta esta desconfiguradodesconfigurado a  a hudhud, não tem efeito de deslize, nem de merge, nem estrelinhas quando merge, em , não tem efeito de deslize, nem de merge, nem estrelinhas quando merge, em éé  csscss  pseudopseudo 3d, precisa aquele efeito de desliar e unir, com efeitos bonito. 3d, precisa aquele efeito de desliar e unir, com efeitos bonito.
+
+
+
+
+
+ precisa melhorar o  precisa melhorar o csscss pseudp3d, e  pseudp3d, e mostarmostar onde é o local para irrigar, ficou parecendo 3 locais possível, devido ao tamanho do  onde é o local para irrigar, ficou parecendo 3 locais possível, devido ao tamanho do cardscards das flores das flores
+
+
+
+
+
+além de não caber na tela, mobile além de não caber na tela, mobile portraitportrait, , 
+etaeta em  em ptbrptbr, é , é soso inglês,  inglês, 
+não não dada para entender o que é para safe  para entender o que é para safe roro  objetidoobjetido e não tem  e não tem dicardicar, sem nada, mude para algo logico,  decifrar um código com base em dicas, cálculos de somar e subtração, exemplo, se 1 =a, 2=b, 5=6, 6 = j, 5+4 = k , 5+5 = l , (, sem nada, mude para algo logico,  decifrar um código com base em dicas, cálculos de somar e subtração, exemplo, se 1 =a, 2=b, 5=6, 6 = j, 5+4 = k , 5+5 = l , (poudepoude usar  usar variasvarias  centrenascentrenas de combinações para  de combinações para fomrafomra um nome,   um nome,  codecode, , bankbank, four, , four, etcetc  infinitarinfinitar combinações que  combinações que daodao cada uma letra, e essas letras forma uma palavra passe) cada uma letra, e essas letras forma uma palavra passe)
+então abcj910 =?, um então abcj910 =?, um sisteminhasisteminha alfa numérico que a  alfa numérico que a pessopesso    soso precisa usar a  precisa usar a logicalogica para descobrir o resultado para descobrir o resultado
+e o usuário digita o código para desbloquear o e o usuário digita o código para desbloquear o prpoximoprpoximo, poderia ser 20 , poderia ser 20 niveisniveis, procedurais com verificação, , procedurais com verificação, 
+
+
+
+
+
+não ficou claro o não ficou claro o objetivoobjetivo,  precisa ser ,  precisa ser dragdrag e  e dropdrop, com, animação de arraste, e , com, animação de arraste, e csscss  pseudopseudo 3d 3d, e tem que ser um jogo de encaixar no lugar certo as peças, , e tem que ser um jogo de encaixar no lugar certo as peças, aeae não ser possível encaixar, mude a  não ser possível encaixar, mude a lloogicagica para isso,  o usuário  para isso,  o usuário iraira receber peças e ele vai enxiar , se preencher receber peças e ele vai enxiar , se preencher tudo tudo de azul ele ganha, mude a  de azul ele ganha, mude a logicalogica  e formação das peças  e formação das peças para isso, e que seja verificável o resultado, pois se trata de jogo procedural. para isso, e que seja verificável o resultado, pois se trata de jogo procedural.
+=== ENTRY 14 (p) ===
+IMAGES (9): ['rId24', 'rId25', 'rId26', 'rId27', 'rId28', 'rId29', 'rId30', 'rId31', 'rId32']
+TEXT: ficou sem o css
+
+
+
+
+
+aumente mais os cards representativos para o game ficar mais dinâmico, use css pseudo3d, e faça esse modelo de layout e css, e efeitos no outros logic grid, de vc colocar ele ele autocompletar no suymary, e coloque o tema mais animado pastel/cryon;/divertido
+
+
+
+deu erro, sem css, e coloque o css pseudo 3d, 
+
+
+o tempo precisa ser renovado a cada jogada, se acaber perder
+
+Mudar Capa
+
+
+
+
+quando a peça some, ainda fica a estrutura roxa ao redor, ela precisa sair junto.
+
+
+
+
+
+
+,udar capa, tirar a velhinha
+
+
+
+
+
+
+mudar capa tirar mao de velhinha
+
+
+
+
+
+nao acontece nada
+
+ficou sem o ficou sem o csscss
+
+
+
+
+
+aumente mais os aumente mais os cardscards representativos para o game ficar mais dinâmico, use  representativos para o game ficar mais dinâmico, use csscss pseudo3d, e faça esse modelo de layout e  pseudo3d, e faça esse modelo de layout e csscss, e efeitos no outros , e efeitos no outros logiclogic grid, de  grid, de vcvc colocar ele  colocar ele eleele  autocompletarautocompletar no  no suymarysuymary, e coloque o tema mais animado pastel/, e coloque o tema mais animado pastel/cryoncryon;/divertido;/divertido
+
+
+
+deu erro, sem deu erro, sem csscss, e coloque o , e coloque o csscss  pseudopseudo 3d,  3d, 
+
+
+o tempo precisa ser renovado a cada jogada, se o tempo precisa ser renovado a cada jogada, se acaberacaber perder perder
+
+Mudar CapaMudar Capa
+
+
+
+
+quando a peça some, ainda fica a estrutura roxa ao redor, ela precisa sair junto.quando a peça some, ainda fica a estrutura roxa ao redor, ela precisa sair junto.
+
+
+
+
+
+
+,,udarudar capa, tirar a velhinha capa, tirar a velhinha
+
+
+
+
+
+
+mudar capa tirar mudar capa tirar maomao de velhinha de velhinha
+
+
+
+
+
+naonao acontece nada acontece nada
+=== ENTRY 15 (p) ===
+IMAGES (4): ['rId33', 'rId34', 'rId35', 'rId36']
+TEXT: erro e não carregaa o jogo
+
+
+tirar as mãos de velhinha
+
+
+
+falta retirar as setas, e o modo double não esta multiplicando no no emexmo ele so faz somar, exemplo : no modo double, 8x8 = 64 e não 16,. O modo adtion esta correto, ele soma os iguais
+
+
+
+
+
+so cortou o menu superior um pouco o botão de ?, no modo mobile portrait
+
+
+
+erro e não erro e não carregaacarregaa o jogo o jogo
+
+
+tirar as mãos de velhinhatirar as mãos de velhinha
+
+
+
+falta retirar as setas, e o modo falta retirar as setas, e o modo doubledouble não  não estaesta multiplicando no  multiplicando no nono  emexmoemexmo ele  ele soso faz somar, exemplo : no modo  faz somar, exemplo : no modo doubledouble, 8x8 = 64 e não 16,. O , 8x8 = 64 e não 16,. O modomodo  adtionadtion  estaesta correto, ele soma os iguais correto, ele soma os iguais
+
+
+
+
+
+soso cortou o menu superior um pouco o botão de ?, no modo mobile  cortou o menu superior um pouco o botão de ?, no modo mobile portraitportrait
+=== ENTRY 16 (p) ===
+IMAGES (19): ['rId37', 'rId38', 'rId39', 'rId40', 'rId41', 'rId42', 'rId43', 'rId44', 'rId45', 'rId46', 'rId47', 'rId48', 'rId49', 'rId50', 'rId51', 'rId52', 'rId53', 'rId54', 'rId55']
+TEXT: é melhor iniciar com os trens  em stopped, depois que o jogador libera, e acrescente linahs triplas e quadruplas,  e quíntuplas  e, com o passar dos níveis. E linhas que andar outra formas não so em linha reta,, bifurcações, etc.
+
+
+
+
+coloque em css pseudo 3d, e com efeitos de explosão, 
+
+
+
+retirar a velhinha da capa
+
+
+
+
+retirar a velhinha da capa
+
+
+
+
+
+sem responder, so tela preta
+
+
+
+
+so tela preta
+
+
+
+o jogo não esta claro o objetivo, a iamgem diz que é para arras tar com dedo e somar, ç fala com efeito de arrastar e soltar, e eles vei se somanto ate o resultado esperado, , precisa de um tutorial animado, no inivo mostrando com mover e o objetivo
+
+
+
+
+so precisa de uma animção do animal sendo arrastado par ao local e se css pseudo 3d, com stickeres. A musica de fundo, e tero no numero co cantinho  pois se trata de um sudoku infantil
+, um nuemro bem queno no canto inferios direito.
+
+
+
+
+
+
+
+
+
+
+
+não ficou claro o bjetivo, se ó merge é 100,quando jogador perde??? O correto seria ter bolas que tivessem um nuemro negativo, para ser dificl o jogador chegar aos 100 ou ate passar ai perderia o jogo, por exemplo , qualquer lado que a bola se mover, ela soma, o jogador começa sempre com 0, então aao mover comom em math 2048, ira surgir numeor aleatórios, negativos ou posivitos, se  o jogador não souber direcionar ele pode ficar sempre subtraindo, somando a te ultrapassar ou bater a meta rápido. E ajusta p css, est sem as bolas numeradas(), e coloque boals estilo bilhar, com css pseudo 3d, e que elas tenha o efeito de rolar
+
+
+
+ajuste que o robô tem limite de energia, se fizer um percurso longo ele fica parado, então o jogador tem que fazer o caminho mais curto e o correto para não ficar fechado, pois não pode voltar atrás.
+
+
+
+não aparece nada ao inciar o jogo, a maioroa de logic grid  esta com mesmo problema
+
+
+
+
+coloque stickers, css pseuso 3d, animão da agua, barquinho flutuando na agua, efeitos diversos.
+
+
+
+falta efeito de deslise, de andat, de empurra a caixa, musica de fundo
+
+
+
+
+falta stickers, sons melhores, musica de funto, a tinta ficar ultrapando os objetoe e fica caindo, , esta feito, calfa css pseudo 3d, melhor o backgorund
+falta menu, fase procesural com verificação de resolução, 
+
+
+
+colocar um som divertido, de feira de ciências
+
+
+
+não consigo arrastar e soltar, e precis ser css pseudo 3d
+
+
+não aparece nada
+
+
+
+
+falta menu, tutorial interativo, coloque varoas figuras geométricas, não coloque nome, e coloque varias figuras, para o jogador tentar usando observação qual delas se encaixaria para forma a outra, se doi trigando, um hexagno , etc, estilo tangran, e quem quer ser procedutal, use inteliogencia para saber o que formar, exemplo, a logica dos lado, se vc colcoa uma silhuera com uam figura de 3 lados, e outra de 4 lados, vc vai dar figuras com que 3 lados,4 lados 5 lados, e o jogador vai per qual delas é mais coerente para arrastar e soltar, e tem efeito, de erro,acerto, deslisar, arrastar e soltar, 
+
+
+
+
+
+
+éé melhor iniciar com os trens  em  melhor iniciar com os trens  em stoppedstopped, depois que o jogador libera, e acrescente , depois que o jogador libera, e acrescente linahslinahs triplas e quadruplas,  e quíntuplas  e, com o passar dos níveis. E linhas que andar outra formas não  triplas e quadruplas,  e quíntuplas  e, com o passar dos níveis. E linhas que andar outra formas não soso em linha reta,, bifurcações, etc. em linha reta,, bifurcações, etc.
+
+
+
+
+coloque em coloque em csscss  pseudopseudo 3d, e com efeitos de explosão,  3d, e com efeitos de explosão, 
+
+
+
+retirar a velhinha da caparetirar a velhinha da capa
+
+
+
+
+retirar a velhinha da caparetirar a velhinha da capa
+
+
+
+
+
+sem responder, sem responder, soso tela preta tela preta
+
+
+
+
+soso tela preta tela preta
+
+
+
+o jogo não o jogo não estaesta claro o objetivo, a  claro o objetivo, a iamgemiamgem diz que é para arras  diz que é para arras tartar com dedo e somar,  com dedo e somar, ç fala com efeito de arrastar e soltar, e eles ç fala com efeito de arrastar e soltar, e eles veivei se  se somantosomanto  ateate o resultado esperado, , precisa de um tutorial animado, no  o resultado esperado, , precisa de um tutorial animado, no inivoinivo mostrando com mover e o objetivo mostrando com mover e o objetivo
+
+
+
+
+soso precisa de uma  precisa de uma animçãoanimção do animal sendo arrastado par ao local e se  do animal sendo arrastado par ao local e se csscss  pseudopseudo 3d, com  3d, com stickeresstickeres. A musica de fundo, e . A musica de fundo, e terotero no  no numeronumero  coco cantinho  pois se trata de um  cantinho  pois se trata de um sudokusudoku infantil infantil
+, um , um nuemronuemro bem  bem quenoqueno no canto  no canto inferiosinferios direito. direito.
+
+
+
+
+
+
+
+
+
+
+
+não ficou claro o não ficou claro o bjetivobjetivo, se ó merge é 100,quando jogador perde??? O correto seria ter bolas que tivessem um , se ó merge é 100,quando jogador perde??? O correto seria ter bolas que tivessem um nuemronuemro negativo, para ser  negativo, para ser dificldificl o jogador chegar aos 100 ou ate passar ai perderia o jogo, por  o jogador chegar aos 100 ou ate passar ai perderia o jogo, por exemplo ,exemplo , qualquer lado que a bola se mover, ela soma, o jogador começa sempre com 0, então  qualquer lado que a bola se mover, ela soma, o jogador começa sempre com 0, então aaoaao mover  mover comomcomom em  em mathmath 2048,  2048, ira surgir ira surgir numeornumeor aleatórios, negativos ou  aleatórios, negativos ou posivitosposivitos, se  o jogador não souber direcionar ele pode ficar sempre subtraindo, somando a te ultrapassar ou bater a meta rápido. E ajusta p , se  o jogador não souber direcionar ele pode ficar sempre subtraindo, somando a te ultrapassar ou bater a meta rápido. E ajusta p csscss, est sem as bolas numeradas, est sem as bolas numeradas()(), e , e coloquecoloque  boalsboals estilo bilhar, com  estilo bilhar, com csscss  pseudopseudo 3d, e que elas tenha o efeito de rolar 3d, e que elas tenha o efeito de rolar
+
+
+
+ajuste que o robô tem limite de energia, se fizer um percurso longo ele fica parado, então o jogador tem que fazer o caminho mais curto e o correto para não ficar fechado, pois não pode voltar atrás.ajuste que o robô tem limite de energia, se fizer um percurso longo ele fica parado, então o jogador tem que fazer o caminho mais curto e o correto para não ficar fechado, pois não pode voltar atrás.
+
+
+
+não aparece nada ao não aparece nada ao inciarinciar o jogo, a  o jogo, a maioroamaioroa de  de logiclogic grid   grid  estaesta com mesmo problema com mesmo problema
+
+
+
+
+coloque coloque stickersstickers, , csscss  pseusopseuso 3d,  3d, animãoanimão da agua, barquinho flutuando na agua, efeitos diversos. da agua, barquinho flutuando na agua, efeitos diversos.
+
+
+
+falta efeito de falta efeito de deslisedeslise, de , de andatandat, de empurra a caixa, , de empurra a caixa, musicamusica de fundo de fundo
+
+
+
+
+falta falta stickersstickers, sons melhores, , sons melhores, musicamusica de  de funtofunto, a tinta ficar , a tinta ficar ultrapandoultrapando os  os objetoeobjetoe e fica caindo, ,  e fica caindo, , estaesta feito,  feito, calfacalfa  csscss  pseudopseudo 3d, melhor o  3d, melhor o backgorundbackgorund
+falta menu, fase falta menu, fase procesuralprocesural com verificação de resolução,  com verificação de resolução, 
+
+
+
+colocar um som divertido, de feira de ciênciascolocar um som divertido, de feira de ciências
+
+
+
+não consigo arrastar e soltar, e não consigo arrastar e soltar, e precisprecis ser  ser csscss  pseudopseudo 3d 3d
+
+
+não aparece nadanão aparece nada
+
+
+
+
+falta menu, tutorial interativo, falta menu, tutorial interativo, coloque varoas figuras geométricas, não coloque nome, e coloque varias figuras, para o jogador tentar usando observação qual delas se encaixaria para forma a outra, se coloque varoas figuras geométricas, não coloque nome, e coloque varias figuras, para o jogador tentar usando observação qual delas se encaixaria para forma a outra, se doidoi trigando, um  trigando, um hexagnohexagno ,  , etcetc, estilo, estilo  tangrantangran, e quem quer ser , e quem quer ser procedutalprocedutal, use , use inteliogenciainteliogencia para saber o que formar, exemplo, a logica dos lado, se  para saber o que formar, exemplo, a logica dos lado, se vcvc  colcoacolcoa uma  uma silhuerasilhuera com  com uamuam figura de 3 lados, e outra de 4 lados,  figura de 3 lados, e outra de 4 lados, vcvc vai dar figuras com que 3 lados,4 lados 5 lados, e o jogador vai per qual delas é mais coerente para arrastar e soltar, e tem efeito, de  vai dar figuras com que 3 lados,4 lados 5 lados, e o jogador vai per qual delas é mais coerente para arrastar e soltar, e tem efeito, de erro,acertoerro,acerto, , deslisardeslisar, arrastar e soltar, , arrastar e soltar,
+=== ENTRY 17 (p) ===
+IMAGES (2): ['rId56', 'rId57']
+TEXT: falta menu, tutorial interativo, coloque varoas figuras geométricas, não coloque nome, e coloque varias figuras, para o jogador tentar usando observação qual delas se encaixaria para forma a outra, se foi trigando, um hexagno , etc, estilo tangran, e quem quer ser procedutal, use inteliogencia para saber o que formar, exemplo, a logica dos lado, se vc colcoa uma silhuera  de um gato, cahrrocho(quadrado com arrolhar de triangulo e olhas em ciculo, ) macaco(cabela reconda, orelha redonda, olhas redondos) e por ai vai, pense em 20 animais e faça a silhueta e vi mudando colcoando um por nível, , ,  efeito, de erro,acerto, deslisar, arrastar e soltar, 
+
+
+
+
+
+sem css
+
+
+mude a capa tiro o velhinho
+
+
+
+falta menu, tutorial interativo, coloque varoas figuras geométricas, não coloque nome, e coloque falta menu, tutorial interativo, coloque varoas figuras geométricas, não coloque nome, e coloque variasvarias figuras, para o jogador tentar usando observação qual delas se encaixaria para forma a outra, se foi trigando, um  figuras, para o jogador tentar usando observação qual delas se encaixaria para forma a outra, se foi trigando, um hexagnohexagno ,  , etcetc, estilo , estilo tangrantangran, e quem quer ser , e quem quer ser procedutalprocedutal, use , use inteliogenciainteliogencia para saber o que formar, exemplo, a  para saber o que formar, exemplo, a logicalogica dos lado, se  dos lado, se vcvc  colcoacolcoa uma  uma silhuerasilhuera  de um gato,   de um gato, cahrrochocahrrocho(quadrado com arrolhar de triangulo e olhas em (quadrado com arrolhar de triangulo e olhas em ciculociculo, ) macaco(, ) macaco(cabelacabela  recondareconda, orelha redonda, olhas redondos) e por ai vai, pense em 20 animais e faça a silhueta e vi mudando , orelha redonda, olhas redondos) e por ai vai, pense em 20 animais e faça a silhueta e vi mudando colcoandocolcoando um por nível, , ,  efeito, de  um por nível, , ,  efeito, de erro,acertoerro,acerto, , deslisardeslisar, arrastar e soltar, , arrastar e soltar, 
+
+
+
+
+
+sem sem csscss
+
+
+mude a capa tiro o velhinhomude a capa tiro o velhinho
+=== ENTRY 18 (p) ===
+IMAGES (1): ['rId58']
+TEXT: erro 
+/game/sokoban-warehouse:1 Banner not shown: beforeinstallpromptevent.preventDefault() called. The page must call beforeinstallpromptevent.prompt() to show the banner.
+
+
+erro erro 
+/game/sokoban-warehouse:1 Banner /game/sokoban-warehouse:1 Banner notnot  shownshown: : beforeinstallpromptevent.preventDefaultbeforeinstallpromptevent.preventDefault() () calledcalled. The . The pagepage must  must callcall  beforeinstallpromptevent.promptbeforeinstallpromptevent.prompt() () toto show  show thethe banner. banner.
+=== ENTRY 19 (p) ===
+IMAGES (29): ['rId59', 'rId60', 'rId61', 'rId62', 'rId63', 'rId64', 'rId65', 'rId66', 'rId67', 'rId68', 'rId69', 'rId70', 'rId71', 'rId72', 'rId73', 'rId74', 'rId75', 'rId76', 'rId77', 'rId78', 'rId79', 'rId80', 'rId81', 'rId82', 'rId83', 'rId84', 'rId85', 'rId86', 'rId87']
+TEXT: /games/sokoban-warehouse/src/index.css:1 Failed to load module script: Expected a JavaScript-or-Wasm module script but the server responded with a MIME type of "text/css". Strict MIME type checking is enforced for module scripts per HTML spec.
+
+
+
+coloque efeito de derramar liquido no outro tubinho
+
+
+
+
+
+
+verifique se a logica esta certa
+
+
+
+tela preta
+
+
+
+
+
+tela preta
+
+
+
+
+
+
+
+
+não cabe no mobile portratir, e esta muito fácil, so um sentido, sem conexoa em curta, t, L, sem tabuleiro
+
+
+falta animação de transferência de líquidos
+
+
+
+
+tirar idoso desses 4
+
+
+
+
+transforme em laboratório de quimoca, ao misturar as cores, o liquido reaje e explode, , pois isso pode deixar uma cor misturar na outra, e musar a cor simulando reação, com animação em css pseudo 3d
+falta menu incial
+
+
+
+falta o css no hud menu inicial
+
+
+
+
+
+tirar idoso
+
+
+
+falta animações, css de liquido, transferência de liquido, css pseudo 3d
+menu
+
+
+
+
+tirar idoso
+
+
+
+
+
+ao mover ele da um atela branco um flash bem rápido como se atualizae a tela
+
+
+
+
+tirar idoso
+
+
+
+
+tela preta
+
+
+falta css pseudo 3d, e estickeres que mudam de carinha quando muda o status deles, de suspeito, cultpado ,etc
+
+
+tela preta
+
+ tela preta
+
+
+
+tela preta
+
+
+
+
+tirar idoso
+
+
+tela preta
+
+
+tela preta
+
+
+ tela preta
+
+
+
+tela preta
+
+
+tirar idoso
+
+
+
+
+
+o objeivo é misturar as cores para formal uma so em cada tupo, coloque o menu,  e no gameplay um barra com o mapa de cores, exemplo azul + verda = amarelo, vermelhor + preto = marrom, usando a grade de mistura real, precisa mudar no meta.json como funciona o game
+
+
+
+
+
+
+tela preta
+
+
+
+
+
+mude essa tela tradicional para essaa baixo, colorido, css pseudo 3d, efeitos de estrelinhos, qunaod colcoar o numero, e sendo drag e drop, com efeito de arrastar e soltar e sano sometne sugir
+
+
+
+
+/games//games/sokoban-warehousesokoban-warehouse//srcsrc/index.css:1 /index.css:1 FailedFailed  toto  loadload module script:  module script: ExpectedExpected a  a JavaScript-or-WasmJavaScript-or-Wasm module script  module script butbut  thethe server  server respondedresponded  withwith a MIME  a MIME typetype  ofof " "texttext//csscss". ". StrictStrict MIME  MIME typetype  checkingchecking  isis  enforcedenforced for module scripts per HTML  for module scripts per HTML specspec..
+
+
+
+coloque efeito de derramar liquido no outro tubinhocoloque efeito de derramar liquido no outro tubinho
+
+
+
+
+
+
+verifique se a verifique se a logicalogica  estaesta certa certa
+
+
+
+tela pretatela preta
+
+
+
+
+
+tela pretatela preta
+
+
+
+
+
+
+
+
+não cabe no mobile não cabe no mobile portratirportratir, e , e estaesta muito fácil,  muito fácil, soso um sentido, sem  um sentido, sem conexoaconexoa em curta,  em curta, t, L, sem tabuleirot, L, sem tabuleiro
+
+
+falta animação de transferência de líquidosfalta animação de transferência de líquidos
+
+
+
+
+tirar idoso desses 4tirar idoso desses 4
+
+
+
+
+transforme em laboratório de transforme em laboratório de quimocaquimoca, ao misturar as cores, o liquido , ao misturar as cores, o liquido reajereaje e explode, , pois isso pode deixar uma cor misturar na outra, e  e explode, , pois isso pode deixar uma cor misturar na outra, e musarmusar a cor simulando reação, com animação em  a cor simulando reação, com animação em csscss  pseudopseudo 3d 3d
+falta menu falta menu incialincial
+
+
+
+falta o falta o csscss no  no hudhud menu inicial menu inicial
+
+
+
+
+
+tirar idosotirar idoso
+
+
+
+falta animações, falta animações, csscss de liquido, transferência de liquido,  de liquido, transferência de liquido, csscss  pseudopseudo 3d 3d
+menumenu
+
+
+
+
+tirar idosotirar idoso
+
+
+
+
+
+ao mover ele ao mover ele dada um  um atelaatela branco um flash bem rápido como se  branco um flash bem rápido como se atualizaeatualizae a tela a tela
+
+
+
+
+tirar idosotirar idoso
+
+
+
+
+tela pretatela preta
+
+
+falta falta csscss  pseudopseudo 3d, e  3d, e estickeresestickeres que mudam de carinha quando muda o status deles, de suspeito,  que mudam de carinha quando muda o status deles, de suspeito, cultpadocultpado , ,etcetc
+
+
+tela pretatela preta
+
+ tela preta tela preta
+
+
+
+tela pretatela preta
+
+
+
+
+tirar idosotirar idoso
+
+
+tela pretatela preta
+
+
+tela pretatela preta
+
+
+ tela preta tela preta
+
+
+
+tela pretatela preta
+
+
+tirar idosotirar idoso
+
+
+
+
+
+o o objeivoobjeivo é misturar as cores para formal uma  é misturar as cores para formal uma soso em cada  em cada tupotupo, coloque o menu,  e no , coloque o menu,  e no gameplaygameplay um barra com um barra com o mapa de cores, exemplo azul +  o mapa de cores, exemplo azul + verdaverda = amarelo,  = amarelo, vermelhorvermelhor + preto = marrom, usando a grade de mistura real, precisa mudar no  + preto = marrom, usando a grade de mistura real, precisa mudar no meta.jsonmeta.json como funciona o game como funciona o game
+
+
+
+
+
+
+tela pretatela preta
+
+
+
+
+
+mude essa tela tradicional para mude essa tela tradicional para essaaessaa baixo, colorido,  baixo, colorido, csscss  pseudopseudo 3d, efeitos de  3d, efeitos de estrelinhosestrelinhos, , qunaodqunaod  colcoarcolcoar o  o numeronumero, e sendo , e sendo dragdrag e  e dropdrop, com efeito de arrastar e soltar e sano , com efeito de arrastar e soltar e sano sometnesometne  sugirsugir

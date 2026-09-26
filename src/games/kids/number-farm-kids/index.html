@@ -68,6 +68,9 @@
         <span class="badge">🚜 Number Farm</span>
       </div>
       <div class="hud-group">
+        <button id="btn-music" class="btn-tactile btn-icon" title="Música">
+          <span>🎵</span>
+        </button>
         <button id="btn-restart" class="btn-tactile btn-icon" title="New Game">
           <span>🔄</span>
         </button>
@@ -84,16 +87,28 @@
     <main class="game-area">
       <div id="sudoku-grid" class="sudoku-grid"></div>
 
-      <!-- Animal Palette Tray -->
+      <!-- Animal Palette Tray (Click or Drag & Drop) -->
       <div class="selector-tray">
-        <button class="tray-btn" data-val="1" title="Dog">🐶</button>
-        <button class="tray-btn" data-val="2" title="Cat">🐱</button>
-        <button class="tray-btn" data-val="3" title="Pig">🐷</button>
-        <button class="tray-btn" data-val="4" title="Cow">🐮</button>
+        <button class="tray-btn draggable-animal" data-val="1" title="Dog">
+          <span class="animal-emoji">🐶</span>
+          <span class="corner-num">1</span>
+        </button>
+        <button class="tray-btn draggable-animal" data-val="2" title="Cat">
+          <span class="animal-emoji">🐱</span>
+          <span class="corner-num">2</span>
+        </button>
+        <button class="tray-btn draggable-animal" data-val="3" title="Pig">
+          <span class="animal-emoji">🐷</span>
+          <span class="corner-num">3</span>
+        </button>
+        <button class="tray-btn draggable-animal" data-val="4" title="Cow">
+          <span class="animal-emoji">🐮</span>
+          <span class="corner-num">4</span>
+        </button>
         <button class="tray-btn" data-val="0" title="Erase" style="font-size: 22px; color: #ef4444;">❌</button>
       </div>
 
-      <div id="status-text" class="status-text">Tap a square, then choose a farm pet!</div>
+      <div id="status-text" class="status-text">Arraste os bichinhos para o cercado ou clique no quadrado!</div>
     </main>
 
     <!-- How to Play Modal -->

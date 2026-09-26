@@ -12,21 +12,21 @@ export function renderLegalView(container: HTMLElement, activeTab: LegalTab = 'p
   };
 
   const tabDescriptions: Record<LegalTab, string> = {
-    privacy: 'Privacy Policy and Cookie Disclosure for FunLogic.games by Lumia Studio. Learn how your data is protected and our compliance with Google AdSense, GDPR, and LGPD.',
-    terms: 'Terms of Service and End-User Usage Agreement for FunLogic.games casual logic and puzzle web games.',
-    about: 'About FunLogic.games and Lumia Studio: independent creator of accessible, fast, and cognitive-friendly web puzzles for all generations.',
-    contact: 'Contact Lumia Studio and the FunLogic.games team for support, game suggestions, developer partnerships, and bug reports.'
+    privacy: 'Privacy Policy and Cookie Disclosure for PlayFunLogic.com by Lumia Studio. Learn how your data is protected and our compliance with Google AdSense, GDPR, and LGPD.',
+    terms: 'Terms of Service and End-User Usage Agreement for PlayFunLogic.com casual logic and puzzle web games.',
+    about: 'About PlayFunLogic.com and Lumia Studio: independent creator of accessible, fast, and cognitive-friendly web puzzles for all generations.',
+    contact: 'Contact Lumia Studio and the PlayFunLogic.com team for support, game suggestions, developer partnerships, and bug reports.'
   };
 
   updateHeadSeo({
     title: tabTitles[activeTab],
     description: tabDescriptions[activeTab],
-    canonicalUrl: `https://funlogic.games/${activeTab}/`,
+    canonicalUrl: `https://playfunlogic.com/${activeTab}/`,
     type: 'website'
   });
 
   container.innerHTML = `
-    <div class="max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-12 space-y-8">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 md:px-8 py-8 sm:py-12 space-y-8 safe-padding-x">
       
       <!-- Top Navigation Tabs -->
       <div class="flex items-center justify-between flex-wrap gap-4 border-b border-slate-700/60 pb-4">
@@ -70,17 +70,17 @@ function getTabContent(tab: LegalTab): string {
           <header class="border-b border-slate-800 pb-4">
             <span class="text-xs font-black uppercase tracking-wider text-[#58CC02] bg-[#58CC02]/10 border border-[#58CC02]/20 px-3 py-1 rounded-full inline-block mb-2">Legal Compliance</span>
             <h1 class="text-2xl sm:text-3xl font-black text-white tracking-tight">Privacy Policy</h1>
-            <p class="text-xs text-slate-400 mt-1">Last Updated: September 23, 2026 • FunLogic.games by Lumia Studio</p>
+            <p class="text-xs text-slate-400 mt-1">Last Updated: September 23, 2026 • PlayFunLogic.com by Lumia Studio</p>
           </header>
 
           <section class="space-y-3">
             <h2 class="text-base font-black text-white">1. Introduction & Overview</h2>
-            <p>Welcome to <strong>FunLogic.games</strong>, an online browser puzzle portal operated by <strong>Lumia Studio</strong> ("we", "us", or "our"). We respect your privacy and are committed to protecting any data collected during your gameplay sessions. This policy explains what information we gather, how we use it, and your rights under global privacy regulations including GDPR (EU), LGPD (Brazil), and CCPA (California).</p>
+            <p>Welcome to <strong>PlayFunLogic.com</strong>, an online browser puzzle portal operated by <strong>Lumia Studio</strong> ("we", "us", or "our"). We respect your privacy and are committed to protecting any data collected during your gameplay sessions. This policy explains what information we gather, how we use it, and your rights under global privacy regulations including GDPR (EU), LGPD (Brazil), and CCPA (California).</p>
           </section>
 
           <section class="space-y-3">
             <h2 class="text-base font-black text-white">2. Information We Collect</h2>
-            <p>FunLogic.games is designed to be fully playable without user registration or mandatory personal logins. We collect:</p>
+            <p>PlayFunLogic.com is designed to be fully playable without user registration or mandatory personal logins. We collect:</p>
             <ul class="list-disc pl-5 space-y-1.5 text-slate-300">
               <li><strong>Gameplay Progress & High Scores:</strong> Stored locally on your personal device using HTML5 LocalStorage (e.g., solved levels, daily streak, sound volume preferences). This data never leaves your device.</li>
               <li><strong>Log Data:</strong> Standard internet log data collected by hosting servers, including your browser type, operating system, language preference, referring URL, and general geographic location (country level).</li>
@@ -93,7 +93,7 @@ function getTabContent(tab: LegalTab): string {
             <div class="p-4 rounded-2xl bg-slate-800/80 border border-slate-700/60 space-y-2">
               <h3 class="text-xs font-black uppercase text-[#58CC02] tracking-wider">Google Advertising & DART Cookies</h3>
               <p class="text-xs text-slate-300 leading-relaxed">
-                Google's use of advertising cookies enables it and its partners to serve personalized or non-personalized ads to users based on their visits to FunLogic.games and other sites. You may opt out of personalized advertising by visiting <a href="https://www.google.com/settings/ads" target="_blank" rel="noopener noreferrer" class="text-[#1CB0F6] underline">Google Ads Settings</a> or <a href="https://www.aboutads.info" target="_blank" rel="noopener noreferrer" class="text-[#1CB0F6] underline">aboutads.info</a>.
+                Google's use of advertising cookies enables it and its partners to serve personalized or non-personalized ads to users based on their visits to PlayFunLogic.com and other sites. You may opt out of personalized advertising by visiting <a href="https://www.google.com/settings/ads" target="_blank" rel="noopener noreferrer" class="text-[#1CB0F6] underline">Google Ads Settings</a> or <a href="https://www.aboutads.info" target="_blank" rel="noopener noreferrer" class="text-[#1CB0F6] underline">aboutads.info</a>.
               </p>
             </div>
           </section>
@@ -110,7 +110,7 @@ function getTabContent(tab: LegalTab): string {
 
           <section class="space-y-3">
             <h2 class="text-base font-black text-white">6. Contact Information</h2>
-            <p>If you have any questions or privacy concerns regarding this policy, contact Lumia Studio directly at: <a href="mailto:contact@funlogic.games" class="text-[#58CC02] font-bold underline">contact@funlogic.games</a>.</p>
+            <p>If you have any questions or privacy concerns regarding this policy, contact Lumia Studio directly at: <a href="mailto:contact@playfunlogic.com" class="text-[#58CC02] font-bold underline">contact@playfunlogic.com</a>.</p>
           </section>
         </div>
       `;
@@ -121,17 +121,17 @@ function getTabContent(tab: LegalTab): string {
           <header class="border-b border-slate-800 pb-4">
             <span class="text-xs font-black uppercase tracking-wider text-[#1CB0F6] bg-[#1CB0F6]/10 border border-[#1CB0F6]/20 px-3 py-1 rounded-full inline-block mb-2">Terms & Conditions</span>
             <h1 class="text-2xl sm:text-3xl font-black text-white tracking-tight">Terms of Service</h1>
-            <p class="text-xs text-slate-400 mt-1">Effective Date: September 23, 2026 • FunLogic.games</p>
+            <p class="text-xs text-slate-400 mt-1">Effective Date: September 23, 2026 • PlayFunLogic.com</p>
           </header>
 
           <section class="space-y-3">
             <h2 class="text-base font-black text-white">1. Acceptance of Terms</h2>
-            <p>By accessing and playing games on <strong>FunLogic.games</strong>, you agree to comply with and be bound by these Terms of Service. If you do not agree with any part of these terms, you should discontinue use of the website.</p>
+            <p>By accessing and playing games on <strong>PlayFunLogic.com</strong>, you agree to comply with and be bound by these Terms of Service. If you do not agree with any part of these terms, you should discontinue use of the website.</p>
           </section>
 
           <section class="space-y-3">
             <h2 class="text-base font-black text-white">2. License to Play</h2>
-            <p>Lumia Studio grants you a personal, non-exclusive, non-transferable, revocable license to access, view, and play games on FunLogic.games solely for personal, non-commercial entertainment purposes directly inside your web browser.</p>
+            <p>Lumia Studio grants you a personal, non-exclusive, non-transferable, revocable license to access, view, and play games on PlayFunLogic.com solely for personal, non-commercial entertainment purposes directly inside your web browser.</p>
           </section>
 
           <section class="space-y-3">
@@ -141,7 +141,7 @@ function getTabContent(tab: LegalTab): string {
 
           <section class="space-y-3">
             <h2 class="text-base font-black text-white">4. Disclaimer of Warranties</h2>
-            <p>FunLogic.games is provided on an "AS IS" and "AS AVAILABLE" basis. While we strive for 100% uptime and zero glitches, Lumia Studio makes no warranties that the service will be uninterrupted, error-free, or compatible with every hardware device.</p>
+            <p>PlayFunLogic.com is provided on an "AS IS" and "AS AVAILABLE" basis. While we strive for 100% uptime and zero glitches, Lumia Studio makes no warranties that the service will be uninterrupted, error-free, or compatible with every hardware device.</p>
           </section>
 
           <section class="space-y-3">
@@ -156,13 +156,13 @@ function getTabContent(tab: LegalTab): string {
         <div class="space-y-6">
           <header class="border-b border-slate-800 pb-4">
             <span class="text-xs font-black uppercase tracking-wider text-[#FF9600] bg-[#FF9600]/10 border border-[#FF9600]/20 px-3 py-1 rounded-full inline-block mb-2">Our Mission</span>
-            <h1 class="text-2xl sm:text-3xl font-black text-white tracking-tight">About Lumia Studio & FunLogic.games</h1>
+            <h1 class="text-2xl sm:text-3xl font-black text-white tracking-tight">About Lumia Studio & PlayFunLogic.com</h1>
             <p class="text-xs text-slate-400 mt-1">Crafting accessible cognitive gaming experiences for all ages.</p>
           </header>
 
           <section class="space-y-3">
             <h2 class="text-base font-black text-white">Who We Are</h2>
-            <p><strong>FunLogic.games</strong> is an independent digital portal created by <strong>Lumia Studio</strong>. We design lightweight, fast-loading, and thoughtful puzzle games that challenge reasoning, deduction, spatial visualization, and memory.</p>
+            <p><strong>PlayFunLogic.com</strong> is an independent digital portal created by <strong>Lumia Studio</strong>. We design lightweight, fast-loading, and thoughtful puzzle games that challenge reasoning, deduction, spatial visualization, and memory.</p>
           </section>
 
           <section class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2">
@@ -185,7 +185,7 @@ function getTabContent(tab: LegalTab): string {
 
           <section class="space-y-3 pt-2">
             <h2 class="text-base font-black text-white">Accessibility & Clean Design</h2>
-            <p>Unlike ad-saturated gaming sites with disruptive overlays, FunLogic.games prioritizes calm play. We provide unlimited undos, untimed options, high color contrasts, and full Progressive Web App (PWA) offline installation.</p>
+            <p>Unlike ad-saturated gaming sites with disruptive overlays, PlayFunLogic.com prioritizes calm play. We provide unlimited undos, untimed options, high color contrasts, and full Progressive Web App (PWA) offline installation.</p>
           </section>
         </div>
       `;
@@ -203,13 +203,13 @@ function getTabContent(tab: LegalTab): string {
             <div class="p-5 rounded-2xl bg-slate-800/80 border border-slate-700/60 space-y-2">
               <div class="text-xs font-black uppercase text-[#58CC02] tracking-wider">Direct Email</div>
               <p class="text-xs text-slate-300">For general support, feedback, and questions:</p>
-              <a href="mailto:contact@funlogic.games" class="text-sm font-black text-white hover:text-[#58CC02] transition block">contact@funlogic.games</a>
+              <a href="mailto:contact@playfunlogic.com" class="text-sm font-black text-white hover:text-[#58CC02] transition block">contact@playfunlogic.com</a>
             </div>
 
             <div class="p-5 rounded-2xl bg-slate-800/80 border border-slate-700/60 space-y-2">
               <div class="text-xs font-black uppercase text-[#1CB0F6] tracking-wider">Partnerships & Developers</div>
               <p class="text-xs text-slate-300">HTML5 game submissions and publishing inquiries:</p>
-              <a href="mailto:partners@funlogic.games" class="text-sm font-black text-white hover:text-[#1CB0F6] transition block">partners@funlogic.games</a>
+              <a href="mailto:partners@playfunlogic.com" class="text-sm font-black text-white hover:text-[#1CB0F6] transition block">partners@playfunlogic.com</a>
             </div>
           </div>
 

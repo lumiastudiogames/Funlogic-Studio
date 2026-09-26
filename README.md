@@ -1,4 +1,4 @@
-# FunLogic.games
+# PlayFunLogic.com
 
 Portal de jogos de lógica em JavaScript e TypeScript vanilla.
 

@@ -161,42 +161,42 @@ body {
   max-width: 420px;
 }
 
-/* Faucet Header */
+/* Faucet Header - Locked to Column 0 */
 .flow-start-indicator {
   width: 100%;
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  gap: 12px;
-  padding: 0 12px 6px;
+  padding: 0 16px 4px;
 }
 
 .faucet-box {
   display: flex;
   align-items: center;
-  gap: 8px;
-  background: linear-gradient(135deg, #0284c7, #0369a1);
+  gap: 6px;
+  background: linear-gradient(180deg, #38bdf8 0%, #0284c7 60%, #0369a1 100%);
   color: #ffffff;
-  padding: 6px 14px;
-  border-radius: 14px;
-  box-shadow: 0 4px 10px rgba(2, 132, 199, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.4);
-  border: 1px solid #38bdf8;
+  padding: 5px 12px;
+  border-radius: 12px;
+  box-shadow: 0 4px 0 #075985, 0 6px 12px rgba(2, 132, 199, 0.35), inset 0 2px 2px rgba(255, 255, 255, 0.6);
+  border: 1.5px solid #7dd3fc;
 }
 
 .faucet-icon {
-  font-size: 24px;
+  font-size: 22px;
   animation: faucet-bob 2s infinite ease-in-out;
 }
 
 .faucet-label {
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 800;
   letter-spacing: 0.5px;
 }
 
 .water-arrow-down {
-  font-size: 16px;
+  font-size: 15px;
   animation: drip 1.5s infinite ease-in-out;
+  margin-left: 6px;
 }
 
 @keyframes faucet-bob {
@@ -209,23 +209,29 @@ body {
   50% { transform: translateY(4px); opacity: 1; }
 }
 
-/* Flowers Destination Footer */
+/* Flowers Destination Footer - Locked Directly Under Column 3 */
 .flow-end-indicator {
   width: 100%;
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  gap: 12px;
-  padding: 6px 12px 0;
+  padding: 4px 16px 0;
+}
+
+.dest-funnel-col3 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
 }
 
 .water-arrow-out {
-  font-size: 16px;
+  font-size: 15px;
   transition: opacity 0.3s;
 }
 
 .water-arrow-out.dry {
-  opacity: 0.3;
+  opacity: 0.35;
 }
 
 .water-arrow-out.flowing {
@@ -237,25 +243,24 @@ body {
 .garden-box {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 6px 14px;
+  gap: 6px;
+  padding: 6px 12px;
   border-radius: 14px;
   transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow: 0 4px 0 rgba(0,0,0,0.2), 0 6px 12px rgba(0,0,0,0.15);
 }
 
 .garden-box.wilted {
-  background: linear-gradient(135deg, #78716c, #57534e);
+  background: linear-gradient(180deg, #78716c 0%, #57534e 60%, #44403c 100%);
   color: #e7e5e4;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.2);
-  border: 1px solid #a8a29e;
-  filter: grayscale(0.6);
+  border: 1.5px solid #a8a29e;
+  box-shadow: 0 4px 0 #292524, 0 6px 10px rgba(0,0,0,0.2), inset 0 2px 2px rgba(255, 255, 255, 0.2);
 }
 
 .garden-box.wilted .garden-icon {
-  font-size: 20px;
-  opacity: 0.8;
+  font-size: 22px;
   display: inline-block;
-  transform: rotate(-10deg);
+  transform: rotate(-12deg);
 }
 
 .garden-box.bloomed {

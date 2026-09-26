@@ -120,6 +120,8 @@ function serveGamesPlugin(): Plugin {
           workbox: {
             globPatterns: ['**/*.{js,css,html,ico,png,jpg,svg,woff,woff2}'],
             maximumFileSizeToCacheInBytes: 15 * 1024 * 1024,
+            navigateFallback: 'index.html',
+            navigateFallbackDenylist: [/^\/games\//, /^\/assets\//, /\.html$/],
           },
           devOptions: {
             enabled: false,

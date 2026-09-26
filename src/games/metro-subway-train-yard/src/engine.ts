@@ -109,8 +109,8 @@ export class YardEngine {
         baseSpeed: speed,
         headX: startX,
         currentTrack: currentTrack,
-        isMoving: true, // Auto starts moving, can be paused by tapping
-        state: 'MOVING',
+        isMoving: false, // Trains start stopped waiting for player tap to dispatch
+        state: 'STOPPED',
         cars: [],
         pathHistory: [],
         enteredTimer: 0

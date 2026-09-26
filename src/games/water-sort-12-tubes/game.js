@@ -439,6 +439,19 @@
     const infoBtn = document.getElementById('btn-info');
     const rulesModal = document.getElementById('modal-rules');
     const closeRulesBtn = document.getElementById('btn-close-rules');
+    const startScreen = document.getElementById('start-menu-screen');
+    const btnStartGame = document.getElementById('btn-start-game');
+    const btnStartRules = document.getElementById('btn-start-rules');
+
+    btnStartGame?.addEventListener('click', () => {
+      startScreen?.classList.add('dismissed');
+      playSound('select');
+      startTime = Date.now();
+    });
+
+    btnStartRules?.addEventListener('click', () => {
+      rulesModal?.classList.add('active');
+    });
 
     infoBtn?.addEventListener('click', () => rulesModal?.classList.add('active'));
     closeRulesBtn?.addEventListener('click', () => rulesModal?.classList.remove('active'));

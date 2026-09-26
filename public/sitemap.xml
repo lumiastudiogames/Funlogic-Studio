@@ -2,37 +2,37 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <!-- Core Portal Entry Points -->
   <url>
-    <loc>https://funlogic.games/</loc>
+    <loc>https://playfunlogic.com/</loc>
     <lastmod>2026-09-24</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://funlogic.games/sitemap/</loc>
+    <loc>https://playfunlogic.com/sitemap/</loc>
     <lastmod>2026-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://funlogic.games/privacy/</loc>
+    <loc>https://playfunlogic.com/privacy/</loc>
     <lastmod>2026-09-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.3</priority>
   </url>
   <url>
-    <loc>https://funlogic.games/terms/</loc>
+    <loc>https://playfunlogic.com/terms/</loc>
     <lastmod>2026-09-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.3</priority>
   </url>
   <url>
-    <loc>https://funlogic.games/about/</loc>
+    <loc>https://playfunlogic.com/about/</loc>
     <lastmod>2026-09-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.4</priority>
   </url>
   <url>
-    <loc>https://funlogic.games/contact/</loc>
+    <loc>https://playfunlogic.com/contact/</loc>
     <lastmod>2026-09-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.4</priority>
@@ -40,79 +40,79 @@
 
   <!-- 13 Official Category Landing Pages -->
   <url>
-    <loc>https://funlogic.games/category/water-sort/</loc>
+    <loc>https://playfunlogic.com/category/water-sort/</loc>
     <lastmod>2026-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://funlogic.games/category/mahjong/</loc>
+    <loc>https://playfunlogic.com/category/mahjong/</loc>
     <lastmod>2026-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://funlogic.games/category/sokoban/</loc>
+    <loc>https://playfunlogic.com/category/sokoban/</loc>
     <lastmod>2026-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://funlogic.games/category/pipe/</loc>
+    <loc>https://playfunlogic.com/category/pipe/</loc>
     <lastmod>2026-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://funlogic.games/category/logicgrid/</loc>
+    <loc>https://playfunlogic.com/category/logicgrid/</loc>
     <lastmod>2026-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://funlogic.games/category/numbers/</loc>
+    <loc>https://playfunlogic.com/category/numbers/</loc>
     <lastmod>2026-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://funlogic.games/category/kids/</loc>
+    <loc>https://playfunlogic.com/category/kids/</loc>
     <lastmod>2026-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://funlogic.games/category/seniors/</loc>
+    <loc>https://playfunlogic.com/category/seniors/</loc>
     <lastmod>2026-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://funlogic.games/category/mazes/</loc>
+    <loc>https://playfunlogic.com/category/mazes/</loc>
     <lastmod>2026-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://funlogic.games/category/problemsolving/</loc>
+    <loc>https://playfunlogic.com/category/problemsolving/</loc>
     <lastmod>2026-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://funlogic.games/category/puzzle/</loc>
+    <loc>https://playfunlogic.com/category/puzzle/</loc>
     <lastmod>2026-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://funlogic.games/category/memory/</loc>
+    <loc>https://playfunlogic.com/category/memory/</loc>
     <lastmod>2026-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://funlogic.games/category/all-brain/</loc>
+    <loc>https://playfunlogic.com/category/all-brain/</loc>
     <lastmod>2026-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
@@ -120,625 +120,613 @@
 
   <!-- 104 Official Games Landing Pages -->
   <url>
-    <loc>https://funlogic.games/game/sliding-puzzle-15/</loc>
+    <loc>https://playfunlogic.com/game/sliding-puzzle-15/</loc>
     <lastmod>2026-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://funlogic.games/game/game-2048-5x5/</loc>
+    <loc>https://playfunlogic.com/game/game-2048-5x5/</loc>
     <lastmod>2026-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://funlogic.games/game/2048-classic/</loc>
+    <loc>https://playfunlogic.com/game/game-2048-fibonacci/</loc>
     <lastmod>2026-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://funlogic.games/game/game-2048-classic/</loc>
+    <loc>https://playfunlogic.com/game/ancient-egypt-explorers---logic-grid/</loc>
     <lastmod>2026-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://funlogic.games/game/game-2048-fibonacci/</loc>
+    <loc>https://playfunlogic.com/game/animal-mix-kids/</loc>
     <lastmod>2026-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://funlogic.games/game/ancient-egypt-explorers---logic-grid/</loc>
+    <loc>https://playfunlogic.com/game/animal-tictac-kids/</loc>
     <lastmod>2026-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://funlogic.games/game/animal-mix-kids/</loc>
+    <loc>https://playfunlogic.com/game/ball-bounce-target/</loc>
     <lastmod>2026-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://funlogic.games/game/animal-tictac-kids/</loc>
+    <loc>https://playfunlogic.com/game/ball-sort-puzzle/</loc>
     <lastmod>2026-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://funlogic.games/game/ball-bounce-target/</loc>
+    <loc>https://playfunlogic.com/game/big-tile-match/</loc>
     <lastmod>2026-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://funlogic.games/game/ball-sort-puzzle/</loc>
+    <loc>https://playfunlogic.com/game/box-push-easy/</loc>
     <lastmod>2026-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://funlogic.games/game/big-tile-match/</loc>
+    <loc>https://playfunlogic.com/game/bunny-trail-kids/</loc>
     <lastmod>2026-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://funlogic.games/game/box-push-easy/</loc>
+    <loc>https://playfunlogic.com/game/calm-maze/</loc>
     <lastmod>2026-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://funlogic.games/game/bunny-trail-kids/</loc>
+    <loc>https://playfunlogic.com/game/chess-mate-in-one/</loc>
     <lastmod>2026-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://funlogic.games/game/calm-maze/</loc>
+    <loc>https://playfunlogic.com/game/07-time-paradox-chronos/</loc>
     <lastmod>2026-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://funlogic.games/game/chess-mate-in-one/</loc>
+    <loc>https://playfunlogic.com/game/city-parking-jam/</loc>
     <lastmod>2026-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://funlogic.games/game/07-time-paradox-chronos/</loc>
+    <loc>https://playfunlogic.com/game/clock-gears---ratio-&-speed-challenge/</loc>
     <lastmod>2026-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://funlogic.games/game/city-parking-jam/</loc>
+    <loc>https://playfunlogic.com/game/color-parrot-kids/</loc>
     <lastmod>2026-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://funlogic.games/game/clock-gears---ratio-&-speed-challenge/</loc>
+    <loc>https://playfunlogic.com/game/color-sort/</loc>
     <lastmod>2026-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://funlogic.games/game/color-parrot-kids/</loc>
+    <loc>https://playfunlogic.com/game/cut-the-rope/</loc>
     <lastmod>2026-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://funlogic.games/game/color-sort/</loc>
+    <loc>https://playfunlogic.com/game/19-cyber-dystopia-memories/</loc>
     <lastmod>2026-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://funlogic.games/game/cut-the-rope/</loc>
+    <loc>https://playfunlogic.com/game/sudoku-daily/</loc>
     <lastmod>2026-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://funlogic.games/game/19-cyber-dystopia-memories/</loc>
+    <loc>https://playfunlogic.com/game/04-death-on-the-nile/</loc>
     <lastmod>2026-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://funlogic.games/game/sudoku-daily/</loc>
+    <loc>https://playfunlogic.com/game/05-deep-space-chimera/</loc>
     <lastmod>2026-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://funlogic.games/game/04-death-on-the-nile/</loc>
+    <loc>https://playfunlogic.com/game/domino-classic/</loc>
     <lastmod>2026-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://funlogic.games/game/05-deep-space-chimera/</loc>
+    <loc>https://playfunlogic.com/game/easy-sudoku/</loc>
     <lastmod>2026-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://funlogic.games/game/domino-classic/</loc>
+    <loc>https://playfunlogic.com/game/fruit-merge-kids/</loc>
     <lastmod>2026-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://funlogic.games/game/easy-sudoku/</loc>
+    <loc>https://playfunlogic.com/game/garden-flow/</loc>
     <lastmod>2026-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://funlogic.games/game/fruit-merge-kids/</loc>
+    <loc>https://playfunlogic.com/game/geometric-cut-master/</loc>
     <lastmod>2026-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://funlogic.games/game/garden-flow/</loc>
+    <loc>https://playfunlogic.com/game/hacker-logic/</loc>
     <lastmod>2026-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://funlogic.games/game/geometric-cut-master/</loc>
+    <loc>https://playfunlogic.com/game/large-tube-sort/</loc>
     <lastmod>2026-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://funlogic.games/game/hacker-logic/</loc>
+    <loc>https://playfunlogic.com/game/lego-stack-kids/</loc>
     <lastmod>2026-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://funlogic.games/game/large-tube-sort/</loc>
+    <loc>https://playfunlogic.com/game/lights-out-matrix/</loc>
     <lastmod>2026-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://funlogic.games/game/lego-stack-kids/</loc>
+    <loc>https://playfunlogic.com/game/liquid-sort/</loc>
     <lastmod>2026-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://funlogic.games/game/lights-out-matrix/</loc>
+    <loc>https://playfunlogic.com/game/logic-grid---who-owns-the-fish_/</loc>
     <lastmod>2026-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://funlogic.games/game/liquid-sort/</loc>
+    <loc>https://playfunlogic.com/game/logic-pattern-series/</loc>
     <lastmod>2026-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://funlogic.games/game/logic-grid---who-owns-the-fish_/</loc>
+    <loc>https://playfunlogic.com/game/mahjong-24-tiles/</loc>
     <lastmod>2026-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://funlogic.games/game/logic-pattern-series/</loc>
+    <loc>https://playfunlogic.com/game/mahjong-connect/</loc>
     <lastmod>2026-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://funlogic.games/game/mahjong-24-tiles/</loc>
+    <loc>https://playfunlogic.com/game/mahjong-dimensions-3d/</loc>
     <lastmod>2026-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://funlogic.games/game/mahjong-connect/</loc>
+    <loc>https://playfunlogic.com/game/mahjong-solitaire/</loc>
     <lastmod>2026-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://funlogic.games/game/mahjong-dimensions-3d/</loc>
+    <loc>https://playfunlogic.com/game/mahjong-triple/</loc>
     <lastmod>2026-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://funlogic.games/game/mahjong-solitaire/</loc>
+    <loc>https://playfunlogic.com/game/15-mars-colony-breach/</loc>
     <lastmod>2026-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://funlogic.games/game/mahjong-triple/</loc>
+    <loc>https://playfunlogic.com/game/matchstick-logic/</loc>
     <lastmod>2026-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://funlogic.games/game/15-mars-colony-breach/</loc>
+    <loc>https://playfunlogic.com/game/math-2048-operations/</loc>
     <lastmod>2026-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://funlogic.games/game/matchstick-logic/</loc>
+    <loc>https://playfunlogic.com/game/math-bridge-builder/</loc>
     <lastmod>2026-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://funlogic.games/game/math-2048-operations/</loc>
+    <loc>https://playfunlogic.com/game/memory-care/</loc>
     <lastmod>2026-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://funlogic.games/game/math-bridge-builder/</loc>
+    <loc>https://playfunlogic.com/game/memory-palace---the-mansion/</loc>
     <lastmod>2026-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://funlogic.games/game/memory-care/</loc>
+    <loc>https://playfunlogic.com/game/metro-subway-train-yard/</loc>
     <lastmod>2026-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://funlogic.games/game/memory-palace---the-mansion/</loc>
+    <loc>https://playfunlogic.com/game/campo-minado/</loc>
     <lastmod>2026-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://funlogic.games/game/metro-subway-train-yard/</loc>
+    <loc>https://playfunlogic.com/game/01-murder-orient-express/</loc>
     <lastmod>2026-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://funlogic.games/game/campo-minado/</loc>
+    <loc>https://playfunlogic.com/game/museum-art-heist---logic-grid/</loc>
     <lastmod>2026-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://funlogic.games/game/01-murder-orient-express/</loc>
+    <loc>https://playfunlogic.com/game/03-cyberpunk-neon-syndicate/</loc>
     <lastmod>2026-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://funlogic.games/game/museum-art-heist---logic-grid/</loc>
+    <loc>https://playfunlogic.com/game/11-nexus-protocol-rogue-ai/</loc>
     <lastmod>2026-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://funlogic.games/game/03-cyberpunk-neon-syndicate/</loc>
+    <loc>https://playfunlogic.com/game/number-calm/</loc>
     <lastmod>2026-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://funlogic.games/game/11-nexus-protocol-rogue-ai/</loc>
+    <loc>https://playfunlogic.com/game/number-farm-kids/</loc>
     <lastmod>2026-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://funlogic.games/game/number-calm/</loc>
+    <loc>https://playfunlogic.com/game/number-link-flow/</loc>
     <lastmod>2026-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://funlogic.games/game/number-farm-kids/</loc>
+    <loc>https://playfunlogic.com/game/number-merge-10-100/</loc>
     <lastmod>2026-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://funlogic.games/game/number-link-flow/</loc>
+    <loc>https://playfunlogic.com/game/number-sequence---the-vault/</loc>
     <lastmod>2026-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://funlogic.games/game/number-merge-10-100/</loc>
+    <loc>https://playfunlogic.com/game/path-logic---factory-escape/</loc>
     <lastmod>2026-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://funlogic.games/game/number-sequence---the-vault/</loc>
+    <loc>https://playfunlogic.com/game/resta-1/</loc>
     <lastmod>2026-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://funlogic.games/game/path-logic---factory-escape/</loc>
+    <loc>https://playfunlogic.com/game/physical-balance---the-scale/</loc>
     <lastmod>2026-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://funlogic.games/game/resta-1/</loc>
+    <loc>https://playfunlogic.com/game/pipe-flow-plumber/</loc>
     <lastmod>2026-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://funlogic.games/game/physical-balance---the-scale/</loc>
+    <loc>https://playfunlogic.com/game/17-quantum-lab-theft/</loc>
     <lastmod>2026-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://funlogic.games/game/pipe-flow-plumber/</loc>
+    <loc>https://playfunlogic.com/game/river-crossing-easy/</loc>
     <lastmod>2026-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://funlogic.games/game/17-quantum-lab-theft/</loc>
+    <loc>https://playfunlogic.com/game/robox/</loc>
     <lastmod>2026-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://funlogic.games/game/river-crossing-easy/</loc>
+    <loc>https://playfunlogic.com/game/save-the-dog/</loc>
     <lastmod>2026-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://funlogic.games/game/robox/</loc>
+    <loc>https://playfunlogic.com/game/science-fair_-logic-grid/</loc>
     <lastmod>2026-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://funlogic.games/game/save-the-dog/</loc>
+    <loc>https://playfunlogic.com/game/shadow-logic/</loc>
     <lastmod>2026-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://funlogic.games/game/science-fair_-logic-grid/</loc>
+    <loc>https://playfunlogic.com/game/08-noir-shadows-chicago/</loc>
     <lastmod>2026-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://funlogic.games/game/shadow-logic/</loc>
+    <loc>https://playfunlogic.com/game/shape-fit-relax/</loc>
     <lastmod>2026-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://funlogic.games/game/08-noir-shadows-chicago/</loc>
+    <loc>https://playfunlogic.com/game/shape-puzzle-kids/</loc>
     <lastmod>2026-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://funlogic.games/game/shape-fit-relax/</loc>
+    <loc>https://playfunlogic.com/game/sky-control---air-traffic-collision-avoidance/</loc>
     <lastmod>2026-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://funlogic.games/game/shape-puzzle-kids/</loc>
+    <loc>https://playfunlogic.com/game/sokoban-warehouse/</loc>
     <lastmod>2026-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://funlogic.games/game/sky-control---air-traffic-collision-avoidance/</loc>
+    <loc>https://playfunlogic.com/game/sort-water/</loc>
     <lastmod>2026-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://funlogic.games/game/sokoban-warehouse/</loc>
+    <loc>https://playfunlogic.com/game/spider-solitaire/</loc>
     <lastmod>2026-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://funlogic.games/game/sort-water/</loc>
+    <loc>https://playfunlogic.com/game/09-station-alpha-sabotage/</loc>
     <lastmod>2026-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://funlogic.games/game/spider-solitaire/</loc>
+    <loc>https://playfunlogic.com/game/13-sub-zero-outpost-31/</loc>
     <lastmod>2026-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://funlogic.games/game/09-station-alpha-sabotage/</loc>
+    <loc>https://playfunlogic.com/game/sudoku-6x6/</loc>
     <lastmod>2026-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://funlogic.games/game/13-sub-zero-outpost-31/</loc>
+    <loc>https://playfunlogic.com/game/sudoku-classic/</loc>
     <lastmod>2026-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://funlogic.games/game/sudoku-6x6/</loc>
+    <loc>https://playfunlogic.com/game/sudoku-x/</loc>
     <lastmod>2026-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://funlogic.games/game/sudoku-classic/</loc>
+    <loc>https://playfunlogic.com/game/teddy-pair-kids/</loc>
     <lastmod>2026-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://funlogic.games/game/sudoku-x/</loc>
+    <loc>https://playfunlogic.com/game/test-tube-sort/</loc>
     <lastmod>2026-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://funlogic.games/game/teddy-pair-kids/</loc>
+    <loc>https://playfunlogic.com/game/14-arsenic-tea-morrington/</loc>
     <lastmod>2026-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://funlogic.games/game/test-tube-sort/</loc>
+    <loc>https://playfunlogic.com/game/10-curse-blackwood-abbey/</loc>
     <lastmod>2026-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://funlogic.games/game/14-arsenic-tea-morrington/</loc>
+    <loc>https://playfunlogic.com/game/20-lighthouse-enigma/</loc>
     <lastmod>2026-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://funlogic.games/game/10-curse-blackwood-abbey/</loc>
+    <loc>https://playfunlogic.com/game/18-fog-over-whitechapel/</loc>
     <lastmod>2026-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://funlogic.games/game/20-lighthouse-enigma/</loc>
+    <loc>https://playfunlogic.com/game/02-baker-street-hound/</loc>
     <lastmod>2026-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://funlogic.games/game/18-fog-over-whitechapel/</loc>
+    <loc>https://playfunlogic.com/game/the-lost-keys---logic-puzzle/</loc>
     <lastmod>2026-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://funlogic.games/game/02-baker-street-hound/</loc>
+    <loc>https://playfunlogic.com/game/06-blackwood-manor/</loc>
     <lastmod>2026-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://funlogic.games/game/the-lost-keys---logic-puzzle/</loc>
+    <loc>https://playfunlogic.com/game/16-phantom-opera-vaults/</loc>
     <lastmod>2026-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://funlogic.games/game/06-blackwood-manor/</loc>
+    <loc>https://playfunlogic.com/game/the-poisoned-coffee---liar's-logic/</loc>
     <lastmod>2026-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://funlogic.games/game/16-phantom-opera-vaults/</loc>
+    <loc>https://playfunlogic.com/game/the-secret-code_-vault-breaker/</loc>
     <lastmod>2026-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://funlogic.games/game/the-poisoned-coffee---liar's-logic/</loc>
+    <loc>https://playfunlogic.com/game/12-venice-carnival-conspiracy/</loc>
     <lastmod>2026-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://funlogic.games/game/the-secret-code_-vault-breaker/</loc>
+    <loc>https://playfunlogic.com/game/jogo-da-velha/</loc>
     <lastmod>2026-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://funlogic.games/game/12-venice-carnival-conspiracy/</loc>
+    <loc>https://playfunlogic.com/game/tube-sort-3d/</loc>
     <lastmod>2026-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://funlogic.games/game/jogo-da-velha/</loc>
+    <loc>https://playfunlogic.com/game/unblock-red-key/</loc>
     <lastmod>2026-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://funlogic.games/game/tube-sort-3d/</loc>
+    <loc>https://playfunlogic.com/game/water-puzzle/</loc>
     <lastmod>2026-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://funlogic.games/game/unblock-red-key/</loc>
+    <loc>https://playfunlogic.com/game/water-sort-100-levels/</loc>
     <lastmod>2026-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://funlogic.games/game/water-puzzle/</loc>
+    <loc>https://playfunlogic.com/game/water-sort-12-tubes/</loc>
     <lastmod>2026-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://funlogic.games/game/water-sort-100-levels/</loc>
+    <loc>https://playfunlogic.com/game/water-sort-5-colors/</loc>
     <lastmod>2026-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://funlogic.games/game/water-sort-12-tubes/</loc>
+    <loc>https://playfunlogic.com/game/water-sort-lab/</loc>
     <lastmod>2026-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://funlogic.games/game/water-sort-5-colors/</loc>
+    <loc>https://playfunlogic.com/game/water-flower-kids/</loc>
     <lastmod>2026-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://funlogic.games/game/water-sort-lab/</loc>
-    <lastmod>2026-09-24</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://funlogic.games/game/water-flower-kids/</loc>
-    <lastmod>2026-09-24</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://funlogic.games/game/2048-merge-game/</loc>
+    <loc>https://playfunlogic.com/game/2048-merge-game/</loc>
     <lastmod>2026-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>

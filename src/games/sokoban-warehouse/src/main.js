@@ -1,4 +1,4 @@
-import './index.css';
+
 import { SokobanGame, loadSaveData, writeSaveData } from './game/gameState.js';
 import { Renderer2D } from './game/renderer2d.js';
 import { LEVELS } from './game/levels.js';

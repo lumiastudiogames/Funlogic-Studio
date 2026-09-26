@@ -77,12 +77,41 @@
     }
   }
 
+  let score = 0;
+  let newlyMergedCoords = [];
+
+  function spawnFruitSparkles(tileEl) {
+    if (!tileEl) return;
+    const rect = tileEl.getBoundingClientRect();
+    const cx = rect.left + rect.width / 2;
+    const cy = rect.top + rect.height / 2;
+    const stars = ['✨', '⭐', '🌟', '✦', '🍓', '🍉'];
+    stars.forEach((s, i) => {
+      const sp = document.createElement('span');
+      sp.className = 'fruit-sparkle';
+      sp.textContent = s;
+      const angle = (i / stars.length) * 2 * Math.PI + (Math.random() - 0.5) * 0.4;
+      const dist = 32 + Math.random() * 28;
+      sp.style.setProperty('--dx', `${Math.cos(angle) * dist}px`);
+      sp.style.setProperty('--dy', `${Math.sin(angle) * dist}px`);
+      sp.style.setProperty('--rot', `${(Math.random() - 0.5) * 120}deg`);
+      sp.style.left = `${cx}px`;
+      sp.style.top = `${cy}px`;
+      document.body.appendChild(sp);
+      setTimeout(() => sp.remove(), 700);
+    });
+  }
+
   function initGame() {
     grid = [
       [0, 0, 0],
       [0, 0, 0],
       [0, 0, 0]
     ];
+    score = 0;
+    const scoreEl = document.getElementById('score-val');
+    if (scoreEl) scoreEl.textContent = '0';
+    newlyMergedCoords = [];
     isWon = false;
     isGameOver = false;
     startTime = Date.now();
@@ -106,22 +135,56 @@
     grid[choice.r][choice.c] = Math.random() < 0.85 ? 2 : 4;
   }
 
+  function updateFruitCards() {
+    let maxVal = 2;
+    for (let r = 0; r < SIZE; r++) {
+      for (let c = 0; c < SIZE; c++) {
+        if (grid[r][c] > maxVal) maxVal = grid[r][c];
+      }
+    }
+
+    const valToTier = { 2: 1, 4: 2, 8: 3, 16: 4, 32: 5 };
+    const currentMaxTier = valToTier[maxVal] || 1;
+
+    document.querySelectorAll('.fruit-card').forEach(card => {
+      const tier = parseInt(card.dataset.tier, 10);
+      if (tier <= currentMaxTier) {
+        card.classList.add('unlocked');
+      } else {
+        card.classList.remove('unlocked');
+      }
+      if (tier === currentMaxTier) {
+        card.classList.add('active');
+      } else {
+        card.classList.remove('active');
+      }
+    });
+  }
+
   function render() {
+    updateFruitCards();
     const container = document.getElementById('tiles-layer');
+    const boardEl = document.getElementById('board-container');
     container.innerHTML = '';
+    const boardWidth = boardEl ? boardEl.clientWidth : 300;
+    const padding = 8;
+    const gap = 8;
+    const cellSize = (boardWidth - (padding * 2) - (gap * (SIZE - 1))) / SIZE;
 
     for (let r = 0; r < SIZE; r++) {
       for (let c = 0; c < SIZE; c++) {
         const val = grid[r][c];
         if (val !== 0) {
           const tile = document.createElement('div');
-          tile.className = `tile tile-${val}`;
-          // Position relative to cell in 300x300 container
-          // cell size is 88px + 8px gap + 8px padding
-          const left = 8 + c * (82 + 8);
-          const top = 8 + r * (82 + 8);
+          const isMerged = newlyMergedCoords.some(coord => coord.r === r && coord.c === c);
+          tile.className = `tile tile-${val}` + (isMerged ? ' tile-merged' : '');
+
+          const left = padding + c * (cellSize + gap);
+          const top = padding + r * (cellSize + gap);
           tile.style.left = `${left}px`;
           tile.style.top = `${top}px`;
+          tile.style.width = `${cellSize}px`;
+          tile.style.height = `${cellSize}px`;
 
           const fruit = FRUITS[val] || { emoji: '✨', name: 'Magic' };
           tile.innerHTML = `
@@ -129,19 +192,28 @@
             <span class="tile-level">${fruit.name}</span>
           `;
           container.appendChild(tile);
+
+          if (isMerged) {
+            setTimeout(() => spawnFruitSparkles(tile), 20);
+          }
         }
       }
     }
+    newlyMergedCoords = [];
   }
 
   function slide(row) {
     let arr = row.filter(v => v !== 0);
     let merged = false;
+    let gained = 0;
+    let mergedIndices = [];
     for (let i = 0; i < arr.length - 1; i++) {
       if (arr[i] === arr[i + 1]) {
         arr[i] *= 2;
+        gained += arr[i];
         arr[i + 1] = 0;
         merged = true;
+        mergedIndices.push(i);
         if (arr[i] === 32 && !isWon) {
           handleWin();
         }
@@ -151,56 +223,80 @@
     while (arr.length < SIZE) {
       arr.push(0);
     }
-    return { arr, merged };
+    return { arr, merged, gained, mergedIndices };
   }
 
   function move(direction) {
     if (isWon || isGameOver) return;
     let moved = false;
     let anyMerged = false;
+    let stepScore = 0;
+    newlyMergedCoords = [];
 
     if (direction === 'left') {
       for (let r = 0; r < SIZE; r++) {
         const oldRow = [...grid[r]];
-        const { arr, merged } = slide(grid[r]);
+        const { arr, merged, gained, mergedIndices } = slide(grid[r]);
         grid[r] = arr;
-        if (merged) anyMerged = true;
+        if (merged) {
+          anyMerged = true;
+          stepScore += gained;
+          mergedIndices.forEach(idx => newlyMergedCoords.push({ r, c: idx }));
+        }
         if (oldRow.some((val, idx) => val !== arr[idx])) moved = true;
       }
     } else if (direction === 'right') {
       for (let r = 0; r < SIZE; r++) {
         const oldRow = [...grid[r]];
         const reversed = [...grid[r]].reverse();
-        const { arr, merged } = slide(reversed);
+        const { arr, merged, gained, mergedIndices } = slide(reversed);
         grid[r] = arr.reverse();
-        if (merged) anyMerged = true;
+        if (merged) {
+          anyMerged = true;
+          stepScore += gained;
+          mergedIndices.forEach(idx => newlyMergedCoords.push({ r, c: (SIZE - 1) - idx }));
+        }
         if (oldRow.some((val, idx) => val !== grid[r][idx])) moved = true;
       }
     } else if (direction === 'up') {
       for (let c = 0; c < SIZE; c++) {
         const col = [grid[0][c], grid[1][c], grid[2][c]];
         const oldCol = [...col];
-        const { arr, merged } = slide(col);
+        const { arr, merged, gained, mergedIndices } = slide(col);
         for (let r = 0; r < SIZE; r++) grid[r][c] = arr[r];
-        if (merged) anyMerged = true;
+        if (merged) {
+          anyMerged = true;
+          stepScore += gained;
+          mergedIndices.forEach(idx => newlyMergedCoords.push({ r: idx, c }));
+        }
         if (oldCol.some((val, idx) => val !== arr[idx])) moved = true;
       }
     } else if (direction === 'down') {
       for (let c = 0; c < SIZE; c++) {
         const col = [grid[2][c], grid[1][c], grid[0][c]];
         const oldCol = [...col];
-        const { arr, merged } = slide(col);
+        const { arr, merged, gained, mergedIndices } = slide(col);
         grid[2][c] = arr[0];
         grid[1][c] = arr[1];
         grid[0][c] = arr[2];
-        if (merged) anyMerged = true;
+        if (merged) {
+          anyMerged = true;
+          stepScore += gained;
+          mergedIndices.forEach(idx => newlyMergedCoords.push({ r: (SIZE - 1) - idx, c }));
+        }
         if (oldCol[0] !== arr[0] || oldCol[1] !== arr[1] || oldCol[2] !== arr[2]) moved = true;
       }
     }
 
     if (moved) {
-      if (anyMerged) playSound('merge');
-      else playSound('slide');
+      if (anyMerged) {
+        score += stepScore;
+        const scoreEl = document.getElementById('score-val');
+        if (scoreEl) scoreEl.textContent = score;
+        playSound('merge');
+      } else {
+        playSound('slide');
+      }
 
       spawnRandom();
       render();
@@ -309,11 +405,13 @@
     }
   });
 
-  // Optional D-pad Buttons
-  document.getElementById('btn-up')?.addEventListener('click', () => move('up'));
-  document.getElementById('btn-left')?.addEventListener('click', () => move('left'));
-  document.getElementById('btn-down')?.addEventListener('click', () => move('down'));
-  document.getElementById('btn-right')?.addEventListener('click', () => move('right'));
+  // D-pad Buttons
+  document.querySelectorAll('.d-pad-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const dir = btn.dataset.dir ? btn.dataset.dir.toLowerCase() : '';
+      if (dir) move(dir);
+    });
+  });
 
   document.getElementById('btn-restart').addEventListener('click', initGame);
   document.getElementById('btn-play-again').addEventListener('click', initGame);

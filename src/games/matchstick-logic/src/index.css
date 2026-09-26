@@ -1,5 +1,4 @@
-@import "tailwindcss";
-
+/* tailwindcss loaded via cdn */
 * {
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;

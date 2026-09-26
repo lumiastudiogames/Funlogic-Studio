@@ -157,31 +157,90 @@ body {
   pointer-events: none;
 }
 
-/* 3D Circular Ball Tiles */
-.ball-tile {
+/* 3D Circular Billiard / Pool Ball Tiles */
+.ball-tile, .tile {
   position: absolute;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 900;
-  font-size: clamp(18px, 5vw, 26px);
-  color: #ffffff;
-  transition: transform 0.12s ease-in-out;
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.35), inset 2px 2px 4px rgba(255, 255, 255, 0.6), inset -2px -2px 6px rgba(0, 0, 0, 0.4);
+  font-size: clamp(14px, 4vw, 22px);
+  color: #0f172a;
+  transition: transform 0.16s cubic-bezier(0.2, 0.85, 0.4, 1.1);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5), inset 3px 3px 6px rgba(255, 255, 255, 0.7), inset -3px -3px 8px rgba(0, 0, 0, 0.6);
   will-change: transform;
+  overflow: hidden;
 }
 
-.ball-10 { background: radial-gradient(circle at 35% 35%, #93c5fd, #2563eb 70%, #1e3a8a); }
-.ball-20 { background: radial-gradient(circle at 35% 35%, #a7f3d0, #059669 70%, #064e3b); }
-.ball-30 { background: radial-gradient(circle at 35% 35%, #fde68a, #d97706 70%, #92400e); }
-.ball-40 { background: radial-gradient(circle at 35% 35%, #fdba74, #ea580c 70%, #9a3412); }
-.ball-50 { background: radial-gradient(circle at 35% 35%, #fbcfe8, #db2777 70%, #831843); }
-.ball-60 { background: radial-gradient(circle at 35% 35%, #e9d5ff, #9333ea 70%, #581c87); }
-.ball-70 { background: radial-gradient(circle at 35% 35%, #a5f3fc, #0891b2 70%, #164e63); }
-.ball-80 { background: radial-gradient(circle at 35% 35%, #fca5a5, #dc2626 70%, #7f1d1d); }
-.ball-90 { background: radial-gradient(circle at 35% 35%, #cbd5e1, #475569 70%, #1e293b); }
-.ball-100 { background: radial-gradient(circle at 35% 35%, #fef08a, #eab308 60%, #713f12); box-shadow: 0 0 25px #facc15; }
+/* Billiard Center White Badge */
+.ball-tile .ball-number, .tile .ball-number {
+  position: relative;
+  z-index: 2;
+  width: 54%;
+  height: 54%;
+  background: radial-gradient(circle at 40% 40%, #ffffff 0%, #f1f5f9 70%, #cbd5e1 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35), inset 0 1px 2px rgba(255, 255, 255, 0.9);
+  color: #0f172a;
+  font-weight: 900;
+  letter-spacing: -0.5px;
+}
+
+/* Pool Ball Colors */
+.ball-10, .tile-10 { background: radial-gradient(circle at 30% 30%, #fde047, #eab308 65%, #854d0e); }
+.ball-20, .tile-20 { background: radial-gradient(circle at 30% 30%, #60a5fa, #2563eb 65%, #1e3a8a); }
+.ball-30, .tile-30 { background: radial-gradient(circle at 30% 30%, #f87171, #dc2626 65%, #7f1d1d); }
+.ball-40, .tile-40 { background: radial-gradient(circle at 30% 30%, #c084fc, #9333ea 65%, #581c87); }
+.ball-50, .tile-50 { background: radial-gradient(circle at 30% 30%, #fb923c, #ea580c 65%, #7c2d12); }
+.ball-60, .tile-60 { background: radial-gradient(circle at 30% 30%, #4ade80, #16a34a 65%, #14532d); }
+.ball-70, .tile-70 { background: radial-gradient(circle at 30% 30%, #f472b6, #db2777 65%, #831843); }
+.ball-80, .tile-80 { background: radial-gradient(circle at 30% 30%, #64748b, #1e293b 65%, #020617); } /* Classic 8-Ball Black */
+.ball-90, .tile-90 { background: radial-gradient(circle at 30% 30%, #38bdf8, #0284c7 65%, #0c4a6e); }
+.ball-100, .tile-100 { 
+  background: radial-gradient(circle at 30% 30%, #fef08a, #eab308 50%, #ca8a04 80%, #713f12); 
+  box-shadow: 0 0 25px rgba(250, 204, 21, 0.8), 0 8px 16px rgba(0, 0, 0, 0.5); 
+}
+.ball--10, .tile--10, .tile-neg-10 {
+  background: radial-gradient(circle at 30% 30%, #ef4444, #991b1b 65%, #450a0a);
+  box-shadow: 0 0 15px rgba(239, 68, 68, 0.6), 0 8px 16px rgba(0, 0, 0, 0.5);
+}
+.ball--10 .ball-number, .tile--10 .ball-number, .tile-neg-10 .ball-number {
+  color: #dc2626;
+  border: 1.5px solid #ef4444;
+}
+
+.ball--20, .tile--20, .tile-neg-20 {
+  background: radial-gradient(circle at 30% 30%, #c084fc, #7e22ce 65%, #3b0764);
+  box-shadow: 0 0 15px rgba(192, 132, 252, 0.6), 0 8px 16px rgba(0, 0, 0, 0.5);
+}
+.ball--20 .ball-number, .tile--20 .ball-number, .tile-neg-20 .ball-number {
+  color: #7e22ce;
+  border: 1.5px solid #a855f7;
+}
+
+.ball--30, .tile--30, .tile-neg-30 {
+  background: radial-gradient(circle at 30% 30%, #f43f5e, #be123c 65%, #4c0519);
+  box-shadow: 0 0 15px rgba(244, 63, 94, 0.6), 0 8px 16px rgba(0, 0, 0, 0.5);
+}
+.ball--30 .ball-number, .tile--30 .ball-number, .tile-neg-30 .ball-number {
+  color: #be123c;
+  border: 1.5px solid #f43f5e;
+}
+
+/* Billiard rail cushion bounce */
+.rail-cushion-hit {
+  animation: cushionPulse 0.18s ease-out;
+}
+
+@keyframes cushionPulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(0.975); }
+  100% { transform: scale(1); }
+}
 
 .mobile-controls {
   display: grid;

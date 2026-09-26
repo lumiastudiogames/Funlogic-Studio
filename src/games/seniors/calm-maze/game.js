@@ -53,6 +53,53 @@
     }
   }
 
+  // Verify and guarantee maze solvability from (0,0) to (8,8)
+  function verifyAndGuaranteeSolution() {
+    const queue = [[0, 0]];
+    const seen = new Set(['0,0']);
+    const dirs = [
+      [-1, 0, 0, 2], // up
+      [0, 1, 1, 3],  // right
+      [1, 0, 2, 0],  // down
+      [0, -1, 3, 1]  // left
+    ];
+
+    while (queue.length > 0) {
+      const [cr, cc] = queue.shift();
+      if (cr === goal.r && cc === goal.c) return true;
+
+      for (const [dr, dc, wIdx, oppIdx] of dirs) {
+        const nr = cr + dr;
+        const nc = cc + dc;
+        if (nr >= 0 && nr < 9 && nc >= 0 && nc < 9) {
+          if (!MAZE[cr][cc][wIdx] && !MAZE[nr][nc][oppIdx]) {
+            const key = `${nr},${nc}`;
+            if (!seen.has(key)) {
+              seen.add(key);
+              queue.push([nr, nc]);
+            }
+          }
+        }
+      }
+    }
+
+    // Carve corridor if blocked
+    let r = 0, c = 0;
+    while (r < 8 || c < 8) {
+      if (r < 8 && (c === 8 || Math.random() < 0.5)) {
+        MAZE[r][c][2] = 0;
+        MAZE[r + 1][c][0] = 0;
+        r++;
+      } else if (c < 8) {
+        MAZE[r][c][1] = 0;
+        MAZE[r][c + 1][3] = 0;
+        c++;
+      }
+    }
+    return true;
+  }
+  verifyAndGuaranteeSolution();
+
   // Audio Synth
   let audioCtx = null;
   function getAudioContext() {
@@ -230,6 +277,13 @@
           dot.className = 'trail-dot';
           cell.appendChild(dot);
         }
+
+        cell.addEventListener('click', () => {
+          if (r === player.r - 1 && c === player.c) move('UP');
+          else if (r === player.r + 1 && c === player.c) move('DOWN');
+          else if (r === player.r && c === player.c - 1) move('LEFT');
+          else if (r === player.r && c === player.c + 1) move('RIGHT');
+        });
 
         mazeEl.appendChild(cell);
       }

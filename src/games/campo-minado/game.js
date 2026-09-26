@@ -102,6 +102,86 @@
   const timerEl = document.getElementById('timer');
   const faceBtn = document.getElementById('face-btn');
   const btnFlagToggle = document.getElementById('btn-flag-toggle');
+  const canvasEl = document.getElementById('explosion-canvas');
+  let pCtx = null;
+  let particles = [];
+  let animId = null;
+
+  function triggerExplosion(targetEl) {
+    if (!canvasEl) return;
+    pCtx = canvasEl.getContext('2d');
+    const container = canvasEl.parentElement;
+    const rect = container.getBoundingClientRect();
+    canvasEl.width = rect.width;
+    canvasEl.height = rect.height;
+
+    let originX = rect.width / 2;
+    let originY = rect.height / 2;
+    if (targetEl) {
+      const cellRect = targetEl.getBoundingClientRect();
+      originX = cellRect.left - rect.left + cellRect.width / 2;
+      originY = cellRect.top - rect.top + cellRect.height / 2;
+    }
+
+    const stage = document.getElementById('game-stage');
+    if (stage) {
+      stage.classList.remove('board-shaking');
+      void stage.offsetWidth;
+      stage.classList.add('board-shaking');
+    }
+
+    particles = [];
+    const colors = ['#f97316', '#ef4444', '#facc15', '#fbbf24', '#ffffff', '#78716c', '#475569'];
+    for (let i = 0; i < 70; i++) {
+      const angle = Math.random() * Math.PI * 2;
+      const speed = 2 + Math.random() * 9;
+      particles.push({
+        x: originX,
+        y: originY,
+        vx: Math.cos(angle) * speed,
+        vy: Math.sin(angle) * speed - (1 + Math.random() * 3),
+        size: 3 + Math.random() * 6,
+        color: colors[Math.floor(Math.random() * colors.length)],
+        alpha: 1,
+        decay: 0.015 + Math.random() * 0.02,
+        gravity: 0.18,
+        rotation: Math.random() * Math.PI * 2,
+        rotSpeed: (Math.random() - 0.5) * 0.25
+      });
+    }
+
+    if (animId) cancelAnimationFrame(animId);
+    function frame() {
+      pCtx.clearRect(0, 0, canvasEl.width, canvasEl.height);
+      let active = false;
+      for (let p of particles) {
+        p.x += p.vx;
+        p.y += p.vy;
+        p.vy += p.gravity;
+        p.vx *= 0.98;
+        p.alpha -= p.decay;
+        p.rotation += p.rotSpeed;
+        if (p.alpha > 0) {
+          active = true;
+          pCtx.save();
+          pCtx.globalAlpha = Math.max(0, p.alpha);
+          pCtx.translate(p.x, p.y);
+          pCtx.rotate(p.rotation);
+          pCtx.fillStyle = p.color;
+          pCtx.shadowBlur = 6;
+          pCtx.shadowColor = p.color;
+          pCtx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);
+          pCtx.restore();
+        }
+      }
+      if (active) {
+        animId = requestAnimationFrame(frame);
+      } else {
+        pCtx.clearRect(0, 0, canvasEl.width, canvasEl.height);
+      }
+    }
+    frame();
+  }
 
   function initGame(diff = currentDiff) {
     currentDiff = diff;
@@ -113,6 +193,9 @@
     firstClick = true;
     gameOver = false;
     elapsedSeconds = 0;
+
+    if (animId) cancelAnimationFrame(animId);
+    if (canvasEl && pCtx) pCtx.clearRect(0, 0, canvasEl.width, canvasEl.height);
 
     clearInterval(timerInterval);
     timerEl.textContent = '000';
@@ -235,6 +318,7 @@
       clearInterval(timerInterval);
       faceBtn.textContent = '😵';
       AudioEngine.playExplosion();
+      triggerExplosion(e ? e.target : null);
 
       // Reveal all mines
       for (let i = 0; i < rows; i++) {

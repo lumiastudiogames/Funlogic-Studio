@@ -1,5 +1,4 @@
-@import "tailwindcss";
-
+/* tailwindcss loaded via cdn */
 /* Universal Mobile & Touch Reset */
 * {
   -webkit-tap-highlight-color: transparent;

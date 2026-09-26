@@ -131,42 +131,39 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 10px;
+  padding: 6px 10px;
   position: relative;
   background: radial-gradient(circle at 50% 30%, #fff7ed 0%, #ffedd5 100%);
-  overflow-y: auto;
+  min-height: 0;
+  overflow: hidden;
 }
 
 .instructions-banner {
-  font-size: 17px;
+  font-size: 14px;
   font-weight: 700;
   color: #9a3412;
   text-align: center;
-  margin-bottom: 12px;
-  padding: 6px 18px;
+  margin-bottom: 8px;
+  padding: 4px 14px;
   background: #ffffff;
   border-radius: 9999px;
   border: 1px solid #fb923c;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 }
 
-/* 6x6 Map Grid */
+/* 6x6 to 7x7 Map Grid - Responsive Mobile Portrait */
 .sokoban-grid {
   display: grid;
-  grid-template-columns: repeat(6, 48px);
-  grid-template-rows: repeat(6, 48px);
-  gap: 4px;
-  background: #78350f;
+  width: min(88vw, 360px, 46vh);
+  height: min(88vw, 360px, 46vh);
+  grid-template-columns: repeat(6, 1fr);
+  grid-template-rows: repeat(6, 1fr);
+  gap: 5px;
+  background: #451a03;
   padding: 8px;
-  border-radius: 18px;
-  box-shadow: 0 12px 24px -4px rgba(120, 53, 15, 0.25);
-}
-
-@media (min-width: 480px) {
-  .sokoban-grid {
-    grid-template-columns: repeat(6, 56px);
-    grid-template-rows: repeat(6, 56px);
-    gap: 6px;
-  }
+  border-radius: 20px;
+  border: 3px solid #78350f;
+  box-shadow: 0 14px 28px -4px rgba(69, 26, 3, 0.4), inset 0 2px 4px rgba(255,255,255,0.1);
 }
 
 .sokoban-cell {
@@ -174,59 +171,132 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 32px;
+  font-size: clamp(22px, 5.5vw, 30px);
   position: relative;
+  user-select: none;
+  transition: all 0.15s ease;
 }
 
+/* Pseudo-3D Tactile Wall */
 .cell-wall {
-  background: #451a03;
-  box-shadow: inset 0 2px 4px rgba(255, 255, 255, 0.15);
+  background: linear-gradient(180deg, #78350f 0%, #451a03 70%, #291002 100%);
+  border: 1px solid #92400e;
+  border-top: 2px solid #b45309;
+  border-radius: 8px;
+  box-shadow: 0 5px 0 #1c0b02, 0 7px 10px rgba(0, 0, 0, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.25);
+  transform: translateY(-2px);
 }
 
+/* Warehouse Floor Tiles */
 .cell-floor {
-  background: #ffedd5;
-  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05);
+  background: radial-gradient(circle at center, #fed7aa 20%, #fdba74 100%);
+  border-radius: 6px;
+  box-shadow: inset 0 1px 3px rgba(120, 53, 15, 0.2), inset 0 -1px 1px rgba(255,255,255,0.4);
 }
 
+/* Target Goal with Glowing Ring */
 .cell-goal {
-  background: #fed7aa;
+  background: radial-gradient(circle at center, #fef08a 0%, #facc15 60%, #eab308 100%);
+  border: 2px dashed #ca8a04;
+  border-radius: 50%;
+  box-shadow: inset 0 0 8px rgba(202, 138, 4, 0.5), 0 0 12px rgba(250, 204, 21, 0.6);
+  animation: goalPulse 2s infinite ease-in-out;
 }
 
-.cell-box-on-goal {
-  box-shadow: 0 0 12px #22c55e;
+@keyframes goalPulse {
+  0%, 100% { transform: scale(0.92); opacity: 0.9; }
+  50% { transform: scale(1); opacity: 1; box-shadow: inset 0 0 10px #eab308, 0 0 16px #facc15; }
 }
 
-/* 60px D-Pad */
+/* Vinyl Stickers with Die-Cut Contour & Pseudo-3D */
+.sticker-3d {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 92%;
+  height: 92%;
+  border-radius: 12px;
+  position: relative;
+  transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* 3D Wooden Crate with Vinyl Contour */
+.sticker-box {
+  background: linear-gradient(135deg, #fbbf24 0%, #d97706 60%, #92400e 100%);
+  border: 2px solid #ffffff;
+  border-top: 3px solid #fef08a;
+  border-radius: 12px;
+  box-shadow: 0 5px 0 #78350f, 0 8px 12px rgba(0, 0, 0, 0.35), inset 0 2px 2px rgba(255,255,255,0.7);
+  transform: translateY(-3px);
+  filter: drop-shadow(0 2px 3px rgba(0,0,0,0.2));
+}
+
+.sticker-box::before {
+  content: '📦';
+  font-size: clamp(22px, 5.5vw, 28px);
+  filter: drop-shadow(0 1px 2px rgba(0,0,0,0.2));
+}
+
+/* 3D Character Avatar with Vinyl White Edge */
+.sticker-player {
+  background: linear-gradient(180deg, #60a5fa 0%, #3b82f6 60%, #1d4ed8 100%);
+  border: 2.5px solid #ffffff;
+  border-radius: 50%;
+  box-shadow: 0 5px 0 #1e3a8a, 0 8px 14px rgba(0, 0, 0, 0.35), inset 0 2px 2px rgba(255,255,255,0.8);
+  transform: translateY(-3px);
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.25));
+}
+
+.cell-box-on-goal .sticker-box {
+  background: linear-gradient(135deg, #4ade80 0%, #16a34a 60%, #14532d 100%);
+  border: 2.5px solid #ffffff;
+  border-top: 3px solid #bbf7d0;
+  box-shadow: 0 5px 0 #14532d, 0 0 16px #22c55e;
+  animation: bounceGoal 0.45s ease;
+}
+
+.cell-box-on-goal .sticker-box::before {
+  content: '⭐';
+}
+
+@keyframes bounceGoal {
+  0% { transform: scale(0.8); }
+  50% { transform: scale(1.15); }
+  100% { transform: scale(1); }
+}
+
+/* Accessible D-Pad */
 .dpad-container {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 6px;
-  margin-top: 14px;
+  gap: 4px;
+  margin-top: 8px;
+  flex-shrink: 0;
 }
 
 .dpad-row {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: 6px;
 }
 
 .dpad-btn {
-  width: 62px;
-  height: 60px;
-  font-size: 26px;
+  width: clamp(52px, 14vw, 62px);
+  height: clamp(44px, 11vw, 54px);
+  font-size: 22px;
   font-weight: 900;
   background: linear-gradient(180deg, #ffffff 0%, #fff7ed 100%);
   color: #9a3412;
   border: 2px solid #ea580c;
-  border-radius: 18px;
+  border-radius: 14px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 5px 0 #9a3412, 0 6px 12px rgba(154, 52, 18, 0.2);
+  box-shadow: 0 4px 0 #9a3412, 0 4px 8px rgba(154, 52, 18, 0.2);
   transition: transform 0.08s ease, box-shadow 0.08s ease;
 }
 
@@ -235,8 +305,8 @@ body {
 }
 
 .dpad-btn:active {
-  transform: translateY(3px);
-  box-shadow: 0 2px 0 #9a3412, 0 2px 4px rgba(154, 52, 18, 0.15);
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 #9a3412, 0 1px 3px rgba(154, 52, 18, 0.15);
 }
 
 .player-marker {
@@ -259,10 +329,9 @@ body {
 .player-marker.facing-down {
   transform: translateY(2px) scale(1.04);
 }
-}
 
 .game-footer {
-  height: 64px;
+  height: 56px;
   background: #fff7ed;
   border-top: 2px solid #fed7aa;
   display: flex;

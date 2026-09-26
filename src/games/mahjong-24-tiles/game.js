@@ -220,6 +220,15 @@
         });
       }
 
+      const retryOverBtn = document.getElementById('btn-retry-over');
+      if (retryOverBtn) {
+        retryOverBtn.addEventListener('click', () => {
+          const overModal = document.getElementById('modal-gameover');
+          if (overModal) overModal.classList.remove('active');
+          this.startNewGame();
+        });
+      }
+
       if (this.viewportEl) {
         const resizeObserver = new ResizeObserver(() => this.scaleBoard());
         resizeObserver.observe(this.viewportEl);
@@ -242,17 +251,26 @@
       this.rushBarFill.style.width = '100%';
       this.undoBtn.disabled = true;
 
+      const overModal = document.getElementById('modal-gameover');
+      if (overModal) overModal.classList.remove('active');
+      const winModal = document.getElementById('modal-win');
+      if (winModal) winModal.classList.remove('active');
+
       this.timerInterval = setInterval(() => {
         if (!this.isGameOver) {
           this.elapsedSeconds++;
-          this.timeRemaining = Math.max(0, RUSH_TIME - this.elapsedSeconds);
-          this.timerEl.textContent = `${this.elapsedSeconds}s`;
+          this.timeRemaining--;
+          this.timerEl.textContent = `${Math.max(0, this.timeRemaining)}s`;
 
           const pct = Math.max(0, (this.timeRemaining / RUSH_TIME) * 100);
           this.rushBarFill.style.width = `${pct}%`;
 
-          if (this.elapsedSeconds === RUSH_TIME) {
-            this.showToast('Rush time finished! Keep playing casually.');
+          if (this.timeRemaining <= 0) {
+            this.isGameOver = true;
+            clearInterval(this.timerInterval);
+            const over = document.getElementById('modal-gameover');
+            if (over) over.classList.add('active');
+            this.sound.playClick();
           }
         }
       }, 1000);
@@ -441,6 +459,12 @@
 
         const speedBonus = this.timeRemaining > 0 ? 50 : 0;
         this.updateScore(this.score + 100 + speedBonus);
+
+        // Renew time on each move as requested!
+        this.timeRemaining = RUSH_TIME;
+        this.rushBarFill.style.width = '100%';
+        this.timerEl.textContent = `${this.timeRemaining}s`;
+        this.showToast('+Time Renewed! ⚡');
 
         setTimeout(() => {
           first.element.style.display = 'none';

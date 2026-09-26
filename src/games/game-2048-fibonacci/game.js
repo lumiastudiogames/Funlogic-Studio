@@ -63,7 +63,7 @@ class SoundEngine {
 class Game2048Fibonacci {
   constructor() {
     this.size = 4;
-    this.FIBO = [1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610, 987, 1597, 2584, 4181];
+    this.FIBO = [1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610, 987, 1597, 2584, 4181];
     this.sound = new SoundEngine();
     this.score = 0;
     this.bestScore = parseInt(localStorage.getItem('fibo2048_best') || '0', 10);
@@ -167,7 +167,7 @@ class Game2048Fibonacci {
     if (a === 1 && b === 1) return 2;
     const idxA = this.FIBO.indexOf(a);
     const idxB = this.FIBO.indexOf(b);
-    if (idxA > 0 && idxB > 0 && Math.abs(idxA - idxB) === 1) {
+    if (idxA !== -1 && idxB !== -1 && Math.abs(idxA - idxB) === 1) {
       return this.FIBO[Math.max(idxA, idxB) + 1];
     }
     return false;

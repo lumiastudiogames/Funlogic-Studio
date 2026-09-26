@@ -1,5 +1,4 @@
-@import "tailwindcss";
-
+/* tailwindcss loaded via cdn */
 /* src/games/metro-subway-train-yard/src/index.css */
 * {
   -webkit-tap-highlight-color: transparent;

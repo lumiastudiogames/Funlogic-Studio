@@ -1,5 +1,5 @@
 {
-  "name": "funlogic-games",
+  "name": "playfunlogic",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -8,19 +8,21 @@
     "build": "vite build && node scripts/prerender.cjs",
     "preview": "vite preview",
     "clean": "rm -rf dist server.js",
+    "optimize:images": "node scripts/optimize_all_covers.js",
     "lint": "tsc --noEmit"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.3.3",
-    "vite": "^8.3.0",
+    "dotenv": "^17.2.3",
     "express": "^4.21.2",
-    "dotenv": "^17.2.3"
+    "vite": "^8.3.0"
   },
   "devDependencies": {
     "@types/express": "^4.17.21",
     "@types/node": "^22.14.0",
     "autoprefixer": "^10.4.21",
     "esbuild": "^0.28.0",
+    "sharp": "^0.35.4",
     "tailwindcss": "^4.3.3",
     "tsx": "^4.21.0",
     "typescript": "^7.0.2",

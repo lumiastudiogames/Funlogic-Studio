@@ -62,8 +62,9 @@ function updateHUD() {
 
   // Moves Counter
   const movesCounter = document.getElementById('moves-counter');
+  const maxMoves = currentLvl.maxMoves || 1;
   if (movesCounter) {
-    movesCounter.textContent = `${moves} / 1`;
+    movesCounter.textContent = `${moves} / ${maxMoves}`;
     if (moves > 0 && !isWon) {
       movesCounter.classList.add('text-amber-600');
     } else {
@@ -95,7 +96,7 @@ function updateHUD() {
     if (isWon || isTrue) {
       eqStatusPill.className = 'flex items-center gap-1.5 text-xs font-bold text-emerald-600';
       eqStatusText.textContent = 'Correct!';
-    } else if (moves >= 1) {
+    } else if (moves >= maxMoves) {
       eqStatusPill.className = 'flex items-center gap-1.5 text-xs font-bold text-amber-600';
       eqStatusText.textContent = 'Incorrect';
     } else if (held) {
@@ -111,11 +112,11 @@ function updateHUD() {
     if (held) {
       touchInstruction.textContent = '📍 Drag or drop into an open dashed slot';
       touchInstruction.classList.add('animate-pulse-subtle');
-    } else if (moves >= 1) {
+    } else if (moves >= maxMoves) {
       touchInstruction.textContent = '🔄 Use "UNDO" or "RESET" to try another move';
       touchInstruction.classList.remove('animate-pulse-subtle');
     } else {
-      touchInstruction.textContent = '🖐️ Drag & Drop 1 matchstick to fix the equation';
+      touchInstruction.textContent = `🖐️ Move ${maxMoves} matchstick${maxMoves > 1 ? 's' : ''} to fix equation`;
       touchInstruction.classList.remove('animate-pulse-subtle');
     }
   }

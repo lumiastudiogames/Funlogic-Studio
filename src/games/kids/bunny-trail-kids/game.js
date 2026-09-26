@@ -242,17 +242,60 @@
     const goalY = goal.r * cellH + cellH / 2;
 
     // Carrot Shadow (shrinks when floating up)
-    const shadowScale = 1 - (carrotFloat + 5) * 0.04;
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
+    const shadowScale = Math.max(0.6, 1 - (carrotFloat + 5) * 0.04);
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.22)';
     ctx.beginPath();
-    ctx.ellipse(goalX, goalY + 12, cellW * 0.28 * shadowScale, cellH * 0.14 * shadowScale, 0, 0, Math.PI * 2);
+    ctx.ellipse(goalX, goalY + cellH * 0.35, cellW * 0.28 * shadowScale, cellH * 0.12 * shadowScale, 0, 0, Math.PI * 2);
     ctx.fill();
 
-    // Carrot Emoji
-    ctx.font = `${Math.floor(cellW * 0.72)}px sans-serif`;
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText('🥕', goalX, goalY + carrotFloat);
+    // High-Resolution Crisp Vector Carrot (never transparent or faded)
+    ctx.save();
+    ctx.translate(goalX, goalY + carrotFloat);
+    const carrotScale = (cellW / 46) * 0.9;
+    ctx.scale(carrotScale, carrotScale);
+
+    // Green leafy top
+    ctx.fillStyle = '#22c55e';
+    ctx.beginPath();
+    ctx.ellipse(-4, -12, 4, 9, -0.4, 0, Math.PI * 2);
+    ctx.ellipse(0, -15, 4.5, 11, 0, 0, Math.PI * 2);
+    ctx.ellipse(4, -12, 4, 9, 0.4, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.strokeStyle = '#15803d';
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+
+    // Vibrant Orange Carrot Body
+    ctx.fillStyle = '#f97316';
+    ctx.beginPath();
+    ctx.moveTo(-11, -7);
+    ctx.quadraticCurveTo(-12, 5, 0, 18);
+    ctx.quadraticCurveTo(12, 5, 11, -7);
+    ctx.quadraticCurveTo(0, -10, -11, -7);
+    ctx.closePath();
+    ctx.fill();
+
+    // Carrot border
+    ctx.strokeStyle = '#c2410c';
+    ctx.lineWidth = 2.2;
+    ctx.stroke();
+
+    // Carrot detail wrinkles / texture lines
+    ctx.strokeStyle = '#ea580c';
+    ctx.lineWidth = 1.8;
+    ctx.lineCap = 'round';
+    ctx.beginPath();
+    ctx.moveTo(-6, -2); ctx.lineTo(1, -1);
+    ctx.moveTo(0, 4);   ctx.lineTo(6, 5);
+    ctx.moveTo(-4, 9);  ctx.lineTo(3, 10);
+    ctx.stroke();
+
+    // Shiny gloss highlight
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.45)';
+    ctx.beginPath();
+    ctx.ellipse(-4, -1, 2.5, 7, -0.2, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
 
     // Draw Floating Bunny 🐰 with 3D shadow and hop/float bobbing
     const bunnyHop = Math.sin(animTime * 4) * 4;
@@ -260,14 +303,100 @@
     const py = visualPlayer.y * cellH + cellH / 2;
 
     // Bunny Shadow
-    const bShadowScale = 1 - (bunnyHop + 4) * 0.05;
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.22)';
+    const bShadowScale = Math.max(0.6, 1 - (bunnyHop + 4) * 0.05);
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.25)';
     ctx.beginPath();
-    ctx.ellipse(px, py + 12, cellW * 0.32 * bShadowScale, cellH * 0.16 * bShadowScale, 0, 0, Math.PI * 2);
+    ctx.ellipse(px, py + cellH * 0.35, cellW * 0.34 * bShadowScale, cellH * 0.14 * bShadowScale, 0, 0, Math.PI * 2);
     ctx.fill();
 
-    // Bunny Emoji
-    ctx.fillText('🐰', px, py + bunnyHop);
+    // High-Resolution Crisp Vector Bunny (100% solid, super cute & vivid)
+    ctx.save();
+    ctx.translate(px, py + bunnyHop);
+    const bunnyScale = (cellW / 46) * 0.95;
+    ctx.scale(bunnyScale, bunnyScale);
+
+    // Bunny Ears (Back / Outer)
+    ctx.fillStyle = '#ffffff';
+    ctx.strokeStyle = '#94a3b8';
+    ctx.lineWidth = 2;
+    // Left ear
+    ctx.beginPath();
+    ctx.ellipse(-7, -14, 5, 11, -0.15, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+    // Right ear
+    ctx.beginPath();
+    ctx.ellipse(7, -14, 5, 11, 0.15, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+
+    // Inner pink ears
+    ctx.fillStyle = '#f472b6';
+    ctx.beginPath();
+    ctx.ellipse(-7, -14, 2.6, 7.5, -0.15, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.ellipse(7, -14, 2.6, 7.5, 0.15, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Bunny Round Face / Head
+    ctx.fillStyle = '#ffffff';
+    ctx.strokeStyle = '#94a3b8';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.ellipse(0, 2, 14, 12.5, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+
+    // Cheerful Rosy Cheeks
+    ctx.fillStyle = 'rgba(251, 113, 133, 0.5)';
+    ctx.beginPath();
+    ctx.arc(-8, 5, 3.2, 0, Math.PI * 2);
+    ctx.arc(8, 5, 3.2, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Shiny Black Eyes with White Catchlights
+    ctx.fillStyle = '#0f172a';
+    ctx.beginPath();
+    ctx.arc(-5.5, 1, 2.4, 0, Math.PI * 2);
+    ctx.arc(5.5, 1, 2.4, 0, Math.PI * 2);
+    ctx.fill();
+    // Eye shines
+    ctx.fillStyle = '#ffffff';
+    ctx.beginPath();
+    ctx.arc(-6.2, 0.2, 0.9, 0, Math.PI * 2);
+    ctx.arc(4.8, 0.2, 0.9, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Cute Little Pink Nose
+    ctx.fillStyle = '#ec4899';
+    ctx.beginPath();
+    ctx.moveTo(0, 3.2);
+    ctx.lineTo(-2, 4.8);
+    ctx.lineTo(2, 4.8);
+    ctx.closePath();
+    ctx.fill();
+
+    // Whiskers & Mouth
+    ctx.strokeStyle = '#64748b';
+    ctx.lineWidth = 1.2;
+    ctx.lineCap = 'round';
+    // Mouth curves
+    ctx.beginPath();
+    ctx.arc(-1.6, 6.2, 1.8, Math.PI * 0.1, Math.PI * 0.9, false);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.arc(1.6, 6.2, 1.8, Math.PI * 0.1, Math.PI * 0.9, false);
+    ctx.stroke();
+    // Whiskers
+    ctx.beginPath();
+    ctx.moveTo(-7, 3.5); ctx.lineTo(-13, 2.5);
+    ctx.moveTo(-7, 5.5); ctx.lineTo(-13, 6);
+    ctx.moveTo(7, 3.5);  ctx.lineTo(13, 2.5);
+    ctx.moveTo(7, 5.5);  ctx.lineTo(13, 6);
+    ctx.stroke();
+
+    ctx.restore();
   }
 
   function tryMove(dir) {

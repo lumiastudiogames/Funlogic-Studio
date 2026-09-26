@@ -56,7 +56,8 @@
     <header>
       <div class="hud-left">
         <button id="btn-info" class="btn-tactile btn-icon" title="Rules">ℹ️</button>
-        <div class="badge">LAB RACK • 10 TUBES</div>
+        <button id="btn-recipes" class="btn-tactile" title="Color Mix Recipes">🧪 <span class="hidden sm:inline">RECIPES</span></button>
+        <button id="btn-levels" class="btn-tactile" title="Select Level">📋 <span id="level-btn-txt">LEVEL 1</span></button>
       </div>
 
       <div class="hud-center">
@@ -83,6 +84,14 @@
     </header>
 
     <main>
+      <div class="lab-recipe-bar" id="recipe-quick-bar" title="Click to view all 10 Synthesis Recipes">
+        <span>🧪 <strong>Reactions:</strong></span>
+        <span class="recipe-chip">🔵 + 🟡 = 🟢 Green</span>
+        <span class="recipe-chip">🔴 + 🟡 = 🟠 Orange</span>
+        <span class="recipe-chip">🔴 + 🔵 = 🟣 Purple</span>
+        <span style="font-size: 10px; color: #fbbf24; margin-left: 4px;">[10 Recipes ℹ️]</span>
+      </div>
+
       <div class="lab-bench">
         <div class="rack-row-wrapper">
           <div id="row-1" class="tubes-row"></div>
@@ -96,17 +105,21 @@
       </div>
     </main>
 
+    <!-- Modal: General Rules -->
     <div id="modal-rules" class="overlay">
       <div class="modal-card">
         <div class="modal-title">🔬 Test Tube Sort (Lab Edition)</div>
-        <p style="font-size: 13px; color: #fde68a;">Chemistry laboratory rack holding 10 borosilicate glass tubes.</p>
+        <p style="font-size: 13px; color: #fde68a;">Chemistry research laboratory with color synthesis and reagent sorting.</p>
 
         <div style="display: flex; flex-direction: column; gap: 10px; margin: 18px 0; text-align: left;">
           <div style="background: #0f172a; padding: 10px; border-radius: 8px; border: 1px solid rgba(217,119,6,0.3); font-size: 12px;">
-            <strong>💡 Hint Assistant:</strong> Stuck on a tricky reagent? Click the 💡 HINT button to flash the next strategic pour.
+            <strong>🧪 Part-by-Part Color Mixing:</strong> Pour compatible reagents over each other to synthesize new colors! 1 part mixes with 1 part to make 2 parts, 2 parts with 2 parts to make 4 parts!
           </div>
           <div style="background: #0f172a; padding: 10px; border-radius: 8px; border: 1px solid rgba(217,119,6,0.3); font-size: 12px;">
-            <strong>🪵 Wooden Rack:</strong> 8 tubes filled with chemical compounds, 2 empty tubes reserved for separation.
+            <strong>💡 Hint Assistant:</strong> Need a clue? Click 💡 HINT to highlight the next valid tactical transfer or reaction.
+          </div>
+          <div style="background: #0f172a; padding: 10px; border-radius: 8px; border: 1px solid rgba(217,119,6,0.3); font-size: 12px;">
+            <strong>🪵 Mahogany Lab Rack:</strong> Isolate each pure chemical compound into its own full tube to complete certification.
           </div>
         </div>
 
@@ -114,11 +127,105 @@
       </div>
     </div>
 
+    <!-- Modal: Chemical Synthesis Table (10 Recipes) -->
+    <div id="modal-recipes" class="overlay">
+      <div class="modal-card" style="max-width: 520px; max-height: 85vh; overflow-y: auto;">
+        <div class="modal-title" style="color: #38bdf8;">🧪 10 Color Synthesis Recipes</div>
+        <p style="font-size: 13px; color: #94a3b8;">Reactions triggered when pouring compatible reagents together:</p>
+
+        <div class="recipe-grid">
+          <div class="recipe-card">
+            <div class="recipe-card-formula"><span>🔵 + 🟡 ➔ 🟢</span></div>
+            <div style="font-size: 12px; font-weight: 700; color: #34d399;">Green (Emerald)</div>
+            <div class="recipe-card-desc">Cobalt Blue + Sulfur Yellow form Emerald Green.</div>
+          </div>
+
+          <div class="recipe-card">
+            <div class="recipe-card-formula"><span>🔴 + 🟡 ➔ 🟠</span></div>
+            <div style="font-size: 12px; font-weight: 700; color: #fb923c;">Orange (Amber)</div>
+            <div class="recipe-card-desc">Crimson Red + Sulfur Yellow form Amber Orange.</div>
+          </div>
+
+          <div class="recipe-card">
+            <div class="recipe-card-formula"><span>🔴 + 🔵 ➔ 🟣</span></div>
+            <div style="font-size: 12px; font-weight: 700; color: #c084fc;">Purple (Amethyst)</div>
+            <div class="recipe-card-desc">Crimson Red + Cobalt Blue form Amethyst Purple.</div>
+          </div>
+
+          <div class="recipe-card">
+            <div class="recipe-card-formula"><span>🔵 + 🟢 ➔ 🩵</span></div>
+            <div style="font-size: 12px; font-weight: 700; color: #22d3ee;">Cyan (Copper)</div>
+            <div class="recipe-card-desc">Cobalt Blue + Emerald Green form Copper Cyan.</div>
+          </div>
+
+          <div class="recipe-card">
+            <div class="recipe-card-formula"><span>🔴 + ⚪ ➔ 🩷</span></div>
+            <div style="font-size: 12px; font-weight: 700; color: #f472b6;">Pink (Rose)</div>
+            <div class="recipe-card-desc">Crimson Red + Pure Solvent form Rose Pink.</div>
+          </div>
+
+          <div class="recipe-card">
+            <div class="recipe-card-formula"><span>🟡 + 🟢 ➔ 🟩</span></div>
+            <div style="font-size: 12px; font-weight: 700; color: #a3e635;">Lime (Neon)</div>
+            <div class="recipe-card-desc">Sulfur Yellow + Emerald Green form Neon Lime.</div>
+          </div>
+
+          <div class="recipe-card">
+            <div class="recipe-card-formula"><span>🔵 + 🟣 ➔ 🩵</span></div>
+            <div style="font-size: 12px; font-weight: 700; color: #38bdf8;">Indigo Cyan</div>
+            <div class="recipe-card-desc">Cobalt Blue + Amethyst Purple form Deep Aqua.</div>
+          </div>
+
+          <div class="recipe-card">
+            <div class="recipe-card-formula"><span>🔴 + 🟠 ➔ 🩷</span></div>
+            <div style="font-size: 12px; font-weight: 700; color: #fb7185;">Coral Pink</div>
+            <div class="recipe-card-desc">Crimson Red + Amber Orange form Coral Pink.</div>
+          </div>
+
+          <div class="recipe-card">
+            <div class="recipe-card-formula"><span>🟡 + 🟠 ➔ 🟩</span></div>
+            <div style="font-size: 12px; font-weight: 700; color: #facc15;">Golden Lime</div>
+            <div class="recipe-card-desc">Sulfur Yellow + Amber Orange form Golden Lime.</div>
+          </div>
+
+          <div class="recipe-card">
+            <div class="recipe-card-formula"><span>⚪ + 🔵 ➔ 🩵</span></div>
+            <div style="font-size: 12px; font-weight: 700; color: #67e8f9;">Solvent Cyan</div>
+            <div class="recipe-card-desc">Pure Solvent + Cobalt Blue form Light Aqua.</div>
+          </div>
+        </div>
+
+        <div style="background: rgba(15,23,42,0.9); border: 1px solid rgba(56,189,248,0.25); border-radius: 8px; padding: 10px; font-size: 11px; color: #cbd5e1; text-align: left; margin: 12px 0;">
+          💡 <strong>Reaction Mechanics:</strong> Pouring 1 unit of a reagent over a matching partner reacts part-by-part, turning into 2 units of the product color!
+        </div>
+
+        <button id="btn-close-recipes" class="btn-primary">Return to Lab</button>
+      </div>
+    </div>
+
+    <!-- Modal: Select Level -->
+    <div id="modal-levels" class="overlay">
+      <div class="modal-card" style="max-width: 460px;">
+        <div class="modal-title" style="color: #fbbf24;">📋 Laboratory Experiments</div>
+        <p style="font-size: 13px; color: #94a3b8;">Choose a verified experiment to synthesize and sort compounds:</p>
+
+        <div id="levels-container" class="levels-grid"></div>
+
+        <div style="display: flex; gap: 10px; margin-top: 14px;">
+          <button id="btn-random-mode" class="btn-tactile" style="flex: 1; justify-content: center; background: #334155;">
+            🎲 Random Mode
+          </button>
+          <button id="btn-close-levels" class="btn-primary" style="flex: 1;">Close</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal: Victory -->
     <div id="modal-victory" class="overlay">
       <div class="modal-card">
         <div style="font-size: 48px; margin-bottom: 8px;">⚗️</div>
-        <div class="modal-title" style="color: #fbbf24;">Lab Certification Earned!</div>
-        <p style="font-size: 14px; color: #fef3c7; margin-bottom: 16px;">Every chemical solution perfectly isolated on the wooden rack!</p>
+        <div class="modal-title" style="color: #fbbf24;">Lab Certification Complete!</div>
+        <p id="win-desc" style="font-size: 14px; color: #fef3c7; margin-bottom: 16px;">All chemical reagents synthesized and isolated with precision!</p>
 
         <div style="display: flex; justify-content: center; gap: 16px; margin-bottom: 20px;">
           <div class="metric-card" style="padding: 8px 16px;">
@@ -131,7 +238,10 @@
           </div>
         </div>
 
-        <button id="btn-win-restart" class="btn-primary">Sort Another Batch</button>
+        <div style="display: flex; gap: 10px; justify-content: center;">
+          <button id="btn-win-next" class="btn-primary" style="flex: 1.2;">Next Level ▶</button>
+          <button id="btn-win-restart" class="btn-tactile" style="flex: 1; justify-content: center;">Restart 🔄</button>
+        </div>
       </div>
     </div>
   </div>

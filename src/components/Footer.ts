@@ -3,16 +3,16 @@ import { subscribeToPWAInstall, triggerPWAInstall, isIOS, showIOSGuidedInstall }
 export function renderFooter(container: HTMLElement): void {
   container.innerHTML = `
     <footer class="w-full game-console-footer mt-12 sm:mt-16">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 py-10 sm:py-12">
+      <div class="max-w-7xl mx-auto px-5 sm:px-8 py-10 pb-28 sm:pb-14 safe-padding-x">
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
           
           <!-- Col 1: Brand Info -->
           <div>
             <div class="flex items-center gap-2.5 mb-3">
               <div class="w-9 h-9 rounded-xl bg-[#58CC02] text-white font-black text-xl flex items-center justify-center border-b-4 border-[#46A302]">
-                F
+                P
               </div>
-              <span class="font-black text-lg tracking-tight text-white">FunLogic.games</span>
+              <span class="font-black text-lg tracking-tight text-white">PlayFunLogic.com</span>
             </div>
             <p class="text-xs text-slate-300 leading-relaxed max-w-sm mb-3">
               <strong class="text-white">Lumia Studio</strong> — Independent studio making calm brain games. Fast, lightweight, no popups over the board.
@@ -53,7 +53,7 @@ export function renderFooter(container: HTMLElement): void {
             <div id="pwa-install-container" class="hidden">
               <button 
                 id="btn-pwa-install" 
-                class="w-full sm:w-auto h-10 px-4 rounded-2xl bg-[#58CC02] hover:bg-[#4EBA02] border-b-4 border-[#46A302] font-black text-xs text-white flex items-center justify-center gap-2 shadow-md cursor-pointer transition active:scale-95"
+                class="w-full max-w-xs sm:w-auto h-11 px-5 rounded-2xl bg-[#58CC02] hover:bg-[#4EBA02] border-b-4 border-[#46A302] font-black text-xs text-white flex items-center justify-center gap-2 shadow-md cursor-pointer transition active:scale-95"
               >
                 <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24">
                   <path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM17 13l-5 5-5-5h3V9h4v4h3z"/>
@@ -67,7 +67,7 @@ export function renderFooter(container: HTMLElement): void {
 
         <div class="mt-10 pt-6 border-t border-slate-700/80 flex flex-col sm:flex-row items-center justify-between text-[11px] font-bold text-slate-400 gap-3">
           <div>
-            © 2026 FunLogic.games by Lumia Studio. All rights reserved.
+            © 2026 PlayFunLogic.com by Lumia Studio. All rights reserved.
           </div>
         </div>
       </div>

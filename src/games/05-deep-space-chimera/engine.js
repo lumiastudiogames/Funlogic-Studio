@@ -1,1041 +1,1586 @@
 
+// ==========================================================================
+// UNIFIED EINSTEIN / ZEBRA LOGIC GRID ENGINE WITH PROGRESSIVE LOCKING
+// ==========================================================================
+
+const THEMES = {
+  "01-murder-orient-express": {
+    "primary": "#991b1b",
+    "primaryDark": "#7f1d1d",
+    "accent": "#d97706",
+    "accentLight": "#fef3c7",
+    "bgPage": "#fdfbf7",
+    "badge": "1930s Train Mystery",
+    "icon": "🚂",
+    "columnIcon": "🚪"
+  },
+  "02-baker-street-hound": {
+    "primary": "#1e293b",
+    "primaryDark": "#0f172a",
+    "accent": "#059669",
+    "accentLight": "#d1fae5",
+    "bgPage": "#f8fafc",
+    "badge": "Sherlockian Deduction",
+    "icon": "🔍",
+    "columnIcon": "📍"
+  },
+  "03-cyberpunk-neon-syndicate": {
+    "primary": "#0891b2",
+    "primaryDark": "#0e7490",
+    "accent": "#c026d3",
+    "accentLight": "#fae8ff",
+    "bgPage": "#f8fafc",
+    "badge": "Cyberpunk Netrunner",
+    "icon": "⚡",
+    "columnIcon": "🏢"
+  },
+  "04-death-on-the-nile": {
+    "primary": "#1e3a8a",
+    "primaryDark": "#172554",
+    "accent": "#d97706",
+    "accentLight": "#fef3c7",
+    "bgPage": "#fefce8",
+    "badge": "Agatha Riverboat Mystery",
+    "icon": "🚢",
+    "columnIcon": "🛳️"
+  },
+  "05-deep-space-chimera": {
+    "primary": "#0f172a",
+    "primaryDark": "#020617",
+    "accent": "#10b981",
+    "accentLight": "#d1fae5",
+    "bgPage": "#f1f5f9",
+    "badge": "Deep Space Protocol",
+    "icon": "🚀",
+    "columnIcon": "🛸"
+  },
+  "06-blackwood-manor": {
+    "primary": "#7f1d1d",
+    "primaryDark": "#450a0a",
+    "accent": "#b45309",
+    "accentLight": "#fef3c7",
+    "bgPage": "#faf5f0",
+    "badge": "Victorian Manor Mystery",
+    "icon": "🏰",
+    "columnIcon": "🗝️"
+  },
+  "07-time-paradox-chronos": {
+    "primary": "#4338ca",
+    "primaryDark": "#312e81",
+    "accent": "#0284c7",
+    "accentLight": "#e0f2fe",
+    "bgPage": "#f8faff",
+    "badge": "Temporal Paradox Case",
+    "icon": "⏳",
+    "columnIcon": "🌀"
+  },
+  "08-noir-shadows-chicago": {
+    "primary": "#292524",
+    "primaryDark": "#1c1917",
+    "accent": "#b45309",
+    "accentLight": "#fef3c7",
+    "bgPage": "#fbf9f4",
+    "badge": "Chicago 1932 Noir",
+    "icon": "🕵️",
+    "columnIcon": "🍸"
+  },
+  "09-station-alpha-sabotage": {
+    "primary": "#1e293b",
+    "primaryDark": "#0f172a",
+    "accent": "#d97706",
+    "accentLight": "#fef3c7",
+    "bgPage": "#f8fafc",
+    "badge": "Orbital Station Sabotage",
+    "icon": "🛰️",
+    "columnIcon": "📡"
+  },
+  "10-curse-blackwood-abbey": {
+    "primary": "#581c87",
+    "primaryDark": "#3b0764",
+    "accent": "#ca8a04",
+    "accentLight": "#fef9c3",
+    "bgPage": "#faf5ff",
+    "badge": "Gothic Abbey Mystery",
+    "icon": "⛪",
+    "columnIcon": "🕯️"
+  },
+  "11-nexus-protocol-rogue-ai": {
+    "primary": "#0369a1",
+    "primaryDark": "#075985",
+    "accent": "#15803d",
+    "accentLight": "#dcfce7",
+    "bgPage": "#f0fdfa",
+    "badge": "AI Core Forensics",
+    "icon": "🤖",
+    "columnIcon": "🖥️"
+  },
+  "12-venice-carnival-conspiracy": {
+    "primary": "#0f766e",
+    "primaryDark": "#115e59",
+    "accent": "#eab308",
+    "accentLight": "#fef9c3",
+    "bgPage": "#f0fdfa",
+    "badge": "Venetian Masquerade",
+    "icon": "🎭",
+    "columnIcon": "🛶"
+  },
+  "13-sub-zero-outpost-31": {
+    "primary": "#0369a1",
+    "primaryDark": "#075985",
+    "accent": "#0284c7",
+    "accentLight": "#e0f2fe",
+    "bgPage": "#f0f9ff",
+    "badge": "Antarctic Enigma",
+    "icon": "❄️",
+    "columnIcon": "🧊"
+  },
+  "14-arsenic-tea-morrington": {
+    "primary": "#78350f",
+    "primaryDark": "#451a03",
+    "accent": "#15803d",
+    "accentLight": "#dcfce7",
+    "bgPage": "#fdfbf7",
+    "badge": "Poisoner's Tea Party",
+    "icon": "🫖",
+    "columnIcon": "☕"
+  },
+  "15-mars-colony-breach": {
+    "primary": "#9a3412",
+    "primaryDark": "#7c2d12",
+    "accent": "#ea580c",
+    "accentLight": "#ffedd5",
+    "bgPage": "#fff7ed",
+    "badge": "Mars Colony Breach",
+    "icon": "🔴",
+    "columnIcon": "🪐"
+  },
+  "16-phantom-opera-vaults": {
+    "primary": "#881337",
+    "primaryDark": "#4c0519",
+    "accent": "#ca8a04",
+    "accentLight": "#fef9c3",
+    "bgPage": "#fff1f2",
+    "badge": "Paris Opera Mystery",
+    "icon": "🎭",
+    "columnIcon": "🎟️"
+  },
+  "17-quantum-lab-theft": {
+    "primary": "#6b21a8",
+    "primaryDark": "#581c87",
+    "accent": "#0284c7",
+    "accentLight": "#e0f2fe",
+    "bgPage": "#faf5ff",
+    "badge": "Quantum Formula Theft",
+    "icon": "⚛️",
+    "columnIcon": "🔬"
+  },
+  "18-fog-over-whitechapel": {
+    "primary": "#262626",
+    "primaryDark": "#171717",
+    "accent": "#b45309",
+    "accentLight": "#fef3c7",
+    "bgPage": "#fafaf9",
+    "badge": "Whitechapel 1888 Case",
+    "icon": "🌫️",
+    "columnIcon": "🏮"
+  },
+  "19-cyber-dystopia-memories": {
+    "primary": "#581c87",
+    "primaryDark": "#3b0764",
+    "accent": "#2563eb",
+    "accentLight": "#dbeafe",
+    "bgPage": "#faf5ff",
+    "badge": "Memory Theft Case",
+    "icon": "💾",
+    "columnIcon": "🔌"
+  },
+  "20-lighthouse-enigma": {
+    "primary": "#334155",
+    "primaryDark": "#1e293b",
+    "accent": "#d97706",
+    "accentLight": "#fef3c7",
+    "bgPage": "#f8fafc",
+    "badge": "Flannan Isle Mystery",
+    "icon": "🏮",
+    "columnIcon": "🌊"
+  }
+};
+window.LOGIC_GRID_THEMES = THEMES;
+
+
+class ZebraAudioEngine {
+  constructor() {
+    this.ctx = null;
+    this.isMuted = localStorage.getItem('fl_zebra_muted') === 'true';
+  }
+
+  init() {
+    if (!this.ctx) {
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      if (AudioCtx) this.ctx = new AudioCtx();
+    }
+    if (this.ctx && this.ctx.state === 'suspended') {
+      this.ctx.resume();
+    }
+  }
+
+  toggleMute() {
+    this.isMuted = !this.isMuted;
+    localStorage.setItem('fl_zebra_muted', this.isMuted);
+    return this.isMuted;
+  }
+
+  playClick() {
+    if (this.isMuted) return;
+    this.init();
+    if (!this.ctx) return;
+    const now = this.ctx.currentTime;
+    const osc = this.ctx.createOscillator();
+    const gain = this.ctx.createGain();
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(600, now);
+    osc.frequency.exponentialRampToValueAtTime(300, now + 0.04);
+    gain.gain.setValueAtTime(0.08, now);
+    gain.gain.linearRampToValueAtTime(0.001, now + 0.04);
+    osc.connect(gain);
+    gain.connect(this.ctx.destination);
+    osc.start(now);
+    osc.stop(now + 0.05);
+  }
+
+  playSelect() {
+    if (this.isMuted) return;
+    this.init();
+    if (!this.ctx) return;
+    const now = this.ctx.currentTime;
+    const osc = this.ctx.createOscillator();
+    const gain = this.ctx.createGain();
+    osc.type = 'triangle';
+    osc.frequency.setValueAtTime(440, now);
+    osc.frequency.exponentialRampToValueAtTime(659.25, now + 0.08);
+    gain.gain.setValueAtTime(0.12, now);
+    gain.gain.linearRampToValueAtTime(0.001, now + 0.08);
+    osc.connect(gain);
+    gain.connect(this.ctx.destination);
+    osc.start(now);
+    osc.stop(now + 0.09);
+  }
+
+  playClue() {
+    if (this.isMuted) return;
+    this.init();
+    if (!this.ctx) return;
+    const now = this.ctx.currentTime;
+    const osc = this.ctx.createOscillator();
+    const gain = this.ctx.createGain();
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(523.25, now);
+    gain.gain.setValueAtTime(0.09, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
+    osc.connect(gain);
+    gain.connect(this.ctx.destination);
+    osc.start(now);
+    osc.stop(now + 0.13);
+  }
+
+  playUndo() {
+    if (this.isMuted) return;
+    this.init();
+    if (!this.ctx) return;
+    const now = this.ctx.currentTime;
+    const osc = this.ctx.createOscillator();
+    const gain = this.ctx.createGain();
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(480, now);
+    osc.frequency.exponentialRampToValueAtTime(320, now + 0.08);
+    gain.gain.setValueAtTime(0.08, now);
+    gain.gain.linearRampToValueAtTime(0.001, now + 0.08);
+    osc.connect(gain);
+    gain.connect(this.ctx.destination);
+    osc.start(now);
+    osc.stop(now + 0.09);
+  }
+
+  playHint() {
+    if (this.isMuted) return;
+    this.init();
+    if (!this.ctx) return;
+    const now = this.ctx.currentTime;
+    [440, 554.37, 659.25, 880].forEach((freq, idx) => {
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(freq, now + idx * 0.06);
+      gain.gain.setValueAtTime(0.12, now + idx * 0.06);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.06 + 0.25);
+      osc.connect(gain);
+      gain.connect(this.ctx.destination);
+      osc.start(now + idx * 0.06);
+      osc.stop(now + idx * 0.06 + 0.26);
+    });
+  }
+
+  playVictory() {
+    if (this.isMuted) return;
+    this.init();
+    if (!this.ctx) return;
+    const now = this.ctx.currentTime;
+    const notes = [
+      { f: 523.25, t: 0 },
+      { f: 659.25, t: 0.12 },
+      { f: 783.99, t: 0.24 },
+      { f: 1046.50, t: 0.38 },
+      { f: 1318.51, t: 0.52 }
+    ];
+    notes.forEach(n => {
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(n.f, now + n.t);
+      gain.gain.setValueAtTime(0.16, now + n.t);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + n.t + 0.45);
+      osc.connect(gain);
+      gain.connect(this.ctx.destination);
+      osc.start(now + n.t);
+      osc.stop(now + n.t + 0.5);
+    });
+  }
+
+  playError() {
+    if (this.isMuted) return;
+    this.init();
+    if (!this.ctx) return;
+    const now = this.ctx.currentTime;
+    [320, 260].forEach((freq, idx) => {
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(freq, now + idx * 0.08);
+      gain.gain.setValueAtTime(0.08, now + idx * 0.08);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.08 + 0.15);
+      osc.connect(gain);
+      gain.connect(this.ctx.destination);
+      osc.start(now + idx * 0.08);
+      osc.stop(now + idx * 0.08 + 0.16);
+    });
+  }
+}
 
 class LogicGridEngine {
   constructor(config) {
-    this.level = config.level;
-    this.allLevels = config.allLevels || [config.level];
-    this.theme = config.theme || 'mystery'; // 'mystery', 'scifi', 'noir', 'victorian'
+    this.config = config || {};
+    this.rawLevel = config.level || window.CURRENT_LEVEL || {};
+    this.gameKey = config.gameKey || 'logic_case';
     this.onBack = config.onBack || null;
-    this.gameKey = config.gameKey || 'logic_game';
+    this.sound = new ZebraAudioEngine();
 
-    // State
-    this.currentScreen = 'main-menu';
-    this.gridState = {}; // key: `${cat1}_${id1}__${cat2}_${id2}` -> 'EMPTY' | 'CROSS' | 'CHECK'
-    this.historyStack = [];
-    this.autoCross = true;
-    this.timerSeconds = 0;
-    this.timerInterval = null;
-    this.isTimerRunning = false;
-    this.activeMobileTab = 'grid'; // 'grid' | 'clues' | 'notebook'
-    this.highlightedRow = null;
-    this.highlightedCol = null;
-    this.clueStates = {}; // clueId -> boolean (strikethrough)
+    // Progression: level unlock state from localStorage
+    this.unlockedLevel = parseInt(localStorage.getItem('fl_unlocked_' + this.gameKey) || '0', 10);
+    this.currentLevelIndex = 0;
 
-    // Canvas Background
-    this.canvas = null;
-    this.ctx = null;
-    this.particles = [];
-    this.animFrameId = null;
+    // Detect theme metadata
+    this.theme = this.detectTheme();
+
+    // Build the stages (Stage 1: 3x3 Warmup, Stage 2: 4x4 Standard Case, Stage 3: 4x4 Master Challenge)
+    this.stages = this.buildStages();
+
+    this.tableState = {};
+    this.crossedClues = new Set();
+    this.history = [];
+    this.startTime = Date.now();
+    this.movesCount = 0;
 
     this.initDOM();
-    this.initCanvas();
-    this.initAudio();
+    this.initLevel(this.currentLevelIndex);
   }
 
-  initAudio() {
-    this.sound = window.soundEngine || {
-      playClick() {}, playCross() {}, playCheck() {},
-      playUndo() {}, playHint() {}, playVictory() {},
-      toggleMute() { return false; }
+  detectTheme() {
+    const raw = this.rawLevel;
+    const folder = (window.location.pathname.match(/\/games\/([^/]+)/) || [])[1] || '';
+    const themeKey = Object.keys(window.LOGIC_GRID_THEMES || {}).find(k => folder.includes(k) || this.gameKey.includes(k.replace(/^[0-9]+-/, ''))) || '';
+    const t = (window.LOGIC_GRID_THEMES && window.LOGIC_GRID_THEMES[themeKey]) || {
+      primary: '#1e3a8a',
+      primaryDark: '#172554',
+      accent: '#d97706',
+      accentLight: '#fef3c7',
+      bgPage: '#fbf9f4',
+      badge: 'Logic Grid Mystery',
+      icon: '🔍',
+      columnIcon: '📍'
     };
+    return t;
+  }
+
+  buildStages() {
+    const raw = this.rawLevel;
+    const catA = raw.categories ? raw.categories.categoryA : { name: 'Suspects', items: [] };
+    const catB = raw.categories ? raw.categories.categoryB : { name: 'Locations', items: [] };
+    const catC = raw.categories ? raw.categories.categoryC : { name: 'Evidence', items: [] };
+    const sol = raw.solution || {};
+    const clues = (raw.clues || []).map(c => typeof c === 'string' ? c : c.text);
+
+    // Stage 1: 3x3 Focused Case
+    const s1Cols = catB.items.slice(0, 3);
+    const s1Sol = {};
+    s1Cols.forEach(col => {
+      Object.entries(sol).forEach(([aId, map]) => {
+        if (map.categoryB === col.id) {
+          s1Sol[col.id] = { categoryA: aId, categoryC: map.categoryC };
+        }
+      });
+    });
+    const s1CatAIds = new Set(Object.values(s1Sol).map(v => v.categoryA));
+    const s1CatCIds = new Set(Object.values(s1Sol).map(v => v.categoryC));
+
+    const s1ItemsA = catA.items.filter(i => s1CatAIds.has(i.id));
+    const s1ItemsC = catC.items.filter(i => s1CatCIds.has(i.id));
+
+    // Filter or create clear clues for Stage 1
+    const s1Clues = [];
+    clues.forEach(clueText => {
+      // Check if clue mentions any of the 4th item names
+      const fourthA = catA.items[3] ? catA.items[3].name : '';
+      const fourthB = catB.items[3] ? catB.items[3].name : '';
+      const fourthC = catC.items[3] ? catC.items[3].name : '';
+      const mentionsExcluded = (fourthA && clueText.includes(fourthA)) ||
+                               (fourthB && clueText.includes(fourthB)) ||
+                               (fourthC && clueText.includes(fourthC));
+      if (!mentionsExcluded && s1Clues.length < 5) {
+        s1Clues.push(clueText);
+      }
+    });
+
+    // Ensure Stage 1 has at least 3 solvable clues
+    if (s1Clues.length < 3) {
+      s1Cols.forEach((col, idx) => {
+        const itemSol = s1Sol[col.id];
+        if (itemSol) {
+          const aObj = s1ItemsA.find(x => x.id === itemSol.categoryA);
+          const cObj = s1ItemsC.find(x => x.id === itemSol.categoryC);
+          if (aObj && cObj && s1Clues.length < 4) {
+            s1Clues.push(`At ${col.name}, ${aObj.name} was linked with the ${cObj.name}.`);
+          }
+        }
+      });
+    }
+
+    // Stage 2: Canonical 4x4 Case
+    const s2Cols = catB.items.slice(0, 4);
+    const s2Sol = {};
+    s2Cols.forEach(col => {
+      Object.entries(sol).forEach(([aId, map]) => {
+        if (map.categoryB === col.id) {
+          s2Sol[col.id] = { categoryA: aId, categoryC: map.categoryC };
+        }
+      });
+    });
+
+    // Stage 3: Master Challenge (4x4)
+    const s3Clues = [
+      ...clues,
+      `Examine every elimination carefully: no two ${catB.name.toLowerCase()} share the same ${catA.name.toLowerCase()}.`
+    ];
+
+    return [
+      {
+        id: 1,
+        title: `Stage 1: Preliminary Inquiry`,
+        difficulty: 'Easy (3x3)',
+        description: `Start your investigation by matching 3 ${catB.name.toLowerCase()} with the confirmed suspects and evidence.`,
+        columnCategory: catB.name,
+        columns: s1Cols,
+        categoryA: { name: catA.name, icon: '👤', items: s1ItemsA },
+        categoryC: { name: catC.name, icon: '🔍', items: s1ItemsC },
+        solution: s1Sol,
+        clues: s1Clues
+      },
+      {
+        id: 2,
+        title: raw.title || 'Stage 2: Full Investigation',
+        difficulty: 'Standard (4x4)',
+        description: raw.synopsis || raw.description || `Deduce all 4 ${catB.name.toLowerCase()} cross-referencing all clues.`,
+        columnCategory: catB.name,
+        columns: s2Cols,
+        categoryA: { name: catA.name, icon: '👤', items: catA.items },
+        categoryC: { name: catC.name, icon: '🔍', items: catC.items },
+        solution: s2Sol,
+        clues: clues
+      },
+      {
+        id: 3,
+        title: `Stage 3: Master Dossier`,
+        difficulty: 'Master (4x4)',
+        description: `The final deductive conclusion to completely close the dossier and unlock master status.`,
+        columnCategory: catB.name,
+        columns: s2Cols,
+        categoryA: { name: catA.name, icon: '👤', items: catA.items },
+        categoryC: { name: catC.name, icon: '🔍', items: catC.items },
+        solution: s2Sol,
+        clues: s3Clues
+      }
+    ];
+  }
+
+  get stage() {
+    return this.stages[this.currentLevelIndex];
+  }
+
+  initLevel(index) {
+    if (index > this.unlockedLevel) {
+      this.sound.playError();
+      this.showToast(`🔒 Complete Stage ${this.unlockedLevel + 1} first to unlock this case!`);
+      return;
+    }
+    this.currentLevelIndex = index;
+    this.tableState = {};
+    this.stage.columns.forEach((col, cIdx) => {
+      this.tableState[cIdx] = { categoryA: '', categoryC: '' };
+    });
+    this.crossedClues.clear();
+    this.history = [];
+    this.startTime = Date.now();
+    this.movesCount = 0;
+    this.render();
+  }
+
+  saveHistory() {
+    this.history.push(JSON.stringify(this.tableState));
+    if (this.history.length > 30) this.history.shift();
+  }
+
+  undo() {
+    if (this.history.length === 0) return;
+    const prev = this.history.pop();
+    this.tableState = JSON.parse(prev);
+    this.sound.playUndo();
+    this.renderTableOnly();
+  }
+
+  reset() {
+    this.sound.playClick();
+    this.stage.columns.forEach((col, cIdx) => {
+      this.tableState[cIdx] = { categoryA: '', categoryC: '' };
+    });
+    this.crossedClues.clear();
+    this.history = [];
+    this.movesCount = 0;
+    this.render();
+  }
+
+  giveHint() {
+    this.sound.playHint();
+    const stg = this.stage;
+    for (let cIdx = 0; cIdx < stg.columns.length; cIdx++) {
+      const col = stg.columns[cIdx];
+      const correct = stg.solution[col.id];
+      if (!correct) continue;
+
+      if (this.tableState[cIdx].categoryA !== correct.categoryA) {
+        this.saveHistory();
+        this.tableState[cIdx].categoryA = correct.categoryA;
+        this.movesCount++;
+        this.renderTableOnly();
+        const sel = document.querySelector(`select[data-col="${cIdx}"][data-cat="categoryA"]`);
+        if (sel) {
+          sel.classList.add('hint-flash');
+          setTimeout(() => sel.classList.remove('hint-flash'), 1200);
+        }
+        const itm = stg.categoryA.items.find(x => x.id === correct.categoryA);
+        this.showToast(`Hint: Set ${itm ? itm.name : ''} in ${col.name}`);
+        return;
+      }
+
+      if (this.tableState[cIdx].categoryC !== correct.categoryC) {
+        this.saveHistory();
+        this.tableState[cIdx].categoryC = correct.categoryC;
+        this.movesCount++;
+        this.renderTableOnly();
+        const sel = document.querySelector(`select[data-col="${cIdx}"][data-cat="categoryC"]`);
+        if (sel) {
+          sel.classList.add('hint-flash');
+          setTimeout(() => sel.classList.remove('hint-flash'), 1200);
+        }
+        const itm = stg.categoryC.items.find(x => x.id === correct.categoryC);
+        this.showToast(`Hint: Set ${itm ? itm.name : ''} in ${col.name}`);
+        return;
+      }
+    }
+
+    this.showToast('All fields already match the solution!');
+  }
+
+  checkSolution() {
+    const stg = this.stage;
+    let unfilled = 0;
+
+    for (let cIdx = 0; cIdx < stg.columns.length; cIdx++) {
+      if (!this.tableState[cIdx].categoryA) unfilled++;
+      if (!this.tableState[cIdx].categoryC) unfilled++;
+    }
+
+    if (unfilled > 0) {
+      this.sound.playError();
+      this.showToast(`Please fill all dropdowns (${unfilled} remaining)`);
+      return;
+    }
+
+    let isAllCorrect = true;
+    for (let cIdx = 0; cIdx < stg.columns.length; cIdx++) {
+      const col = stg.columns[cIdx];
+      const correct = stg.solution[col.id];
+      if (!correct ||
+          this.tableState[cIdx].categoryA !== correct.categoryA ||
+          this.tableState[cIdx].categoryC !== correct.categoryC) {
+        isAllCorrect = false;
+        break;
+      }
+    }
+
+    if (isAllCorrect) {
+      if (this.currentLevelIndex + 1 > this.unlockedLevel) {
+        this.unlockedLevel = Math.min(this.stages.length - 1, this.currentLevelIndex + 1);
+        localStorage.setItem('fl_unlocked_' + this.gameKey, this.unlockedLevel);
+      }
+      this.sound.playVictory();
+      const elapsedSec = Math.round((Date.now() - this.startTime) / 1000);
+      if (typeof window.triggerPlatformWin === 'function') {
+        window.triggerPlatformWin(elapsedSec);
+      }
+      this.showVictoryModal(elapsedSec);
+    } else {
+      this.sound.playError();
+      this.showToast('Some pairings do not match the clues. Keep investigating!');
+    }
+  }
+
+  showToast(msg) {
+    let toast = document.getElementById('game-toast');
+    if (!toast) {
+      toast = document.createElement('div');
+      toast.id = 'game-toast';
+      toast.className = 'game-toast';
+      document.body.appendChild(toast);
+    }
+    toast.textContent = msg;
+    toast.classList.add('show');
+    clearTimeout(this.toastTimeout);
+    this.toastTimeout = setTimeout(() => toast.classList.remove('show'), 2800);
+  }
+
+  showVictoryModal(elapsedSec) {
+    const isLast = this.currentLevelIndex >= this.stages.length - 1;
+    const modal = document.createElement('div');
+    modal.className = 'victory-overlay';
+    modal.innerHTML = `
+      <div class="victory-card">
+        <div class="victory-icon">${this.theme.icon}✨</div>
+        <h2 class="victory-title">Case Solved!</h2>
+        <p class="victory-sub">You deciphered <strong>${this.stage.title}</strong>!</p>
+        
+        <div class="victory-stats">
+          <div class="stat-box">
+            <span class="stat-label">Time</span>
+            <span class="stat-val">${Math.floor(elapsedSec / 60)}m ${elapsedSec % 60}s</span>
+          </div>
+          <div class="stat-box">
+            <span class="stat-label">Moves</span>
+            <span class="stat-val">${this.movesCount}</span>
+          </div>
+          <div class="stat-box">
+            <span class="stat-label">Difficulty</span>
+            <span class="stat-val">${this.stage.difficulty}</span>
+          </div>
+        </div>
+
+        <div class="victory-actions">
+          ${isLast ? `
+            <button id="btn-replay-all" class="btn-primary-action">🏆 Play from Stage 1</button>
+          ` : `
+            <button id="btn-next-stage" class="btn-primary-action">Next Case →</button>
+          `}
+          <button id="btn-close-victory" class="btn-secondary-action">Review Solution</button>
+        </div>
+      </div>
+    `;
+
+    document.body.appendChild(modal);
+
+    const btnNext = modal.querySelector('#btn-next-stage');
+    if (btnNext) {
+      btnNext.addEventListener('click', () => {
+        modal.remove();
+        this.initLevel(this.currentLevelIndex + 1);
+      });
+    }
+
+    const btnReplay = modal.querySelector('#btn-replay-all');
+    if (btnReplay) {
+      btnReplay.addEventListener('click', () => {
+        modal.remove();
+        this.initLevel(0);
+      });
+    }
+
+    const btnClose = modal.querySelector('#btn-close-victory');
+    if (btnClose) {
+      btnClose.addEventListener('click', () => modal.remove());
+    }
+  }
+
+  renderTableOnly() {
+    const container = this.root.querySelector('#zebra-table-container');
+    if (container) {
+      container.innerHTML = this.buildTableHtml();
+      this.bindTableEvents();
+    }
+  }
+
+  buildTableHtml() {
+    const stg = this.stage;
+    let html = `
+      <div class="table-responsive-wrapper">
+        <table class="zebra-grid-table">
+          <thead>
+            <tr>
+              <th class="category-header-cell">${stg.columnCategory}</th>
+    `;
+
+    for (let c = 0; c < stg.columns.length; c++) {
+      html += `<th class="column-header-cell">${stg.columns[c].name}</th>`;
+    }
+
+    html += `</tr></thead><tbody>`;
+
+    const categories = [
+      { id: 'categoryA', name: stg.categoryA.name, icon: stg.categoryA.icon || '👤', items: stg.categoryA.items },
+      { id: 'categoryC', name: stg.categoryC.name, icon: stg.categoryC.icon || '🔍', items: stg.categoryC.items }
+    ];
+
+    categories.forEach(cat => {
+      html += `
+        <tr>
+          <td class="category-label-cell">
+            <span class="cat-icon">${cat.icon}</span>
+            <span class="cat-name">${cat.name}</span>
+          </td>
+      `;
+
+      for (let c = 0; c < stg.columns.length; c++) {
+        const currentVal = this.tableState[c] ? this.tableState[c][cat.id] : '';
+        html += `
+          <td class="grid-select-cell">
+            <select class="zebra-select ${currentVal ? 'selected' : ''}" data-col="${c}" data-cat="${cat.id}">
+              <option value="">— Select —</option>
+              ${cat.items.map(itm => `
+                <option value="${itm.id}" ${currentVal === itm.id ? 'selected' : ''}>${itm.name}</option>
+              `).join('')}
+            </select>
+          </td>
+        `;
+      }
+
+      html += `</tr>`;
+    });
+
+    html += `</tbody></table></div>`;
+    return html;
+  }
+
+  bindTableEvents() {
+    const selects = this.root.querySelectorAll('.zebra-select');
+    selects.forEach(sel => {
+      sel.addEventListener('change', (e) => {
+        const col = parseInt(e.target.getAttribute('data-col'), 10);
+        const cat = e.target.getAttribute('data-cat');
+        const val = e.target.value;
+
+        this.saveHistory();
+        if (!this.tableState[col]) this.tableState[col] = { categoryA: '', categoryC: '' };
+        this.tableState[col][cat] = val;
+        this.movesCount++;
+
+        if (val) {
+          this.sound.playSelect();
+          e.target.classList.add('selected');
+        } else {
+          this.sound.playClick();
+          e.target.classList.remove('selected');
+        }
+      });
+    });
   }
 
   initDOM() {
-    this.root = document.getElementById('app-root');
+    this.root = document.getElementById('app-root') || document.getElementById('app');
     if (!this.root) {
       this.root = document.createElement('div');
       this.root.id = 'app-root';
       document.body.appendChild(this.root);
     }
-    this.root.className = 'fixed inset-0 w-full h-full overflow-hidden flex flex-col bg-slate-950 select-none';
 
-    this.renderContainer();
-    this.bindEvents();
-    this.showScreen('screen-main-menu');
+    this.injectStyles();
   }
 
-  renderContainer() {
-    const assets = window.GameAssets;
+  injectStyles() {
+    if (document.getElementById('zebra-engine-styles')) return;
+
+    const t = this.theme;
+    const style = document.createElement('style');
+    style.id = 'zebra-engine-styles';
+    style.textContent = `
+      :root {
+        --bg-page: ${t.bgPage || '#fbf9f4'};
+        --bg-card: #ffffff;
+        --bg-card-alt: #f4f0e6;
+        --border-subtle: #e2dcd0;
+        --border-strong: #c8bfb0;
+        --text-main: #2d261e;
+        --text-muted: #73695d;
+        --accent-theme: ${t.primary || '#991b1b'};
+        --accent-theme-dark: ${t.primaryDark || '#7f1d1d'};
+        --accent-gold: ${t.accent || '#d97706'};
+        --accent-gold-light: ${t.accentLight || '#fef3c7'};
+        --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06);
+        --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.08);
+        --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        --radius-sm: 6px;
+        --radius-md: 10px;
+      }
+
+      * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+      html, body {
+        width: 100%;
+        max-width: 100vw;
+        height: 100%;
+        height: 100dvh;
+        overflow: hidden;
+        background-color: var(--bg-page);
+        color: var(--text-main);
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      #app-root, #app {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .zebra-app-root {
+        width: 100%;
+        max-width: 100vw;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        background-color: var(--bg-page);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .zebra-header {
+        flex: 0 0 auto;
+        padding: 6px 8px;
+        display: flex;
+        flex-direction: column;
+        background: #ffffff;
+        border-bottom: 1px solid var(--border-subtle);
+        box-shadow: var(--shadow-sm);
+        z-index: 30;
+        gap: 5px;
+        width: 100%;
+        box-sizing: border-box;
+      }
+
+      .header-top-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        gap: 6px;
+      }
+
+      .header-left {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        min-width: 0;
+        flex: 1 1 auto;
+      }
+
+      .btn-icon-text {
+        display: flex;
+        align-items: center;
+        gap: 3px;
+        padding: 4px 7px;
+        height: 30px;
+        background: #f1ede4;
+        border: 1px solid var(--border-subtle);
+        border-radius: var(--radius-sm);
+        color: var(--text-main);
+        font-size: 11px;
+        font-weight: 700;
+        cursor: pointer;
+        flex-shrink: 0;
+        transition: all 0.15s ease;
+      }
+      .btn-icon-text:hover { background: #e6e0d3; }
+      .btn-icon-text:active { transform: scale(0.96); }
+
+      .header-title-box {
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+        overflow: hidden;
+      }
+
+      .header-title {
+        font-size: 13px;
+        font-weight: 800;
+        color: var(--text-main);
+        letter-spacing: -0.2px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        line-height: 1.2;
+      }
+
+      .header-badge {
+        font-size: 9px;
+        font-weight: 700;
+        color: var(--accent-theme);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        line-height: 1;
+      }
+
+      .stage-nav-pills {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        overflow-x: auto;
+        padding: 1px 0 3px 0;
+        width: 100%;
+        scrollbar-width: none;
+        -webkit-overflow-scrolling: touch;
+      }
+      .stage-nav-pills::-webkit-scrollbar { display: none; }
+
+      .stage-pill {
+        padding: 3px 9px;
+        border-radius: 999px;
+        font-size: 10.5px;
+        font-weight: 700;
+        border: 1px solid var(--border-subtle);
+        background: #f8f6f0;
+        color: var(--text-muted);
+        cursor: pointer;
+        white-space: nowrap;
+        flex-shrink: 0;
+        transition: all 0.15s ease;
+      }
+      .stage-pill:hover { background: #ede7d9; color: var(--text-main); }
+      .stage-pill.active {
+        background: var(--accent-theme);
+        border-color: var(--accent-theme-dark);
+        color: #ffffff;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      }
+      .stage-pill.locked {
+        opacity: 0.6;
+        background: #f1ede4;
+        color: var(--text-muted);
+        border-style: dashed;
+        cursor: pointer;
+      }
+      .stage-pill.locked:hover { background: #e7e2d6; }
+
+      .header-right {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        flex-shrink: 0;
+      }
+
+      .btn-icon-only {
+        width: 30px;
+        height: 30px;
+        border-radius: var(--radius-sm);
+        border: 1px solid var(--border-subtle);
+        background: #f8f6f0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 13px;
+        cursor: pointer;
+        transition: all 0.15s ease;
+      }
+      .btn-icon-only:hover { background: #ede7d9; }
+
+      .zebra-main-content {
+        flex: 1 1 auto;
+        overflow-y: auto;
+        overflow-x: hidden;
+        overscroll-behavior-y: contain;
+        -webkit-overflow-scrolling: touch;
+        padding: 6px 8px 65px 8px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        max-width: 1000px;
+        margin: 0 auto;
+        width: 100%;
+        box-sizing: border-box;
+      }
+      .zebra-main-content > * {
+        flex-shrink: 0;
+      }
+
+      .level-intro-card {
+        background: var(--bg-card);
+        border: 1px solid var(--border-subtle);
+        border-left: 3px solid var(--accent-theme);
+        border-radius: var(--radius-sm);
+        padding: 6px 8px;
+        box-shadow: var(--shadow-sm);
+      }
+      .intro-badge { font-size: 10.5px; font-weight: 800; color: var(--accent-theme-dark); margin-bottom: 2px; }
+      .intro-desc { font-size: 10.5px; color: var(--text-muted); line-height: 1.3; }
+
+      .table-card-wrapper {
+        background: #ffffff;
+        border: 1px solid var(--border-subtle);
+        border-radius: var(--radius-md);
+        box-shadow: var(--shadow-md);
+        padding: 4px;
+        overflow: visible;
+        position: relative;
+        width: 100%;
+        box-sizing: border-box;
+      }
+
+      .table-scroll-hint {
+        font-size: 10px;
+        font-weight: 700;
+        color: var(--accent-theme-dark);
+        text-align: center;
+        padding: 3px 6px;
+        background: var(--accent-gold-light);
+        border-radius: var(--radius-sm);
+        margin-bottom: 4px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+      }
+
+      .table-responsive-wrapper {
+        width: 100%;
+        overflow-x: auto;
+        overflow-y: visible;
+        -webkit-overflow-scrolling: touch;
+        padding-bottom: 2px;
+      }
+
+      .zebra-grid-table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 3px;
+      }
+
+      .category-header-cell {
+        position: sticky;
+        left: 0;
+        z-index: 20;
+        background: #ffffff;
+        padding: 5px 6px;
+        font-size: 10.5px;
+        font-weight: 800;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        text-align: left;
+        width: 115px;
+        min-width: 115px;
+        max-width: 115px;
+        box-shadow: 2px 0 6px -2px rgba(0, 0, 0, 0.12);
+        box-sizing: border-box;
+      }
+
+      .category-label-cell {
+        position: sticky;
+        left: 0;
+        z-index: 15;
+        background: var(--bg-card-alt);
+        padding: 5px 6px;
+        font-size: 11px;
+        font-weight: 700;
+        line-height: 1.25;
+        color: var(--text-main);
+        border: 1px solid var(--border-subtle);
+        border-radius: var(--radius-sm);
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        width: 115px;
+        min-width: 115px;
+        max-width: 115px;
+        box-shadow: 2px 0 6px -2px rgba(0, 0, 0, 0.12);
+        box-sizing: border-box;
+      }
+
+      .column-header-cell {
+        padding: 5px 6px;
+        font-size: 11.5px;
+        font-weight: 800;
+        color: var(--accent-theme-dark);
+        background: var(--accent-gold-light);
+        border: 1px solid #fde68a;
+        border-radius: var(--radius-sm);
+        text-align: center;
+        min-width: 125px;
+        width: 125px;
+        box-sizing: border-box;
+      }
+
+      .cat-icon { font-size: 13px; flex-shrink: 0; }
+      .cat-name { white-space: normal; line-height: 1.15; word-break: break-word; }
+
+      .grid-select-cell { text-align: center; min-width: 125px; width: 125px; box-sizing: border-box; }
+
+      .zebra-select {
+        width: 100%;
+        height: 35px;
+        min-height: 35px;
+        padding: 3px 4px;
+        font-size: 11px;
+        font-weight: 600;
+        color: var(--text-main);
+        background-color: #ffffff;
+        border: 1.5px solid var(--border-strong);
+        border-radius: var(--radius-sm);
+        outline: none;
+        cursor: pointer;
+        transition: all 0.15s ease;
+        box-shadow: inset 0 1px 2px rgba(0,0,0,0.04);
+      }
+      .zebra-select:focus { border-color: var(--accent-theme); box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.15); }
+      .zebra-select.selected {
+        background-color: #fefce8;
+        border-color: #eab308;
+        font-weight: 700;
+        color: #854d0e;
+      }
+      .zebra-select.hint-flash { animation: hintPulse 1s ease; }
+
+      @keyframes hintPulse {
+        0%, 100% { background-color: #ffffff; }
+        50% { background-color: #bbf7d0; border-color: #16a34a; transform: scale(1.03); }
+      }
+
+      .clues-card-section {
+        background: var(--bg-card);
+        border: 1px solid var(--border-subtle);
+        border-radius: var(--radius-md);
+        padding: 8px 10px;
+        box-shadow: var(--shadow-sm);
+      }
+      .clues-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 6px;
+        padding-bottom: 4px;
+        border-bottom: 1px solid var(--border-subtle);
+      }
+      .clues-title { display: flex; align-items: center; gap: 4px; }
+      .clues-icon { font-size: 14px; }
+      .clues-title h2 { font-size: 12.5px; font-weight: 800; color: var(--text-main); }
+      .clues-hint-note { font-size: 9.5px; font-weight: 600; color: var(--text-muted); }
+
+      .clues-two-col-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 5px;
+      }
+      @media (min-width: 680px) {
+        .clues-two-col-grid { grid-template-columns: 1fr 1fr; }
+      }
+
+      .clue-card {
+        display: flex;
+        align-items: flex-start;
+        gap: 6px;
+        padding: 6px 8px;
+        background: #fdfcf9;
+        border: 1px solid var(--border-subtle);
+        border-radius: var(--radius-sm);
+        cursor: pointer;
+        transition: all 0.15s ease;
+      }
+      .clue-card:hover { background: #f7f3ea; border-color: var(--border-strong); }
+      .clue-num {
+        flex: 0 0 auto;
+        width: 17px;
+        height: 17px;
+        border-radius: 50%;
+        background: #ede7d9;
+        color: var(--text-muted);
+        font-size: 9.5px;
+        font-weight: 800;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 1px;
+      }
+      .clue-text { flex: 1 1 auto; font-size: 11px; color: var(--text-main); line-height: 1.35; margin: 0; }
+      .clue-card.crossed { background: #f1ede4; opacity: 0.55; }
+      .clue-card.crossed .clue-text { text-decoration: line-through; color: var(--text-muted); }
+      .clue-card.crossed .clue-num { background: #cbd5e1; color: #64748b; }
+
+      .zebra-footer-toolbar {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 48px;
+        background: #ffffff;
+        border-top: 1px solid var(--border-subtle);
+        box-shadow: 0 -3px 10px rgba(0, 0, 0, 0.06);
+        padding: 0 6px;
+        padding-bottom: max(2px, env(safe-area-inset-bottom));
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        z-index: 40;
+        gap: 4px;
+        box-sizing: border-box;
+      }
+      .toolbar-left { display: flex; align-items: center; gap: 4px; flex: 1 1 auto; }
+      .tool-btn {
+        height: 34px;
+        padding: 0 6px;
+        border-radius: var(--radius-sm);
+        border: 1px solid var(--border-subtle);
+        background: #f8f6f0;
+        color: var(--text-main);
+        font-size: 11px;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        gap: 2px;
+        cursor: pointer;
+        white-space: nowrap;
+        transition: all 0.15s ease;
+      }
+      .tool-btn:hover { background: #ede7d9; }
+      .tool-btn:active { transform: scale(0.96); }
+      .tool-btn.highlight {
+        background: var(--accent-gold-light);
+        border-color: #fde68a;
+        color: var(--accent-theme-dark);
+      }
+
+      .btn-solve-action {
+        height: 34px;
+        padding: 0 10px;
+        border-radius: var(--radius-sm);
+        border: none;
+        background: linear-gradient(135deg, var(--accent-theme), var(--accent-theme-dark));
+        color: #ffffff;
+        font-size: 11.5px;
+        font-weight: 800;
+        display: flex;
+        align-items: center;
+        gap: 3px;
+        cursor: pointer;
+        white-space: nowrap;
+        box-shadow: 0 3px 8px rgba(0, 0, 0, 0.25);
+        transition: all 0.15s ease;
+        flex-shrink: 0;
+      }
+      .btn-solve-action:active { transform: scale(0.96); }
+
+      .game-toast {
+        position: fixed;
+        top: 60px;
+        left: 50%;
+        transform: translateX(-50%) translateY(-20px);
+        background: rgba(30, 25, 20, 0.95);
+        color: #ffffff;
+        padding: 8px 14px;
+        border-radius: 999px;
+        font-size: 12px;
+        font-weight: 700;
+        box-shadow: var(--shadow-lg);
+        pointer-events: none;
+        opacity: 0;
+        transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        z-index: 99999;
+        text-align: center;
+        max-width: 90vw;
+      }
+      .game-toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+
+      .victory-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(15, 23, 42, 0.75);
+        backdrop-filter: blur(6px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+        padding: 14px;
+        animation: fadeIn 0.25s ease;
+      }
+      @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+      .victory-card {
+        background: #ffffff;
+        border-radius: var(--radius-md);
+        padding: 20px;
+        max-width: 380px;
+        width: 100%;
+        text-align: center;
+        box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.25);
+        animation: scaleUp 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      }
+      @keyframes scaleUp { from { transform: scale(0.85); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+      .victory-icon { font-size: 34px; margin-bottom: 4px; }
+      .victory-title { font-size: 18px; font-weight: 900; color: var(--accent-theme-dark); margin-bottom: 4px; }
+      .victory-sub { font-size: 12px; color: var(--text-muted); margin-bottom: 14px; }
+      .victory-stats { display: flex; gap: 6px; margin-bottom: 16px; }
+      .stat-box {
+        flex: 1;
+        background: #f8f6f0;
+        border: 1px solid var(--border-subtle);
+        border-radius: var(--radius-sm);
+        padding: 6px 2px;
+        display: flex;
+        flex-direction: column;
+        gap: 1px;
+      }
+      .stat-label { font-size: 9px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; }
+      .stat-val { font-size: 13px; font-weight: 800; color: var(--text-main); }
+      .victory-actions { display: flex; flex-direction: column; gap: 6px; }
+      .btn-primary-action {
+        width: 100%;
+        height: 40px;
+        border-radius: var(--radius-sm);
+        border: none;
+        background: linear-gradient(135deg, var(--accent-theme), var(--accent-theme-dark));
+        color: #ffffff;
+        font-size: 13px;
+        font-weight: 800;
+        cursor: pointer;
+        box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+        transition: all 0.15s ease;
+      }
+      .btn-secondary-action {
+        width: 100%;
+        height: 36px;
+        border-radius: var(--radius-sm);
+        border: 1px solid var(--border-subtle);
+        background: #f8f6f0;
+        color: var(--text-muted);
+        font-size: 11px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.15s ease;
+      }
+      .btn-secondary-action:hover { background: #ede7d9; color: var(--text-main); }
+
+      @media (min-width: 900px) {
+        .zebra-header {
+          flex-direction: row;
+          align-items: center;
+          justify-content: space-between;
+          height: 56px;
+          padding: 0 20px;
+          gap: 16px;
+        }
+        .header-top-row { width: auto; flex: 0 0 auto; }
+        .stage-nav-pills { width: auto; flex: 1 1 auto; justify-content: center; }
+        .table-scroll-hint { display: none; }
+        .category-header-cell, .category-label-cell { width: 120px; min-width: 120px; font-size: 12px; padding: 6px 10px; }
+        .column-header-cell, .grid-select-cell { min-width: 140px; font-size: 12px; }
+        .zebra-select { height: 38px; min-height: 38px; font-size: 12px; }
+      }
+    `;
+
+    document.head.appendChild(style);
+  }
+
+  render() {
+    const isMuted = this.sound.isMuted;
+    const stg = this.stage;
+
     this.root.innerHTML = `
-      <!-- CAMADA 1: HTML5 Canvas -->
-      <canvas id="bg-canvas"></canvas>
-
-      <!-- CAMADA 2: DOM Screens -->
-      <!-- 1. Screen Main Menu -->
-      <div id="screen-main-menu" class="screen-layer justify-between p-6 overflow-y-auto">
-        <div class="w-full max-w-4xl mx-auto flex items-center justify-between py-2 border-b border-white/10">
-          <div class="flex items-center gap-3">
-            <span class="text-2xl">${this.level.icon || '🔍'}</span>
-            <div>
-              <div class="text-xs uppercase tracking-widest text-amber-400 font-mono">Case Dossier File</div>
-              <h1 class="text-xl md:text-2xl font-bold font-display text-white">${this.level.title}</h1>
-            </div>
-          </div>
-          <div class="flex items-center gap-2">
-            ${this.onBack ? `<button id="btn-menu-back" class="btn text-xs">${assets.get('back')} Back to Hub</button>` : ''}
-            <button id="btn-sound-toggle-menu" class="btn btn-icon text-slate-400" title="Toggle Sound">
-              ${assets.get(window.soundEngine?.isMuted ? 'volumeOff' : 'volumeOn')}
-            </button>
-          </div>
-        </div>
-
-        <div class="w-full max-w-4xl mx-auto flex-1 flex flex-col justify-center items-center text-center py-8">
-          <div class="max-w-2xl bg-slate-900/80 backdrop-blur-md p-6 md:p-8 rounded-2xl border border-white/10 shadow-2xl">
-            <div class="inline-block px-3 py-1 rounded-full text-xs font-mono text-amber-300 bg-amber-500/10 border border-amber-500/30 mb-4">
-              Difficulty: ${this.level.difficulty || 'Standard 4x4'}
-            </div>
-            <h2 class="text-2xl md:text-3xl font-bold font-display text-white mb-3">${this.level.subtitle || 'Unravel the Mystery'}</h2>
-            <p class="text-slate-300 text-sm md:text-base leading-relaxed mb-6">
-              ${this.level.synopsis || this.level.description || 'Analyze the suspects, locations, and evidence using classic logical grid deduction.'}
-            </p>
-
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-left mb-6 text-xs text-slate-400 font-mono">
-              <div class="p-3 bg-slate-950/60 rounded-lg border border-white/5">
-                <span class="text-amber-400 block mb-1">A: ${this.level.categories.categoryA.name || 'Category A'}</span>
-                ${this.level.categories.categoryA.items.map(i => i.name).join(' · ')}
-              </div>
-              <div class="p-3 bg-slate-950/60 rounded-lg border border-white/5">
-                <span class="text-emerald-400 block mb-1">B: ${this.level.categories.categoryB.name || 'Category B'}</span>
-                ${this.level.categories.categoryB.items.map(i => i.name).join(' · ')}
-              </div>
-              <div class="p-3 bg-slate-950/60 rounded-lg border border-white/5">
-                <span class="text-rose-400 block mb-1">C: ${this.level.categories.categoryC.name || 'Category C'}</span>
-                ${this.level.categories.categoryC.items.map(i => i.name).join(' · ')}
-              </div>
-            </div>
-
-            <div class="flex flex-wrap items-center justify-center gap-3">
-              <button id="btn-start-game" class="btn btn-primary px-6 py-2.5 text-sm md:text-base">
-                ${assets.get('search')} Open Case File & Solve
-              </button>
-              <button id="btn-show-tutorial" class="btn px-4 py-2.5 text-xs text-slate-300">
-                ${assets.get('info')} How to Deduce
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <div class="w-full max-w-4xl mx-auto flex items-center justify-between text-xs text-slate-500 font-mono py-2 border-t border-white/10">
-          <span>Best Record: <strong id="menu-best-time" class="text-amber-400">--:--</strong></span>
-          <span>Status: <strong id="menu-solved-badge" class="text-slate-400">UNSOLVED</strong></span>
-        </div>
-      </div>
-
-      <!-- 2. Screen Tutorial -->
-      <div id="screen-tutorial" class="hidden screen-layer justify-between p-6 overflow-y-auto">
-        <div class="w-full max-w-3xl mx-auto bg-slate-900/95 backdrop-blur-md p-6 md:p-8 rounded-2xl border border-white/10 my-auto shadow-2xl">
-          <div class="flex items-center justify-between mb-4 border-b border-white/10 pb-3">
-            <h2 class="text-xl font-bold font-display text-white flex items-center gap-2">
-              ${assets.get('info')} Detective Deduction Manual
-            </h2>
-            <button id="btn-close-tutorial" class="btn btn-icon text-xs">${assets.get('cross')}</button>
-          </div>
-          <div class="space-y-4 text-sm text-slate-300 leading-relaxed">
-            <p><strong class="text-amber-400">1. The Logic Grid Matrix:</strong> Each cell represents a potential relationship between two items. Every suspect belongs to exactly one location and one object.</p>
-            <p><strong class="text-rose-400">2. Marking Crosses (❌):</strong> Tap a cell once to rule out an impossibility when a clue proves two items cannot match.</p>
-            <p><strong class="text-emerald-400">3. Marking Checks (✔️):</strong> Tap a second time to confirm a verified match. When Auto-Eliminate is active, the rest of that subgrid's row and column are crossed automatically.</p>
-            <p><strong class="text-amber-400">4. Deduction Notebook:</strong> Track established connections live on the left panel. Use the Clues checklist to cross off analyzed evidence.</p>
-            <p><strong class="text-slate-300">5. Single-Click Undo:</strong> Experiment boldly—you can undo any step anytime without penalty.</p>
-          </div>
-          <div class="mt-6 text-right">
-            <button id="btn-tutorial-ok" class="btn btn-primary px-6 py-2">Got It, Let's Investigate</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- 3. Screen Gameplay -->
-      <div id="screen-gameplay" class="hidden screen-layer">
+      <div class="zebra-app-root">
         <!-- HEADER -->
-        <header class="app-header">
-          <div class="flex items-center gap-2 md:gap-3">
-            <button id="btn-back-to-menu" class="btn text-xs py-1.5 px-2.5 text-slate-300" title="Return to Case Menu">
-              ${assets.get('back')} <span class="hidden sm:inline">Case File</span>
-            </button>
-            <div class="h-4 w-px bg-white/15 hidden sm:block"></div>
-            <div>
-              <span class="text-xs font-mono text-amber-400 block sm:inline mr-2">${this.level.difficulty}</span>
-              <strong class="text-xs md:text-sm font-display text-white truncate max-w-[140px] sm:max-w-xs inline-block align-bottom">${this.level.title}</strong>
+        <header class="zebra-header">
+          <div class="header-top-row">
+            <div class="header-left">
+              <button id="btn-back" class="btn-icon-text" title="Go back">
+                <span class="btn-icon">←</span>
+                <span class="btn-text">Back</span>
+              </button>
+              <div class="header-title-box">
+                <h1 class="header-title">${this.rawLevel.title || 'Logic Grid Mystery'}</h1>
+                <span class="header-badge">${this.theme.badge || 'Einstein Logic Grid'}</span>
+              </div>
+            </div>
+
+            <div class="header-right">
+              <button id="btn-sound-toggle" class="btn-icon-only" title="Toggle Sound">
+                ${isMuted ? '🔇' : '🔔'}
+              </button>
             </div>
           </div>
 
-          <div class="flex items-center gap-1.5 md:gap-2">
-            <!-- Timer & Solved Counter -->
-            <div class="flex items-center gap-1 bg-slate-950/80 px-2.5 py-1 rounded-md border border-white/10 text-xs font-mono text-slate-200">
-              ${assets.get('clock')} <span id="game-timer">00:00</span>
-            </div>
-            <div class="hidden md:flex items-center gap-1 bg-slate-950/80 px-2.5 py-1 rounded-md border border-white/10 text-xs font-mono text-emerald-400" title="Confirmed Matches">
-              ${assets.get('check')} <span id="game-pairs-counter">0 / 12</span>
-            </div>
-
-            <!-- Controls -->
-            <button id="btn-undo" class="btn btn-icon text-slate-300" title="Undo Move (Z)">
-              ${assets.get('undo')}
-            </button>
-            <button id="btn-auto-cross" class="btn text-xs py-1.5 px-2 font-mono text-emerald-400 bg-emerald-500/10 border-emerald-500/30" title="Toggle Auto Cross">
-              ${assets.get('zap')} <span class="hidden lg:inline">Auto-X</span>
-            </button>
-            <button id="btn-hint" class="btn btn-icon text-amber-400" title="Deduction Clue Hint">
-              ${assets.get('hint')}
-            </button>
-            <button id="btn-sound-toggle-game" class="btn btn-icon text-slate-400" title="Toggle Audio">
-              ${assets.get(window.soundEngine?.isMuted ? 'volumeOff' : 'volumeOn')}
-            </button>
+          <div class="stage-nav-pills">
+            ${this.stages.map((s, idx) => {
+              const isLocked = idx > this.unlockedLevel;
+              const isActive = idx === this.currentLevelIndex;
+              return `
+                <button class="stage-pill ${isActive ? 'active' : ''} ${isLocked ? 'locked' : ''}" data-stage="${idx}" title="${isLocked ? 'Locked Case' : `Stage ${idx + 1}`}">
+                  ${isLocked ? '🔒 ' : ''}Stage ${idx + 1}
+                </button>
+              `;
+            }).join('')}
           </div>
         </header>
 
-        <!-- MOBILE TAB BAR -->
-        <div class="mobile-tabs lg:hidden">
-          <button class="mobile-tab-btn active" data-tab="grid">
-            ${assets.get('grid')} Logic Grid
-          </button>
-          <button class="mobile-tab-btn" data-tab="clues">
-            ${assets.get('list')} Clues (<span id="tab-clues-count">${this.level.clues.length}</span>)
-          </button>
-          <button class="mobile-tab-btn" data-tab="notebook">
-            ${assets.get('notebook')} Notebook
-          </button>
-        </div>
+        <!-- MAIN SCROLLABLE CONTENT -->
+        <main class="zebra-main-content">
+          <div class="level-intro-card">
+            <div class="intro-badge">${stg.title} • ${stg.difficulty}</div>
+            <p class="intro-desc">${stg.description}</p>
+          </div>
 
-        <!-- MAIN SPLIT VIEW -->
-        <div class="gameplay-body">
-          <!-- LEFT PANEL: Case Briefing & Real-time Deduction Notebook (Desktop Split) -->
-          <div id="panel-left" class="left-panel p-4 space-y-4">
-            <!-- Case Synopsis Card -->
-            <div class="bg-slate-900/80 p-3.5 rounded-xl border border-white/10">
-              <div class="text-xs font-mono uppercase text-amber-400 mb-1 flex items-center justify-between">
-                <span>The Case Dossier</span>
-                <span class="text-slate-500">${this.level.icon}</span>
-              </div>
-              <p class="text-xs text-slate-300 leading-relaxed">${this.level.synopsis || this.level.description}</p>
-            </div>
-
-            <!-- Solved Matches Live Notebook -->
-            <div class="bg-slate-900/80 p-3.5 rounded-xl border border-white/10 flex-1 flex flex-col min-h-[220px]">
-              <div class="flex items-center justify-between mb-3 border-b border-white/10 pb-2">
-                <h3 class="text-xs font-bold uppercase tracking-wider font-mono text-emerald-400 flex items-center gap-1.5">
-                  ${assets.get('notebook')} Deduction Notebook
-                </h3>
-                <span id="notebook-status" class="text-xs font-mono text-slate-400">0 of 12 proven</span>
-              </div>
-              <div id="notebook-list" class="space-y-1.5 overflow-y-auto max-h-[300px] flex-1 text-xs">
-                <!-- Dynamically populated -->
-              </div>
-            </div>
-
-            <!-- Legend -->
-            <div class="p-2.5 rounded-lg bg-slate-950/60 border border-white/5 text-[11px] text-slate-400 flex items-center justify-around font-mono">
-              <span class="flex items-center gap-1"><span class="w-3.5 h-3.5 border border-white/20 rounded bg-slate-800 inline-block"></span> Tap: Empty</span>
-              <span class="flex items-center gap-1"><span class="text-rose-400 font-bold">❌</span> 1st: Impossible</span>
-              <span class="flex items-center gap-1"><span class="text-emerald-400 font-bold">✔️</span> 2nd: Match</span>
+          <!-- TABLE -->
+          <div class="table-card-wrapper">
+            <div class="table-scroll-hint">↔ Swipe horizontally to view all ${stg.columnCategory.toLowerCase()}</div>
+            <div id="zebra-table-container">
+              ${this.buildTableHtml()}
             </div>
           </div>
 
-          <!-- RIGHT PANEL: Logic Grid & Clues Checklist -->
-          <div id="panel-right" class="right-panel space-y-6">
-            <!-- Grid Container -->
-            <div id="tab-content-grid" class="flex flex-col items-center justify-center overflow-x-auto w-full py-2">
-              <div id="matrix-wrapper" class="grid-container max-w-full overflow-x-auto">
-                <!-- Dynamically populated matrix table -->
+          <!-- CLUES -->
+          <section class="clues-card-section">
+            <div class="clues-header">
+              <div class="clues-title">
+                <span class="clues-icon">📜</span>
+                <h2>Investigation Clues & Evidence</h2>
               </div>
+              <span class="clues-hint-note">Click any clue to cross it out</span>
             </div>
 
-            <!-- Clues Section -->
-            <div id="tab-content-clues" class="w-full max-w-3xl mx-auto">
-              <div class="flex items-center justify-between mb-3 border-b border-white/10 pb-2">
-                <h3 class="text-xs font-bold uppercase tracking-wider font-mono text-amber-400 flex items-center gap-1.5">
-                  ${assets.get('list')} Evidence & Clues Checklist
-                </h3>
-                <span class="text-xs text-slate-400">Tap clue to cross off</span>
-              </div>
-              <div id="clues-list" class="space-y-2">
-                <!-- Dynamically populated clues -->
-              </div>
+            <div class="clues-two-col-grid">
+              ${stg.clues.map((clueText, idx) => {
+                const isCrossed = this.crossedClues.has(idx);
+                return `
+                  <div class="clue-card ${isCrossed ? 'crossed' : ''}" data-clue-idx="${idx}">
+                    <span class="clue-num">${idx + 1}</span>
+                    <p class="clue-text">${clueText}</p>
+                  </div>
+                `;
+              }).join('')}
             </div>
+          </section>
+        </main>
+
+        <!-- FOOTER TOOLBAR -->
+        <footer class="zebra-footer-toolbar">
+          <div class="toolbar-left">
+            <button id="btn-undo" class="tool-btn" title="Undo last change">
+              <span class="tool-icon">↶</span>
+              <span>Undo</span>
+            </button>
+            <button id="btn-reset" class="tool-btn" title="Reset table">
+              <span class="tool-icon">🔄</span>
+              <span>Reset</span>
+            </button>
+            <button id="btn-hint" class="tool-btn highlight" title="Get a hint">
+              <span class="tool-icon">💡</span>
+              <span>Hint</span>
+            </button>
           </div>
-        </div>
 
-        <!-- FOOTER TICKER -->
-        <footer class="ticker-bar">
-          <span class="text-amber-400 font-mono mr-2 shrink-0">LOGIC TICKER:</span>
-          <span id="ticker-text" class="truncate">Select any clue or tap cells to deduce the mystery.</span>
+          <button id="btn-check-solution" class="btn-solve-action">
+            <span class="solve-icon">🔍</span>
+            <span>Check Solution</span>
+          </button>
         </footer>
-      </div>
-
-      <!-- MODAL VICTORY -->
-      <div id="modal-victory" class="hidden modal-overlay">
-        <div class="modal-content text-center">
-          <div class="w-16 h-16 mx-auto rounded-full bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400 mb-4 shadow-lg">
-            ${assets.get('trophy')}
-          </div>
-          <div class="text-xs uppercase font-mono tracking-widest text-amber-400 mb-1">Case Solved With Absolute Logic</div>
-          <h2 class="text-2xl font-bold font-display text-white mb-2">Brilliant Investigation!</h2>
-          <p id="victory-summary" class="text-xs text-slate-300 mb-6 leading-relaxed">
-            All 12 logical correlations across suspects, locations, and artifacts have been verified beyond any doubt.
-          </p>
-
-          <div class="grid grid-cols-2 gap-3 mb-6 font-mono text-xs">
-            <div class="p-3 bg-slate-950/80 rounded-lg border border-white/10">
-              <span class="text-slate-400 block mb-0.5">Investigation Time</span>
-              <strong id="victory-time" class="text-lg text-amber-400">00:00</strong>
-            </div>
-            <div class="p-3 bg-slate-950/80 rounded-lg border border-white/10">
-              <span class="text-slate-400 block mb-0.5">Total Deductive Moves</span>
-              <strong id="victory-moves" class="text-lg text-emerald-400">0</strong>
-            </div>
-          </div>
-
-          <div class="flex items-center justify-center gap-3">
-            <button id="btn-victory-replay" class="btn px-4 py-2 text-xs">Play Again</button>
-            <button id="btn-victory-menu" class="btn btn-primary px-6 py-2 text-xs">Case File Closed</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- MODAL HINT -->
-      <div id="modal-hint" class="hidden modal-overlay">
-        <div class="modal-content">
-          <div class="flex items-center justify-between mb-3 border-b border-white/10 pb-2">
-            <h3 class="text-sm font-bold font-display text-amber-400 flex items-center gap-2">
-              ${assets.get('hint')} Logic Deduction Assistant
-            </h3>
-            <button id="btn-close-hint" class="btn btn-icon text-xs">${assets.get('cross')}</button>
-          </div>
-          <div id="hint-content" class="text-xs text-slate-200 leading-relaxed space-y-3 mb-5">
-            <!-- Dynamically generated -->
-          </div>
-          <div class="text-right">
-            <button id="btn-apply-hint" class="btn btn-primary text-xs px-4 py-1.5">Highlight In Grid</button>
-          </div>
-        </div>
       </div>
     `;
 
-    this.updateRecordDisplay();
+    this.bindEvents();
+    this.bindTableEvents();
   }
 
   bindEvents() {
-    // Menu buttons
-    document.getElementById('btn-start-game')?.addEventListener('click', () => {
-      this.sound.playClick();
-      this.startGame();
-    });
-
-    document.getElementById('btn-show-tutorial')?.addEventListener('click', () => {
-      this.sound.playClick();
-      this.showScreen('screen-tutorial');
-    });
-
-    document.getElementById('btn-close-tutorial')?.addEventListener('click', () => {
-      this.sound.playClick();
-      this.showScreen('screen-main-menu');
-    });
-
-    document.getElementById('btn-tutorial-ok')?.addEventListener('click', () => {
-      this.sound.playClick();
-      this.startGame();
-    });
-
-    document.getElementById('btn-menu-back')?.addEventListener('click', () => {
-      this.sound.playClick();
-      if (this.onBack) this.onBack();
-    });
-
-    // Sound Toggles
-    const toggleSound = () => {
-      const isMuted = this.sound.toggleMute();
-      const icon = window.GameAssets.get(isMuted ? 'volumeOff' : 'volumeOn');
-      const b1 = document.getElementById('btn-sound-toggle-menu');
-      const b2 = document.getElementById('btn-sound-toggle-game');
-      if (b1) b1.innerHTML = icon;
-      if (b2) b2.innerHTML = icon;
-      if (!isMuted) this.sound.playClick();
-    };
-    document.getElementById('btn-sound-toggle-menu')?.addEventListener('click', toggleSound);
-    document.getElementById('btn-sound-toggle-game')?.addEventListener('click', toggleSound);
-
-    // Gameplay Header
-    document.getElementById('btn-back-to-menu')?.addEventListener('click', () => {
-      this.sound.playClick();
-      this.stopTimer();
-      this.showScreen('screen-main-menu');
-    });
-
-    document.getElementById('btn-undo')?.addEventListener('click', () => {
-      this.undo();
-    });
-
-    document.getElementById('btn-auto-cross')?.addEventListener('click', () => {
-      this.autoCross = !this.autoCross;
-      const btn = document.getElementById('btn-auto-cross');
-      if (btn) {
-        btn.className = `btn text-xs py-1.5 px-2 font-mono ${this.autoCross ? 'text-emerald-400 bg-emerald-500/10 border-emerald-500/30' : 'text-slate-400 bg-slate-800'}`;
-      }
-      this.sound.playClick();
-    });
-
-    document.getElementById('btn-hint')?.addEventListener('click', () => {
-      this.provideHint();
-    });
-
-    // Mobile tabs
-    document.querySelectorAll('.mobile-tab-btn').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        const tab = e.currentTarget.getAttribute('data-tab');
-        this.switchMobileTab(tab);
+    this.root.querySelectorAll('.stage-pill').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const idx = parseInt(btn.getAttribute('data-stage'), 10);
+        this.sound.playClick();
+        this.initLevel(idx);
       });
     });
 
-    // Victory buttons
-    document.getElementById('btn-victory-replay')?.addEventListener('click', () => {
-      document.getElementById('modal-victory').classList.add('hidden');
-      this.startGame();
-    });
-
-    document.getElementById('btn-victory-menu')?.addEventListener('click', () => {
-      document.getElementById('modal-victory').classList.add('hidden');
-      if (this.onBack) {
-        this.onBack();
-      } else {
-        this.showScreen('screen-main-menu');
-      }
-    });
-
-    // Hint modal close
-    document.getElementById('btn-close-hint')?.addEventListener('click', () => {
-      document.getElementById('modal-hint').classList.add('hidden');
-    });
-
-    // Keyboard shortcuts
-    window.addEventListener('keydown', (e) => {
-      if (e.key === 'z' && (e.ctrlKey || e.metaKey)) {
-        this.undo();
-      }
-    });
-  }
-
-  showScreen(screenId) {
-    ['screen-main-menu', 'screen-tutorial', 'screen-gameplay'].forEach(id => {
-      const el = document.getElementById(id);
-      if (el) el.classList.toggle('hidden', id !== screenId);
-    });
-    this.currentScreen = screenId;
-    if (screenId === 'screen-main-menu') {
-      this.updateRecordDisplay();
-    }
-  }
-
-  switchMobileTab(tab) {
-    this.activeMobileTab = tab;
-    document.querySelectorAll('.mobile-tab-btn').forEach(b => {
-      b.classList.toggle('active', b.getAttribute('data-tab') === tab);
-    });
-
-    const leftPanel = document.getElementById('panel-left');
-    const rightPanel = document.getElementById('panel-right');
-    const tabGrid = document.getElementById('tab-content-grid');
-    const tabClues = document.getElementById('tab-content-clues');
-
-    if (window.innerWidth < 1024) {
-      if (tab === 'notebook') {
-        leftPanel?.classList.remove('hidden');
-        rightPanel?.classList.add('hidden');
-      } else {
-        leftPanel?.classList.add('hidden');
-        rightPanel?.classList.remove('hidden');
-        if (tab === 'grid') {
-          tabGrid?.classList.remove('hidden');
-          tabClues?.classList.add('hidden');
+    const btnBack = this.root.querySelector('#btn-back');
+    if (btnBack) {
+      btnBack.addEventListener('click', () => {
+        this.sound.playClick();
+        if (typeof this.onBack === 'function') {
+          this.onBack();
+        } else if (window.history.length > 1) {
+          window.history.back();
         } else {
-          tabGrid?.classList.add('hidden');
-          tabClues?.classList.remove('hidden');
-        }
-      }
-    } else {
-      leftPanel?.classList.remove('hidden');
-      rightPanel?.classList.remove('hidden');
-      tabGrid?.classList.remove('hidden');
-      tabClues?.classList.remove('hidden');
-    }
-    this.sound.playClick();
-  }
-
-  startGame() {
-    this.gridState = {};
-    this.historyStack = [];
-    this.clueStates = {};
-    this.timerSeconds = 0;
-    this.startTimer();
-    this.buildMatrixDOM();
-    this.renderClues();
-    this.updateNotebook();
-    this.showScreen('screen-gameplay');
-    this.switchMobileTab('grid');
-    this.setTicker(`Case opened: ${this.level.title}. Analyze clues and mark grid cells.`);
-  }
-
-  startTimer() {
-    this.stopTimer();
-    this.isTimerRunning = true;
-    this.timerInterval = setInterval(() => {
-      this.timerSeconds++;
-      const m = String(Math.floor(this.timerSeconds / 60)).padStart(2, '0');
-      const s = String(this.timerSeconds % 60).padStart(2, '0');
-      const el = document.getElementById('game-timer');
-      if (el) el.textContent = `${m}:${s}`;
-    }, 1000);
-  }
-
-  stopTimer() {
-    if (this.timerInterval) {
-      clearInterval(this.timerInterval);
-      this.timerInterval = null;
-    }
-    this.isTimerRunning = false;
-  }
-
-  buildMatrixDOM() {
-    const wrapper = document.getElementById('matrix-wrapper');
-    if (!wrapper) return;
-
-    const catA = this.level.categories.categoryA; // Rows top-level
-    const catB = this.level.categories.categoryB; // Cols first block
-    const catC = this.level.categories.categoryC; // Cols second block & Rows second block
-
-    // Structure of 3 subgrids:
-    // Subgrid 1: Cat A (rows) vs Cat B (cols)
-    // Subgrid 2: Cat A (rows) vs Cat C (cols)
-    // Subgrid 3: Cat C (rows) vs Cat B (cols)
-
-    let html = `<table class="logic-table">`;
-
-    // 1. Column Category Headers Row
-    html += `<tr>`;
-    html += `<th colspan="2" rowspan="2" class="bg-slate-950/80 border-r-2 border-b-2 border-white/30"></th>`;
-    html += `<th colspan="${catB.items.length}" class="cat-header-top text-emerald-400 border-r-2 border-white/30">${catB.name}</th>`;
-    html += `<th colspan="${catC.items.length}" class="cat-header-top text-rose-400 border-r-2 border-white/30">${catC.name}</th>`;
-    html += `</tr>`;
-
-    // 2. Column Item Labels Row
-    html += `<tr>`;
-    catB.items.forEach((item, idx) => {
-      const isDivider = idx === catB.items.length - 1;
-      html += `<th class="item-label-top ${isDivider ? 'divider-col' : ''}" title="${item.name}">
-        <div class="rotated-text">${item.name}</div>
-      </th>`;
-    });
-    catC.items.forEach((item, idx) => {
-      const isDivider = idx === catC.items.length - 1;
-      html += `<th class="item-label-top ${isDivider ? 'divider-col' : ''}" title="${item.name}">
-        <div class="rotated-text">${item.name}</div>
-      </th>`;
-    });
-    html += `</tr>`;
-
-    // 3. Category A Rows (vs Cat B & vs Cat C)
-    catA.items.forEach((itemA, rowIdx) => {
-      const isDividerRow = rowIdx === catA.items.length - 1;
-      html += `<tr class="${isDividerRow ? 'divider-row' : ''}">`;
-      if (rowIdx === 0) {
-        html += `<th rowspan="${catA.items.length}" class="cat-header-side text-amber-400">${catA.name}</th>`;
-      }
-      html += `<th class="item-label-side" title="${itemA.name}">${itemA.name}</th>`;
-
-      // Subgrid 1 cells: Cat A vs Cat B
-      catB.items.forEach((itemB, colIdx) => {
-        const isDividerCol = colIdx === catB.items.length - 1;
-        const cellKey = this.makeKey('categoryA', itemA.id, 'categoryB', itemB.id);
-        html += `<td class="grid-cell ${isDividerCol ? 'divider-col' : ''}" data-key="${cellKey}" data-row="catA_${itemA.id}" data-col="catB_${itemB.id}"></td>`;
-      });
-
-      // Subgrid 2 cells: Cat A vs Cat C
-      catC.items.forEach((itemC, colIdx) => {
-        const isDividerCol = colIdx === catC.items.length - 1;
-        const cellKey = this.makeKey('categoryA', itemA.id, 'categoryC', itemC.id);
-        html += `<td class="grid-cell ${isDividerCol ? 'divider-col' : ''}" data-key="${cellKey}" data-row="catA_${itemA.id}" data-col="catC_${itemC.id}"></td>`;
-      });
-
-      html += `</tr>`;
-    });
-
-    // 4. Category C Rows (vs Cat B only - standard logic grid lower quadrant)
-    catC.items.forEach((itemC, rowIdx) => {
-      const isDividerRow = rowIdx === catC.items.length - 1;
-      html += `<tr class="${isDividerRow ? 'divider-row' : ''}">`;
-      if (rowIdx === 0) {
-        html += `<th rowspan="${catC.items.length}" class="cat-header-side text-rose-400">${catC.name}</th>`;
-      }
-      html += `<th class="item-label-side" title="${itemC.name}">${itemC.name}</th>`;
-
-      // Subgrid 3 cells: Cat C vs Cat B
-      catB.items.forEach((itemB, colIdx) => {
-        const isDividerCol = colIdx === catB.items.length - 1;
-        const cellKey = this.makeKey('categoryC', itemC.id, 'categoryB', itemB.id);
-        html += `<td class="grid-cell ${isDividerCol ? 'divider-col' : ''}" data-key="${cellKey}" data-row="catC_${itemC.id}" data-col="catB_${itemB.id}"></td>`;
-      });
-
-      // Blank filler for lower right quadrant
-      html += `<td colspan="${catC.items.length}" class="bg-slate-950/60 border-r-2 border-white/20"></td>`;
-      html += `</tr>`;
-    });
-
-    html += `</table>`;
-    wrapper.innerHTML = html;
-
-    // Attach cell click events
-    wrapper.querySelectorAll('.grid-cell').forEach(cell => {
-      cell.addEventListener('click', (e) => {
-        const key = e.currentTarget.getAttribute('data-key');
-        if (key) this.cycleCellState(key);
-      });
-
-      // Cell Hover Highlights
-      cell.addEventListener('mouseenter', (e) => {
-        const row = e.currentTarget.getAttribute('data-row');
-        const col = e.currentTarget.getAttribute('data-col');
-        this.highlightRowCol(row, col);
-      });
-      cell.addEventListener('mouseleave', () => {
-        this.clearRowColHighlight();
-      });
-    });
-  }
-
-  highlightRowCol(row, col) {
-    document.querySelectorAll(`.grid-cell[data-row="${row}"]`).forEach(c => c.classList.add('highlight-row'));
-    document.querySelectorAll(`.grid-cell[data-col="${col}"]`).forEach(c => c.classList.add('highlight-col'));
-  }
-
-  clearRowColHighlight() {
-    document.querySelectorAll('.grid-cell.highlight-row').forEach(c => c.classList.remove('highlight-row'));
-    document.querySelectorAll('.grid-cell.highlight-col').forEach(c => c.classList.remove('highlight-col'));
-  }
-
-  makeKey(cat1, id1, cat2, id2) {
-    // Alphabetically sort category keys so key is canonical
-    if (cat1 > cat2) {
-      return `${cat2}:${id2}__${cat1}:${id1}`;
-    }
-    return `${cat1}:${id1}__${cat2}:${id2}`;
-  }
-
-  parseKey(key) {
-    const [p1, p2] = key.split('__');
-    const [c1, i1] = p1.split(':');
-    const [c2, i2] = p2.split(':');
-    return { cat1: c1, id1: i1, cat2: c2, id2: i2 };
-  }
-
-  cycleCellState(key) {
-    const current = this.gridState[key] || 'EMPTY';
-    let nextState = 'EMPTY';
-    if (current === 'EMPTY') {
-      nextState = 'CROSS';
-      this.sound.playCross();
-    } else if (current === 'CROSS') {
-      nextState = 'CHECK';
-      this.sound.playCheck();
-    } else {
-      nextState = 'EMPTY';
-      this.sound.playClick();
-    }
-
-    const moveRecord = {
-      key,
-      prevState: current,
-      newState: nextState,
-      autoEliminated: []
-    };
-
-    this.gridState[key] = nextState;
-
-    // Handle Auto-Eliminate of Row & Column on CHECK
-    if (nextState === 'CHECK' && this.autoCross) {
-      const parsed = this.parseKey(key);
-      const cat1Items = this.level.categories[parsed.cat1].items;
-      const cat2Items = this.level.categories[parsed.cat2].items;
-
-      // Auto-cross other items in row (same cat1, other cat2)
-      cat2Items.forEach(item => {
-        if (item.id !== parsed.id2) {
-          const sisterKey = this.makeKey(parsed.cat1, parsed.id1, parsed.cat2, item.id);
-          if (!this.gridState[sisterKey] || this.gridState[sisterKey] === 'EMPTY') {
-            this.gridState[sisterKey] = 'CROSS';
-            moveRecord.autoEliminated.push({ key: sisterKey, prev: 'EMPTY' });
-          }
-        }
-      });
-
-      // Auto-cross other items in col (other cat1, same cat2)
-      cat1Items.forEach(item => {
-        if (item.id !== parsed.id1) {
-          const sisterKey = this.makeKey(parsed.cat1, item.id, parsed.cat2, parsed.id2);
-          if (!this.gridState[sisterKey] || this.gridState[sisterKey] === 'EMPTY') {
-            this.gridState[sisterKey] = 'CROSS';
-            moveRecord.autoEliminated.push({ key: sisterKey, prev: 'EMPTY' });
-          }
+          window.location.href = '../../index.html';
         }
       });
     }
 
-    this.historyStack.push(moveRecord);
-    this.updateMatrixCellDOM(key);
-    moveRecord.autoEliminated.forEach(rec => this.updateMatrixCellDOM(rec.key));
-
-    this.updateNotebook();
-    this.checkVictoryCondition();
-  }
-
-  updateMatrixCellDOM(key) {
-    const cell = document.querySelector(`.grid-cell[data-key="${key}"]`);
-    if (!cell) return;
-    const state = this.gridState[key] || 'EMPTY';
-    const assets = window.GameAssets;
-
-    if (state === 'CROSS') {
-      cell.innerHTML = `<div class="cell-icon cell-cross">${assets.get('cross')}</div>`;
-    } else if (state === 'CHECK') {
-      cell.innerHTML = `<div class="cell-icon cell-check">${assets.get('check')}</div>`;
-    } else {
-      cell.innerHTML = '';
+    const btnSound = this.root.querySelector('#btn-sound-toggle');
+    if (btnSound) {
+      btnSound.addEventListener('click', () => {
+        const isMuted = this.sound.toggleMute();
+        btnSound.textContent = isMuted ? '🔇' : '🔔';
+        if (!isMuted) this.sound.playClick();
+      });
     }
-  }
 
-  undo() {
-    if (this.historyStack.length === 0) return;
-    const lastMove = this.historyStack.pop();
-
-    this.gridState[lastMove.key] = lastMove.prevState;
-    this.updateMatrixCellDOM(lastMove.key);
-
-    lastMove.autoEliminated.forEach(rec => {
-      this.gridState[rec.key] = rec.prev;
-      this.updateMatrixCellDOM(rec.key);
-    });
-
-    this.sound.playUndo();
-    this.updateNotebook();
-    this.setTicker('Reverted last deductive move.');
-  }
-
-  renderClues() {
-    const list = document.getElementById('clues-list');
-    if (!list) return;
-    const assets = window.GameAssets;
-
-    let html = '';
-    this.level.clues.forEach((clue, idx) => {
-      const isStruck = !!this.clueStates[clue.id];
-      html += `
-        <div class="clue-card ${isStruck ? 'strikethrough' : ''}" data-clue-id="${clue.id}">
-          <span class="clue-badge">#${idx + 1}</span>
-          <div class="flex-1 text-xs md:text-sm text-slate-200 leading-relaxed">${clue.text}</div>
-          <button class="btn-inspect-clue text-xs p-1 text-amber-400 hover:text-amber-300 rounded" title="Highlight target in grid" data-clue-idx="${idx}">
-            ${assets.get('search')}
-          </button>
-        </div>
-      `;
-    });
-    list.innerHTML = html;
-
-    list.querySelectorAll('.clue-card').forEach(card => {
-      card.addEventListener('click', (e) => {
-        if (e.target.closest('.btn-inspect-clue')) return;
-        const clueId = card.getAttribute('data-clue-id');
-        this.clueStates[clueId] = !this.clueStates[clueId];
-        card.classList.toggle('strikethrough', this.clueStates[clueId]);
-        this.sound.playClick();
+    this.root.querySelectorAll('.clue-card').forEach(card => {
+      card.addEventListener('click', () => {
+        this.sound.playClue();
+        const idx = parseInt(card.getAttribute('data-clue-idx'), 10);
+        if (this.crossedClues.has(idx)) {
+          this.crossedClues.delete(idx);
+          card.classList.remove('crossed');
+        } else {
+          this.crossedClues.add(idx);
+          card.classList.add('crossed');
+        }
       });
     });
 
-    list.querySelectorAll('.btn-inspect-clue').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        const idx = parseInt(btn.getAttribute('data-clue-idx'), 10);
-        const clue = this.level.clues[idx];
-        if (clue && clue.hintTarget) {
-          this.highlightClueTarget(clue);
-        }
-        this.setTicker(`Inspecting Clue #${idx + 1}: ${clue.text}`);
-        this.sound.playClick();
-      });
-    });
-  }
+    const btnUndo = this.root.querySelector('#btn-undo');
+    if (btnUndo) btnUndo.addEventListener('click', () => this.undo());
 
-  highlightClueTarget(clue) {
-    if (!clue.hintTarget) return;
-    const { cat1, item1, cat2, item2 } = clue.hintTarget;
-    const key = this.makeKey(cat1, item1, cat2, item2);
-    const cell = document.querySelector(`.grid-cell[data-key="${key}"]`);
-    if (cell) {
-      cell.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      cell.classList.add('highlight-row');
-      setTimeout(() => cell.classList.remove('highlight-row'), 1800);
-    }
-  }
+    const btnReset = this.root.querySelector('#btn-reset');
+    if (btnReset) btnReset.addEventListener('click', () => this.reset());
 
-  updateNotebook() {
-    const list = document.getElementById('notebook-list');
-    const counter = document.getElementById('game-pairs-counter');
-    const status = document.getElementById('notebook-status');
-    const assets = window.GameAssets;
+    const btnHint = this.root.querySelector('#btn-hint');
+    if (btnHint) btnHint.addEventListener('click', () => this.giveHint());
 
-    const checkedPairs = [];
-    Object.keys(this.gridState).forEach(key => {
-      if (this.gridState[key] === 'CHECK') {
-        const parsed = this.parseKey(key);
-        const item1 = this.level.categories[parsed.cat1]?.items.find(i => i.id === parsed.id1);
-        const item2 = this.level.categories[parsed.cat2]?.items.find(i => i.id === parsed.id2);
-        if (item1 && item2) {
-          checkedPairs.push({
-            name1: item1.name,
-            name2: item2.name,
-            cat1: parsed.cat1,
-            cat2: parsed.cat2
-          });
-        }
-      }
-    });
-
-    const totalPairsNeeded = 12; // 4 in catA vs catB + 4 in catA vs catC + 4 in catB vs catC
-    if (counter) counter.textContent = `${checkedPairs.length} / ${totalPairsNeeded}`;
-    if (status) status.textContent = `${checkedPairs.length} of ${totalPairsNeeded} proven`;
-
-    if (!list) return;
-    if (checkedPairs.length === 0) {
-      list.innerHTML = `<div class="p-4 text-center text-slate-500 italic">No connections verified yet. Mark ✔️ on the grid to record deductions here.</div>`;
-      return;
-    }
-
-    list.innerHTML = checkedPairs.map(p => `
-      <div class="fact-card">
-        <span class="text-emerald-400 font-bold">✔️</span>
-        <strong class="text-slate-100">${p.name1}</strong>
-        <span class="text-slate-400">matches</span>
-        <strong class="text-amber-300">${p.name2}</strong>
-      </div>
-    `).join('');
-  }
-
-  checkVictoryCondition() {
-    const sol = this.level.solution;
-    if (!sol) return;
-
-    let isComplete = true;
-    let checkedCount = 0;
-
-    // Check each suspect in solution
-    const catA = this.level.categories.categoryA.items;
-    for (const itemA of catA) {
-      const expected = sol[itemA.id];
-      if (!expected) continue;
-
-      const keyAB = this.makeKey('categoryA', itemA.id, 'categoryB', expected.categoryB);
-      const keyAC = this.makeKey('categoryA', itemA.id, 'categoryC', expected.categoryC);
-      const keyBC = this.makeKey('categoryB', expected.categoryB, 'categoryC', expected.categoryC);
-
-      if (this.gridState[keyAB] !== 'CHECK' || this.gridState[keyAC] !== 'CHECK' || this.gridState[keyBC] !== 'CHECK') {
-        isComplete = false;
-        break;
-      }
-    }
-
-    if (isComplete) {
-      this.triggerVictory();
-    }
-  }
-
-  triggerVictory() {
-    this.stopTimer();
-    this.sound.playVictory();
-
-    // Persist Record
-    const storageKey = `case_${this.gameKey}_${this.level.id || 1}`;
-    const bestTime = localStorage.getItem(`${storageKey}_best_time`);
-    if (!bestTime || this.timerSeconds < parseInt(bestTime, 10)) {
-      localStorage.setItem(`${storageKey}_best_time`, this.timerSeconds);
-    }
-    localStorage.setItem(`${storageKey}_solved`, 'true');
-
-    const m = String(Math.floor(this.timerSeconds / 60)).padStart(2, '0');
-    const s = String(this.timerSeconds % 60).padStart(2, '0');
-
-    const modal = document.getElementById('modal-victory');
-    const timeEl = document.getElementById('victory-time');
-    const movesEl = document.getElementById('victory-moves');
-
-    if (timeEl) timeEl.textContent = `${m}:${s}`;
-    if (movesEl) movesEl.textContent = `${this.historyStack.length}`;
-    if (modal) modal.classList.remove('hidden');
-
-    this.setTicker(`🏆 VICTORY: Case solved in ${m}:${s} with ${this.historyStack.length} moves!`);
-  }
-
-  provideHint() {
-    const modal = document.getElementById('modal-hint');
-    const content = document.getElementById('hint-content');
-    const applyBtn = document.getElementById('btn-apply-hint');
-    if (!modal || !content) return;
-
-    // Find first unsolved clue with a hintTarget
-    let targetClue = null;
-    for (const clue of this.level.clues) {
-      if (clue.hintTarget) {
-        const key = this.makeKey(clue.hintTarget.cat1, clue.hintTarget.item1, clue.hintTarget.cat2, clue.hintTarget.item2);
-        const expected = clue.hintTarget.state; // 'CHECK' or 'CROSS'
-        if (this.gridState[key] !== expected) {
-          targetClue = clue;
-          break;
-        }
-      }
-    }
-
-    if (!targetClue) {
-      content.innerHTML = `
-        <p class="text-emerald-400 font-semibold">You have addressed all direct clue inferences!</p>
-        <p class="text-slate-300">Look at the rows and columns that only have one empty cell remaining, or cross-reference the confirmed pairs in your deduction notebook.</p>
-      `;
-      if (applyBtn) applyBtn.classList.add('hidden');
-    } else {
-      const t = targetClue.hintTarget;
-      const i1 = this.level.categories[t.cat1].items.find(i => i.id === t.item1)?.name;
-      const i2 = this.level.categories[t.cat2].items.find(i => i.id === t.item2)?.name;
-
-      content.innerHTML = `
-        <div class="p-3 bg-slate-950/80 rounded-lg border border-amber-500/30">
-          <div class="text-xs font-mono text-amber-400 mb-1">Clue Reference: "${targetClue.text}"</div>
-          <p class="text-sm font-semibold text-white">Deduction: <strong class="text-amber-300">${i1}</strong> and <strong class="text-amber-300">${i2}</strong> should be marked as <span class="${t.state === 'CHECK' ? 'text-emerald-400' : 'text-rose-400'} font-mono font-bold">${t.state === 'CHECK' ? '✔️ (Match)' : '❌ (Impossible)'}</span>.</p>
-          <p class="text-xs text-slate-300 mt-2">${t.reason || 'Careful reading of the clue rules this connection out.'}</p>
-        </div>
-      `;
-
-      if (applyBtn) {
-        applyBtn.classList.remove('hidden');
-        applyBtn.onclick = () => {
-          modal.classList.add('hidden');
-          this.highlightClueTarget(targetClue);
-          this.sound.playClick();
-        };
-      }
-    }
-
-    modal.classList.remove('hidden');
-    this.sound.playHint();
-  }
-
-  setTicker(text) {
-    const el = document.getElementById('ticker-text');
-    if (el) el.textContent = text;
-  }
-
-  updateRecordDisplay() {
-    const storageKey = `case_${this.gameKey}_${this.level.id || 1}`;
-    const bestTime = localStorage.getItem(`${storageKey}_best_time`);
-    const isSolved = localStorage.getItem(`${storageKey}_solved`) === 'true';
-
-    const timeEl = document.getElementById('menu-best-time');
-    const badgeEl = document.getElementById('menu-solved-badge');
-
-    if (timeEl) {
-      if (bestTime) {
-        const m = String(Math.floor(parseInt(bestTime, 10) / 60)).padStart(2, '0');
-        const s = String(parseInt(bestTime, 10) % 60).padStart(2, '0');
-        timeEl.textContent = `${m}:${s}`;
-      } else {
-        timeEl.textContent = '--:--';
-      }
-    }
-
-    if (badgeEl) {
-      if (isSolved) {
-        badgeEl.textContent = 'SOLVED ⭐';
-        badgeEl.className = 'text-amber-400 font-bold';
-      } else {
-        badgeEl.textContent = 'UNSOLVED';
-        badgeEl.className = 'text-slate-500';
-      }
-    }
-  }
-
-  initCanvas() {
-    this.canvas = document.getElementById('bg-canvas');
-    if (!this.canvas) return;
-    this.ctx = this.canvas.getContext('2d');
-
-    const resize = () => {
-      this.canvas.width = window.innerWidth;
-      this.canvas.height = window.innerHeight;
-      this.initParticles();
-    };
-    window.addEventListener('resize', resize);
-    resize();
-
-    this.animateCanvas();
-  }
-
-  initParticles() {
-    this.particles = [];
-    const count = Math.floor((this.canvas.width * this.canvas.height) / 18000);
-    const particleColor = this.theme === 'scifi' ? 'rgba(56, 189, 248, ' : 'rgba(245, 158, 11, ';
-
-    for (let i = 0; i < count; i++) {
-      this.particles.push({
-        x: Math.random() * this.canvas.width,
-        y: Math.random() * this.canvas.height,
-        radius: Math.random() * 1.5 + 0.5,
-        speedX: (Math.random() - 0.5) * 0.3,
-        speedY: (Math.random() - 0.5) * 0.3,
-        baseAlpha: Math.random() * 0.25 + 0.05,
-        pulseSpeed: Math.random() * 0.02 + 0.005,
-        pulsePhase: Math.random() * Math.PI * 2,
-        colorPrefix: particleColor
-      });
-    }
-  }
-
-  animateCanvas() {
-    if (!this.ctx || !this.canvas) return;
-    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-
-    // Subtle atmospheric gradient
-    const grad = this.ctx.createRadialGradient(
-      this.canvas.width / 2, this.canvas.height / 2, 50,
-      this.canvas.width / 2, this.canvas.height / 2, Math.max(this.canvas.width, this.canvas.height) * 0.7
-    );
-    if (this.theme === 'scifi') {
-      grad.addColorStop(0, 'rgba(15, 23, 42, 0.4)');
-      grad.addColorStop(1, 'rgba(2, 6, 23, 0.85)');
-    } else {
-      grad.addColorStop(0, 'rgba(30, 20, 10, 0.25)');
-      grad.addColorStop(1, 'rgba(9, 13, 22, 0.85)');
-    }
-    this.ctx.fillStyle = grad;
-    this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
-
-    // Render floating dust / stars
-    for (const p of this.particles) {
-      p.x += p.speedX;
-      p.y += p.speedY;
-      p.pulsePhase += p.pulseSpeed;
-
-      if (p.x < 0) p.x = this.canvas.width;
-      if (p.x > this.canvas.width) p.x = 0;
-      if (p.y < 0) p.y = this.canvas.height;
-      if (p.y > this.canvas.height) p.y = 0;
-
-      const alpha = p.baseAlpha + Math.sin(p.pulsePhase) * 0.1;
-      this.ctx.fillStyle = `${p.colorPrefix}${Math.max(0, alpha)})`;
-      this.ctx.beginPath();
-      this.ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-      this.ctx.fill();
-    }
-
-    this.animFrameId = requestAnimationFrame(() => this.animateCanvas());
-  }
-
-  destroy() {
-    this.stopTimer();
-    if (this.animFrameId) cancelAnimationFrame(this.animFrameId);
+    const btnCheck = this.root.querySelector('#btn-check-solution');
+    if (btnCheck) btnCheck.addEventListener('click', () => this.checkSolution());
   }
 }
 
+// Export for browser
 window.LogicGridEngine = LogicGridEngine;
+window.LOGIC_GRID_THEMES = THEMES;

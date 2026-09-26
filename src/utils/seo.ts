@@ -24,7 +24,7 @@ export function updateHeadSeo(options: SeoOptions): void {
     description,
     keywords,
     canonicalUrl,
-    imageUrl = 'https://funlogic.games/icon.svg',
+    imageUrl = 'https://playfunlogic.com/icon.svg',
     type = 'website',
     categoryName,
     categoryUrl,
@@ -44,7 +44,7 @@ export function updateHeadSeo(options: SeoOptions): void {
   }
 
   // 2. Update Document Title
-  document.title = title.includes('FunLogic') ? title : `${title} — FunLogic.games`;
+  document.title = title.includes('PlayFunLogic') ? title : `${title} — PlayFunLogic.com`;
 
   // 3. Helper to set or update <meta> tag
   const setMeta = (nameOrProp: string, value: string, isProp = false) => {
@@ -88,16 +88,16 @@ export function updateHeadSeo(options: SeoOptions): void {
   setLink('canonical', cleanCanonical);
 
   // Open Graph
-  setMeta('og:title', `${title} — FunLogic.games`, true);
+  setMeta('og:title', `${title} — PlayFunLogic.com`, true);
   setMeta('og:description', description, true);
   setMeta('og:url', cleanCanonical, true);
   setMeta('og:type', type === 'game' ? 'game' : 'website', true);
   setMeta('og:image', imageUrl, true);
-  setMeta('og:site_name', 'FunLogic.games', true);
+  setMeta('og:site_name', 'PlayFunLogic.com', true);
 
   // Twitter Cards
   setMeta('twitter:card', 'summary_large_image');
-  setMeta('twitter:title', `${title} — FunLogic.games`);
+  setMeta('twitter:title', `${title} — PlayFunLogic.com`);
   setMeta('twitter:description', description);
   setMeta('twitter:image', imageUrl);
 
@@ -155,7 +155,7 @@ export function updateHeadSeo(options: SeoOptions): void {
           '@type': 'ListItem',
           'position': 1,
           'name': 'Home',
-          'item': 'https://funlogic.games/'
+          'item': 'https://playfunlogic.com/'
         }
       ]
     };
@@ -187,7 +187,7 @@ export function updateHeadSeo(options: SeoOptions): void {
     structuredSchemas.push({
       '@context': 'https://schema.org',
       '@type': 'WebSite',
-      'name': 'FunLogic.games',
+      'name': 'PlayFunLogic.com',
       'url': cleanCanonical,
       'description': description
     });

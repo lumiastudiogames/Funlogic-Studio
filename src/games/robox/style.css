@@ -205,6 +205,9 @@ body {
 }
 
 .target-glow-node {
+  position: absolute;
+  top: 50%;
+  left: 50%;
   width: 60%;
   height: 60%;
   border-radius: 50%;
@@ -213,7 +216,8 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  position: relative;
+  pointer-events: none;
+  z-index: 1;
   animation: pulseTarget 2s infinite ease-in-out;
 }
 
@@ -227,8 +231,8 @@ body {
 }
 
 @keyframes pulseTarget {
-  0%, 100% { transform: scale(0.9); opacity: 0.7; }
-  50% { transform: scale(1.1); opacity: 1; box-shadow: 0 0 14px #2dd4bf; }
+  0%, 100% { transform: translate(-50%, -50%) scale(0.9); opacity: 0.7; }
+  50% { transform: translate(-50%, -50%) scale(1.1); opacity: 1; box-shadow: 0 0 14px #2dd4bf; }
 }
 
 /* 2.5D Isometric Box / Crate (NO EMOJI) */
@@ -245,6 +249,35 @@ body {
   border: 1.5px solid #fbbf24;
   box-shadow: 0 5px 0 #78350f, 0 8px 12px rgba(0, 0, 0, 0.5);
   transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.2s ease, box-shadow 0.2s ease;
+}
+
+@keyframes pushSlideFromPrev {
+  0% {
+    transform: translate(calc(var(--push-dc, 0) * -100%), calc(var(--push-dr, 0) * -100%)) scale(0.92);
+  }
+  60% {
+    transform: translate(calc(var(--push-dc, 0) * 6%), calc(var(--push-dr, 0) * 6%)) scale(1.05);
+  }
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+}
+
+.robox-crate-25d.just-pushed {
+  animation: pushSlideFromPrev 0.2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes slideFromPrev {
+  0% {
+    transform: translate(calc(var(--slide-dc, 0) * -100%), calc(var(--slide-dr, 0) * -100%)) scale(0.94);
+  }
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+}
+
+.robox-bot-25d.just-moved {
+  animation: slideFromPrev 0.16s cubic-bezier(0.2, 0.9, 0.3, 1.2) forwards;
 }
 
 .robox-crate-25d .crate-inner {
@@ -297,17 +330,43 @@ body {
   50% { transform: translateY(-2px); }
 }
 
+/* Sliding Box Animation */
+.robox-crate-25d.just-pushed {
+  animation: crateSlideIn 0.22s cubic-bezier(0.2, 0.9, 0.35, 1.15);
+}
+@keyframes crateSlideIn {
+  0% {
+    transform: translate(calc(var(--push-dc, 0) * -85%), calc(var(--push-dr, 0) * -85%)) scale(0.92);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+    filter: brightness(1.25);
+  }
+  100% {
+    transform: translate(0, 0) scale(1);
+    filter: brightness(1);
+  }
+}
+
 /* 2.5D Animated Robot Character (NO EMOJI) */
 .robox-bot-25d {
   width: 90%;
   height: 90%;
   position: relative;
+  z-index: 5;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   filter: drop-shadow(0 6px 8px rgba(0, 0, 0, 0.6));
   transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.robox-bot-25d.walking {
+  animation: botStepBob 0.18s ease-in-out;
+}
+@keyframes botStepBob {
+  0% { transform: translateY(0); }
+  45% { transform: translateY(-6px) scale(1.08, 0.94); }
+  100% { transform: translateY(0); }
 }
 
 .robox-bot-25d.facing-left {

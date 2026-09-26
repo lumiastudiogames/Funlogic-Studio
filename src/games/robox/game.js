@@ -15,35 +15,81 @@
         this.ctx.resume();
       }
     },
+    bgmLoop: null,
+    bgmStep: 0,
+    startBgm() {
+      if (this.muted || this.bgmLoop) return;
+      this.init();
+      const scale = [261.63, 293.66, 329.63, 392.00, 440.00, 523.25];
+      const bass = [130.81, 146.83, 164.81, 196.00];
+      this.bgmLoop = setInterval(() => {
+        if (this.muted || !this.ctx || this.ctx.state !== 'running') return;
+        try {
+          const t = this.ctx.currentTime;
+          if (this.bgmStep % 2 === 0) {
+            const o = this.ctx.createOscillator();
+            const g = this.ctx.createGain();
+            o.type = 'sine';
+            o.frequency.setValueAtTime(bass[Math.floor(this.bgmStep / 4) % bass.length], t);
+            g.gain.setValueAtTime(0.025, t);
+            g.gain.exponentialRampToValueAtTime(0.001, t + 0.35);
+            o.connect(g);
+            g.connect(this.ctx.destination);
+            o.start(t);
+            o.stop(t + 0.35);
+          }
+          if (this.bgmStep % 4 === 1 || this.bgmStep % 4 === 3) {
+            const o = this.ctx.createOscillator();
+            const g = this.ctx.createGain();
+            o.type = 'triangle';
+            o.frequency.setValueAtTime(scale[(this.bgmStep * 3) % scale.length], t);
+            g.gain.setValueAtTime(0.015, t);
+            g.gain.exponentialRampToValueAtTime(0.001, t + 0.2);
+            o.connect(g);
+            g.connect(this.ctx.destination);
+            o.start(t);
+            o.stop(t + 0.2);
+          }
+          this.bgmStep = (this.bgmStep + 1) % 16;
+        } catch (_) {}
+      }, 320);
+    },
+    stopBgm() {
+      if (this.bgmLoop) {
+        clearInterval(this.bgmLoop);
+        this.bgmLoop = null;
+      }
+    },
     playStep() {
       if (this.muted) return;
       this.init();
       const osc = this.ctx.createOscillator();
       const gain = this.ctx.createGain();
-      osc.type = 'sine';
-      osc.frequency.setValueAtTime(220, this.ctx.currentTime);
-      osc.frequency.exponentialRampToValueAtTime(120, this.ctx.currentTime + 0.04);
-      gain.gain.setValueAtTime(0.08, this.ctx.currentTime);
-      gain.gain.linearRampToValueAtTime(0.01, this.ctx.currentTime + 0.04);
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(320, this.ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(140, this.ctx.currentTime + 0.06);
+      gain.gain.setValueAtTime(0.12, this.ctx.currentTime);
+      gain.gain.linearRampToValueAtTime(0.01, this.ctx.currentTime + 0.06);
       osc.connect(gain);
       gain.connect(this.ctx.destination);
       osc.start();
-      osc.stop(this.ctx.currentTime + 0.04);
+      osc.stop(this.ctx.currentTime + 0.06);
     },
     playPush() {
       if (this.muted) return;
       this.init();
+      // Metallic box rumble
       const osc = this.ctx.createOscillator();
       const gain = this.ctx.createGain();
-      osc.type = 'triangle';
-      osc.frequency.setValueAtTime(160, this.ctx.currentTime);
-      osc.frequency.linearRampToValueAtTime(240, this.ctx.currentTime + 0.07);
-      gain.gain.setValueAtTime(0.15, this.ctx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.07);
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(140, this.ctx.currentTime);
+      osc.frequency.linearRampToValueAtTime(80, this.ctx.currentTime + 0.12);
+      gain.gain.setValueAtTime(0.16, this.ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.12);
       osc.connect(gain);
       gain.connect(this.ctx.destination);
       osc.start();
-      osc.stop(this.ctx.currentTime + 0.07);
+      osc.stop(this.ctx.currentTime + 0.12);
     },
     playCharge() {
       if (this.muted) return;
@@ -320,6 +366,8 @@
   let boxes = [];
   let history = [];
   let won = false;
+  let lastPush = null;
+  let lastRobotMove = null;
 
   const boardEl = document.getElementById('board');
   const stepCountEl = document.getElementById('step-count');
@@ -377,6 +425,8 @@
     steps = 0;
     history = [];
     won = false;
+    lastPush = null;
+    lastRobotMove = null;
     startTime = Date.now();
 
     stepCountEl.textContent = `${steps} STEPS`;
@@ -412,11 +462,16 @@
         }
 
         // Box on this cell?
-        const box = boxes.find(b => b.r === r && b.c === c);
-        if (box) {
+        const boxIdxOnCell = boxes.findIndex(b => b.r === r && b.c === c);
+        if (boxIdxOnCell !== -1) {
           const isTarget = char === 'T';
+          const isJustPushed = lastPush && lastPush.boxIdx === boxIdxOnCell;
           const boxEl = document.createElement('div');
-          boxEl.className = 'robox-crate-25d' + (isTarget ? ' powered' : '');
+          boxEl.className = 'robox-crate-25d' + (isTarget ? ' powered' : '') + (isJustPushed ? ' just-pushed' : '');
+          if (isJustPushed) {
+            boxEl.style.setProperty('--push-dr', lastPush.dr);
+            boxEl.style.setProperty('--push-dc', lastPush.dc);
+          }
           boxEl.innerHTML = `
             <div class="crate-bolt tl"></div>
             <div class="crate-bolt tr"></div>
@@ -428,9 +483,13 @@
           `;
           cell.appendChild(boxEl);
         } else if (robot.r === r && robot.c === c) {
-          // Robot on this cell (Directional 2.5D model)
+          // Robot on this cell (Directional 2.5D model with sliding effect)
           const botEl = document.createElement('div');
-          botEl.className = `robox-bot-25d facing-${robotFacing}`;
+          botEl.className = `robox-bot-25d facing-${robotFacing} walking` + (lastRobotMove ? ' just-moved' : '');
+          if (lastRobotMove) {
+            botEl.style.setProperty('--slide-dr', lastRobotMove.dr);
+            botEl.style.setProperty('--slide-dc', lastRobotMove.dc);
+          }
           botEl.innerHTML = `
             <div class="bot-antenna"></div>
             <div class="bot-chassis">
@@ -452,6 +511,7 @@
   function move(dr, dc) {
     if (won) return;
     AudioEngine.init();
+    AudioEngine.startBgm();
 
     // Direction tracking
     if (dc === 1) robotFacing = 'right';
@@ -465,6 +525,8 @@
 
     // Check Wall collision
     if (def.map[newR][newC] === 'W') {
+      lastRobotMove = null;
+      lastPush = null;
       renderBoard();
       return;
     }
@@ -478,10 +540,14 @@
 
       // Cannot push box into wall or another box
       if (def.map[nextBoxR][nextBoxC] === 'W') {
+        lastRobotMove = null;
+        lastPush = null;
         renderBoard();
         return;
       }
       if (boxes.some(b => b.r === nextBoxR && b.c === nextBoxC)) {
+        lastRobotMove = null;
+        lastPush = null;
         renderBoard();
         return;
       }
@@ -497,6 +563,8 @@
       // Push box
       boxes[boxIdx].r = nextBoxR;
       boxes[boxIdx].c = nextBoxC;
+      lastPush = { boxIdx, dr, dc };
+      lastRobotMove = { dr, dc };
 
       // Sound & Particle
       if (def.map[nextBoxR][nextBoxC] === 'T') {
@@ -507,6 +575,8 @@
       }
     } else {
       // Free move
+      lastPush = null;
+      lastRobotMove = { dr, dc };
       history.push({
         robot: { ...robot },
         robotFacing,
@@ -675,7 +745,21 @@
   document.getElementById('btn-sound').addEventListener('click', function () {
     AudioEngine.muted = !AudioEngine.muted;
     this.innerHTML = AudioEngine.muted ? '🔇' : '🔊';
+    if (AudioEngine.muted) {
+      AudioEngine.stopBgm();
+    } else {
+      AudioEngine.startBgm();
+    }
   });
+
+  // Start BGM on first user touch / keydown
+  function triggerBgmStart() {
+    AudioEngine.startBgm();
+    window.removeEventListener('pointerdown', triggerBgmStart);
+    window.removeEventListener('keydown', triggerBgmStart);
+  }
+  window.addEventListener('pointerdown', triggerBgmStart, { once: true });
+  window.addEventListener('keydown', triggerBgmStart, { once: true });
 
   // Modal actions (Stacked safe modal closing)
   document.getElementById('btn-win-restart').addEventListener('click', (e) => {

@@ -1,5 +1,4 @@
-@import "tailwindcss";
-
+/* tailwindcss loaded via cdn */
 /* src/games/chess-mate-in-one/src/index.css */
 @layer base {
   * {

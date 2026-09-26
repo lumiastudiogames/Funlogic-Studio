@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#1e1b4b"/>
+    </linearGradient>
+    <radialGradient id="spill-glow" cx="40%" cy="40%" r="60%">
+      <stop offset="0%" stop-color="#ec4899"/>
+      <stop offset="50%" stop-color="#8b5cf6"/>
+      <stop offset="100%" stop-color="#3b82f6"/>
+    </radialGradient>
+  </defs>
+  <rect width="512" height="512" rx="64" fill="url(#bg)"/>
+  <circle cx="220" cy="220" r="140" fill="url(#spill-glow)" opacity="0.9"/>
+  <!-- Paint splashes -->
+  <path d="M 220 80 Q 270 40 320 90 Q 380 140 350 200 Q 420 260 370 330 Q 320 400 240 370 Q 150 420 110 330 Q 60 250 120 180 Q 80 100 220 80 Z" fill="url(#spill-glow)"/>
+  <!-- Paint Drops -->
+  <circle cx="390" cy="120" r="24" fill="#ec4899"/>
+  <circle cx="110" cy="380" r="28" fill="#3b82f6"/>
+  <circle cx="380" cy="370" r="20" fill="#10b981"/>
+  <circle cx="256" cy="430" r="18" fill="#f59e0b"/>
+  <!-- Central Paint Bucket / Brush icon -->
+  <text x="256" y="275" font-size="110" text-anchor="middle" dominant-baseline="central">🎨</text>
+  <text x="256" y="470" font-family="'Segoe UI', Roboto, sans-serif" font-size="34" font-weight="900" fill="#ffffff" text-anchor="middle" letter-spacing="2">PAINT SPILL</text>
+</svg>

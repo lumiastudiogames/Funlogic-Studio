@@ -121,23 +121,26 @@ body {
 .silhouette-stage {
   width: 280px;
   height: 280px;
-  background: #ffffff;
+  background: linear-gradient(180deg, #ffffff 0%, #fcfaff 100%);
   border: 4px solid #e9d5ff;
-  border-radius: 24px;
-  box-shadow: 0 12px 24px -4px rgba(126, 34, 206, 0.15);
+  border-radius: 28px;
+  box-shadow: inset 0 4px 10px rgba(0, 0, 0, 0.05), 0 14px 28px -4px rgba(126, 34, 206, 0.18);
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
+  overflow: hidden;
 }
 
 .target-slot {
   cursor: pointer;
-  transition: opacity 0.2s, filter 0.2s;
+  transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-.target-slot:hover {
-  filter: drop-shadow(0 0 6px rgba(168, 85, 247, 0.6));
+.target-slot:hover, .target-slot.hover-active {
+  stroke-width: 6;
+  stroke: #7e22ce;
+  filter: drop-shadow(0 0 12px rgba(168, 85, 247, 0.8));
 }
 
 .tray-container {
@@ -146,42 +149,69 @@ body {
   justify-content: center;
   gap: 16px;
   background: #ffffff;
-  padding: 12px 20px;
+  padding: 14px 22px;
   border-radius: 24px;
   border: 2px solid #e9d5ff;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 8px 18px -2px rgba(126, 34, 206, 0.1);
 }
 
+/* Pseudo-3D Tactile Shape Button */
 .shape-btn {
-  width: 70px;
-  height: 70px;
-  background: #faf5ff;
+  width: 74px;
+  height: 74px;
+  background: linear-gradient(180deg, #ffffff 0%, #faf5ff 100%);
   border: 3px solid #d8b4fe;
-  border-radius: 16px;
+  border-radius: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
-  transition: all 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
-  box-shadow: 0 3px 0 #c084fc;
+  cursor: grab;
+  touch-action: none;
+  transition: all 0.18s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow: 0 6px 0 #c084fc, 0 10px 18px rgba(126, 34, 206, 0.2);
+  user-select: none;
+  -webkit-user-select: none;
 }
 
-.shape-btn:hover, .shape-btn.selected {
+.shape-btn:hover {
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 9px 0 #c084fc, 0 14px 22px rgba(126, 34, 206, 0.28);
+}
+
+.shape-btn.selected {
   transform: translateY(-4px) scale(1.08);
   border-color: #7e22ce;
   background: #f3e8ff;
-  box-shadow: 0 6px 12px -2px rgba(126, 34, 206, 0.25);
+  box-shadow: 0 10px 0 #9333ea, 0 16px 24px rgba(126, 34, 206, 0.35);
+}
+
+.shape-btn.dragging {
+  opacity: 0.4;
+  transform: translateY(2px) scale(0.96);
+  box-shadow: 0 3px 0 #c084fc;
 }
 
 .shape-btn.used {
-  opacity: 0.25;
+  opacity: 0.22;
   pointer-events: none;
   border-style: dashed;
+  box-shadow: none;
+  transform: none;
+}
+
+/* Floating Drag Ghost */
+.shape-drag-ghost {
+  position: fixed;
+  pointer-events: none;
+  z-index: 99999;
+  transform: translate(-50%, -50%) scale(1.15);
+  filter: drop-shadow(0 16px 24px rgba(126, 34, 206, 0.42));
+  touch-action: none;
 }
 
 .hint-bar {
   font-size: 15px;
-  font-weight: 700;
+  font-weight: 800;
   color: #7e22ce;
   text-align: center;
 }
@@ -190,8 +220,8 @@ body {
 .modal-overlay {
   position: absolute;
   inset: 0;
-  background: rgba(15, 23, 42, 0.6);
-  backdrop-filter: blur(4px);
+  background: rgba(15, 23, 42, 0.65);
+  backdrop-filter: blur(6px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -209,10 +239,21 @@ body {
 
 .modal-card {
   width: 100%;
-  max-width: 360px;
+  max-width: 380px;
   background: #ffffff;
-  border-radius: 24px;
+  border-radius: 26px;
   padding: 24px;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.3);
   text-align: center;
+  border: 2px solid #e9d5ff;
+}
+
+@keyframes popSnap {
+  0% { transform: scale(0.85); }
+  50% { transform: scale(1.12); }
+  100% { transform: scale(1); }
+}
+
+.snapped-pop {
+  animation: popSnap 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
 }

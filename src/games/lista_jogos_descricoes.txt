@@ -1,7 +1,7 @@
 ====================================================================
-                 FUNLOGIC.GAMES - JOGOS E DESCRIÇÕES               
+                 PLAYFUNLOGIC.COM - JOGOS E DESCRIÇÕES               
 ====================================================================
-TOTAL DE JOGOS: 103
+TOTAL DE JOGOS: 102
 
 --------------------------------------------------------------------
 1. 💡 15 PUZZLE CLASSIC
@@ -18,21 +18,7 @@ Categoria : Logic Challenges (logic)
 Descrição : 2048 5x5 Expert is the ultimate test of endurance for puzzle masters who have mastered the classic 4x4. With 25 tiles on the board, strategic tile packing and prolonged combos unlock massive scores and the elusive 4096 tile.
 
 --------------------------------------------------------------------
-3. 💡 2048 CLASSIC
---------------------------------------------------------------------
-Slug/ID   : 2048-classic
-Categoria : Logic Challenges (logic)
-Descrição : 2048 Classic is a polished online HTML5 puzzle game designed to test your spatial reasoning, strategy, and logic. Play full levels free directly in your web browser.
-
---------------------------------------------------------------------
-4. 💡 2048 CLASSIC
---------------------------------------------------------------------
-Slug/ID   : game-2048-classic
-Categoria : Logic Challenges (logic)
-Descrição : 2048 Classic is the legendary tile-sliding math puzzle on a 4x4 grid. Slide matching numbered tiles together to merge them into higher values, chasing the coveted 2048 tile with undo support, high-score tracking, and silky smooth animations.
-
---------------------------------------------------------------------
-5. 💡 2048 FIBONACCI
+3. 💡 2048 FIBONACCI
 --------------------------------------------------------------------
 Slug/ID   : game-2048-fibonacci
 Categoria : Logic Challenges (logic)

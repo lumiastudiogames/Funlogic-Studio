@@ -73,6 +73,7 @@
             <span id="highest-tile">64</span>
             <span style="font-weight: 500; opacity: 0.7;"> / 512</span>
           </div>
+          <button id="btn-tutorial" class="btn-tactile" title="Como Jogar">❓ Tutorial</button>
           <button id="btn-sound" class="btn-tactile" title="Toggle Sound">🔊 Sound</button>
         </div>
       </header>
@@ -99,6 +100,69 @@
           </div>
         </div>
       </main>
+
+      <!-- Animated Interactive Tutorial Modal -->
+      <div id="tutorial-modal" class="tutorial-modal-overlay">
+        <div class="tutorial-modal-card">
+          <div class="tutorial-modal-header">
+            <span class="tutorial-emoji">🔢</span>
+            <h2>Como Jogar Number Calm</h2>
+            <p class="tutorial-sub">Deslize números iguais para somá-los até 512!</p>
+          </div>
+
+          <!-- Interactive Mini-Grid Demonstration -->
+          <div class="tutorial-interactive-area">
+            <div class="tutorial-board-mini">
+              <div id="demo-cell-left" class="demo-tile-interactive">256</div>
+              <div id="demo-hand-pointer" class="demo-hand-interactive">👉</div>
+              <div id="demo-cell-right" class="demo-tile-interactive">256</div>
+            </div>
+            <button id="btn-demo-slide" class="btn-demo-action">
+              <span>👉 TOQUE PARA DESLIZAR</span>
+            </button>
+            <div id="demo-result-badge" class="demo-result-hidden">
+              🎉 256 + 256 = <strong style="color: #ca8a04;">512</strong>! VITÓRIA! 🏆
+            </div>
+          </div>
+
+          <!-- Animated Progression Roadmap to 512 -->
+          <div class="progression-ladder-container">
+            <span class="ladder-title">CAMINHO ATÉ 512:</span>
+            <div class="ladder-track">
+              <span class="ladder-step" data-val="2">2</span>
+              <span class="ladder-arr">➔</span>
+              <span class="ladder-step" data-val="4">4</span>
+              <span class="ladder-arr">➔</span>
+              <span class="ladder-step" data-val="8">8</span>
+              <span class="ladder-arr">➔</span>
+              <span class="ladder-step" data-val="16">16</span>
+              <span class="ladder-arr">➔</span>
+              <span class="ladder-step" data-val="32">32</span>
+              <span class="ladder-arr">➔</span>
+              <span class="ladder-step" data-val="64">64</span>
+              <span class="ladder-arr">➔</span>
+              <span class="ladder-step" data-val="128">128</span>
+              <span class="ladder-arr">➔</span>
+              <span class="ladder-step" data-val="256">256</span>
+              <span class="ladder-arr">➔</span>
+              <span class="ladder-step ladder-goal" data-val="512">512 🏆</span>
+            </div>
+          </div>
+
+          <div class="tutorial-instructions">
+            <div class="tutorial-bullet">
+              <span class="bullet-icon">👆</span>
+              <span><strong>Deslize com o dedo</strong> na tela ou use as <strong>setas grandes</strong> abaixo do tabuleiro.</span>
+            </div>
+            <div class="tutorial-bullet">
+              <span class="bullet-icon">➕</span>
+              <span>Blocos iguais se fundem e dobram de valor ao se tocarem.</span>
+            </div>
+          </div>
+
+          <button id="btn-start-playing" class="btn-tutorial-start">Entendi, Começar a Jogar! ▶</button>
+        </div>
+      </div>
 
       <!-- Universal Footer Controls -->
       <footer class="game-footer">

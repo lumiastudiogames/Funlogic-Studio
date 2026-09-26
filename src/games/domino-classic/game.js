@@ -232,15 +232,13 @@
       rightEnd = b;
     }
 
+    currentTurn = byWhom === 'PLAYER' ? 'AI' : 'PLAYER';
+    statusEl.textContent = currentTurn === 'PLAYER' ? 'Your turn to play' : 'Bot thinking...';
     renderAll();
     checkGameOver();
 
-    if (!gameOver) {
-      currentTurn = byWhom === 'PLAYER' ? 'AI' : 'PLAYER';
-      statusEl.textContent = currentTurn === 'PLAYER' ? 'Your turn to play' : 'Bot thinking...';
-      if (currentTurn === 'AI') {
-        setTimeout(playAiTurn, 800);
-      }
+    if (!gameOver && currentTurn === 'AI') {
+      setTimeout(playAiTurn, 800);
     }
   }
 

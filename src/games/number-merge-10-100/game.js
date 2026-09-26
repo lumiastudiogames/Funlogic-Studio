@@ -37,6 +37,14 @@ class SoundEngine {
       gain.gain.exponentialRampToValueAtTime(0.001, t + 0.05);
       osc.start(t);
       osc.stop(t + 0.05);
+    } else if (type === 'clack') {
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(900, t);
+      osc.frequency.exponentialRampToValueAtTime(140, t + 0.04);
+      gain.gain.setValueAtTime(0.24, t);
+      gain.gain.exponentialRampToValueAtTime(0.001, t + 0.04);
+      osc.start(t);
+      osc.stop(t + 0.04);
     } else if (type === 'pop') {
       osc.type = 'sine';
       osc.frequency.setValueAtTime(400, t);
@@ -224,12 +232,17 @@ class NumberMergeGame {
     }
     if (emptyCells.length === 0) return null;
     const { r, c } = emptyCells[Math.floor(Math.random() * emptyCells.length)];
-    const val = Math.random() < 0.85 ? 10 : 20;
+    let val = Math.random() < 0.75 ? 10 : 20;
+    // Spawn negative billiard balls (-10, -20, -30)
+    if ((this.tiles.some(t => t.val >= 30) || this.tiles.length >= 5) && Math.random() < 0.28) {
+      val = Math.random() < 0.6 ? -10 : (Math.random() < 0.85 ? -20 : -30);
+    }
     const newTile = {
       id: this.tileIdCounter++,
       r,
       c,
       val,
+      rot: 0,
       prevR: r,
       prevC: c,
       isNew: true
@@ -325,20 +338,26 @@ class NumberMergeGame {
             nextR = testR;
             nextC = testC;
             moved = true;
-          } else if (target.val === tile.val && !target.hasMerged && !tile.hasMerged) {
+          } else if (!target.hasMerged && !tile.hasMerged && (target.val === tile.val || (target.val * tile.val < 0))) {
+            const mergedVal = target.val === tile.val ? target.val * 2 : target.val + tile.val;
             board[nextR][nextC] = null;
-            board[testR][testC] = {
-              id: this.tileIdCounter++,
-              r: testR,
-              c: testC,
-              val: tile.val * 2,
-              prevR: r,
-              prevC: c,
-              isMerged: true,
-              hasMerged: true
-            };
-            totalScoreAdded += tile.val * 2;
-            mergedPositions.push({ r: testR, c: testC, val: tile.val * 2 });
+            if (mergedVal === 0) {
+              board[testR][testC] = null;
+              totalScoreAdded += 20;
+            } else {
+              board[testR][testC] = {
+                id: this.tileIdCounter++,
+                r: testR,
+                c: testC,
+                val: mergedVal,
+                prevR: r,
+                prevC: c,
+                isMerged: true,
+                hasMerged: true
+              };
+              totalScoreAdded += Math.abs(mergedVal);
+              mergedPositions.push({ r: testR, c: testC, val: mergedVal });
+            }
             moved = true;
             break;
           } else {
@@ -363,9 +382,16 @@ class NumberMergeGame {
       this.tiles = finalTiles;
 
       if (totalScoreAdded > 0) {
-        this.sound.play('pop');
+        this.sound.play('clack');
       } else {
         this.sound.play('slide');
+      }
+
+      // Billiard cushion rebound bounce
+      if (this.boardEl) {
+        this.boardEl.classList.remove('rail-cushion-hit');
+        void this.boardEl.offsetWidth;
+        this.boardEl.classList.add('rail-cushion-hit');
       }
 
       this.score += totalScoreAdded;
@@ -383,7 +409,7 @@ class NumberMergeGame {
         this.spawnStarParticles(p.r, p.c, p.val);
       });
 
-      if (!this.hasWon && !this.keepPlaying && this.tiles.some(t => t.val >= 100)) {
+      if (!this.hasWon && !this.keepPlaying && this.tiles.some(t => t.val === 100)) {
         this.hasWon = true;
         this.sound.play('win');
         const totalSecs = Math.max(1, Math.floor((Date.now() - this.startTime) / 1000));
@@ -391,6 +417,12 @@ class NumberMergeGame {
           window.parent.postMessage({ type: 'win', time: totalSecs }, '*');
         } catch (e) {}
         this.modalWin.classList.add('open');
+      } else if (this.tiles.some(t => t.val > 100)) {
+        const titleEl = this.modalOver.querySelector('h2');
+        if (titleEl) titleEl.textContent = 'Ultrapassou 100!';
+        const pEl = this.modalOver.querySelector('p');
+        if (pEl) pEl.textContent = 'Sua bola passou da meta de 100! Tente novamente equilibrando as somas.';
+        this.modalOver.classList.add('open');
       } else if (this.isGameOver()) {
         this.modalOver.classList.add('open');
       }
@@ -423,27 +455,38 @@ class NumberMergeGame {
     this.tiles.forEach(tile => {
       const el = document.createElement('div');
       const val = tile.val;
-      const classKey = `tile-${val}`;
-      el.className = `tile ${classKey}`;
+      const classKey = val < 0 ? `tile-neg-${Math.abs(val)} tile--${Math.abs(val)}` : `tile-${val} ball-${val}`;
+      el.className = `ball-tile tile ${classKey}`;
       if (tile.isNew) el.classList.add('tile-new');
       if (tile.isMerged) el.classList.add('tile-merged');
 
-      el.textContent = val;
+      const numSpan = document.createElement('span');
+      numSpan.className = 'ball-number';
+      numSpan.textContent = val;
+      el.appendChild(numSpan);
+
       el.style.width = `${cellW}px`;
       el.style.height = `${cellW}px`;
 
       const x = tile.c * (cellW + gap);
       const y = tile.r * (cellW + gap);
+      const currentRot = tile.rot || 0;
 
       if (tile.prevR !== undefined && (tile.prevR !== tile.r || tile.prevC !== tile.c)) {
         const prevX = tile.prevC * (cellW + gap);
         const prevY = tile.prevR * (cellW + gap);
-        el.style.transform = `translate(${prevX}px, ${prevY}px)`;
+        const dx = tile.c - tile.prevC;
+        const dy = tile.r - tile.prevR;
+        const rollDelta = (dx * 180 + dy * 180);
+        const nextRot = currentRot + rollDelta;
+        tile.rot = nextRot;
+
+        el.style.transform = `translate(${prevX}px, ${prevY}px) rotate(${currentRot}deg)`;
         requestAnimationFrame(() => {
-          el.style.transform = `translate(${x}px, ${y}px)`;
+          el.style.transform = `translate(${x}px, ${y}px) rotate(${nextRot}deg)`;
         });
       } else {
-        el.style.transform = `translate(${x}px, ${y}px)`;
+        el.style.transform = `translate(${x}px, ${y}px) rotate(${currentRot}deg)`;
       }
 
       this.tileLayerEl.appendChild(el);

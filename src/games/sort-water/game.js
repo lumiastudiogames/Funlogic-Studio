@@ -4,12 +4,12 @@
 
   // Calming pastel shades
   const COLORS = [
-    { id: 'c0', name: 'Blush', gradient: 'linear-gradient(180deg, #fbcfe8 0%, #f472b6 100%)' },
-    { id: 'c1', name: 'Mint', gradient: 'linear-gradient(180deg, #a7f3d0 0%, #34d399 100%)' },
-    { id: 'c2', name: 'Sky', gradient: 'linear-gradient(180deg, #bae6fd 0%, #38bdf8 100%)' },
-    { id: 'c3', name: 'Lavender', gradient: 'linear-gradient(180deg, #e9d5ff 0%, #c084fc 100%)' },
-    { id: 'c4', name: 'Peach', gradient: 'linear-gradient(180deg, #fed7aa 0%, #fb923c 100%)' },
-    { id: 'c5', name: 'Lemon', gradient: 'linear-gradient(180deg, #fef08a 0%, #facc15 100%)' },
+    { id: 'c0', name: 'Blush', core: '#f472b6', gradient: 'linear-gradient(180deg, #fbcfe8 0%, #f472b6 100%)' },
+    { id: 'c1', name: 'Mint', core: '#34d399', gradient: 'linear-gradient(180deg, #a7f3d0 0%, #34d399 100%)' },
+    { id: 'c2', name: 'Sky', core: '#38bdf8', gradient: 'linear-gradient(180deg, #bae6fd 0%, #38bdf8 100%)' },
+    { id: 'c3', name: 'Lavender', core: '#c084fc', gradient: 'linear-gradient(180deg, #e9d5ff 0%, #c084fc 100%)' },
+    { id: 'c4', name: 'Peach', core: '#fb923c', gradient: 'linear-gradient(180deg, #fed7aa 0%, #fb923c 100%)' },
+    { id: 'c5', name: 'Lemon', core: '#facc15', gradient: 'linear-gradient(180deg, #fef08a 0%, #facc15 100%)' },
   ];
 
   const TUBE_CAPACITY = 4;
@@ -22,6 +22,7 @@
   let startTime = Date.now();
   let soundEnabled = true;
   let isWon = false;
+  let isPouring = false;
 
   let audioCtx = null;
   function getAudioContext() {
@@ -57,6 +58,21 @@
         gain.connect(ctx.destination);
         osc.start(now);
         osc.stop(now + 0.18);
+      } else if (type === 'zen_pour') {
+        // Continuous bubbling water stream sound
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(320 + Math.random() * 80, now);
+        osc.frequency.exponentialRampToValueAtTime(620 + Math.random() * 120, now + 0.14);
+        osc.frequency.exponentialRampToValueAtTime(280 + Math.random() * 60, now + 0.32);
+        gain.gain.setValueAtTime(0.12, now);
+        gain.gain.linearRampToValueAtTime(0.15, now + 0.08);
+        gain.gain.exponentialRampToValueAtTime(0.005, now + 0.32);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.32);
       } else if (type === 'select') {
         const osc = ctx.createOscillator();
         const gain = ctx.createGain();
@@ -201,7 +217,7 @@
   }
 
   function handleTubeClick(idx) {
-    if (isWon) return;
+    if (isWon || isPouring) return;
     const tube = tubes[idx];
 
     if (selectedTubeIdx === null) {
@@ -235,21 +251,175 @@
   }
 
   function executePour(srcIdx, dstIdx) {
-    history.push(JSON.parse(JSON.stringify(tubes)));
-
+    if (isPouring) return;
     const src = tubes[srcIdx];
     const dst = tubes[dstIdx];
     const color = src[src.length - 1];
 
-    while (src.length > 0 && src[src.length - 1] === color && dst.length < TUBE_CAPACITY) {
-      dst.push(src.pop());
+    // Determine how many layers of this color can be poured
+    let pourCount = 0;
+    for (let i = src.length - 1; i >= 0; i--) {
+      if (src[i] === color && dst.length + pourCount < TUBE_CAPACITY) {
+        pourCount++;
+      } else {
+        break;
+      }
+    }
+    if (pourCount === 0) {
+      selectedTubeIdx = null;
+      renderTubes();
+      return;
     }
 
+    isPouring = true;
+    history.push(JSON.parse(JSON.stringify(tubes)));
     selectedTubeIdx = null;
-    playSound('zen_drop');
 
-    renderTubes();
-    checkWinCondition();
+    const srcEl = document.querySelector(`.tube[data-idx="${srcIdx}"]`);
+    const dstEl = document.querySelector(`.tube[data-idx="${dstIdx}"]`);
+
+    if (!srcEl || !dstEl) {
+      for (let i = 0; i < pourCount; i++) {
+        dst.push(src.pop());
+      }
+      isPouring = false;
+      renderTubes();
+      checkWinCondition();
+      return;
+    }
+
+    const srcRect = srcEl.getBoundingClientRect();
+    const dstRect = dstEl.getBoundingClientRect();
+    const isTargetRight = dstRect.left >= srcRect.left;
+
+    // Destination opening position
+    const dstMouthX = dstRect.left + dstRect.width / 2;
+    const dstMouthY = dstRect.top + 4;
+
+    // Tilt angle and offset
+    const tiltAngle = isTargetRight ? 68 : -68;
+    const offsetX = dstMouthX - (srcRect.left + srcRect.width / 2) + (isTargetRight ? -36 : 36);
+    const offsetY = dstMouthY - srcRect.top - 40;
+
+    srcEl.style.zIndex = '9999';
+    srcEl.style.transition = 'transform 0.35s cubic-bezier(0.25, 0.9, 0.35, 1)';
+    srcEl.style.transformOrigin = isTargetRight ? '80% 15%' : '20% 15%';
+    srcEl.style.transform = `translate(${offsetX}px, ${offsetY}px) rotate(${tiltAngle}deg)`;
+
+    // Calculate spout (pouring lip) coordinates
+    const spoutX = isTargetRight ? (dstMouthX - 10) : (dstMouthX + 10);
+    const spoutY = dstMouthY - 6;
+
+    // Tube height and layer height in dstEl
+    const layerHeightPx = dstRect.height / TUBE_CAPACITY;
+
+    // Create SVG fluid stream container
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.setAttribute('class', 'pour-stream-svg');
+    svg.style.cssText = 'position:fixed;inset:0;width:100vw;height:100vh;pointer-events:none;z-index:9998;overflow:visible;';
+
+    const coreColor = COLORS[color].core || '#38bdf8';
+
+    // Ripple / landing splash indicator
+    const ripple = document.createElementNS('http://www.w3.org/2000/svg', 'ellipse');
+    ripple.setAttribute('rx', '14');
+    ripple.setAttribute('ry', '4');
+    ripple.setAttribute('fill', coreColor);
+    ripple.setAttribute('opacity', '0.7');
+
+    const streamPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    streamPath.setAttribute('fill', 'none');
+    streamPath.setAttribute('stroke', coreColor);
+    streamPath.setAttribute('stroke-width', '7');
+    streamPath.setAttribute('stroke-linecap', 'round');
+    streamPath.style.filter = 'drop-shadow(0 0 6px ' + coreColor + ')';
+
+    svg.appendChild(ripple);
+    svg.appendChild(streamPath);
+    document.body.appendChild(svg);
+
+    function updateStream(landingY) {
+      // Fluid curved stream from spout into dst tube opening down to current liquid level
+      const midY = (spoutY + landingY) * 0.45;
+      const d = `M ${spoutX} ${spoutY} Q ${dstMouthX} ${midY}, ${dstMouthX} ${landingY}`;
+      streamPath.setAttribute('d', d);
+      ripple.setAttribute('cx', String(dstMouthX));
+      ripple.setAttribute('cy', String(landingY));
+    }
+
+    // Initial landing position before pouring (current surface of dstEl)
+    let currentDstCount = dst.length;
+    let landingY = dstRect.bottom - (currentDstCount * layerHeightPx);
+    updateStream(landingY);
+
+    // After tube finishes initial tilt (320ms), pour unit by unit "aos poucos"
+    setTimeout(() => {
+      let pouredSoFar = 0;
+      const stepDuration = 380; // ms per layer
+
+      function pourNextUnit() {
+        if (pouredSoFar >= pourCount) {
+          // Finished pouring all units
+          svg.style.transition = 'opacity 0.18s ease-out';
+          svg.style.opacity = '0';
+
+          srcEl.style.transition = 'transform 0.35s cubic-bezier(0.25, 0.9, 0.35, 1)';
+          srcEl.style.transform = 'translate(0, 0) rotate(0deg)';
+
+          setTimeout(() => {
+            if (svg.parentNode) svg.parentNode.removeChild(svg);
+            srcEl.style.zIndex = '';
+            srcEl.style.transform = '';
+            srcEl.style.transition = '';
+            srcEl.style.transformOrigin = '';
+
+            for (let k = 0; k < pourCount; k++) {
+              dst.push(src.pop());
+            }
+
+            isPouring = false;
+            renderTubes();
+            checkWinCondition();
+          }, 360);
+          return;
+        }
+
+        pouredSoFar++;
+        playSound('zen_pour');
+
+        // 1. Drain one layer from srcEl (top layer)
+        const srcLayers = srcEl.querySelectorAll('.liquid-layer');
+        if (srcLayers.length > 0) {
+          const topSrcLayer = srcLayers[srcLayers.length - pouredSoFar];
+          if (topSrcLayer) {
+            topSrcLayer.style.transition = 'height 0.34s ease-in, opacity 0.3s ease-in';
+            topSrcLayer.style.height = '0%';
+            topSrcLayer.style.opacity = '0.3';
+          }
+        }
+
+        // 2. Add one growing layer to dstEl
+        const newLayer = document.createElement('div');
+        newLayer.className = 'liquid-layer';
+        newLayer.style.background = COLORS[color].gradient;
+        newLayer.style.height = '0%';
+        newLayer.style.transition = 'height 0.34s cubic-bezier(0.18, 0.85, 0.35, 1.1)';
+        dstEl.appendChild(newLayer);
+
+        // Animate stream landing level rising
+        currentDstCount++;
+        landingY = dstRect.bottom - (currentDstCount * layerHeightPx);
+        updateStream(landingY);
+
+        requestAnimationFrame(() => {
+          newLayer.style.height = '25%';
+        });
+
+        setTimeout(pourNextUnit, stepDuration);
+      }
+
+      pourNextUnit();
+    }, 320);
   }
 
   function undoMove() {

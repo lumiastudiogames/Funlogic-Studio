@@ -275,6 +275,11 @@ class LightsOutApp {
     }
 
     this.renderLevelSelectModal();
+    try {
+      if (typeof (window as any).triggerPlatformWin === 'function') {
+        (window as any).triggerPlatformWin(this.state.elapsedSeconds);
+      }
+    } catch(e) {}
     setTimeout(() => {
       this.screens.openModal('VICTORY');
     }, 600);
@@ -524,7 +529,7 @@ class LightsOutApp {
     if (targetTile) {
       targetTile.classList.add('hint-pulse');
       if (this.tooltipEl) {
-        this.tooltipEl.innerHTML = `<span>💡</span><span>Toque aqui para desarmar a matriz!</span>`;
+        this.tooltipEl.innerHTML = `<span>💡</span><span>Tap here to toggle matrix!</span>`;
         this.showTooltipAt(targetTile);
       }
     }

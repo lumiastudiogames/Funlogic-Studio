@@ -152,22 +152,42 @@ main {
   width: 100%;
 }
 
-/* Deep 5-layer tube */
+/* Deep 5-layer tube with Laboratory Graduated Markings */
 .tube {
   width: 48px;
   height: 195px;
   border-radius: 0 0 24px 24px;
-  border: 3px solid rgba(255, 255, 255, 0.28);
+  border: 3px solid rgba(255, 255, 255, 0.32);
   border-top: none;
-  background: linear-gradient(135deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.02) 50%, rgba(255,255,255,0.06) 100%);
+  background: linear-gradient(135deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.02) 50%, rgba(255,255,255,0.08) 100%);
   position: relative;
   display: flex;
   flex-direction: column-reverse;
   cursor: pointer;
-  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s;
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.5), inset 2px 0 4px rgba(255,255,255,0.15);
-  overflow: hidden;
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease;
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.5), inset 2px 0 4px rgba(255,255,255,0.25);
+  overflow: visible;
   box-sizing: border-box;
+  z-index: 2;
+}
+
+/* Glass Tube Graduated Measurement Lines (Lab Look) */
+.tube::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 4px;
+  width: 8px;
+  height: 100%;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    180deg,
+    transparent 0%,
+    transparent 18%,
+    rgba(255, 255, 255, 0.45) 19%,
+    rgba(255, 255, 255, 0.45) 20%
+  );
+  opacity: 0.6;
 }
 
 .tube::before {
@@ -177,9 +197,9 @@ main {
   left: -5px;
   right: -5px;
   height: 8px;
-  border: 3px solid rgba(255, 255, 255, 0.35);
+  border: 3px solid rgba(255, 255, 255, 0.4);
   border-radius: 6px;
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.25);
 }
 
 @media (max-width: 420px) {
@@ -201,12 +221,36 @@ main {
   box-shadow: 0 0 14px rgba(52, 211, 153, 0.5);
 }
 
+.tube.pouring {
+  z-index: 100 !important;
+  pointer-events: none;
+}
+
+/* Liquid Stream Animation */
+.pouring-stream {
+  position: absolute;
+  width: 6px;
+  border-radius: 3px;
+  pointer-events: none;
+  z-index: 90;
+  animation: streamFlow 0.4s ease-out;
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.4);
+}
+
+@keyframes streamFlow {
+  0% { transform: scaleY(0); transform-origin: top; }
+  30% { transform: scaleY(1); }
+  80% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
 /* Explicit requirement: height 20% per layer in CSS! */
 .liquid-layer {
   width: 100%;
   height: 20%;
   position: relative;
-  transition: height 0.2s ease;
+  transition: height 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
 }
 
 .liquid-surface {
@@ -215,7 +259,7 @@ main {
   left: 0;
   right: 0;
   height: 4px;
-  background: rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.45);
   border-radius: 50%;
 }
 

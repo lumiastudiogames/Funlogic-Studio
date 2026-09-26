@@ -112,7 +112,7 @@
 
   function initLevel(lvl) {
     currentLevel = lvl;
-    levelBadge.textContent = `FASE ${currentLevel}`;
+    levelBadge.textContent = `LEVEL ${currentLevel}`;
     startTime = Date.now();
     gameState = 'DRAWING';
     remainingInk = MAX_INK;
@@ -227,14 +227,26 @@
     gameState = 'DEFENDING';
     toast.style.display = 'none';
     timerBox.classList.add('active');
+
+    // Clamp initial penetration if drawn onto platform
+    let initialPen = 0;
+    platforms.forEach((plat) => {
+      currentLine.forEach((p) => {
+        if (p.x >= plat.x - 2 && p.x <= plat.x + plat.w + 2 && p.y >= plat.y && p.y <= plat.y + plat.h) {
+          const pen = p.y - plat.y;
+          if (pen > initialPen) initialPen = pen;
+        }
+      });
+    });
+
     lineRigidBody = {
-      points: currentLine.map((p) => ({ ...p })),
+      points: currentLine.map((p) => ({ x: p.x, y: p.y - initialPen })),
       vy: 0,
       vx: 0,
       yOffset: 0
     };
 
-    // Spawn 16 Bees
+    // Spawn Bees
     bees = [];
     const count = 14 + currentLevel * 2;
     for (let i = 0; i < count; i++) {
@@ -275,21 +287,30 @@
 
       // Update line rigid body (gravity and platform collision)
       if (lineRigidBody) {
-        lineRigidBody.vy += 0.35; // Gravity
+        lineRigidBody.vy = Math.min(lineRigidBody.vy + 0.35, 6); // Gravity
         lineRigidBody.yOffset += lineRigidBody.vy;
 
-        // Check if any point hits platform
-        let restingOnSolid = false;
-        lineRigidBody.points.forEach((p) => {
-          const actualY = p.y + lineRigidBody.yOffset;
-          platforms.forEach((plat) => {
-            if (p.x >= plat.x && p.x <= plat.x + plat.w && actualY >= plat.y && actualY <= plat.y + 15) {
-              restingOnSolid = true;
+        // Check if any point or segment hits platform
+        let maxPenetration = 0;
+        let isColliding = false;
+
+        platforms.forEach((plat) => {
+          lineRigidBody.points.forEach((p) => {
+            const actualY = p.y + lineRigidBody.yOffset;
+            if (p.x >= plat.x - 2 && p.x <= plat.x + plat.w + 2) {
+              if (actualY >= plat.y && actualY <= plat.y + plat.h + 20) {
+                const pen = actualY - plat.y;
+                if (pen > maxPenetration) {
+                  maxPenetration = pen;
+                  isColliding = true;
+                }
+              }
             }
           });
         });
 
-        if (restingOnSolid) {
+        if (isColliding) {
+          lineRigidBody.yOffset -= maxPenetration;
           lineRigidBody.vy = 0;
         }
       }
@@ -337,7 +358,7 @@
           AudioEngine.stopBuzz();
           AudioEngine.playSting();
           toast.style.display = 'flex';
-          toast.textContent = '😢 O cãozinho foi picado! Tente novamente!';
+          toast.textContent = '😢 Doge got stung! Try again!';
           setTimeout(() => initLevel(currentLevel), 1500);
         }
       });
@@ -348,8 +369,13 @@
         AudioEngine.stopBuzz();
         AudioEngine.playBark();
         const TIME = Math.max(1, Math.floor((Date.now() - startTime) / 1000));
-        // Golden platform win notification
-        window.parent.postMessage({ type: 'win', time: TIME }, '*');
+        try {
+          if (typeof window.triggerPlatformWin === 'function') {
+            window.triggerPlatformWin(TIME);
+          } else if (window.parent && window.parent !== window) {
+            window.parent.postMessage({ type: 'win', time: TIME }, '*');
+          }
+        } catch (e) {}
 
         toast.style.display = 'flex';
         toast.textContent = '🎉 Doge is safe! Well done!';

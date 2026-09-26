@@ -257,6 +257,20 @@ main {
   border-color: #fbbf24;
 }
 
+.tube.pouring-right {
+  transform: translate(28px, -28px) rotate(55deg) !important;
+  z-index: 50 !important;
+  box-shadow: 0 20px 30px rgba(0, 0, 0, 0.6) !important;
+  transition: transform 0.22s cubic-bezier(0.34, 1.25, 0.64, 1) !important;
+}
+
+.tube.pouring-left {
+  transform: translate(-28px, -28px) rotate(-55deg) !important;
+  z-index: 50 !important;
+  box-shadow: 0 20px 30px rgba(0, 0, 0, 0.6) !important;
+  transition: transform 0.22s cubic-bezier(0.34, 1.25, 0.64, 1) !important;
+}
+
 .tube.locked {
   border-color: #22c55e;
   box-shadow: 0 0 16px rgba(34, 197, 94, 0.5);
@@ -298,6 +312,192 @@ main {
   height: 4px;
   background: rgba(255, 255, 255, 0.35);
   border-radius: 50%;
+}
+
+/* Chemical Reaction Bubbles & Glowing FX */
+.tube.reacting {
+  animation: tubeReactionGlow 0.8s ease-out;
+}
+
+@keyframes tubeReactionGlow {
+  0% { transform: scale(1); filter: drop-shadow(0 0 2px #fff); }
+  35% { transform: scale(1.08) translateY(-8px); filter: drop-shadow(0 0 16px #38bdf8) brightness(1.2); }
+  100% { transform: scale(1); filter: drop-shadow(0 0 4px rgba(255,255,255,0.2)); }
+}
+
+.reaction-bubble {
+  position: absolute;
+  bottom: 10px;
+  width: 6px;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 50%;
+  pointer-events: none;
+  animation: bubbleRise 0.7s ease-out forwards;
+}
+
+@keyframes bubbleRise {
+  0% { transform: translateY(0) scale(0.6); opacity: 1; }
+  100% { transform: translateY(-110px) scale(1.4); opacity: 0; }
+}
+
+/* Floating Reaction Toast Pill */
+.reaction-toast {
+  position: absolute;
+  top: -38px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(15, 23, 42, 0.95);
+  border: 1px solid #38bdf8;
+  color: #38bdf8;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 3px 8px;
+  border-radius: 9999px;
+  white-space: nowrap;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6), 0 0 8px rgba(56, 189, 248, 0.4);
+  pointer-events: none;
+  animation: toastFloatUp 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  z-index: 50;
+}
+
+@keyframes toastFloatUp {
+  0% { opacity: 0; transform: translate(-50%, 10px) scale(0.85); }
+  20% { opacity: 1; transform: translate(-50%, -6px) scale(1); }
+  80% { opacity: 1; transform: translate(-50%, -14px) scale(1); }
+  100% { opacity: 0; transform: translate(-50%, -24px) scale(0.9); }
+}
+
+/* Recipe Quick Bar */
+.lab-recipe-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  background: rgba(15, 23, 42, 0.85);
+  border: 1px solid rgba(217, 119, 6, 0.3);
+  border-radius: 12px;
+  padding: 6px 14px;
+  margin-bottom: 12px;
+  font-size: 12px;
+  color: #cbd5e1;
+  cursor: pointer;
+  transition: all 0.2s;
+  backdrop-filter: blur(8px);
+  max-width: 90%;
+  flex-wrap: wrap;
+}
+
+.lab-recipe-bar:hover {
+  background: rgba(30, 41, 59, 0.95);
+  border-color: #f59e0b;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.2);
+}
+
+.recipe-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(0, 0, 0, 0.35);
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-weight: 700;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Recipe Grid in Modal */
+.recipe-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+  margin: 16px 0;
+  text-align: left;
+}
+
+.recipe-card {
+  background: rgba(15, 23, 42, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  transition: transform 0.15s, border-color 0.15s;
+}
+
+.recipe-card:hover {
+  border-color: #fbbf24;
+  transform: translateY(-2px);
+}
+
+.recipe-card-formula {
+  font-size: 15px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #ffffff;
+}
+
+.recipe-card-desc {
+  font-size: 11px;
+  color: #94a3b8;
+  line-height: 1.3;
+}
+
+/* Level Grid in Modal */
+.levels-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+  max-height: 280px;
+  overflow-y: auto;
+  padding: 6px 2px;
+  margin: 14px 0;
+}
+
+@media (max-width: 480px) {
+  .levels-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.level-btn {
+  background: #1e293b;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 10px;
+  padding: 10px 4px;
+  color: #ffffff;
+  font-weight: 800;
+  font-size: 13px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  transition: all 0.15s;
+}
+
+.level-btn:hover {
+  background: #334155;
+  border-color: #fbbf24;
+  transform: scale(1.04);
+}
+
+.level-btn.active {
+  background: linear-gradient(135deg, #d97706, #b45309);
+  border-color: #fbbf24;
+  box-shadow: 0 0 10px rgba(251, 191, 36, 0.5);
+}
+
+.level-btn.completed {
+  border-color: #22c55e;
+}
+
+.level-stars {
+  font-size: 10px;
+  color: #fbbf24;
 }
 
 /* Overlays */

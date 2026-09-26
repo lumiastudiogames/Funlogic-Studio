@@ -2,19 +2,29 @@ import { GAMES } from '../data/games';
 import { Game } from '../types';
 import { showVictoryModal } from '../components/VictoryModal';
 import { getDiscoveredEngine } from '../games/autoLoader';
-import { showGamePrerollAd } from '../components/PrerollAd';
 import { updateHeadSeo } from '../utils/seo';
 import { recordGamePlay } from '../utils/gameStats';
+import { showGamePrerollAd } from '../components/PrerollAd';
+
+const GAME_ALIASES: Record<string, string> = {
+  'mahjong': 'mahjong-solitaire',
+  '2048': 'math-2048-operations',
+  'sokoban': 'sokoban-warehouse',
+  'sudoku': 'sudoku-classic',
+  'water-sort': 'water-sort-lab',
+  'chess': 'chess-mate-in-one'
+};
 
 export function renderGameView(container: HTMLElement, gameId: string): void {
-  const game = GAMES.find(g => g.id === gameId) || GAMES[0];
+  const resolvedId = GAME_ALIASES[gameId.toLowerCase()] || gameId;
+  const game = GAMES.find(g => g.id === resolvedId) || GAMES.find(g => g.id === gameId) || GAMES[0];
 
   // Clean up any active, conflicting game-level sub-path service workers
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.getRegistrations().then(registrations => {
       for (const reg of registrations) {
         const scopePath = new URL(reg.scope).pathname;
-        if (scopePath !== '/' && scopePath !== '/funlogic.games/') {
+        if (scopePath !== '/' && scopePath !== '/funlogic.games/' && scopePath !== '/playfunlogic.com/') {
           reg.unregister().then(() => {
             console.log('Unregistered conflicting game-level service worker:', reg.scope);
           });
@@ -44,7 +54,7 @@ export function renderGameView(container: HTMLElement, gameId: string): void {
   });
 
   container.innerHTML = `
-    <div id="fullscreen-game-root" class="w-full h-[100dvh] flex flex-col bg-[#0b0f19] text-white overflow-hidden select-none border-0 p-0 m-0">
+    <div id="fullscreen-game-root" class="w-full h-[100dvh] flex flex-col bg-[#0b0f19] text-white overflow-hidden select-none border-0 p-0 m-0" style="height: 100dvh; min-height: 100vh; width: 100%; display: flex; flex-direction: column;">
       
       <!-- Top Game Bar (Compact Console Header - Borderless & Ultra-Responsive) -->
       <header class="h-12 sm:h-14 bg-[#0F172A] px-2 sm:px-4 flex items-center justify-between gap-1.5 sm:gap-3 shrink-0 z-30 shadow-md border-0 w-full overflow-hidden">
@@ -112,8 +122,8 @@ export function renderGameView(container: HTMLElement, gameId: string): void {
       </header>
 
       <!-- Main Game Display Stage: 100% Full Screen Viewport - Completely Borderless & Responsive -->
-      <main id="game-stage-screen" class="flex-1 w-full h-[calc(100dvh-48px)] sm:h-[calc(100dvh-56px)] bg-black relative flex items-center justify-center overflow-hidden border-0 p-0 m-0">
-        <div id="game-canvas-area" class="w-full h-full flex items-center justify-center relative overflow-hidden border-0 p-0 m-0">
+      <main id="game-stage-screen" class="flex-1 w-full h-[calc(100dvh-48px)] sm:h-[calc(100dvh-56px)] bg-black relative flex items-center justify-center overflow-hidden border-0 p-0 m-0" style="height: calc(100dvh - 48px); min-height: calc(100vh - 48px); width: 100%; flex: 1; display: flex;">
+        <div id="game-canvas-area" class="w-full h-full flex items-center justify-center relative overflow-hidden border-0 p-0 m-0" style="width: 100%; height: 100%; flex: 1; display: flex;">
           <!-- Game Engine or Iframe mounts here with 100% full screen dimensions -->
         </div>
 
@@ -259,7 +269,7 @@ export function renderGameView(container: HTMLElement, gameId: string): void {
           id="game-active-frame"
           src="${game.htmlUrl}" 
           class="w-full h-full border-0 outline-none block bg-slate-900 m-0 p-0" 
-          style="border: 0; outline: none; margin: 0; padding: 0; width: 100%; height: 100%; display: block; background: #0f172a;"
+          style="border: 0; outline: none; margin: 0; padding: 0; width: 100%; height: 100%; min-height: 100%; display: block; background: #0f172a;"
           allow="autoplay; fullscreen; gamepad; clipboard-write; xr-spatial-tracking; encrypted-media; screen-wake-lock">
         </iframe>
       `;
@@ -295,7 +305,6 @@ export function renderGameView(container: HTMLElement, gameId: string): void {
             }
           } catch (e) {}
         };
-        blockSWAndInjectCSS();
         frame.addEventListener('load', blockSWAndInjectCSS);
       }
 
@@ -346,30 +355,32 @@ export function renderGameView(container: HTMLElement, gameId: string): void {
           ${game.iconSvg}
         </div>
         <h3 class="text-xl font-black text-white">${game.title}</h3>
-        <p class="text-xs text-slate-400 max-w-sm">${game.shortDesc || game.description || 'Carregando jogo...'}</p>
+        <p class="text-xs text-slate-400 max-w-sm">${game.shortDesc || game.description || 'Loading game...'}</p>
         <div class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-800 text-xs font-bold text-slate-300 border border-slate-700">
-          <span>🎮 Pronto para receber os arquivos em /src/games/</span>
+          <span>🎮 Loading game engine...</span>
         </div>
       </div>
     `;
   };
 
-  let prerollController: { cancel: () => void } | null = null;
+  const fullscreenRoot = container.querySelector('#fullscreen-game-root') as HTMLElement;
+  let prerollController: { cancel: () => void; mount: (parent: HTMLElement) => void } | null = null;
 
-  // Show Interstitial Preroll Ad (3-4s with countdown and Skip button) before launching game
-  const stageScreen = container.querySelector('#game-stage-screen') as HTMLElement;
-  if (stageScreen) {
-    prerollController = showGamePrerollAd({
-      gameTitle: game.title,
-      gameIconSvg: game.iconSvg,
-      categoryLabel: game.categoryLabel,
-      coverBg: game.coverBg,
-      durationSeconds: 1.5,
-      onComplete: () => {
-        mountEngine();
-      }
-    });
-    (prerollController as any).mount(stageScreen);
+  // Launch with Preroll Ad: shows interstitial ad loading screen before game starts
+  prerollController = showGamePrerollAd({
+    gameTitle: game.title,
+    gameIconSvg: game.iconSvg,
+    categoryLabel: game.categoryLabel,
+    coverBg: game.coverBg,
+    durationSeconds: 3,
+    onComplete: () => {
+      prerollController = null;
+      mountEngine();
+    }
+  });
+
+  if (fullscreenRoot && prerollController) {
+    prerollController.mount(fullscreenRoot);
   } else {
     mountEngine();
   }
@@ -377,7 +388,10 @@ export function renderGameView(container: HTMLElement, gameId: string): void {
   // Attach cleanup to container
   (container as any)._cleanup = () => {
     document.removeEventListener('fullscreenchange', updateFullscreenUI);
-    if (prerollController) prerollController.cancel();
+    if (prerollController) {
+      prerollController.cancel();
+      prerollController = null;
+    }
     if (cleanupEngine) cleanupEngine();
   };
 }

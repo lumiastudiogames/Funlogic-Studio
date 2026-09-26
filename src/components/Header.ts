@@ -7,17 +7,17 @@ export function renderHeader(container: HTMLElement, onNavigate: (route: string)
 
   container.innerHTML = `
     <header class="w-full game-console-header shadow-xl">
-      <div class="max-w-7xl mx-auto px-3 sm:px-6 py-2.5 sm:py-0">
-        <div class="flex flex-wrap sm:flex-nowrap items-center justify-between gap-2 sm:gap-3 sm:h-16">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2.5 md:py-0 safe-padding-x">
+        <div class="flex flex-wrap md:flex-nowrap items-center justify-between gap-2.5 sm:gap-3 md:h-16">
           
           <!-- Logo - Highlighted & Always Visible (Order 1 on mobile, left) -->
           <a href="#home" id="header-logo" class="order-1 flex items-center gap-2 sm:gap-2.5 text-decoration-none group shrink-0">
             <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-2xl bg-[#58CC02] text-white flex items-center justify-center font-black text-xl sm:text-2xl shadow-md border-b-4 border-[#46A302] group-hover:scale-105 transition-transform shrink-0">
-              F
+              P
             </div>
             <div class="flex flex-col">
-              <span class="font-black text-base sm:text-xl tracking-tight text-white leading-none block drop-shadow-xs">
-                FunLogic<span class="text-[#58CC02]">.games</span>
+              <span class="font-black text-base sm:text-lg md:text-xl tracking-tight text-white leading-none block drop-shadow-xs">
+                PlayFunLogic<span class="text-[#58CC02]">.com</span>
               </span>
               <span class="text-[9px] sm:text-[10px] font-black tracking-wider text-[#1CB0F6] uppercase leading-none block mt-0.5">
                 Logic Game Portal
@@ -26,20 +26,20 @@ export function renderHeader(container: HTMLElement, onNavigate: (route: string)
           </a>
 
           <!-- Right Controls: Daily Shortcut & Accessibility (Order 2 on mobile, right) -->
-          <div class="order-2 flex items-center gap-1.5 sm:gap-2 shrink-0">
+          <div class="order-2 flex items-center gap-2 shrink-0">
             
-            <!-- Font Size Controls (A- / A+) - Desktop Only -->
-            <div class="hidden sm:flex items-center bg-slate-800 p-1 rounded-2xl border-2 border-slate-700">
+            <!-- Font Size Controls (A- / A+) - Tablet & Desktop Only -->
+            <div class="hidden md:flex items-center bg-slate-800 p-1 rounded-2xl border-2 border-slate-700">
               <button 
                 id="btn-font-down" 
-                title="Diminuir fonte"
+                title="Decrease font size"
                 class="w-8 h-8 rounded-xl bg-slate-700 hover:bg-slate-600 active:scale-95 text-xs font-black text-white flex items-center justify-center transition cursor-pointer border-b-2 border-slate-900"
               >
                 A−
               </button>
               <button 
                 id="btn-font-up" 
-                title="Aumentar fonte"
+                title="Increase font size"
                 class="w-8 h-8 rounded-xl bg-slate-700 hover:bg-slate-600 active:scale-95 text-sm font-black text-white flex items-center justify-center transition cursor-pointer border-b-2 border-slate-900"
               >
                 A+
@@ -49,7 +49,7 @@ export function renderHeader(container: HTMLElement, onNavigate: (route: string)
             <!-- Daily Challenge Shortcut (Duolingo 3D Extruded Button) -->
             <a 
               href="#daily" 
-              class="h-9 sm:h-10 px-3 sm:px-4 rounded-2xl btn-duo-green font-black text-xs sm:text-sm flex items-center gap-1.5 text-decoration-none shrink-0 whitespace-nowrap shadow-md"
+              class="h-9 sm:h-10 px-3.5 sm:px-4 rounded-2xl btn-duo-green font-black text-xs sm:text-sm flex items-center gap-1.5 text-decoration-none shrink-0 whitespace-nowrap shadow-md"
             >
               <span>Daily</span>
               <span class="w-4 h-4 inline-block">${STICKERS.flame}</span>
@@ -57,18 +57,21 @@ export function renderHeader(container: HTMLElement, onNavigate: (route: string)
 
           </div>
 
-          <!-- Search with Autocomplete (Order 3 on mobile: full width on bottom line; Order 2 on desktop: center) -->
-          <div class="order-3 sm:order-2 w-full sm:w-auto sm:flex-1 sm:max-w-md mx-0 sm:mx-6 pt-1 sm:pt-0 relative">
+          <!-- Search with Autocomplete (Order 3 on mobile: full width; Order 2 on desktop: center) -->
+          <div class="order-3 md:order-2 w-full md:w-auto md:flex-1 md:max-w-md mx-0 md:mx-6 pt-0.5 md:pt-0 relative">
             <div class="relative">
               <span class="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none select-none flex items-center justify-center">${STICKERS.hiddenitem}</span>
               <input 
                 type="text" 
                 id="search-input"
-                placeholder="Buscar jogos de lógica..." 
+                lang="en"
+                aria-label="Search logic games"
+                placeholder="Search logic games..." 
+                spellcheck="false"
                 class="w-full h-10 pl-10 pr-8 bg-slate-800/90 hover:bg-slate-800 focus:bg-slate-900 border-2 border-slate-700 focus:border-[#58CC02] rounded-2xl text-xs sm:text-sm font-bold text-white placeholder-slate-400 focus:outline-none transition cursor-text shadow-inner"
                 autocomplete="off"
               />
-              <button id="search-clear" class="hidden absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white font-bold text-xs p-1">
+              <button id="search-clear" title="Clear search" class="hidden absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white font-bold text-xs p-1">
                 ✕
               </button>
             </div>
@@ -113,7 +116,7 @@ export function renderHeader(container: HTMLElement, onNavigate: (route: string)
       `;
     } else {
       searchResults.innerHTML = matches.slice(0, 6).map(g => `
-        <a href="#game/${g.id}" class="search-item flex items-center gap-3 p-3 hover:bg-emerald-50 transition border-b border-black/5 last:border-none text-decoration-none">
+        <a href="/game/${g.id}/" class="search-item flex items-center gap-3 p-3 hover:bg-emerald-50 transition border-b border-black/5 last:border-none text-decoration-none">
           <div class="w-10 h-10 rounded-xl flex items-center justify-center text-2xl" style="background-color: ${g.coverBg};">
             ${g.iconSvg}
           </div>

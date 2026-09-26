@@ -101,11 +101,11 @@ footer.game-console-footer {
     radial-gradient(rgba(28, 176, 246, 0.1) 1.5px, #F8FAFC 1.5px);
   background-size: 28px 28px;
   background-position: 0 0, 14px 14px;
-  border-left: 4px solid #1E293B;
-  border-right: 4px solid #1E293B;
+  border-left: 0;
+  border-right: 0;
   border-top: 0;
   border-bottom: 0;
-  border-radius: 0; /* Straight non-rounded corners connecting cleanly to header & footer */
+  border-radius: 0;
   box-shadow: 
     inset 0 12px 28px -6px rgba(15, 23, 42, 0.18),
     inset 0 -10px 24px -6px rgba(15, 23, 42, 0.12);
@@ -114,8 +114,27 @@ footer.game-console-footer {
 
 @media (min-width: 640px) {
   .game-screen-viewport {
+    border-left: 4px solid #1E293B;
+    border-right: 4px solid #1E293B;
+  }
+}
+
+@media (min-width: 1024px) {
+  .game-screen-viewport {
     border-left-width: 8px;
     border-right-width: 8px;
+  }
+}
+
+/* Mobile Safe Area & Compact Landscape Rules */
+.safe-padding-x {
+  padding-left: max(1rem, env(safe-area-inset-left, 0px));
+  padding-right: max(1rem, env(safe-area-inset-right, 0px));
+}
+
+@media (orientation: landscape) and (max-height: 520px) {
+  #mobile-anchor-ad {
+    display: none !important;
   }
 }
 

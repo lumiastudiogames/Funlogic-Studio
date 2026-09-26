@@ -584,7 +584,7 @@
       <div id="toast"></div>
 
       <!-- Start Menu Modal (Initial Screen) -->
-      <div id="modal-menu" class="modal-overlay active">
+      <div id="modal-menu" class="modal-overlay">
         <div class="modal-card">
           <div class="menu-icon">🀄</div>
           <h1 class="menu-title">Mahjong 24 Tiles</h1>
@@ -658,6 +658,20 @@
           </div>
           <button id="btn-replay-win" class="btn-tactile btn-emerald" style="width: 100%; padding: 12px; font-size: 14px;">
             🔄 Play Again
+          </button>
+        </div>
+      </div>
+
+      <!-- Game Over Modal (Time expired) -->
+      <div id="modal-gameover" class="modal-overlay">
+        <div class="modal-card" style="text-align: center;">
+          <div style="font-size: 48px; margin-bottom: 8px;">⏱️</div>
+          <h2 class="modal-title" style="justify-content: center; color: #f87171;">Time's Up!</h2>
+          <p style="font-size: 14px; font-weight: 700; color: #cbd5e1; margin-bottom: 16px;">
+            You ran out of time! Match pairs faster to keep your timer full.
+          </p>
+          <button id="btn-retry-over" class="btn-tactile btn-amber" style="width: 100%; padding: 12px; font-size: 14px;">
+            ⚡ Try Again
           </button>
         </div>
       </div>

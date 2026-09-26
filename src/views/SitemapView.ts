@@ -5,7 +5,7 @@ export function renderSitemapView(container: HTMLElement): void {
   const sortedGames = [...GAMES].sort((a, b) => a.title.localeCompare(b.title));
 
   container.innerHTML = `
-    <div class="max-w-5xl mx-auto px-4 sm:px-6 py-8 space-y-8">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 md:px-8 py-8 space-y-8 safe-padding-x">
       
       <!-- Back Navigation Button -->
       <div>
@@ -18,7 +18,7 @@ export function renderSitemapView(container: HTMLElement): void {
       <!-- Sitemap H1 -->
       <div class="border-b border-black/10 pb-4">
         <h1 class="text-2xl sm:text-3xl font-extrabold text-gray-900 tracking-tight">
-          FunLogic.games Human Sitemap
+          PlayFunLogic.com Human Sitemap
         </h1>
         <p class="text-xs sm:text-sm text-gray-600 font-medium mt-1">
           Complete index of categories and published logic games by Lumia Studio.

@@ -1,6 +1,8 @@
 <!doctype html>
 <html lang="en">
   <head>
+    <script src="https://cdn.tailwindcss.com"></script>
+
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
     <title>Sky Control - Air Traffic Collision Avoidance</title>
@@ -385,16 +387,22 @@
 
     </div>
 
-    <!-- Main Module Script -->
-    <script type="module" src="./src/main.ts"></script>
+    <!-- Main Game Script -->
+    <script src="./game.js"></script>
   
-  <!-- PWA Service Worker Registration -->
+  <!-- PWA Service Worker Disabled / Unregistering conflicting workers -->
   <script>
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js').catch(() => {});
-      });
-    }
+    (function() {
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.getRegistrations().then(regs => {
+          for (let reg of regs) {
+            if (reg.scope && reg.scope.includes('sky-control')) {
+              reg.unregister();
+            }
+          }
+        }).catch(() => {});
+      }
+    })();
   </script>
 
 
@@ -469,7 +477,7 @@
       ">
         <div style="font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: #64748b; margin-bottom: 4px;">Advertisement</div>
         <div style="font-size: 14px; font-weight: 600; color: #e2e8f0;">Brain Booster Puzzles</div>
-        <div style="font-size: 11px; color: #38bdf8; margin-top: 2px;">play.funlogic.games</div>
+        <div style="font-size: 11px; color: #38bdf8; margin-top: 2px;">playfunlogic.com</div>
       </div>
 
       <div style="margin-bottom: 16px;">

@@ -250,3 +250,240 @@ body {
   padding: 0 16px;
   flex-shrink: 0;
 }
+
+/* ==========================================================================
+   ANIMATED TUTORIAL MODAL
+   ========================================================================== */
+.tutorial-modal-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(120, 53, 15, 0.45);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 16px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+
+.tutorial-modal-overlay.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.tutorial-modal-card {
+  background: #ffffff;
+  border: 3px solid #facc15;
+  border-radius: 24px;
+  padding: 24px;
+  max-width: 380px;
+  width: 100%;
+  box-shadow: 0 20px 40px rgba(120, 53, 15, 0.3);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  animation: cardPop 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+}
+
+@keyframes cardPop {
+  from { transform: scale(0.9); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.tutorial-modal-header h2 {
+  font-size: 20px;
+  font-weight: 900;
+  color: #78350f;
+  margin-top: 4px;
+}
+
+.tutorial-sub {
+  font-size: 13px;
+  color: #b45309;
+  font-weight: 600;
+}
+
+/* Interactive Tutorial Demo Area */
+.tutorial-interactive-area {
+  background: #fefce8;
+  border: 2px dashed #fde047;
+  border-radius: 18px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.tutorial-board-mini {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  position: relative;
+  width: 220px;
+  height: 64px;
+  background: #fef08a;
+  border-radius: 14px;
+  border: 2px solid #ca8a04;
+  padding: 6px;
+}
+
+.demo-tile-interactive {
+  width: 52px;
+  height: 52px;
+  background: linear-gradient(135deg, #fcd34d, #f59e0b);
+  border: 2px solid #b45309;
+  border-radius: 12px;
+  font-weight: 900;
+  font-size: 20px;
+  color: #78350f;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 0 #78350f;
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s;
+}
+
+.demo-hand-interactive {
+  font-size: 26px;
+  position: absolute;
+  left: 20px;
+  bottom: -6px;
+  animation: handSwipe 2s infinite ease-in-out;
+  pointer-events: none;
+}
+
+@keyframes handSwipe {
+  0%, 20% { transform: translateX(0) scale(1); }
+  50%, 70% { transform: translateX(90px) scale(0.9); }
+  100% { transform: translateX(0) scale(1); }
+}
+
+.btn-demo-action {
+  background: #10b981;
+  color: #ffffff;
+  border: 2px solid #059669;
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 900;
+  padding: 8px 16px;
+  cursor: pointer;
+  box-shadow: 0 3px 0 #047857;
+  transition: transform 0.05s ease;
+}
+
+.btn-demo-action:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 #047857;
+}
+
+.demo-result-hidden {
+  display: none;
+  font-size: 14px;
+  font-weight: 900;
+  color: #78350f;
+  background: #fde047;
+  padding: 6px 12px;
+  border-radius: 10px;
+  border: 1px solid #ca8a04;
+  animation: cardPop 0.25s ease-out;
+}
+
+/* Progression Ladder */
+.progression-ladder-container {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  background: #fffbeb;
+  border-radius: 12px;
+  padding: 8px 10px;
+  border: 1px solid #fef08a;
+}
+
+.ladder-title {
+  font-size: 10px;
+  font-weight: 900;
+  color: #b45309;
+  letter-spacing: 0.5px;
+}
+
+.ladder-track {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  flex-wrap: wrap;
+}
+
+.ladder-step {
+  font-size: 11px;
+  font-weight: 800;
+  background: #fef08a;
+  color: #78350f;
+  padding: 2px 5px;
+  border-radius: 6px;
+  border: 1px solid #ca8a04;
+  transition: all 0.2s ease;
+}
+
+.ladder-step.active {
+  background: #f59e0b;
+  color: #ffffff;
+  transform: scale(1.15);
+  box-shadow: 0 0 6px rgba(245, 158, 11, 0.6);
+}
+
+.ladder-goal {
+  background: #f59e0b;
+  color: #ffffff;
+  font-weight: 900;
+}
+
+.ladder-arr {
+  font-size: 9px;
+  color: #d97706;
+}
+
+.tutorial-instructions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  text-align: left;
+}
+
+.tutorial-bullet {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 13px;
+  line-height: 1.35;
+  color: #78350f;
+}
+
+.bullet-icon {
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.btn-tutorial-start {
+  background: linear-gradient(180deg, #facc15 0%, #eab308 100%);
+  color: #713f12;
+  font-size: 16px;
+  font-weight: 900;
+  padding: 12px 20px;
+  border: 2px solid #ca8a04;
+  border-radius: 16px;
+  cursor: pointer;
+  box-shadow: 0 5px 0 #854d0e;
+  transition: transform 0.1s ease;
+}
+.btn-tutorial-start:active {
+  transform: translateY(3px);
+  box-shadow: 0 2px 0 #854d0e;
+}

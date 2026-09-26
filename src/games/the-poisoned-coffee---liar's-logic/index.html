@@ -3,19 +3,38 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <title>The Poisoned Coffee - Liar's Logic</title>
-  <meta name="description" content="A cartoon brain logic mystery where 4 suspects tell the truth and exactly 1 is LYING! Find the liar who poisoned the coffee." />
-  <meta property="og:title" content="The Poisoned Coffee - Liar's Logic" />
-  <meta property="og:description" content="A cartoon brain logic mystery where 4 suspects tell the truth and exactly 1 is LYING! Find the liar who poisoned the coffee." />
+  <title>The Poisoned Coffee - Liar's Logic Grid</title>
+  <meta name="description" content="Investigate the Café Noir murder: cross-reference suspects, café tables, and poisoned coffee cups using pure Einstein zebra logic deduction." />
+  <meta property="og:title" content="The Poisoned Coffee - Liar's Logic Grid" />
+  <meta property="og:description" content="A rich detective logic grid mystery game set in a 1930s espresso bar. Deduce who poisoned the coffee!" />
   <meta property="og:type" content="website" />
   <meta name="twitter:card" content="summary_large_image" />
 
   <style>
-    /* ==========================================================================
-       RESET & ZERO-BORDER VIEWPORT CONFIGURATION
-       Fills 100% viewport, zero black bars, zero margins, seamlessly responsive
-       ========================================================================== */
-    *, *::before, *::after {
+    :root {
+      --bg-page: #fdfbf7;
+      --bg-card: #ffffff;
+      --bg-card-alt: #f7f2ea;
+      --border-subtle: #e6ded2;
+      --border-strong: #c4b5a0;
+      --text-main: #2c1a11;
+      --text-muted: #786558;
+      --accent-primary: #78350f;
+      --accent-dark: #451a03;
+      --accent-gold: #d97706;
+      --accent-gold-dark: #b45309;
+      --accent-gold-light: #fef3c7;
+      --accent-green: #059669;
+      --accent-blue: #2563eb;
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.08), 0 2px 4px -1px rgba(0, 0, 0, 0.04);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 16px;
+    }
+
+    * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
@@ -25,554 +44,505 @@
     }
 
     html, body {
-      width: 100%;
-      height: 100%;
+      width: 100vw;
+      height: 100vh;
       height: 100dvh;
       overflow: hidden;
-      background-color: #160d09;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-      color: #f5eedc;
+      background-color: var(--bg-page);
+      color: var(--text-main);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      -webkit-font-smoothing: antialiased;
     }
 
-    #app-container {
+    #app {
       width: 100%;
       height: 100%;
-      height: 100dvh;
       display: flex;
       flex-direction: column;
-      background: radial-gradient(circle at 50% 30%, #3a2016 0%, #1e0f0a 60%, #100805 100%);
+    }
+
+    .zebra-app-root {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      background-color: var(--bg-page);
       position: relative;
       overflow: hidden;
     }
 
-    .bg-ambience {
-      position: absolute;
-      inset: 0;
-      opacity: 0.07;
-      background-image: 
-        radial-gradient(#e0a96d 1px, transparent 1px),
-        radial-gradient(#ffbe76 1px, transparent 1px);
-      background-size: 32px 32px;
-      background-position: 0 0, 16px 16px;
-      pointer-events: none;
+    /* HEADER */
+    .zebra-header {
+      flex: 0 0 auto;
+      padding: 10px 16px;
+      display: flex;
+      flex-direction: column;
+      background: #ffffff;
+      border-bottom: 1px solid var(--border-subtle);
+      box-shadow: var(--shadow-sm);
+      z-index: 20;
+      gap: 8px;
     }
 
-    /* ==========================================================================
-       HEADER (FIXED RESPONSIVENESS - NO OVERLAPPING ON MOBILE)
-       ========================================================================== */
-    header.game-header {
-      width: 100%;
-      height: 48px;
-      min-height: 48px;
-      background: rgba(22, 13, 9, 0.96);
-      border-bottom: 2px solid #4a2717;
+    .header-top-row {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0 6px;
-      z-index: 20;
-      gap: 4px;
+      width: 100%;
+      gap: 8px;
     }
 
-    .brand-title {
+    .header-left {
       display: flex;
       align-items: center;
-      gap: 5px;
-      font-weight: 900;
-      color: #ffbe76;
-      font-size: 13px;
-      letter-spacing: 0.3px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      gap: 10px;
       min-width: 0;
       flex: 1 1 auto;
     }
 
-    .brand-title svg {
-      width: 20px;
-      height: 20px;
-      flex-shrink: 0;
-      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.4));
-    }
-
-    .brand-title span {
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-
-    .header-actions {
+    .back-btn {
       display: flex;
       align-items: center;
-      gap: 3px;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      border-radius: var(--radius-md);
+      background: var(--bg-card-alt);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-main);
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s ease;
       flex-shrink: 0;
     }
 
-    .header-btn {
-      height: 38px;
-      min-width: 38px;
-      padding: 0 6px;
-      border-radius: 8px;
-      border: 1.5px solid #5a3221;
-      background: #2e170d;
-      color: #f7d794;
-      font-size: 12px;
-      font-weight: bold;
+    .back-btn:active {
+      transform: scale(0.95);
+      background: var(--border-subtle);
+    }
+
+    .title-block {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+
+    .game-title {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--text-main);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .game-badge {
       display: inline-flex;
       align-items: center;
-      justify-content: center;
-      gap: 3px;
-      cursor: pointer;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.3);
-      transition: transform 0.1s, background 0.15s, border-color 0.15s;
-      flex-shrink: 0;
-    }
-
-    .header-btn:active {
-      transform: scale(0.94);
-      background: #462516;
-    }
-
-    .header-btn.active-glow {
-      border-color: #2ed573;
-      color: #2ed573;
-      background: #14331a;
-      box-shadow: 0 0 8px rgba(46, 213, 115, 0.3);
-    }
-
-    .header-btn.btn-hint {
-      background: linear-gradient(135deg, #d35400, #b33924);
-      border-color: #e67e22;
-      color: #ffffff;
-      padding: 0 8px;
-    }
-
-    .header-btn.btn-hint .ad-tag {
-      font-size: 9px;
-      background: #27ae60;
-      color: #fff;
-      padding: 1px 4px;
-      border-radius: 4px;
-      margin-left: 2px;
-      font-weight: 800;
+      font-size: 10.5px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 12px;
+      background: var(--accent-gold-light);
+      color: var(--accent-gold-dark);
       text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-top: 1px;
+      width: fit-content;
     }
 
-    /* ==========================================================================
-       CRIME CASE BANNER
-       ========================================================================== */
-    .crime-banner {
-      width: 100%;
-      background: #20100a;
-      border-bottom: 2px solid #3f1f12;
-      padding: 5px 8px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 6px;
-      z-index: 10;
-      font-size: 11.5px;
-    }
-
-    .case-info {
-      display: flex;
-      flex-direction: column;
-      min-width: 0;
-      flex: 1;
-    }
-
-    .case-title {
-      font-size: 12.5px;
-      font-weight: 800;
-      color: #f8c291;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .case-rule {
-      font-size: 10.5px;
-      color: #ff6b81;
-      font-weight: 700;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .case-rule .badge-rule {
-      background: #eb2f06;
-      color: #fff;
-      padding: 1px 4px;
-      border-radius: 4px;
-      font-size: 9.5px;
-      font-weight: 900;
-      flex-shrink: 0;
-    }
-
-    .logic-status {
-      display: flex;
-      gap: 4px;
-      flex-shrink: 0;
-    }
-
-    .logic-pill {
-      background: #140b07;
-      border: 1px solid #3f1f12;
-      border-radius: 6px;
-      padding: 2px 5px;
-      font-size: 10.5px;
-      font-weight: 700;
-      display: flex;
-      align-items: center;
-      gap: 3px;
-    }
-
-    .logic-pill.liar-valid {
-      border-color: #ff4757;
-      color: #ff6b81;
-      background: #290d13;
-    }
-
-    .logic-pill.truth-valid {
-      border-color: #2ed573;
-      color: #2ed573;
-      background: #0d2614;
-    }
-
-    /* ==========================================================================
-       MAIN PLAY AREA - ZERO SCROLL ADAPTIVE ROSTER
-       ========================================================================== */
-    main#game-main {
-      flex: 1;
-      width: 100%;
-      height: calc(100% - 98px);
-      display: flex;
-      flex-direction: column;
-      padding: 5px 6px;
-      gap: 5px;
-      overflow: hidden;
-      position: relative;
-    }
-
-    .scene-header {
-      width: 100%;
-      background: rgba(28, 14, 9, 0.85);
-      border: 1.5px solid #442214;
-      border-radius: 8px;
-      padding: 4px 6px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 6px;
-      flex-shrink: 0;
-    }
-
-    .scene-victim {
+    .header-right {
       display: flex;
       align-items: center;
       gap: 6px;
-      font-size: 11.5px;
-      color: #fad390;
-      min-width: 0;
-      flex: 1;
-    }
-
-    .scene-victim .skull-cup {
-      width: 24px;
-      height: 24px;
-      flex-shrink: 0;
-      animation: steamPulse 2s infinite ease-in-out;
-    }
-
-    @keyframes steamPulse {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-2px); }
-    }
-
-    .scene-prompt {
-      font-size: 10.5px;
-      font-weight: 800;
-      color: #ffbe76;
-      text-align: right;
       flex-shrink: 0;
     }
 
-    /* Suspects Container */
-    .suspects-container {
-      flex: 1;
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      gap: 4px;
-      overflow: hidden;
-    }
-
-    .suspect-card {
-      flex: 1;
-      min-height: 0;
-      background: linear-gradient(90deg, #27140c 0%, #321a11 100%);
-      border: 1.5px solid #4c291b;
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      padding: 3px 6px;
-      gap: 6px;
-      position: relative;
-      transition: border-color 0.2s, transform 0.15s, background 0.2s;
-      cursor: pointer;
-    }
-
-    .suspect-card:hover {
-      border-color: #e67e22;
-    }
-
-    .suspect-card.truth-tagged {
-      border-color: #2ed573;
-      background: linear-gradient(90deg, #102616 0%, #17341e 100%);
-    }
-
-    .suspect-card.liar-tagged {
-      border-color: #eb3b5a;
-      background: linear-gradient(90deg, #2a1117 0%, #35171e 100%);
-    }
-
-    .suspect-avatar-box {
-      width: 42px;
-      height: 42px;
-      border-radius: 8px;
-      background: #140b07;
-      border: 1.5px solid #5a3221;
+    .header-icon-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: var(--radius-md);
+      background: var(--bg-card-alt);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-main);
       display: flex;
       align-items: center;
       justify-content: center;
-      flex-shrink: 0;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .suspect-avatar-box svg {
-      width: 38px;
-      height: 38px;
-      transition: transform 0.2s;
-    }
-
-    .suspect-body {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      min-width: 0;
-      gap: 2px;
-    }
-
-    .suspect-meta {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-    }
-
-    .suspect-name {
-      font-size: 12.5px;
-      font-weight: 800;
-      color: #fff;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .suspect-role {
-      font-size: 9.5px;
-      font-weight: 700;
-      color: #e58e26;
-      background: #180c07;
-      padding: 1px 4px;
-      border-radius: 4px;
-      white-space: nowrap;
-    }
-
-    .suspect-quote {
-      font-size: 11px;
-      line-height: 1.2;
-      color: #f7f1e3;
-      font-style: italic;
-      background: rgba(0, 0, 0, 0.3);
-      padding: 2px 5px;
-      border-radius: 5px;
-      border-left: 2.5px solid #e67e22;
-      word-break: break-word;
-    }
-
-    .suspect-controls {
-      display: flex;
-      align-items: center;
-      gap: 3px;
-      flex-shrink: 0;
-    }
-
-    .tag-toggle-btn {
-      min-width: 44px;
-      height: 40px;
-      border-radius: 7px;
-      border: 1.5px solid #4c291b;
-      background: #160d08;
-      color: #a4b0be;
-      font-size: 10.5px;
-      font-weight: 900;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
+      font-size: 15px;
       cursor: pointer;
-      transition: all 0.15s;
+      transition: all 0.2s ease;
     }
 
-    .tag-toggle-btn.state-truth {
-      border-color: #2ed573;
-      background: #0f381c;
-      color: #2ed573;
-    }
-
-    .tag-toggle-btn.state-liar {
-      border-color: #eb3b5a;
-      background: #3b0f17;
-      color: #ff6b81;
-    }
-
-    .accuse-btn {
-      min-width: 48px;
-      height: 40px;
-      padding: 0 4px;
-      border-radius: 7px;
-      border: 1.5px solid #c0392b;
-      background: linear-gradient(135deg, #e74c3c, #c0392b);
-      color: #fff;
-      font-size: 9.5px;
-      font-weight: 900;
-      text-transform: uppercase;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      box-shadow: 0 2px 5px rgba(192, 57, 43, 0.4);
-      transition: transform 0.1s;
-    }
-
-    .accuse-btn:active {
-      transform: scale(0.94);
-    }
-
-    /* ==========================================================================
-       BOTTOM FOOTER
-       ========================================================================== */
-    footer.game-footer {
-      width: 100%;
-      height: 46px;
-      min-height: 46px;
-      background: rgba(22, 13, 9, 0.98);
-      border-top: 2px solid #4a2717;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 8px;
-      gap: 6px;
-      z-index: 20;
-    }
-
-    .footer-help-txt {
-      font-size: 10.5px;
-      color: #d2dae2;
-      line-height: 1.2;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-
-    .footer-help-txt strong {
-      color: #ffbe76;
-    }
-
-    .footer-actions {
-      display: flex;
-      gap: 4px;
-      flex-shrink: 0;
-    }
-
-    .action-btn {
-      height: 38px;
-      padding: 0 10px;
-      border-radius: 8px;
-      border: 1.5px solid #5a3221;
-      background: #2e170d;
-      color: #f7d794;
-      font-size: 11.5px;
-      font-weight: 800;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      cursor: pointer;
-      transition: all 0.15s;
-    }
-
-    .action-btn:active {
+    .header-icon-btn:active {
       transform: scale(0.95);
     }
 
-    .action-btn.btn-reset {
-      background: #1e0f09;
-      border-color: #3f1f12;
-      color: #ced6e0;
+    /* LEVEL SELECTOR TABS */
+    .level-tabs-scroll {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      padding-bottom: 2px;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+    }
+    .level-tabs-scroll::-webkit-scrollbar {
+      display: none;
     }
 
-    /* Landscape Adjustments */
-    @media (min-aspect-ratio: 4/3), (orientation: landscape) and (min-width: 600px) {
-      main#game-main {
-        flex-direction: row;
-        gap: 8px;
-      }
-
-      .scene-header {
-        width: 30%;
-        flex-direction: column;
-        justify-content: center;
-        text-align: center;
-        gap: 8px;
-        padding: 8px;
-      }
-
-      .scene-victim {
-        flex-direction: column;
-      }
-
-      .scene-prompt {
-        text-align: center;
-        font-size: 11px;
-      }
-
-      .suspects-container {
-        width: 70%;
-      }
+    .level-tab-pill {
+      flex: 0 0 auto;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+      border: 1px solid var(--border-subtle);
+      background: var(--bg-card-alt);
+      color: var(--text-muted);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.2s ease;
     }
 
-    /* ==========================================================================
-       MODAL DIALOGS SYSTEM
-       ========================================================================== */
+    .level-tab-pill.active {
+      background: var(--accent-primary);
+      border-color: var(--accent-primary);
+      color: #ffffff;
+      box-shadow: 0 2px 4px rgba(120, 53, 15, 0.25);
+    }
+
+    .level-tab-pill.locked {
+      opacity: 0.55;
+      background: #eee8de;
+      border-style: dashed;
+      cursor: not-allowed;
+    }
+
+    /* MAIN SCROLLABLE CONTENT */
+    .zebra-main-content {
+      flex: 1 1 auto;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding: 12px 14px 80px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .zebra-main-content > * {
+      flex-shrink: 0;
+    }
+
+    /* STORY PROMPT CARD */
+    .story-card {
+      background: #ffffff;
+      border-radius: var(--radius-md);
+      padding: 12px 14px;
+      border: 1px solid var(--border-subtle);
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+    }
+
+    .story-icon {
+      font-size: 24px;
+      line-height: 1;
+      padding: 6px;
+      border-radius: var(--radius-sm);
+      background: var(--accent-gold-light);
+      flex-shrink: 0;
+    }
+
+    .story-body {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .story-title {
+      font-size: 13.5px;
+      font-weight: 800;
+      color: var(--accent-primary);
+    }
+
+    .story-text {
+      font-size: 12px;
+      line-height: 1.4;
+      color: var(--text-muted);
+    }
+
+    /* TABLE CONTAINER - MOBILE FULL VISIBILITY */
+    .table-card {
+      background: #ffffff;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-subtle);
+      box-shadow: var(--shadow-sm);
+      overflow-x: auto;
+      overflow-y: hidden;
+      -webkit-overflow-scrolling: touch;
+      position: relative;
+    }
+
+    .zebra-grid-table {
+      width: max-content;
+      min-width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+    }
+
+    .zebra-grid-table th,
+    .zebra-grid-table td {
+      border: 1px solid var(--border-subtle);
+      padding: 6px 8px;
+      text-align: center;
+      font-size: 12px;
+      min-width: 125px;
+      width: 125px;
+      box-sizing: border-box;
+    }
+
+    .zebra-grid-table th {
+      background: var(--bg-card-alt);
+      font-weight: 800;
+      color: var(--text-main);
+      padding: 8px 6px;
+    }
+
+    .table-col-header {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+    }
+
+    .table-col-num {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--accent-primary);
+      font-weight: 900;
+    }
+
+    .table-col-name {
+      font-size: 12px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .zebra-category-cell {
+      background: var(--bg-card-alt) !important;
+      font-weight: 800;
+      text-align: left !important;
+      padding: 6px 8px !important;
+      width: 115px !important;
+      min-width: 115px !important;
+      max-width: 115px !important;
+      position: sticky;
+      left: 0;
+      z-index: 10;
+      border-right: 2px solid var(--border-strong) !important;
+      box-shadow: 2px 0 6px rgba(0, 0, 0, 0.08);
+      box-sizing: border-box;
+    }
+
+    .cat-cell-content {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 11px;
+      line-height: 1.2;
+      color: var(--text-main);
+      white-space: normal;
+      word-break: break-word;
+    }
+
+    .zebra-select {
+      width: 100%;
+      height: 38px;
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      background: #ffffff;
+      color: var(--text-main);
+      font-size: 11px;
+      font-weight: 600;
+      padding: 0 4px;
+      outline: none;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      text-align-last: center;
+    }
+
+    .zebra-select:focus {
+      border-color: var(--accent-primary);
+      box-shadow: 0 0 0 2px var(--accent-gold-light);
+    }
+
+    .zebra-select.has-value {
+      background: #fdfbf7;
+      font-weight: 700;
+      color: var(--accent-primary);
+      border-color: var(--accent-gold);
+    }
+
+    /* CLUES SECTION */
+    .clues-card {
+      background: #ffffff;
+      border-radius: var(--radius-md);
+      padding: 12px 14px;
+      border: 1px solid var(--border-subtle);
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .clues-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .clues-title {
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .clues-subtitle {
+      font-size: 11px;
+      color: var(--text-muted);
+      font-style: italic;
+    }
+
+    .clues-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .clue-item {
+      padding: 8px 10px;
+      border-radius: var(--radius-sm);
+      background: var(--bg-card-alt);
+      border: 1px solid var(--border-subtle);
+      font-size: 12px;
+      line-height: 1.4;
+      color: var(--text-main);
+      cursor: pointer;
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      transition: all 0.15s ease;
+    }
+
+    .clue-item:active {
+      transform: scale(0.98);
+    }
+
+    .clue-item.crossed {
+      opacity: 0.45;
+      background: #f1ede5;
+      text-decoration: line-through;
+      color: var(--text-muted);
+    }
+
+    .clue-checkbox {
+      margin-top: 2px;
+      font-size: 12px;
+      line-height: 1;
+      flex-shrink: 0;
+    }
+
+    /* FOOTER BAR */
+    .zebra-footer-bar {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 64px;
+      background: #ffffff;
+      border-top: 1px solid var(--border-subtle);
+      box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.05);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+      z-index: 30;
+      gap: 8px;
+    }
+
+    .footer-btn-group {
+      display: flex;
+      gap: 6px;
+    }
+
+    .btn-secondary {
+      height: 40px;
+      padding: 0 10px;
+      border-radius: var(--radius-sm);
+      background: var(--bg-card-alt);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-main);
+      font-size: 12px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .btn-secondary:active {
+      transform: scale(0.95);
+      background: var(--border-subtle);
+    }
+
+    .btn-primary-check {
+      height: 42px;
+      padding: 0 18px;
+      border-radius: var(--radius-sm);
+      background: linear-gradient(135deg, var(--accent-primary), var(--accent-dark));
+      border: none;
+      color: #ffffff;
+      font-size: 13.5px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(120, 53, 15, 0.35);
+      transition: all 0.15s ease;
+      flex: 1 1 auto;
+      justify-content: center;
+      max-width: 220px;
+    }
+
+    .btn-primary-check:active {
+      transform: scale(0.97);
+    }
+
+    /* VICTORY MODAL */
     .modal-overlay {
       position: absolute;
       inset: 0;
-      background: rgba(10, 5, 3, 0.88);
+      background: rgba(44, 26, 17, 0.75);
       backdrop-filter: blur(4px);
       -webkit-backdrop-filter: blur(4px);
       z-index: 100;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 10px;
+      padding: 16px;
       opacity: 0;
       pointer-events: none;
       transition: opacity 0.25s ease-out;
@@ -583,1947 +553,853 @@
       pointer-events: auto;
     }
 
-    .modal-card {
+    .modal-dialog {
       width: 100%;
-      max-width: 420px;
-      max-height: 94dvh;
-      background: linear-gradient(180deg, #29150d 0%, #1a0d07 100%);
-      border: 2px solid #ffbe76;
-      border-radius: 14px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7), 0 0 16px rgba(230, 126, 34, 0.25);
+      max-width: 380px;
+      background: #ffffff;
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      text-align: center;
+      box-shadow: var(--shadow-lg);
       display: flex;
       flex-direction: column;
-      overflow: hidden;
-      animation: modalPop 0.22s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      align-items: center;
+      gap: 12px;
+      animation: modalPop 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      border: 2px solid var(--accent-gold);
     }
 
     @keyframes modalPop {
-      0% { transform: scale(0.88); opacity: 0; }
+      0% { transform: scale(0.85); opacity: 0; }
       100% { transform: scale(1); opacity: 1; }
     }
 
-    .modal-header {
-      background: #170b06;
-      border-bottom: 2px solid #4a2717;
-      padding: 8px 12px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+    .modal-win-icon {
+      font-size: 48px;
+      line-height: 1;
     }
 
-    .modal-title {
-      font-size: 14px;
+    .modal-win-title {
+      font-size: 20px;
       font-weight: 900;
-      color: #ffbe76;
-      display: flex;
-      align-items: center;
-      gap: 5px;
+      color: var(--accent-primary);
     }
 
-    .modal-close-btn {
-      width: 32px;
-      height: 32px;
-      border-radius: 7px;
-      border: 1.5px solid #5a3221;
-      background: #2e170d;
-      color: #f7d794;
-      font-size: 16px;
-      font-weight: bold;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
+    .modal-win-desc {
+      font-size: 13px;
+      line-height: 1.45;
+      color: var(--text-muted);
     }
 
-    .modal-content {
-      padding: 12px;
-      overflow-y: auto;
-      font-size: 12.5px;
-      line-height: 1.4;
-      color: #f5eedc;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .modal-footer {
-      background: #170b06;
-      border-top: 2px solid #3f1f12;
-      padding: 8px 12px;
-      display: flex;
-      justify-content: flex-end;
-      gap: 6px;
-    }
-
-    /* Ad Sponsor */
-    .ad-container {
-      background: #fff;
-      color: #222;
-      border-radius: 10px;
-      border: 2.5px dashed #d35400;
+    .modal-stats {
+      width: 100%;
+      background: var(--bg-card-alt);
+      border-radius: var(--radius-md);
       padding: 10px;
       display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-      gap: 6px;
-      position: relative;
+      justify-content: space-around;
+      border: 1px solid var(--border-subtle);
     }
 
-    .ad-badge {
-      position: absolute;
-      top: 4px;
-      right: 4px;
-      background: #e67e22;
-      color: #fff;
-      font-size: 8.5px;
-      font-weight: 800;
-      padding: 1px 5px;
-      border-radius: 4px;
-      text-transform: uppercase;
-    }
-
-    .ad-brand {
-      font-size: 14.5px;
-      font-weight: 900;
-      color: #b33939;
-    }
-
-    .ad-cartoon-art {
-      width: 52px;
-      height: 52px;
-      animation: wiggle 1.2s infinite ease-in-out;
-    }
-
-    @keyframes wiggle {
-      0%, 100% { transform: rotate(-4deg); }
-      50% { transform: rotate(4deg); }
-    }
-
-    .ad-slogan {
-      font-size: 11px;
-      font-weight: 700;
-      color: #333;
-    }
-
-    .ad-timer-banner {
-      width: 100%;
-      background: #2c3e50;
-      color: #fff;
-      border-radius: 6px;
-      padding: 6px 8px;
+    .modal-stat-box {
       display: flex;
       flex-direction: column;
-      gap: 4px;
+      gap: 2px;
     }
 
-    .ad-timer-txt {
-      font-size: 11px;
-      font-weight: 800;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .ad-timer-countdown {
-      font-size: 13px;
-      color: #f1c40f;
-    }
-
-    .ad-progress-bar {
-      width: 100%;
-      height: 6px;
-      background: #1a252f;
-      border-radius: 3px;
-      overflow: hidden;
-    }
-
-    .ad-progress-fill {
-      width: 0%;
-      height: 100%;
-      background: linear-gradient(90deg, #e67e22, #2ecc71);
-      transition: width 0.1s linear;
-    }
-
-    .clue-reveal-box {
-      background: #200f09;
-      border: 1.5px solid #f39c12;
-      border-radius: 8px;
-      padding: 8px;
-      display: none;
-      flex-direction: column;
-      gap: 4px;
-    }
-
-    .clue-reveal-box.unlocked {
-      display: flex;
-    }
-
-    .clue-header {
-      color: #f1c40f;
-      font-weight: 800;
-      font-size: 12px;
-    }
-
-    .clue-text {
-      font-size: 12px;
-      color: #f5eedc;
-      line-height: 1.35;
-    }
-
-    /* Verdict Styles */
-    .verdict-box {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-      gap: 6px;
-      padding: 4px 0;
-    }
-
-    .verdict-icon {
-      width: 54px;
-      height: 54px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .verdict-icon.success {
-      background: #27ae60;
-      border: 2.5px solid #2ecc71;
-    }
-
-    .verdict-icon.failure {
-      background: #c0392b;
-      border: 2.5px solid #e74c3c;
-    }
-
-    .verdict-headline {
+    .modal-stat-val {
       font-size: 16px;
-      font-weight: 900;
-    }
-
-    .verdict-headline.success { color: #2ecc71; }
-    .verdict-headline.failure { color: #e74c3c; }
-
-    .verdict-details {
-      background: #140b07;
-      border: 1px solid #3f1f12;
-      border-radius: 8px;
-      padding: 8px;
-      width: 100%;
-      text-align: left;
-      font-size: 11.5px;
-      line-height: 1.35;
-      display: flex;
-      flex-direction: column;
-      gap: 5px;
-    }
-
-    .verdict-details strong {
-      color: #ffbe76;
-    }
-
-    .btn-modal-primary {
-      height: 42px;
-      min-width: 100px;
-      padding: 0 14px;
-      border-radius: 8px;
-      border: 1.5px solid #27ae60;
-      background: linear-gradient(135deg, #2ecc71, #27ae60);
-      color: #fff;
-      font-size: 13px;
-      font-weight: 900;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 4px;
-      cursor: pointer;
-    }
-
-    .btn-modal-primary:active { transform: scale(0.96); }
-
-    .btn-modal-secondary {
-      height: 42px;
-      min-width: 80px;
-      padding: 0 12px;
-      border-radius: 8px;
-      border: 1.5px solid #5a3221;
-      background: #2e170d;
-      color: #f7d794;
-      font-size: 12px;
       font-weight: 800;
+      color: var(--accent-primary);
+    }
+
+    .modal-stat-lbl {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .btn-modal-next {
+      width: 100%;
+      height: 44px;
+      border-radius: var(--radius-md);
+      background: linear-gradient(135deg, var(--accent-gold), var(--accent-gold-dark));
+      border: none;
+      color: #ffffff;
+      font-size: 14px;
+      font-weight: 800;
+      cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      cursor: pointer;
+      gap: 8px;
+      box-shadow: 0 4px 8px rgba(217, 119, 6, 0.3);
+      transition: all 0.15s ease;
     }
 
-    #fx-canvas {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      z-index: 150;
+    .btn-modal-next:active {
+      transform: scale(0.97);
     }
 
-    #toast {
+    /* TOAST ALERTS */
+    .toast-popup {
       position: absolute;
-      bottom: 54px;
+      top: 60px;
       left: 50%;
-      transform: translateX(-50%) translateY(20px);
-      background: #2a140b;
-      color: #ffbe76;
-      border: 1.5px solid #e67e22;
-      padding: 6px 14px;
-      border-radius: 18px;
-      font-size: 11.5px;
-      font-weight: 800;
-      z-index: 200;
+      transform: translateX(-50%) translateY(-20px);
+      background: #2c1a11;
+      color: #ffffff;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 12.5px;
+      font-weight: 700;
+      box-shadow: var(--shadow-md);
+      z-index: 99;
       opacity: 0;
       pointer-events: none;
-      transition: opacity 0.2s, transform 0.2s;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.6);
+      transition: all 0.25s ease;
       white-space: nowrap;
+      border: 1px solid var(--accent-gold);
     }
 
-    #toast.show {
-      opacity: 1;
+    .toast-popup.show {
       transform: translateX(-50%) translateY(0);
+      opacity: 1;
     }
   </style>
-
-  <script>
-    function triggerPlatformWin(timeInSeconds) {
-      const elapsed = Math.round(timeInSeconds || 45);
-      try {
-        if (typeof window.onWin === 'function') {
-          window.onWin(elapsed);
-        }
-        if (window.parent && window.parent !== window) {
-          window.parent.postMessage({ type: 'win', time: elapsed }, '*');
-        }
-      } catch(e) { console.error('Platform win notify error:', e); }
-    }
-  </script>
-
 </head>
 <body>
-
-  <div id="app-container">
-    <div class="bg-ambience"></div>
-    <canvas id="fx-canvas"></canvas>
-
-    <!-- Top Header Navigation -->
-    <header class="game-header">
-      <div class="brand-title">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#ffbe76" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M18 8h1a4 4 0 0 1 0 8h-1"></path>
-          <path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path>
-          <line x1="6" y1="1" x2="6" y2="4"></line>
-          <line x1="10" y1="1" x2="10" y2="4"></line>
-          <line x1="14" y1="1" x2="14" y2="4"></line>
-        </svg>
-        <span>The Poisoned Coffee</span>
-      </div>
-
-      <div class="header-actions">
-        <button id="btn-music" class="header-btn active-glow" title="Toggle Detective Jazz Music" aria-label="Toggle Music">
-          <span id="music-icon">🎵</span>
-        </button>
-
-        <button id="btn-sound" class="header-btn" title="Toggle Sound FX" aria-label="Toggle Sound">
-          <span id="sound-icon">🔊</span>
-        </button>
-
-        <button id="btn-rules" class="header-btn" title="Case Files / Rules" aria-label="Game Rules">
-          <span>📋</span>
-        </button>
-
-        <button id="btn-hint" class="header-btn btn-hint" title="Get Hint (Watch 5s Ad)" aria-label="Get Hint">
-          <span>💡</span>
-          <span class="ad-tag">5s</span>
-        </button>
-
-        <button id="btn-fullscreen" class="header-btn" title="Toggle Fullscreen" aria-label="Toggle Fullscreen">
-          <span id="fs-icon">⛶</span>
-        </button>
-      </div>
-    </header>
-
-    <!-- Crime Case Briefing Bar -->
-    <div class="crime-banner">
-      <div class="case-info">
-        <div id="case-title" class="case-title">Case 1: The Bitter Almonds</div>
-        <div class="case-rule">
-          <span class="badge-rule">RULE</span>
-          <span>4 tell the truth • The 1 who LIES is the POISONER!</span>
-        </div>
-      </div>
-
-      <div class="logic-status">
-        <div id="status-liar" class="logic-pill liar-valid" title="Your hypothesis Liar count (Target: 1)">
-          <span>Liar (Culprit):</span>
-          <strong id="liar-count">0/1</strong>
-        </div>
-        <div id="status-truth" class="logic-pill" title="Your hypothesis Truth count (Target: 4)">
-          <span>Truth:</span>
-          <strong id="truth-count">0/4</strong>
-        </div>
-      </div>
-    </div>
-
-    <!-- Main Game Section -->
-    <main id="game-main">
-      <div class="scene-header">
-        <div class="scene-victim">
-          <svg class="skull-cup" viewBox="0 0 32 32" fill="none">
-            <rect x="4" y="10" width="20" height="18" rx="5" fill="#4a2c1d" stroke="#f5a623" stroke-width="2"/>
-            <path d="M24 14h3a3 3 0 0 1 0 6h-3" stroke="#f5a623" stroke-width="2"/>
-            <circle cx="14" cy="19" r="5" fill="#fff8f0"/>
-            <circle cx="12.5" cy="18.5" r="1" fill="#20110b"/>
-            <circle cx="15.5" cy="18.5" r="1" fill="#20110b"/>
-            <path d="M12.5 22h3" stroke="#20110b" stroke-width="1"/>
-            <path d="M10 6c0-2 2-3 2-4" stroke="#ffbe76" stroke-width="1.5" stroke-linecap="round"/>
-            <path d="M14 7c0-2 2-3 2-4" stroke="#ffbe76" stroke-width="1.5" stroke-linecap="round"/>
-            <path d="M18 6c0-2 2-3 2-4" stroke="#ffbe76" stroke-width="1.5" stroke-linecap="round"/>
-          </svg>
-          <div>
-            <strong id="victim-name" style="color:#ffbe76;">Victim: Lord Bean</strong>
-            <div style="font-size:9.5px; color:#d2dae2;" id="victim-sub">Poisoned at Café Espresso! Touch the liar to accuse!</div>
-          </div>
-        </div>
-        <div class="scene-prompt">
-          Find the liar!
-        </div>
-      </div>
-
-      <!-- Suspects Roster (5 suspects) -->
-      <div id="suspects-container" class="suspects-container"></div>
-    </main>
-
-    <!-- Bottom Action & Helper Footer -->
-    <footer class="game-footer">
-      <div class="footer-help-txt">
-        Tap <strong>[?]</strong> for Truth/Lie • Tap <strong>[POISON!]</strong> to accuse the liar!
-      </div>
-      <div class="footer-actions">
-        <button id="btn-cases" class="action-btn" title="Select Case (1 to 10)">
-          <span>📁 10 Cases</span>
-        </button>
-        <button id="btn-clear-tags" class="action-btn btn-reset" title="Reset Scratchpad">
-          <span>🔄 Reset</span>
-        </button>
-      </div>
-    </footer>
-
-    <!-- MODAL 1: 5-SECOND REWARDED AD SPONSOR & HINT -->
-    <div id="modal-ad-hint" class="modal-overlay">
-      <div class="modal-card">
-        <div class="modal-header">
-          <div class="modal-title">
-            <span>📺 Detective Sponsor Break</span>
-          </div>
-          <button id="btn-close-ad-modal" class="modal-close-btn" aria-label="Close modal">&times;</button>
-        </div>
-
-        <div class="modal-content">
-          <div id="ad-space" class="ad-container">
-            <div class="ad-badge">Sponsored</div>
-            <div id="ad-brand-name" class="ad-brand">
-              <span>☕ ACME Anti-Poison Crema</span>
-            </div>
-            <svg id="ad-illustration" class="ad-cartoon-art" viewBox="0 0 64 64" fill="none">
-              <circle cx="32" cy="32" r="30" fill="#f8c291" stroke="#e67e22" stroke-width="3"/>
-              <path d="M32 14v36c12-6 16-16 16-24V18L32 14z" fill="#2ecc71"/>
-              <path d="M32 14v36C20 44 16 34 16 26V18L32 14z" fill="#27ae60"/>
-              <circle cx="32" cy="32" r="7" fill="#fff"/>
-              <path d="M29 32l2 2 4-4" stroke="#27ae60" stroke-width="2" stroke-linecap="round"/>
-            </svg>
-            <div id="ad-slogan-txt" class="ad-slogan">
-              "Guaranteed 99.9% cyanide-free or your next cappuccino is FREE!"
-            </div>
-
-            <div class="ad-timer-banner">
-              <div class="ad-timer-txt">
-                <span id="ad-status-msg">Clue unlocking in...</span>
-                <span id="ad-countdown" class="ad-timer-countdown">5.0s</span>
-              </div>
-              <div class="ad-progress-bar">
-                <div id="ad-progress-fill" class="ad-progress-fill"></div>
-              </div>
+  <div id="app">
+    <div class="zebra-app-root">
+      <!-- HEADER -->
+      <header class="zebra-header">
+        <div class="header-top-row">
+          <div class="header-left">
+            <button class="back-btn" id="btn-back" title="Back to Games Portal" onclick="window.history.back()">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
+              </svg>
+            </button>
+            <div class="title-block">
+              <span class="game-title">☕ The Poisoned Coffee</span>
+              <span class="game-badge">Café Noir Liar's Logic</span>
             </div>
           </div>
-
-          <div id="clue-reveal-box" class="clue-reveal-box">
-            <div class="clue-header">
-              <span>💡 Detective's Deduction Clue:</span>
-            </div>
-            <div id="clue-content-text" class="clue-text"></div>
+          <div class="header-right">
+            <button class="header-icon-btn" id="btn-sound" title="Toggle Sound">🔊</button>
           </div>
         </div>
 
-        <div class="modal-footer">
-          <button id="btn-ad-done" class="btn-modal-primary" style="display:none; width:100%;">
-            <span>🔍 Return to Case</span>
+        <!-- STAGE TABS -->
+        <div class="level-tabs-scroll" id="level-tabs-container"></div>
+      </header>
+
+      <!-- MAIN SCROLLABLE CONTENT -->
+      <main class="zebra-main-content" id="main-content">
+        <!-- Story / Scenario -->
+        <div class="story-card" id="story-card"></div>
+
+        <!-- Table -->
+        <div class="table-card" id="table-card"></div>
+
+        <!-- Clues -->
+        <div class="clues-card" id="clues-card"></div>
+      </main>
+
+      <!-- FOOTER -->
+      <footer class="zebra-footer-bar">
+        <div class="footer-btn-group">
+          <button class="btn-secondary" id="btn-undo">↩️ Undo</button>
+          <button class="btn-secondary" id="btn-reset">🔄 Reset</button>
+          <button class="btn-secondary" id="btn-hint">💡 Hint</button>
+        </div>
+        <button class="btn-primary-check" id="btn-check">
+          <span>🔍 Check Case</span>
+        </button>
+      </footer>
+
+      <!-- WIN MODAL -->
+      <div class="modal-overlay" id="win-modal">
+        <div class="modal-dialog">
+          <div class="modal-win-icon">🏆</div>
+          <div class="modal-win-title" id="win-title">Case Solved!</div>
+          <div class="modal-win-desc" id="win-desc">You deduced every customer, table, and coffee order flawlessly.</div>
+          <div class="modal-stats">
+            <div class="modal-stat-box">
+              <span class="modal-stat-val" id="stat-time">00:45</span>
+              <span class="modal-stat-lbl">Time</span>
+            </div>
+            <div class="modal-stat-box">
+              <span class="modal-stat-val" id="stat-moves">12</span>
+              <span class="modal-stat-lbl">Moves</span>
+            </div>
+          </div>
+          <button class="btn-modal-next" id="btn-next-stage">
+            <span>Next Stage ➡️</span>
           </button>
         </div>
       </div>
+
+      <!-- TOAST POPUP -->
+      <div class="toast-popup" id="toast-popup"></div>
     </div>
-
-    <!-- MODAL 2: ACCUSATION CONFIRMATION / INTERROGATION -->
-    <div id="modal-accuse" class="modal-overlay">
-      <div class="modal-card">
-        <div class="modal-header">
-          <div class="modal-title">
-            <span>⚖️ Interrogation & Accusation</span>
-          </div>
-          <button id="btn-close-accuse" class="modal-close-btn">&times;</button>
-        </div>
-
-        <div class="modal-content">
-          <div style="display:flex; align-items:center; gap:10px; background:#140b07; padding:8px; border-radius:8px; border:1px solid #4a2717;">
-            <div id="accuse-portrait-box" style="width:48px; height:48px; border-radius:8px; background:#241109; display:flex; align-items:center; justify-content:center; border:2px solid #ffbe76;"></div>
-            <div>
-              <div id="accuse-name" style="font-size:15px; font-weight:900; color:#fff;">Suspect Name</div>
-              <div id="accuse-role" style="font-size:10.5px; color:#ffbe76; font-weight:700;">Role</div>
-            </div>
-          </div>
-
-          <div style="background:rgba(0,0,0,0.3); border-left:3px solid #e67e22; padding:6px 8px; border-radius:5px; font-style:italic;" id="accuse-statement">
-            "Statement..."
-          </div>
-
-          <div style="font-size:11.5px; color:#d2dae2; line-height:1.35;">
-            Are you accusing this suspect of <strong>LYING</strong> and putting poison in the coffee? (Remember: 4 suspects are honest, and the 1 liar is the poisoner!).
-          </div>
-        </div>
-
-        <div class="modal-footer">
-          <button id="btn-cancel-accuse" class="btn-modal-secondary">Cancel</button>
-          <button id="btn-confirm-accuse" class="btn-modal-primary" style="background:linear-gradient(135deg, #e74c3c, #c0392b); border-color:#e74c3c;">
-            <span>🚨 Accuse Now!</span>
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <!-- MODAL 3: VERDICT (VICTORY / WRONG ACCUSATION) -->
-    <div id="modal-verdict" class="modal-overlay">
-      <div class="modal-card">
-        <div class="modal-header">
-          <div class="modal-title">
-            <span id="verdict-modal-title">Mystery Verdict</span>
-          </div>
-          <button id="btn-close-verdict" class="modal-close-btn">&times;</button>
-        </div>
-
-        <div class="modal-content">
-          <div class="verdict-box">
-            <div id="verdict-icon-box" class="verdict-icon success">
-              <span id="verdict-icon-emoji" style="font-size:28px;">🏆</span>
-            </div>
-            <div id="verdict-headline" class="verdict-headline success">CASE CRACKED!</div>
-            <div id="verdict-subheadline" style="font-size:12px; color:#fad390;">You found the liar and solved the crime!</div>
-          </div>
-
-          <div id="verdict-explanation" class="verdict-details"></div>
-        </div>
-
-        <div class="modal-footer" id="verdict-footer"></div>
-      </div>
-    </div>
-
-    <!-- MODAL 4: CASE SELECTION (10 CASES EXCLUSIVELY) -->
-    <div id="modal-cases" class="modal-overlay">
-      <div class="modal-card">
-        <div class="modal-header">
-          <div class="modal-title">
-            <span>📁 Detective Case Files (10 Cases)</span>
-          </div>
-          <button id="btn-close-cases" class="modal-close-btn">&times;</button>
-        </div>
-
-        <div class="modal-content">
-          <div style="background:#140b07; border:1px solid #4a2717; border-radius:8px; padding:8px; font-size:11.5px; line-height:1.35;">
-            <strong style="color:#f1c40f;">📖 LOGICAL RULE:</strong><br/>
-            • Exactly <strong>4 suspects tell the truth</strong> (they are innocent witnesses).<br/>
-            • Exactly <strong>1 suspect is LYING</strong> and that liar is the <strong>POISONER</strong>!<br/>
-            • Check the testimonies to find the single statement that contradicts the others.
-          </div>
-
-          <div style="font-weight:800; color:#ffbe76; font-size:12.5px; margin-top:3px;">
-            Select Case (1 to 10):
-          </div>
-
-          <div id="cases-list-container" style="display:flex; flex-direction:column; gap:5px;"></div>
-        </div>
-
-        <div class="modal-footer">
-          <button id="btn-close-cases-foot" class="btn-modal-primary" style="width:100%;">
-            <span>Close</span>
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <div id="toast">Accusation registered!</div>
   </div>
 
   <script>
-    (function() {
-      "use strict";
-
-      /* ========================================================================
-         1. HIGH-QUALITY PROCEDURAL DETECTIVE JAZZ BGM (WEB AUDIO API)
-         Rich, mellow café noir mood, upright bass, Rhodes chords, brush clicks
-         ======================================================================== */
-      let audioCtx = null;
-      let soundEnabled = true;
-      let musicEnabled = true;
-      let musicMasterGain = null;
-      let sfxMasterGain = null;
-      let isMusicPlaying = false;
-      let musicStepTimer = null;
-      let currentBar = 0;
-      let currentBeat = 0;
-      let noiseBuffer = null;
-
-      function getAudioContext() {
-        if (!audioCtx) {
-          const AudioContextClass = window.AudioContext || window.webkitAudioContext;
-          if (AudioContextClass) {
-            audioCtx = new AudioContextClass();
-            
-            // Music Master Gain Node
-            musicMasterGain = audioCtx.createGain();
-            musicMasterGain.gain.setValueAtTime(0.24, audioCtx.currentTime);
-            musicMasterGain.connect(audioCtx.destination);
-
-            // SFX Master Gain Node
-            sfxMasterGain = audioCtx.createGain();
-            sfxMasterGain.gain.setValueAtTime(0.35, audioCtx.currentTime);
-            sfxMasterGain.connect(audioCtx.destination);
-
-            // Pre-generate warm noise for subtle jazz brush clicks
-            const bufferSize = audioCtx.sampleRate * 1;
-            noiseBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
-            const output = noiseBuffer.getChannelData(0);
-            for (let i = 0; i < bufferSize; i++) {
-              output[i] = (Math.random() * 2 - 1) * 0.7;
-            }
-          }
-        }
-        if (audioCtx && audioCtx.state === 'suspended') {
-          audioCtx.resume();
-        }
-        return audioCtx;
+    // ==========================================
+    // AUDIO ENGINE
+    // ==========================================
+    class ZebraAudioEngine {
+      constructor() {
+        this.ctx = null;
+        this.isMuted = localStorage.getItem('fl_zebra_muted') === 'true';
       }
 
-      function playTone(freq, type, duration, gainStart = 0.15, gainEnd = 0.001) {
-        if (!soundEnabled) return;
-        try {
-          const ctx = getAudioContext();
-          if (!ctx || !sfxMasterGain) return;
-          const osc = ctx.createOscillator();
-          const gain = ctx.createGain();
-          osc.type = type;
-          osc.frequency.setValueAtTime(freq, ctx.currentTime);
-          gain.gain.setValueAtTime(gainStart, ctx.currentTime);
-          gain.gain.exponentialRampToValueAtTime(gainEnd, ctx.currentTime + duration);
-          osc.connect(gain);
-          gain.connect(sfxMasterGain);
-          osc.start();
-          osc.stop(ctx.currentTime + duration);
-        } catch (e) {}
-      }
-
-      const Sounds = {
-        tap: () => playTone(620, 'sine', 0.08, 0.14),
-        blip: () => playTone(480, 'triangle', 0.1, 0.16),
-        tagToggle: (state) => {
-          if (state === 'truth') playTone(784, 'sine', 0.12, 0.2);
-          else if (state === 'liar') playTone(310, 'sawtooth', 0.14, 0.18);
-          else playTone(520, 'sine', 0.08, 0.1);
-        },
-        adTick: () => playTone(880, 'sine', 0.05, 0.08),
-        hintUnlock: () => {
-          if (!soundEnabled) return;
-          const notes = [523.25, 659.25, 783.99, 1046.50];
-          notes.forEach((freq, idx) => {
-            setTimeout(() => playTone(freq, 'sine', 0.25, 0.15), idx * 70);
-          });
-        },
-        accuseOpen: () => {
-          if (!soundEnabled) return;
-          playTone(220, 'sawtooth', 0.25, 0.2);
-          setTimeout(() => playTone(207.65, 'sawtooth', 0.35, 0.25), 100);
-        },
-        victory: () => {
-          if (!soundEnabled) return;
-          const chords = [
-            { f: 523.25, t: 0 },
-            { f: 659.25, t: 100 },
-            { f: 783.99, t: 200 },
-            { f: 1046.5, t: 350 },
-            { f: 1318.5, t: 550 }
-          ];
-          chords.forEach(c => {
-            setTimeout(() => playTone(c.f, 'triangle', 0.4, 0.25), c.t);
-          });
-        },
-        wrong: () => {
-          if (!soundEnabled) return;
-          playTone(260, 'sawtooth', 0.2, 0.25);
-          setTimeout(() => playTone(180, 'sawtooth', 0.35, 0.3), 120);
+      init() {
+        if (!this.ctx) {
+          const AudioCtx = window.AudioContext || window.webkitAudioContext;
+          if (AudioCtx) this.ctx = new AudioCtx();
         }
-      };
-
-      // Frequencies for rich jazz harmony
-      const Notes = {
-        C2: 65.41, D2: 73.42, Eb2: 77.78, E2: 82.41, F2: 87.31, Fs2: 92.50, G2: 98.00, Ab2: 103.83, A2: 110.00, Bb2: 116.54, B2: 123.47,
-        C3: 130.81, D3: 146.83, Eb3: 155.56, E3: 164.81, F3: 174.61, G3: 196.00, A3: 220.00, Bb3: 233.08, B3: 246.94,
-        C4: 261.63, D4: 293.66, Eb4: 311.13, E4: 329.63, F4: 349.23, G4: 392.00, A4: 440.00, Bb4: 466.16, B4: 493.88,
-        C5: 523.25, D5: 587.33, E5: 659.25
-      };
-
-      // 8-Bar Classic Mystery Lounge Progression: Dm9 -> G13 -> Cmaj9 -> A7b13
-      const JazzBars = [
-        {
-          bass: [Notes.D2, Notes.F2, Notes.Ab2, Notes.A2],
-          chords: [Notes.F3, Notes.A3, Notes.C4, Notes.E4], // Dm9
-          lead: [Notes.A4, null, Notes.F4, Notes.E4]
-        },
-        {
-          bass: [Notes.G2, Notes.B2, Notes.D3, Notes.F2],
-          chords: [Notes.F3, Notes.B3, Notes.E4], // G13
-          lead: [Notes.D4, Notes.E4, Notes.F4, null]
-        },
-        {
-          bass: [Notes.C2, Notes.E2, Notes.G2, Notes.B2],
-          chords: [Notes.E3, Notes.G3, Notes.B3, Notes.D4], // Cmaj9
-          lead: [Notes.E4, null, Notes.G4, Notes.B4]
-        },
-        {
-          bass: [Notes.A2, Notes.Cs3, Notes.E3, Notes.G2],
-          chords: [Notes.G3, Notes.Cs4, Notes.F4], // A7b13
-          lead: [Notes.A4, Notes.G4, Notes.F4, Notes.E4]
-        },
-        {
-          bass: [Notes.D2, Notes.F2, Notes.G2, Notes.Ab2],
-          chords: [Notes.F3, Notes.A3, Notes.C4, Notes.E4], // Dm9
-          lead: [Notes.D4, null, Notes.F4, Notes.A4]
-        },
-        {
-          bass: [Notes.G2, Notes.B2, Notes.D3, Notes.Eb3],
-          chords: [Notes.F3, Notes.B3, Notes.E4], // G13
-          lead: [Notes.B4, Notes.A4, Notes.G4, Notes.F4]
-        },
-        {
-          bass: [Notes.Bb2, Notes.D3, Notes.F3, Notes.Ab2],
-          chords: [Notes.D3, Notes.F3, Notes.Ab3, Notes.C4], // Bb9
-          lead: [Notes.D5, null, Notes.C5, Notes.Ab4]
-        },
-        {
-          bass: [Notes.A2, Notes.C3, Notes.Cs3, Notes.Eb2],
-          chords: [Notes.G3, Notes.Cs4, Notes.F4], // A7alt
-          lead: [Notes.A4, Notes.F4, Notes.E4, null]
+        if (this.ctx && this.ctx.state === 'suspended') {
+          this.ctx.resume();
         }
-      ];
-
-      function playPizzicatoBass(freq, time, dur = 0.32) {
-        if (!audioCtx || !musicMasterGain) return;
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
-        const filter = audioCtx.createBiquadFilter();
-
-        osc.type = 'triangle';
-        osc.frequency.setValueAtTime(freq, time);
-
-        filter.type = 'lowpass';
-        filter.frequency.setValueAtTime(380, time);
-        filter.frequency.exponentialRampToValueAtTime(120, time + dur);
-
-        gain.gain.setValueAtTime(0.001, time);
-        gain.gain.linearRampToValueAtTime(0.42, time + 0.025);
-        gain.gain.exponentialRampToValueAtTime(0.001, time + dur);
-
-        osc.connect(filter);
-        filter.connect(gain);
-        gain.connect(musicMasterGain);
-
-        osc.start(time);
-        osc.stop(time + dur + 0.06);
       }
 
-      function playVibeChord(frequencies, time, dur = 0.65) {
-        if (!audioCtx || !musicMasterGain) return;
-        frequencies.forEach(f => {
-          const osc = audioCtx.createOscillator();
-          const gain = audioCtx.createGain();
-          osc.type = 'sine';
-          osc.frequency.setValueAtTime(f, time);
-
-          gain.gain.setValueAtTime(0.001, time);
-          gain.gain.linearRampToValueAtTime(0.08, time + 0.03);
-          gain.gain.exponentialRampToValueAtTime(0.001, time + dur);
-
-          osc.connect(gain);
-          gain.connect(musicMasterGain);
-          osc.start(time);
-          osc.stop(time + dur + 0.05);
-        });
+      toggleMute() {
+        this.isMuted = !this.isMuted;
+        localStorage.setItem('fl_zebra_muted', this.isMuted);
+        return this.isMuted;
       }
 
-      function playMelodyNote(freq, time, dur = 0.3) {
-        if (!audioCtx || !musicMasterGain || !freq) return;
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
+      playClick() {
+        if (this.isMuted) return;
+        this.init();
+        if (!this.ctx) return;
+        const now = this.ctx.currentTime;
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
         osc.type = 'sine';
-        osc.frequency.setValueAtTime(freq, time);
-
-        gain.gain.setValueAtTime(0.001, time);
-        gain.gain.linearRampToValueAtTime(0.12, time + 0.02);
-        gain.gain.exponentialRampToValueAtTime(0.001, time + dur);
-
+        osc.frequency.setValueAtTime(580, now);
+        osc.frequency.exponentialRampToValueAtTime(320, now + 0.04);
+        gain.gain.setValueAtTime(0.08, now);
+        gain.gain.linearRampToValueAtTime(0.001, now + 0.04);
         osc.connect(gain);
-        gain.connect(musicMasterGain);
-        osc.start(time);
-        osc.stop(time + dur + 0.05);
+        gain.connect(this.ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.05);
       }
 
-      function playBrushHiHat(time) {
-        if (!audioCtx || !noiseBuffer || !musicMasterGain) return;
-        const source = audioCtx.createBufferSource();
-        source.buffer = noiseBuffer;
-
-        const filter = audioCtx.createBiquadFilter();
-        filter.type = 'bandpass';
-        filter.frequency.setValueAtTime(7500, time);
-        filter.Q.setValueAtTime(1.5, time);
-
-        const gain = audioCtx.createGain();
-        gain.gain.setValueAtTime(0.035, time);
-        gain.gain.exponentialRampToValueAtTime(0.001, time + 0.08);
-
-        source.connect(filter);
-        filter.connect(gain);
-        gain.connect(musicMasterGain);
-
-        source.start(time);
-        source.stop(time + 0.09);
+      playSelect() {
+        if (this.isMuted) return;
+        this.init();
+        if (!this.ctx) return;
+        const now = this.ctx.currentTime;
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(440, now);
+        osc.frequency.exponentialRampToValueAtTime(659.25, now + 0.08);
+        gain.gain.setValueAtTime(0.12, now);
+        gain.gain.linearRampToValueAtTime(0.001, now + 0.08);
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.09);
       }
 
-      function musicTick() {
-        if (!musicEnabled || !isMusicPlaying) return;
-        const ctx = getAudioContext();
-        if (!ctx) return;
-
-        const barData = JazzBars[currentBar % JazzBars.length];
-        const now = ctx.currentTime + 0.05;
-
-        // Bassline
-        const bassNote = barData.bass[currentBeat % 4];
-        if (bassNote) playPizzicatoBass(bassNote, now);
-
-        // Chords on beats 0 and 2
-        if (currentBeat === 0) playVibeChord(barData.chords, now, 0.85);
-        else if (currentBeat === 2) playVibeChord(barData.chords, now, 0.55);
-
-        // Melody lead
-        const melody = barData.lead[currentBeat % 4];
-        if (melody) playMelodyNote(melody, now, 0.35);
-
-        // Brush hi-hat
-        if (currentBeat === 1 || currentBeat === 3) playBrushHiHat(now);
-
-        currentBeat++;
-        if (currentBeat >= 4) {
-          currentBeat = 0;
-          currentBar++;
-        }
+      playClue() {
+        if (this.isMuted) return;
+        this.init();
+        if (!this.ctx) return;
+        const now = this.ctx.currentTime;
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(523.25, now);
+        gain.gain.setValueAtTime(0.09, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.13);
       }
 
-      function startBackgroundMusic() {
-        if (isMusicPlaying) return;
-        const ctx = getAudioContext();
-        if (!ctx) return;
-        isMusicPlaying = true;
-        currentBar = 0;
-        currentBeat = 0;
-        musicStepTimer = setInterval(musicTick, 680);
-        updateMusicButtonUI();
+      playUndo() {
+        if (this.isMuted) return;
+        this.init();
+        if (!this.ctx) return;
+        const now = this.ctx.currentTime;
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(480, now);
+        osc.frequency.exponentialRampToValueAtTime(320, now + 0.08);
+        gain.gain.setValueAtTime(0.08, now);
+        gain.gain.linearRampToValueAtTime(0.001, now + 0.08);
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.09);
       }
 
-      function stopBackgroundMusic() {
-        isMusicPlaying = false;
-        if (musicStepTimer) {
-          clearInterval(musicStepTimer);
-          musicStepTimer = null;
-        }
-        updateMusicButtonUI();
-      }
-
-      function toggleMusic() {
-        musicEnabled = !musicEnabled;
-        if (musicEnabled) {
-          startBackgroundMusic();
-          showToast("Detective Jazz BGM: ON 🎵");
-        } else {
-          stopBackgroundMusic();
-          showToast("Detective Jazz BGM: MUTED 🔇");
-        }
-      }
-
-      function updateMusicButtonUI() {
-        const btn = document.getElementById('btn-music');
-        const icon = document.getElementById('music-icon');
-        if (!btn || !icon) return;
-        if (musicEnabled && isMusicPlaying) {
-          btn.classList.add('active-glow');
-          icon.textContent = '🎵';
-        } else {
-          btn.classList.remove('active-glow');
-          icon.textContent = '🔇';
-        }
-      }
-
-      function initAudioOnFirstTouch() {
-        getAudioContext();
-        if (musicEnabled && !isMusicPlaying) {
-          startBackgroundMusic();
-        }
-        document.removeEventListener('click', initAudioOnFirstTouch);
-        document.removeEventListener('touchstart', initAudioOnFirstTouch);
-      }
-      document.addEventListener('click', initAudioOnFirstTouch, { once: true });
-      document.addEventListener('touchstart', initAudioOnFirstTouch, { once: true });
-
-      /* ========================================================================
-         2. CARTOON SUSPECT AVATARS (SVG DRAWINGS)
-         ======================================================================== */
-      const SuspectAvatars = {
-        bruno: `
-          <svg viewBox="0 0 60 60" fill="none">
-            <rect width="60" height="60" rx="10" fill="#3a2016"/>
-            <circle cx="30" cy="30" r="18" fill="#f8c291"/>
-            <path d="M12 26c0-10 8-16 18-16s18 6 18 16c-4-4-10-6-18-6s-14 2-18 6z" fill="#2c1d11"/>
-            <path d="M16 18h28v4H16z" fill="#e67e22"/>
-            <path d="M22 36c4-1 8 3 8 3s4-4 8-3c4 1 6 4 4 6-4 0-8-4-8-4s-4 4-8 4c-2-2 0-5 4-6z" fill="#2c1d11"/>
-            <circle cx="23" cy="28" r="2.5" fill="#20110b"/>
-            <circle cx="37" cy="28" r="2.5" fill="#20110b"/>
-            <path d="M46 22c0 2-2 4-3 4s-2-2-1-4c1-2 4-2 4 0z" fill="#3498db"/>
-            <ellipse cx="30" cy="32" rx="2" ry="2.5" fill="#e58e26"/>
-          </svg>
-        `,
-        wendy: `
-          <svg viewBox="0 0 60 60" fill="none">
-            <rect width="60" height="60" rx="10" fill="#2c1b2b"/>
-            <circle cx="30" cy="31" r="18" fill="#fed3a2"/>
-            <path d="M14 28c-1-10 6-17 16-17 9 0 17 6 17 15 0 2-3 2-6 1-4-2-7-4-11-4-6 0-11 2-16 5z" fill="#c0392b"/>
-            <rect x="18" y="26" width="9" height="7" rx="2" stroke="#d35400" stroke-width="1.8" fill="rgba(255,255,255,0.3)"/>
-            <rect x="33" y="26" width="9" height="7" rx="2" stroke="#d35400" stroke-width="1.8" fill="rgba(255,255,255,0.3)"/>
-            <line x1="27" y1="29" x2="33" y2="29" stroke="#d35400" stroke-width="1.8"/>
-            <circle cx="22.5" cy="29.5" r="1.5" fill="#20110b"/>
-            <circle cx="37.5" cy="29.5" r="1.5" fill="#20110b"/>
-            <path d="M26 39c2 2 6 2 8 0" stroke="#c0392b" stroke-width="1.5" stroke-linecap="round"/>
-            <circle cx="18" cy="35" r="2" fill="#ff7979" opacity="0.6"/>
-            <circle cx="42" cy="35" r="2" fill="#ff7979" opacity="0.6"/>
-          </svg>
-        `,
-        pierre: `
-          <svg viewBox="0 0 60 60" fill="none">
-            <rect width="60" height="60" rx="10" fill="#1b282c"/>
-            <path d="M18 20c0-6 3-10 7-10 2 0 4 2 5 2s3-2 5-2c4 0 7 4 7 10H18z" fill="#ffffff"/>
-            <rect x="20" y="19" width="20" height="5" fill="#bdc3c7"/>
-            <circle cx="30" cy="34" r="17" fill="#f8c291"/>
-            <path d="M22 38c3 0 6-3 8-1 2-2 5 1 8 1" stroke="#2c3e50" stroke-width="2" stroke-linecap="round"/>
-            <circle cx="23" cy="32" r="2" fill="#20110b"/>
-            <circle cx="37" cy="32" r="2" fill="#20110b"/>
-            <circle cx="20" cy="37" r="3" fill="#eb4d4b" opacity="0.5"/>
-            <circle cx="40" cy="37" r="3" fill="#eb4d4b" opacity="0.5"/>
-          </svg>
-        `,
-        flora: `
-          <svg viewBox="0 0 60 60" fill="none">
-            <rect width="60" height="60" rx="10" fill="#2c2415"/>
-            <path d="M12 24c0-5 8-9 18-9s18 4 18 9c-5-2-12-3-18-3s-13 1-18 3z" fill="#8e44ad"/>
-            <path d="M38 15c4-6 10-8 12-8-2 4-2 8-5 11z" fill="#f1c40f"/>
-            <circle cx="30" cy="33" r="17" fill="#f5cd79"/>
-            <circle cx="13" cy="35" r="2.5" fill="#ffffff"/>
-            <circle cx="47" cy="35" r="2.5" fill="#ffffff"/>
-            <path d="M20 28q3-3 6 0" stroke="#2c1d11" stroke-width="2"/>
-            <path d="M34 28q3-3 6 0" stroke="#2c1d11" stroke-width="2"/>
-            <path d="M25 40q5 4 10 0" stroke="#c0392b" stroke-width="2" stroke-linecap="round"/>
-          </svg>
-        `,
-        charles: `
-          <svg viewBox="0 0 60 60" fill="none">
-            <rect width="60" height="60" rx="10" fill="#232b2b"/>
-            <path d="M10 24h40c-4-8-12-10-20-10s-16 2-20 10z" fill="#34495e"/>
-            <rect x="8" y="23" width="44" height="4" rx="2" fill="#2c3e50"/>
-            <circle cx="30" cy="34" r="17" fill="#f8c291"/>
-            <circle cx="23" cy="32" r="5" stroke="#f1c40f" stroke-width="1.8" fill="rgba(255,255,255,0.2)"/>
-            <path d="M18 32c-3 8 0 16 2 18" stroke="#f1c40f" stroke-width="1" fill="none"/>
-            <circle cx="23" cy="32" r="1.8" fill="#20110b"/>
-            <circle cx="37" cy="32" r="1.8" fill="#20110b"/>
-            <path d="M25 42q5-3 10 0" stroke="#2c3e50" stroke-width="2" stroke-linecap="round"/>
-          </svg>
-        `
-      };
-
-      /* ========================================================================
-         3. EXACTLY 10 UNIQUE HANDCRAFTED MYSTERY CASES
-         Rule: Exactly 4 tell the TRUTH (Innocent witnesses).
-               Exactly 1 is LYING (The Poisoner / Culprit).
-         ======================================================================== */
-      const MysteryCases = [
-        {
-          id: 1,
-          title: "Case 1: The Bitter Almonds",
-          victim: "Lord Bean",
-          description: "Lord Bean took one sip of hazelnut espresso and collapsed! The aroma of bitter almonds was unmistakable.",
-          clue: "Look at Pierre's claim: he insists he was outside and never in the kitchen. But what did Wendy and Bruno both witness?",
-          culpritId: "pierre", // Pierre is the liar & poisoner
-          explanation: "Pierre is the LIAR and the POISONER! Pierre claimed he was outside all morning, but Bruno saw Pierre near the coffee pot with a vial, and Wendy confirmed Pierre was in the kitchen. The other 4 suspects told the complete truth.",
-          suspects: [
-            { id: "bruno", name: "Bruno", role: "Barista", avatar: "bruno", quote: "I saw Pierre near the coffee pot holding a glass vial." },
-            { id: "wendy", name: "Wendy", role: "Waitress", avatar: "wendy", quote: "Pierre was in the kitchen preparing the hazelnut syrup." },
-            { id: "pierre", name: "Pierre", role: "Chef", avatar: "pierre", quote: "I was outside delivering orders and never entered the kitchen!" },
-            { id: "flora", name: "Flora", role: "Regular", avatar: "flora", quote: "Bruno stayed right at the front counter all morning." },
-            { id: "charles", name: "Charles", role: "Critic", avatar: "charles", quote: "Wendy was carrying trays to the outdoor patio at that time." }
-          ]
-        },
-        {
-          id: 2,
-          title: "Case 2: The Spilled Sugar",
-          victim: "Mayor Roast",
-          description: "A jar of sugar was spiked with tasteless white powder right before the Mayor's morning macchiato.",
-          clue: "Flora says she was in the restroom all morning and never touched any sugar. But where did Bruno and Charles see her?",
-          culpritId: "flora", // Flora is the liar & poisoner
-          explanation: "Flora is the LIAR and the POISONER! Flora claimed she was in the restroom all morning, but Bruno saw her sitting right by the sugar jar, and Charles noticed white powder on her table. The other 4 suspects spoke the truth.",
-          suspects: [
-            { id: "bruno", name: "Bruno", role: "Barista", avatar: "bruno", quote: "Flora sat at the VIP table right next to the sugar jar." },
-            { id: "wendy", name: "Wendy", role: "Waitress", avatar: "wendy", quote: "Bruno only brewed black tea from 9 to 10 AM." },
-            { id: "pierre", name: "Pierre", role: "Chef", avatar: "pierre", quote: "I watched Wendy deliver clean teacups to the counter." },
-            { id: "flora", name: "Flora", role: "Regular", avatar: "flora", quote: "I was in the restroom all morning and never touched any sugar!" },
-            { id: "charles", name: "Charles", role: "Critic", avatar: "charles", quote: "I noticed white powder spilled on Flora's table." }
-          ]
-        },
-        {
-          id: 3,
-          title: "Case 3: Cyanide Crema",
-          victim: "Baroness Crema",
-          description: "The Baroness collapsed clutching her cup of flat white with greenish foam on the rim.",
-          clue: "Wendy claims Charles was never in the café today. Check Flora and Charles's statements!",
-          culpritId: "wendy", // Wendy is the liar & poisoner
-          explanation: "Wendy is the LIAR and the POISONER! Wendy claimed Charles was never in the café today to cover her tracks, but Flora and Pierre both saw Charles reading his paper by the window, and Charles saw Wendy tamper with the crema.",
-          suspects: [
-            { id: "bruno", name: "Bruno", role: "Barista", avatar: "bruno", quote: "Pierre and I were standing together by the milk steamer." },
-            { id: "wendy", name: "Wendy", role: "Waitress", avatar: "wendy", quote: "Charles was never in the café today!" },
-            { id: "pierre", name: "Pierre", role: "Chef", avatar: "pierre", quote: "Charles was sitting by the window reading the newspaper." },
-            { id: "flora", name: "Flora", role: "Regular", avatar: "flora", quote: "I ordered my drink before the Baroness arrived." },
-            { id: "charles", name: "Charles", role: "Critic", avatar: "charles", quote: "I saw Wendy slip a dark liquid into the Baroness's crema." }
-          ]
-        },
-        {
-          id: 4,
-          title: "Case 4: Arsenic Arabica",
-          victim: "Duke Espresso",
-          description: "Poisonous powder was traced to the special grinder behind the barista counter.",
-          clue: "Bruno claims he was not working today. But what did Pierre, Wendy, and Flora all observe?",
-          culpritId: "bruno", // Bruno is the liar & poisoner
-          explanation: "Bruno is the LIAR and the POISONER! Bruno claimed he was off-duty and that his twin brother was working, but Pierre, Wendy, and Flora all confirmed Bruno was at the grinder when the Duke's coffee was made.",
-          suspects: [
-            { id: "bruno", name: "Bruno", role: "Barista", avatar: "bruno", quote: "I wasn't working today; that was my identical twin brother!" },
-            { id: "wendy", name: "Wendy", role: "Waitress", avatar: "wendy", quote: "Bruno ground the Arabica beans specifically for the Duke." },
-            { id: "pierre", name: "Pierre", role: "Chef", avatar: "pierre", quote: "I watched Bruno operate the grinder right after breakfast." },
-            { id: "flora", name: "Flora", role: "Regular", avatar: "flora", quote: "Pierre remained in the baking pantry until the alarm rang." },
-            { id: "charles", name: "Charles", role: "Critic", avatar: "charles", quote: "Wendy was wearing her green apron while serving the Duke." }
-          ]
-        },
-        {
-          id: 5,
-          title: "Case 5: Midnight Mocha",
-          victim: "Inspector Higgins",
-          description: "The visiting detective got his decaf mocha spiked with laced cinnamon.",
-          clue: "Charles says he is allergic to cinnamon and never touched any shaker. But who saw Charles with the shaker?",
-          culpritId: "charles", // Charles is the liar & poisoner
-          explanation: "Charles is the LIAR and the POISONER! Charles lied that he never touched any shaker, but Bruno, Wendy, and Flora all saw Charles tampering with the cinnamon shaker at his table before passing it to the Inspector.",
-          suspects: [
-            { id: "bruno", name: "Bruno", role: "Barista", avatar: "bruno", quote: "Charles requested the cinnamon shaker for the mocha." },
-            { id: "wendy", name: "Wendy", role: "Waitress", avatar: "wendy", quote: "I picked up the cinnamon shaker directly from Charles's table." },
-            { id: "pierre", name: "Pierre", role: "Chef", avatar: "pierre", quote: "Wendy brought the shaker from the dining room." },
-            { id: "flora", name: "Flora", role: "Regular", avatar: "flora", quote: "I saw Charles unscrew the cinnamon shaker and drop something inside." },
-            { id: "charles", name: "Charles", role: "Critic", avatar: "charles", quote: "I am allergic to cinnamon and never touched any shaker!" }
-          ]
-        },
-        {
-          id: 6,
-          title: "Case 6: The Barista's Secret",
-          victim: "Senator Java",
-          description: "A politician was poisoned with a chemical agent at his reserved booth.",
-          clue: "Pierre claims his apron was locked in his locker all day. But what did Bruno, Wendy, and Charles see on Pierre?",
-          culpritId: "pierre", // Pierre is the liar & poisoner
-          explanation: "Pierre is the LIAR and the POISONER! Pierre claimed his apron was locked away, but Bruno and Wendy saw Pierre wearing his apron with a greenish vial poking out, and Charles saw him near the Senator's coffee.",
-          suspects: [
-            { id: "bruno", name: "Bruno", role: "Barista", avatar: "bruno", quote: "Pierre was wearing his apron with a greenish vial inside." },
-            { id: "wendy", name: "Wendy", role: "Waitress", avatar: "wendy", quote: "I noticed Pierre's apron had stains matching the vial." },
-            { id: "pierre", name: "Pierre", role: "Chef", avatar: "pierre", quote: "My apron was locked in my locker all day!" },
-            { id: "flora", name: "Flora", role: "Regular", avatar: "flora", quote: "Wendy and I were sitting near the window talking." },
-            { id: "charles", name: "Charles", role: "Critic", avatar: "charles", quote: "Pierre poured a greenish liquid into the Senator's drip pot." }
-          ]
-        },
-        {
-          id: 7,
-          title: "Case 7: The Heiress's Revenge",
-          victim: "Countess Latte",
-          description: "The Countess fainted after drinking an herbal infusion spiked with belladonna.",
-          clue: "Flora insists she never had an antique perfume bottle. Who saw Flora holding that exact bottle?",
-          culpritId: "flora", // Flora is the liar & poisoner
-          explanation: "Flora is the LIAR and the POISONER! Flora claimed she never owned any perfume bottle, but Bruno, Pierre, and Charles all saw her bring the antique bottle and drip liquid into the Countess's infusion.",
-          suspects: [
-            { id: "bruno", name: "Bruno", role: "Barista", avatar: "bruno", quote: "Flora carried an ornate antique perfume bottle into the café." },
-            { id: "wendy", name: "Wendy", role: "Waitress", avatar: "wendy", quote: "Pierre shouted as soon as he saw someone reach for the cup." },
-            { id: "pierre", name: "Pierre", role: "Chef", avatar: "pierre", quote: "I watched Flora drip fluid from that antique bottle into the cup." },
-            { id: "flora", name: "Flora", role: "Regular", avatar: "flora", quote: "I have never owned an antique bottle or perfume in my life!" },
-            { id: "charles", name: "Charles", role: "Critic", avatar: "charles", quote: "Flora was examining an antique perfume bottle at her seat." }
-          ]
-        },
-        {
-          id: 8,
-          title: "Case 8: The Critic's Poison",
-          victim: "Editor Grinder",
-          description: "The food magazine editor slumped over his cold brew tasting glass.",
-          clue: "Bruno claims Pierre was asleep until noon. But what did Wendy, Pierre, and Charles all verify about Pierre?",
-          culpritId: "bruno", // Bruno is the liar & poisoner
-          explanation: "Bruno is the LIAR and the POISONER! Bruno claimed Pierre was asleep until noon to discredit Pierre's testimony, but Wendy, Flora, and Charles confirmed Pierre was awake making pastries and caught Bruno tampering with the cold brew.",
-          suspects: [
-            { id: "bruno", name: "Bruno", role: "Barista", avatar: "bruno", quote: "Pierre was asleep until noon and was never in the kitchen!" },
-            { id: "wendy", name: "Wendy", role: "Waitress", avatar: "wendy", quote: "Pierre arrived at 7:00 AM to bake the morning croissants." },
-            { id: "pierre", name: "Pierre", role: "Chef", avatar: "pierre", quote: "I caught Bruno crushing hemlock root into the cold brew tank." },
-            { id: "flora", name: "Flora", role: "Regular", avatar: "flora", quote: "Pierre served me a fresh warm croissant at 8:30 AM." },
-            { id: "charles", name: "Charles", role: "Critic", avatar: "charles", quote: "Pierre was actively working in the kitchen when I arrived." }
-          ]
-        },
-        {
-          id: 9,
-          title: "Case 9: Cold Brew Catastrophe",
-          victim: "Judge Caffeine",
-          description: "A steep 12-hour cold brew turned fatal inside the locked ice refrigerator.",
-          clue: "Wendy says the refrigerator was never locked. But who had the key and what did Pierre and Bruno witness?",
-          culpritId: "wendy", // Wendy is the liar & poisoner
-          explanation: "Wendy is the LIAR and the POISONER! Wendy claimed the fridge was never locked, but Bruno, Pierre, Flora, and Charles all confirmed the fridge was locked and Wendy held the only key, using it to spike the judge's cold brew.",
-          suspects: [
-            { id: "bruno", name: "Bruno", role: "Barista", avatar: "bruno", quote: "Wendy held the only key to the locked cold brew refrigerator." },
-            { id: "wendy", name: "Wendy", role: "Waitress", avatar: "wendy", quote: "The refrigerator was never locked; anyone could open it!" },
-            { id: "pierre", name: "Pierre", role: "Chef", avatar: "pierre", quote: "I asked Wendy for the fridge key at 8 AM and she refused." },
-            { id: "flora", name: "Flora", role: "Regular", avatar: "flora", quote: "I saw Wendy unlock the fridge and slip something into the tank." },
-            { id: "charles", name: "Charles", role: "Critic", avatar: "charles", quote: "Pierre and Bruno asked Wendy for the key in front of me." }
-          ]
-        },
-        {
-          id: 10,
-          title: "Case 10: The Grand Velvet Roast",
-          victim: "The Master Roaster",
-          description: "The founder of Café Moka was poisoned in the pantry right before the championship round.",
-          clue: "Charles claims he never went into the pantry. But what did Bruno, Wendy, and Pierre all witness?",
-          culpritId: "charles", // Charles is the liar & poisoner
-          explanation: "Charles is the LIAR and the POISONER! Charles claimed he never went into the pantry, but Bruno saw white powder on Charles's cuffs as he exited the pantry, and Pierre and Wendy found the opened poison jar inside immediately after.",
-          suspects: [
-            { id: "bruno", name: "Bruno", role: "Barista", avatar: "bruno", quote: "Charles had white powder on his cuffs after leaving the pantry." },
-            { id: "wendy", name: "Wendy", role: "Waitress", avatar: "wendy", quote: "I saw Charles walking out of the storage pantry in a hurry." },
-            { id: "pierre", name: "Pierre", role: "Chef", avatar: "pierre", quote: "I entered the pantry after Charles left and found the poison unsealed." },
-            { id: "flora", name: "Flora", role: "Regular", avatar: "flora", quote: "Pierre showed everyone the unsealed poison jar right away." },
-            { id: "charles", name: "Charles", role: "Critic", avatar: "charles", quote: "I never went into the pantry; I don't even know where it is!" }
-          ]
-        }
-      ];
-
-      const CartoonAds = [
-        {
-          brand: "☕ ACME Anti-Poison Crema",
-          slogan: "Guaranteed 99.9% cyanide-free or your next cappuccino is FREE!"
-        },
-        {
-          brand: "🔍 Sleuth Brand Trenchcoats",
-          slogan: "Hide in café shadows with waterproof velvet and extra poison-test kit pockets!"
-        },
-        {
-          brand: "🍩 Detective Donut Co.",
-          slogan: "Brain-power sprinkles! Spot the liar twice as fast with pure glaze!"
-        }
-      ];
-
-      /* ========================================================================
-         4. STATE MANAGEMENT
-         ======================================================================== */
-      let currentCaseIndex = 0;
-      let currentCase = MysteryCases[0];
-      let userTags = {};
-      let targetAccuseSuspect = null;
-      let adTimerInterval = null;
-
-      const elSuspectsContainer = document.getElementById('suspects-container');
-      const elCaseTitle = document.getElementById('case-title');
-      const elVictimName = document.getElementById('victim-name');
-      const elVictimSub = document.getElementById('victim-sub');
-      const elTruthCount = document.getElementById('truth-count');
-      const elLiarCount = document.getElementById('liar-count');
-      const elStatusLiar = document.getElementById('status-liar');
-      const elStatusTruth = document.getElementById('status-truth');
-      const elToast = document.getElementById('toast');
-
-      const elModalAdHint = document.getElementById('modal-ad-hint');
-      const elModalAccuse = document.getElementById('modal-accuse');
-      const elModalVerdict = document.getElementById('modal-verdict');
-      const elModalCases = document.getElementById('modal-cases');
-
-      const elAdBrandName = document.getElementById('ad-brand-name');
-      const elAdSloganTxt = document.getElementById('ad-slogan-txt');
-      const elAdCountdown = document.getElementById('ad-countdown');
-      const elAdProgressFill = document.getElementById('ad-progress-fill');
-      const elAdStatusMsg = document.getElementById('ad-status-msg');
-      const elClueRevealBox = document.getElementById('clue-reveal-box');
-      const elClueContentText = document.getElementById('clue-content-text');
-      const elBtnAdDone = document.getElementById('btn-ad-done');
-
-      const elBtnMusic = document.getElementById('btn-music');
-      const elBtnSound = document.getElementById('btn-sound');
-      const elSoundIcon = document.getElementById('sound-icon');
-      const elBtnFullscreen = document.getElementById('btn-fullscreen');
-      const elFsIcon = document.getElementById('fs-icon');
-      const elBtnHint = document.getElementById('btn-hint');
-      const elBtnRules = document.getElementById('btn-rules');
-      const elBtnCases = document.getElementById('btn-cases');
-      const elBtnClearTags = document.getElementById('btn-clear-tags');
-
-      let toastTimeout = null;
-      function showToast(msg) {
-        if (!elToast) return;
-        elToast.textContent = msg;
-        elToast.classList.add('show');
-        if (toastTimeout) clearTimeout(toastTimeout);
-        toastTimeout = setTimeout(() => elToast.classList.remove('show'), 2200);
-      }
-
-      /* ========================================================================
-         5. CASE RENDERING
-         ======================================================================== */
-      function loadCase(index) {
-        currentCaseIndex = index;
-        currentCase = MysteryCases[index];
-        userTags = {};
-        targetAccuseSuspect = null;
-
-        elCaseTitle.textContent = currentCase.title;
-        elVictimName.textContent = `Victim: ${currentCase.victim}`;
-        elVictimSub.textContent = currentCase.description;
-
-        renderSuspects();
-        updateLogicStatus();
-      }
-
-      function renderSuspects() {
-        elSuspectsContainer.innerHTML = '';
-
-        currentCase.suspects.forEach(s => {
-          const tag = userTags[s.id] || null;
-
-          const card = document.createElement('div');
-          card.className = `suspect-card ${tag === 'truth' ? 'truth-tagged' : tag === 'liar' ? 'liar-tagged' : ''}`;
-          card.id = `card-${s.id}`;
-
-          const avatarSvg = SuspectAvatars[s.avatar] || SuspectAvatars.bruno;
-
-          let tagLabel = '?';
-          let tagClass = '';
-          if (tag === 'truth') {
-            tagLabel = '✓ TRUTH';
-            tagClass = 'state-truth';
-          } else if (tag === 'liar') {
-            tagLabel = '✗ LIAR';
-            tagClass = 'state-liar';
-          }
-
-          card.innerHTML = `
-            <div class="suspect-avatar-box">${avatarSvg}</div>
-            <div class="suspect-body">
-              <div class="suspect-meta">
-                <span class="suspect-name">${s.name}</span>
-                <span class="suspect-role">${s.role}</span>
-              </div>
-              <div class="suspect-quote">"${s.quote}"</div>
-            </div>
-            <div class="suspect-controls">
-              <button class="tag-toggle-btn ${tagClass}" data-id="${s.id}" title="Toggle Truth/Liar tag">
-                ${tagLabel}
-              </button>
-              <button class="accuse-btn" data-id="${s.id}" title="Accuse as Liar & Poisoner">
-                <span>POISON!</span>
-              </button>
-            </div>
-          `;
-
-          card.addEventListener('click', (e) => {
-            if (e.target.closest('.tag-toggle-btn') || e.target.closest('.accuse-btn')) return;
-            Sounds.blip();
-            card.style.transform = 'scale(0.98)';
-            setTimeout(() => card.style.transform = '', 120);
-          });
-
-          const tagBtn = card.querySelector('.tag-toggle-btn');
-          tagBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            toggleSuspectTag(s.id);
-          });
-
-          const accuseBtn = card.querySelector('.accuse-btn');
-          accuseBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            openAccuseModal(s);
-          });
-
-          elSuspectsContainer.appendChild(card);
+      playWin() {
+        if (this.isMuted) return;
+        this.init();
+        if (!this.ctx) return;
+        const now = this.ctx.currentTime;
+        const chords = [523.25, 659.25, 783.99, 1046.50];
+        chords.forEach((freq, idx) => {
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(freq, now + idx * 0.1);
+          gain.gain.setValueAtTime(0.12, now + idx * 0.1);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.1 + 0.35);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start(now + idx * 0.1);
+          osc.stop(now + idx * 0.1 + 0.36);
         });
       }
 
-      function toggleSuspectTag(suspectId) {
-        const current = userTags[suspectId];
-        let next = null;
-        if (!current) next = 'truth';
-        else if (current === 'truth') next = 'liar';
-        else next = null;
-
-        userTags[suspectId] = next;
-        Sounds.tagToggle(next);
-        renderSuspects();
-        updateLogicStatus();
-      }
-
-      function updateLogicStatus() {
-        let truths = 0;
-        let liars = 0;
-        Object.values(userTags).forEach(t => {
-          if (t === 'truth') truths++;
-          if (t === 'liar') liars++;
+      playError() {
+        if (this.isMuted) return;
+        this.init();
+        if (!this.ctx) return;
+        const now = this.ctx.currentTime;
+        [320, 260].forEach((freq, idx) => {
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(freq, now + idx * 0.08);
+          gain.gain.setValueAtTime(0.08, now + idx * 0.08);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.08 + 0.15);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start(now + idx * 0.08);
+          osc.stop(now + idx * 0.08 + 0.16);
         });
-
-        elTruthCount.textContent = `${truths}/4`;
-        elLiarCount.textContent = `${liars}/1`;
-
-        if (liars === 1) {
-          elStatusLiar.className = 'logic-pill liar-valid';
-        } else {
-          elStatusLiar.className = 'logic-pill';
-        }
-
-        if (truths === 4) {
-          elStatusTruth.className = 'logic-pill truth-valid';
-        } else {
-          elStatusTruth.className = 'logic-pill';
-        }
       }
-
-      /* ========================================================================
-         6. 5-SECOND REWARDED AD SPACE & HINT SYSTEM
-         ======================================================================== */
-      function openAdHintModal() {
-        Sounds.tap();
-        if (adTimerInterval) clearInterval(adTimerInterval);
-
-        // Duck music during ad
-        if (musicMasterGain && audioCtx) {
-          musicMasterGain.gain.setTargetAtTime(0.06, audioCtx.currentTime, 0.2);
-        }
-
-        const ad = CartoonAds[Math.floor(Math.random() * CartoonAds.length)];
-        elAdBrandName.innerHTML = `<span>${ad.brand}</span>`;
-        elAdSloganTxt.textContent = ad.slogan;
-
-        elAdCountdown.textContent = '5.0s';
-        elAdProgressFill.style.width = '0%';
-        elAdStatusMsg.textContent = 'Clue unlocking in...';
-        elClueRevealBox.classList.remove('unlocked');
-        elBtnAdDone.style.display = 'none';
-
-        elModalAdHint.classList.add('active');
-
-        const startTime = Date.now();
-        const duration = 5000;
-        let lastSec = 5;
-
-        adTimerInterval = setInterval(() => {
-          const elapsed = Date.now() - startTime;
-          const remaining = Math.max(0, duration - elapsed);
-          const secondsRemaining = (remaining / 1000).toFixed(1);
-
-          elAdCountdown.textContent = `${secondsRemaining}s`;
-          const pct = Math.min(100, (elapsed / duration) * 100);
-          elAdProgressFill.style.width = `${pct}%`;
-
-          const curSec = Math.ceil(remaining / 1000);
-          if (curSec < lastSec && curSec > 0) {
-            Sounds.adTick();
-            lastSec = curSec;
-          }
-
-          if (remaining <= 0) {
-            clearInterval(adTimerInterval);
-            adTimerInterval = null;
-            revealClue();
-          }
-        }, 100);
-      }
-
-      function revealClue() {
-        Sounds.hintUnlock();
-        elAdCountdown.textContent = 'UNLOCKED!';
-        elAdProgressFill.style.width = '100%';
-        elAdStatusMsg.textContent = 'Sponsor complete! Here is your clue:';
-        elClueContentText.textContent = currentCase.clue;
-        elClueRevealBox.classList.add('unlocked');
-        elBtnAdDone.style.display = 'flex';
-      }
-
-      function closeAdHintModal() {
-        if (adTimerInterval) {
-          clearInterval(adTimerInterval);
-          adTimerInterval = null;
-        }
-        if (musicMasterGain && audioCtx && musicEnabled) {
-          musicMasterGain.gain.setTargetAtTime(0.24, audioCtx.currentTime, 0.3);
-        }
-        elModalAdHint.classList.remove('active');
-      }
-
-      /* ========================================================================
-         7. ACCUSATION & VERDICT
-         ======================================================================== */
-      function openAccuseModal(suspect) {
-        targetAccuseSuspect = suspect;
-        Sounds.accuseOpen();
-
-        const accName = document.getElementById('accuse-name');
-        if (accName) accName.textContent = suspect.name;
-        const accRole = document.getElementById('accuse-role');
-        if (accRole) accRole.textContent = suspect.role;
-        const accStmt = document.getElementById('accuse-statement');
-        if (accStmt) accStmt.textContent = `"${suspect.quote}"`;
-
-        const portraitBox = document.getElementById('accuse-portrait-box');
-        portraitBox.innerHTML = SuspectAvatars[suspect.avatar] || SuspectAvatars.bruno;
-
-        elModalAccuse.classList.add('active');
-      }
-
-      function confirmAccusation() {
-        elModalAccuse.classList.remove('active');
-        if (!targetAccuseSuspect) return;
-
-        const isCulpritCorrect = targetAccuseSuspect.id === currentCase.culpritId;
-
-        const verdictModalTitle = document.getElementById('verdict-modal-title');
-        const verdictIconBox = document.getElementById('verdict-icon-box');
-        const verdictIconEmoji = document.getElementById('verdict-icon-emoji');
-        const verdictHeadline = document.getElementById('verdict-headline');
-        const verdictSubheadline = document.getElementById('verdict-subheadline');
-        const verdictExplanation = document.getElementById('verdict-explanation');
-        const verdictFooter = document.getElementById('verdict-footer');
-
-        if (isCulpritCorrect) {
-          Sounds.victory();
-          triggerConfetti();
-
-          if (verdictModalTitle) verdictModalTitle.textContent = "CASE SOLVED!";
-          if (verdictIconBox) verdictIconBox.className = "verdict-icon success";
-          if (verdictIconEmoji) verdictIconEmoji.textContent = "🏆";
-          if (verdictHeadline) {
-            verdictHeadline.className = "verdict-headline success";
-            verdictHeadline.textContent = "BRILLIANT DEDUCTION!";
-          }
-          if (verdictSubheadline) verdictSubheadline.textContent = `${targetAccuseSuspect.name} is the LIAR and the POISONER!`;
-
-          if (verdictExplanation) {
-            verdictExplanation.innerHTML = `
-              <div><strong>Culprit Identified:</strong> ${targetAccuseSuspect.name} (${targetAccuseSuspect.role})</div>
-              <div><strong>False Statement Exposed:</strong> "${targetAccuseSuspect.quote}"</div>
-              <div style="margin-top:4px; padding-top:4px; border-top:1px dashed #4a2717;">
-                <strong>Full Logical Proof:</strong><br/>
-                ${currentCase.explanation}
-              </div>
-            `;
-          }
-
-          const hasNext = currentCaseIndex < MysteryCases.length - 1;
-          if (verdictFooter) {
-            verdictFooter.innerHTML = `
-              <button id="btn-replay-case" class="btn-modal-secondary">Restart</button>
-              <button id="btn-next-case" class="btn-modal-primary" style="flex:1;">
-                <span>${hasNext ? 'Next Case ➡️' : 'Completed All 10 Cases! 🎉'}</span>
-              </button>
-            `;
-          }
-
-          const replayBtn = document.getElementById('btn-replay-case');
-          if (replayBtn) {
-            replayBtn.onclick = () => {
-              if (elModalVerdict) elModalVerdict.classList.remove('active');
-              loadCase(currentCaseIndex);
-            };
-          }
-
-          const nextBtn = document.getElementById('btn-next-case');
-          if (nextBtn) {
-            nextBtn.onclick = () => {
-              if (elModalVerdict) elModalVerdict.classList.remove('active');
-              if (hasNext) loadCase(currentCaseIndex + 1);
-              else openCasesModal();
-            };
-          }
-
-        } else {
-          Sounds.wrong();
-
-          if (verdictModalTitle) verdictModalTitle.textContent = "FALSE ACCUSATION!";
-          if (verdictIconBox) verdictIconBox.className = "verdict-icon failure";
-          if (verdictIconEmoji) verdictIconEmoji.textContent = "⚠️";
-          if (verdictHeadline) {
-            verdictHeadline.className = "verdict-headline failure";
-            verdictHeadline.textContent = "INSUFFICIENT PROOF!";
-          }
-          if (verdictSubheadline) verdictSubheadline.textContent = `${targetAccuseSuspect.name} was telling the truth!`;
-
-          if (verdictExplanation) {
-            verdictExplanation.innerHTML = `
-              <div><strong>Your Accusation:</strong> ${targetAccuseSuspect.name}</div>
-              <div style="color:#ff6b81;">
-                ${targetAccuseSuspect.name} is an innocent witness who spoke the truth. Look for the ONE suspect whose statement contradicts what everyone else saw!
-              </div>
-              <div style="margin-top:4px; font-size:11px; color:#fad390;">
-                💡 <em>Tip: Tap the <strong>💡 Hint</strong> button to watch the 5s sponsor break and unlock an investigative lead!</em>
-              </div>
-            `;
-          }
-
-          if (verdictFooter) {
-            verdictFooter.innerHTML = `
-              <button id="btn-retry-case" class="btn-modal-primary" style="width:100%; background:linear-gradient(135deg, #e67e22, #d35400); border-color:#f39c12;">
-                <span>Try Again 🔄</span>
-              </button>
-            `;
-          }
-
-          const retryBtn = document.getElementById('btn-retry-case');
-          if (retryBtn) {
-            retryBtn.onclick = () => {
-              if (elModalVerdict) elModalVerdict.classList.remove('active');
-            };
-          }
-        }
-
-        elModalVerdict.classList.add('active');
-      }
-
-      /* ========================================================================
-         8. CASE SELECTION (10 CASES EXCLUSIVELY)
-         ======================================================================== */
-      function openCasesModal() {
-        Sounds.tap();
-        const container = document.getElementById('cases-list-container');
-        container.innerHTML = '';
-
-        MysteryCases.forEach((c, idx) => {
-          const item = document.createElement('div');
-          item.style.cssText = `
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background: ${idx === currentCaseIndex ? '#3a1f14' : '#160b07'};
-            border: 1.5px solid ${idx === currentCaseIndex ? '#f1c40f' : '#4a2717'};
-            padding: 7px 9px;
-            border-radius: 8px;
-            cursor: pointer;
-          `;
-          item.innerHTML = `
-            <div>
-              <strong style="color:#f5eedc; font-size:12.5px;">${c.title}</strong>
-              <div style="font-size:9.5px; color:#d2dae2;">Victim: ${c.victim}</div>
-            </div>
-            <span style="font-size:10.5px; color:#ffbe76; font-weight:bold;">${idx === currentCaseIndex ? 'ACTIVE' : `CASE ${idx + 1}`}</span>
-          `;
-          item.onclick = () => {
-            loadCase(idx);
-            elModalCases.classList.remove('active');
-          };
-          container.appendChild(item);
-        });
-
-        elModalCases.classList.add('active');
-      }
-
-      /* ========================================================================
-         9. FULLSCREEN API
-         ======================================================================== */
-      function toggleFullscreen() {
-        Sounds.tap();
-        try {
-          if (!document.fullscreenElement && !document.webkitFullscreenElement) {
-            const root = document.documentElement;
-            if (root.requestFullscreen) root.requestFullscreen();
-            else if (root.webkitRequestFullscreen) root.webkitRequestFullscreen();
-            elFsIcon.textContent = "🗗";
-            showToast("Fullscreen Enabled");
-          } else {
-            if (document.exitFullscreen) document.exitFullscreen();
-            else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
-            elFsIcon.textContent = "⛶";
-            showToast("Fullscreen Exited");
-          }
-        } catch (e) {
-          showToast("Fullscreen restricted in preview");
-        }
-      }
-
-      document.addEventListener('fullscreenchange', () => {
-        elFsIcon.textContent = document.fullscreenElement ? "🗗" : "⛶";
-      });
-
-      /* ========================================================================
-         10. CONFETTI ANIMATION
-         ======================================================================== */
-      const canvas = document.getElementById('fx-canvas');
-      const ctx = canvas.getContext('2d');
-      let particles = [];
-      let animId = null;
-
-      function resizeCanvas() {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-      }
-      window.addEventListener('resize', resizeCanvas);
-      resizeCanvas();
-
-      function triggerConfetti() {
-        particles = [];
-        const colors = ['#f1c40f', '#e67e22', '#2ecc71', '#e74c3c', '#9b59b6', '#3498db'];
-        for (let i = 0; i < 90; i++) {
-          particles.push({
-            x: canvas.width / 2,
-            y: canvas.height / 3,
-            vx: (Math.random() - 0.5) * 14,
-            vy: (Math.random() - 0.8) * 16,
-            size: Math.random() * 7 + 4,
-            color: colors[Math.floor(Math.random() * colors.length)],
-            rotation: Math.random() * 360,
-            vRot: (Math.random() - 0.5) * 10,
-            opacity: 1
-          });
-        }
-        if (animId) cancelAnimationFrame(animId);
-        renderParticles();
-      }
-
-      function renderParticles() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        let alive = false;
-
-        particles.forEach(p => {
-          p.x += p.vx;
-          p.y += p.vy;
-          p.vy += 0.4;
-          p.rotation += p.vRot;
-          p.opacity -= 0.012;
-
-          if (p.opacity > 0) {
-            alive = true;
-            ctx.save();
-            ctx.translate(p.x, p.y);
-            ctx.rotate((p.rotation * Math.PI) / 180);
-            ctx.fillStyle = p.color;
-            ctx.globalAlpha = Math.max(0, p.opacity);
-            ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);
-            ctx.restore();
-          }
-        });
-
-        if (alive) animId = requestAnimationFrame(renderParticles);
-        else ctx.clearRect(0, 0, canvas.width, canvas.height);
-      }
-
-      /* ========================================================================
-         11. EVENT LISTENERS
-         ======================================================================== */
-      elBtnMusic.addEventListener('click', () => {
-        getAudioContext();
-        toggleMusic();
-      });
-
-      elBtnSound.addEventListener('click', () => {
-        soundEnabled = !soundEnabled;
-        elSoundIcon.textContent = soundEnabled ? '🔊' : '🔇';
-        if (soundEnabled) Sounds.tap();
-        showToast(soundEnabled ? 'Sound SFX: ON 🔊' : 'Sound SFX: MUTED 🔇');
-      });
-
-      elBtnFullscreen.addEventListener('click', toggleFullscreen);
-      elBtnHint.addEventListener('click', openAdHintModal);
-      document.getElementById('btn-close-ad-modal').addEventListener('click', closeAdHintModal);
-      elBtnAdDone.addEventListener('click', closeAdHintModal);
-
-      document.getElementById('btn-close-accuse').addEventListener('click', () => {
-        elModalAccuse.classList.remove('active');
-      });
-      document.getElementById('btn-cancel-accuse').addEventListener('click', () => {
-        elModalAccuse.classList.remove('active');
-      });
-      document.getElementById('btn-confirm-accuse').addEventListener('click', confirmAccusation);
-
-      document.getElementById('btn-close-verdict').addEventListener('click', () => {
-        elModalVerdict.classList.remove('active');
-      });
-
-      elBtnCases.addEventListener('click', openCasesModal);
-      elBtnRules.addEventListener('click', openCasesModal);
-      document.getElementById('btn-close-cases').addEventListener('click', () => {
-        elModalCases.classList.remove('active');
-      });
-      document.getElementById('btn-close-cases-foot').addEventListener('click', () => {
-        elModalCases.classList.remove('active');
-      });
-
-      elBtnClearTags.addEventListener('click', () => {
-        Sounds.tap();
-        userTags = {};
-        renderSuspects();
-        updateLogicStatus();
-        showToast("Scratchpad reset!");
-      });
-
-      // Launch Case 1
-      loadCase(0);
-      updateMusicButtonUI();
-    })();
-  </script>
-
-  <!-- PWA Service Worker Registration -->
-  <script>
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js').catch(() => {});
-      });
     }
-  </script>
 
+    const sound = new ZebraAudioEngine();
 
-  <!-- 5-Second Hint Ad Modal System -->
-  <div id="fl-hint-modal-overlay" style="
-    display: none;
-    position: fixed;
-    inset: 0;
-    z-index: 999999;
-    background: rgba(10, 15, 30, 0.85);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    align-items: center;
-    justify-content: center;
-    font-family: system-ui, -apple-system, sans-serif;
-    padding: 16px;
-    box-sizing: border-box;
-  ">
-    <div style="
-      background: linear-gradient(145deg, #1e293b, #0f172a);
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      box-shadow: 0 20px 50px rgba(0,0,0,0.6), 0 0 30px rgba(245, 158, 11, 0.2);
-      border-radius: 20px;
-      max-width: 420px;
-      width: 100%;
-      padding: 24px;
-      text-align: center;
-      color: #f8fafc;
-      position: relative;
-    ">
-      <button id="fl-hint-close-btn" style="
-        position: absolute;
-        top: 14px;
-        right: 14px;
-        background: rgba(255,255,255,0.08);
-        border: none;
-        color: #94a3b8;
-        font-size: 18px;
-        width: 32px;
-        height: 32px;
-        border-radius: 50%;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      ">✕</button>
+    // ==========================================
+    // COFFEE NOIR LOGIC GRID STAGES (PROGRESSIVE LOCKING)
+    // ==========================================
+    const COFFEE_STAGES = [
+      {
+        id: 1,
+        title: "Stage 1: The Morning Rush",
+        subtitle: "3 Tables • 3 Suspects • 3 Orders",
+        difficulty: "Warmup",
+        size: 3,
+        story: "Lord Bean ordered espresso before his sudden collapse. Connect each patron to their table and morning drink.",
+        columns: [
+          { id: "tab1", name: "Table 1" },
+          { id: "tab2", name: "Table 2" },
+          { id: "tab3", name: "Table 3" }
+        ],
+        suspects: [
+          { id: "bruno", name: "Bruno (Barista)" },
+          { id: "wendy", name: "Wendy (Waitress)" },
+          { id: "pierre", name: "Pierre (Chef)" }
+        ],
+        drinks: [
+          { id: "hazelnut", name: "Hazelnut Espresso" },
+          { id: "latte", name: "Vanilla Latte" },
+          { id: "dark", name: "Dark Roast" }
+        ],
+        clues: [
+          "1. Bruno is sitting at Table 1 drinking Dark Roast.",
+          "2. The Vanilla Latte was served at Table 2.",
+          "3. Wendy is seated to the immediate left of Pierre."
+        ],
+        solution: [
+          { table: "tab1", suspect: "bruno", drink: "dark" },
+          { table: "tab2", suspect: "wendy", drink: "latte" },
+          { table: "tab3", suspect: "pierre", drink: "hazelnut" }
+        ]
+      },
+      {
+        id: 2,
+        title: "Stage 2: The Bitter Almonds",
+        subtitle: "4 Tables • 4 Suspects • 4 Drinks",
+        difficulty: "Standard Case",
+        size: 4,
+        story: "Traces of bitter almond cyanide were detected in Lord Bean's cup. Deduce who ordered each beverage across the 4 café tables.",
+        columns: [
+          { id: "tab1", name: "Table 1" },
+          { id: "tab2", name: "Table 2" },
+          { id: "tab3", name: "Table 3" },
+          { id: "tab4", name: "Table 4" }
+        ],
+        suspects: [
+          { id: "bruno", name: "Bruno (Barista)" },
+          { id: "wendy", name: "Wendy (Waitress)" },
+          { id: "pierre", name: "Pierre (Chef)" },
+          { id: "flora", name: "Flora (Regular)" }
+        ],
+        drinks: [
+          { id: "almond", name: "Spiked Almond Espresso" },
+          { id: "macchiato", name: "Caramel Macchiato" },
+          { id: "mocha", name: "Mint Mocha" },
+          { id: "crema", name: "Vienna Crema" }
+        ],
+        clues: [
+          "1. Flora is seated at Table 4 enjoying a Caramel Macchiato.",
+          "2. The patron at Table 1 ordered the Mint Mocha.",
+          "3. Pierre is sitting at Table 2 and did NOT drink the Spiked Almond Espresso.",
+          "4. Wendy is sitting next to Flora at Table 3.",
+          "5. Bruno is at Table 1."
+        ],
+        solution: [
+          { table: "tab1", suspect: "bruno", drink: "mocha" },
+          { table: "tab2", suspect: "pierre", drink: "crema" },
+          { table: "tab3", suspect: "wendy", drink: "almond" },
+          { table: "tab4", suspect: "flora", drink: "macchiato" }
+        ]
+      },
+      {
+        id: 3,
+        title: "Stage 3: Cyanide Crema",
+        subtitle: "4 Booths • 4 Patrons • 4 Evidence Traces",
+        difficulty: "Hard Case",
+        size: 4,
+        story: "A toxic glass vial was abandoned under one of the leather booths. Link the suspects, booths, and physical clues.",
+        columns: [
+          { id: "booth1", name: "Corner Booth" },
+          { id: "booth2", name: "Window Booth" },
+          { id: "booth3", name: "Counter Booth" },
+          { id: "booth4", name: "Garden Booth" }
+        ],
+        suspects: [
+          { id: "bruno", name: "Bruno (Barista)" },
+          { id: "wendy", name: "Wendy (Waitress)" },
+          { id: "pierre", name: "Pierre (Chef)" },
+          { id: "charles", name: "Charles (Critic)" }
+        ],
+        drinks: [
+          { id: "vial", name: "Empty Glass Vial" },
+          { id: "powder", name: "Spilled White Powder" },
+          { id: "froth", name: "Green Froth Cup" },
+          { id: "spoon", name: "Tarnished Teaspoon" }
+        ],
+        clues: [
+          "1. Critic Charles sits in the Window Booth where the Tarnished Teaspoon was recovered.",
+          "2. The Empty Glass Vial was discovered in the Corner Booth.",
+          "3. Chef Pierre is seated in the Garden Booth with the Spilled White Powder.",
+          "4. Bruno is seated in the Corner Booth.",
+          "5. Waitress Wendy is in the Counter Booth with the Green Froth Cup."
+        ],
+        solution: [
+          { table: "booth1", suspect: "bruno", drink: "vial" },
+          { table: "booth2", suspect: "charles", drink: "spoon" },
+          { table: "booth3", suspect: "wendy", drink: "froth" },
+          { table: "booth4", suspect: "pierre", drink: "powder" }
+        ]
+      },
+      {
+        id: 4,
+        title: "Stage 4: Arsenic Arabica Master",
+        subtitle: "4 Tables • 4 Suspects • 4 Secret Powders",
+        difficulty: "Master Enigma",
+        size: 4,
+        story: "The ultimate deduction: identify the exact poisoner and the lethal ingredient hidden in the café roast.",
+        columns: [
+          { id: "tA", name: "Terrace A" },
+          { id: "tB", name: "Terrace B" },
+          { id: "tC", name: "Terrace C" },
+          { id: "tD", name: "Terrace D" }
+        ],
+        suspects: [
+          { id: "bruno", name: "Bruno" },
+          { id: "wendy", name: "Wendy" },
+          { id: "flora", name: "Flora" },
+          { id: "charles", name: "Charles" }
+        ],
+        drinks: [
+          { id: "arsenic", name: "Arsenic Arabica" },
+          { id: "cyanide", name: "Potassium Cyanide" },
+          { id: "strychnine", name: "Ground Strychnine" },
+          { id: "belladonna", name: "Nightshade Extract" }
+        ],
+        clues: [
+          "1. Charles is on Terrace A, and his table tested positive for Potassium Cyanide.",
+          "2. Wendy sits directly between Charles and Flora.",
+          "3. The lethal Arsenic Arabica was placed on Terrace C.",
+          "4. Flora is at Terrace C.",
+          "5. Bruno occupies Terrace D with the Nightshade Extract."
+        ],
+        solution: [
+          { table: "tA", suspect: "charles", drink: "cyanide" },
+          { table: "tB", suspect: "wendy", drink: "strychnine" },
+          { table: "tC", suspect: "flora", drink: "arsenic" },
+          { table: "tD", suspect: "bruno", drink: "belladonna" }
+        ]
+      }
+    ];
 
-      <div style="
-        width: 56px;
-        height: 56px;
-        margin: 0 auto 14px auto;
-        background: rgba(245, 158, 11, 0.15);
-        border: 1px solid rgba(245, 158, 11, 0.3);
-        border-radius: 16px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 28px;
-      ">💡</div>
+    // ==========================================
+    // GAME APP CONTROLLER
+    // ==========================================
+    class PoisonedCoffeeGame {
+      constructor() {
+        this.gameKey = 'poisoned_coffee';
+        this.unlockedStage = parseInt(localStorage.getItem('fl_unlocked_' + this.gameKey) || '0', 10);
+        this.currentStageIndex = 0;
+        this.tableState = {};
+        this.crossedClues = new Set();
+        this.history = [];
+        this.startTime = Date.now();
+        this.movesCount = 0;
 
-      <h3 style="margin: 0 0 6px 0; font-size: 19px; font-weight: 800; color: #fbbf24;">Unlocking Hint</h3>
-      <p style="margin: 0 0 18px 0; font-size: 13px; color: #94a3b8; line-height: 1.4;">
-        Sponsored Reward: Wait 5 seconds to reveal your clue assistance.
-      </p>
-
-      <div id="fl-hint-ad-box" style="
-        background: rgba(0, 0, 0, 0.35);
-        border: 1px dashed rgba(255, 255, 255, 0.15);
-        border-radius: 12px;
-        padding: 16px;
-        margin-bottom: 18px;
-      ">
-        <div style="font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: #64748b; margin-bottom: 4px;">Advertisement</div>
-        <div style="font-size: 14px; font-weight: 600; color: #e2e8f0;">Brain Booster Puzzles</div>
-        <div style="font-size: 11px; color: #38bdf8; margin-top: 2px;">play.funlogic.games</div>
-      </div>
-
-      <div style="margin-bottom: 16px;">
-        <div style="display: flex; justify-content: space-between; font-size: 12px; font-weight: 700; margin-bottom: 6px;">
-          <span style="color: #94a3b8;">Sponsor Video</span>
-          <span id="fl-hint-timer-txt" style="color: #f59e0b;">5s</span>
-        </div>
-        <div style="width: 100%; height: 8px; background: rgba(255,255,255,0.1); border-radius: 4px; overflow: hidden;">
-          <div id="fl-hint-progress-bar" style="width: 0%; height: 100%; background: linear-gradient(90deg, #f59e0b, #10b981); transition: width 0.1s linear;"></div>
-        </div>
-      </div>
-
-      <button id="fl-hint-claim-btn" disabled style="
-        width: 100%;
-        padding: 12px;
-        border-radius: 12px;
-        border: none;
-        background: #334155;
-        color: #64748b;
-        font-weight: 700;
-        font-size: 14px;
-        cursor: not-allowed;
-        transition: all 0.2s;
-      ">Please wait 5s...</button>
-    </div>
-  </div>
-
-  <script>
-    (function() {
-      let countdownTimer = null;
-      let originalHintCallback = null;
-
-      const overlay = document.getElementById('fl-hint-modal-overlay');
-      const timerTxt = document.getElementById('fl-hint-timer-txt');
-      const progressBar = document.getElementById('fl-hint-progress-bar');
-      const claimBtn = document.getElementById('fl-hint-claim-btn');
-      const closeBtn = document.getElementById('fl-hint-close-btn');
-
-      function showHintAdModal(callback) {
-        if (!overlay) return;
-        originalHintCallback = callback;
-        overlay.style.display = 'flex';
-        
-        let timeLeft = 50; // 5.0 seconds
-        claimBtn.disabled = true;
-        claimBtn.style.background = '#334155';
-        claimBtn.style.color = '#64748b';
-        claimBtn.style.cursor = 'not-allowed';
-        claimBtn.textContent = 'Please wait 5s...';
-        progressBar.style.width = '0%';
-        timerTxt.textContent = '5s';
-
-        try {
-          if (window.parent && window.parent !== window) {
-            window.parent.postMessage({ type: 'hint_ad_started', duration: 5 }, '*');
-          }
-        } catch(e) {}
-
-        clearInterval(countdownTimer);
-        countdownTimer = setInterval(() => {
-          timeLeft--;
-          const percent = ((50 - timeLeft) / 50) * 100;
-          progressBar.style.width = percent + '%';
-          const secondsRemaining = Math.ceil(timeLeft / 10);
-          timerTxt.textContent = secondsRemaining + 's';
-          claimBtn.textContent = 'Please wait ' + secondsRemaining + 's...';
-
-          if (timeLeft <= 0) {
-            clearInterval(countdownTimer);
-            timerTxt.textContent = 'Ready!';
-            timerTxt.style.color = '#10b981';
-            claimBtn.disabled = false;
-            claimBtn.style.background = 'linear-gradient(90deg, #f59e0b, #10b981)';
-            claimBtn.style.color = '#0f172a';
-            claimBtn.style.cursor = 'pointer';
-            claimBtn.textContent = '✨ Get Hint Now';
-
-            try {
-              if (window.parent && window.parent !== window) {
-                window.parent.postMessage({ type: 'hint_ad_completed' }, '*');
-              }
-            } catch(e) {}
-          }
-        }, 100);
+        this.initStage(this.currentStageIndex);
+        this.bindEvents();
       }
 
-      function closeHintModal() {
-        clearInterval(countdownTimer);
-        if (overlay) overlay.style.display = 'none';
+      get stage() {
+        return COFFEE_STAGES[this.currentStageIndex];
       }
 
-      function claimHint() {
-        closeHintModal();
-        if (typeof originalHintCallback === 'function') {
-          originalHintCallback();
+      initStage(index) {
+        if (index > this.unlockedStage) {
+          sound.playError();
+          this.showToast(`🔒 Complete Stage ${this.unlockedStage + 1} first to unlock!`);
+          return;
+        }
+        this.currentStageIndex = index;
+        this.tableState = {};
+        for (let c = 0; c < this.stage.size; c++) {
+          this.tableState[c] = { suspect: '', drink: '' };
+        }
+        this.crossedClues.clear();
+        this.history = [];
+        this.startTime = Date.now();
+        this.movesCount = 0;
+        this.render();
+      }
+
+      saveHistory() {
+        this.history.push(JSON.stringify(this.tableState));
+        if (this.history.length > 25) this.history.shift();
+      }
+
+      undo() {
+        if (this.history.length === 0) return;
+        this.tableState = JSON.parse(this.history.pop());
+        sound.playUndo();
+        this.renderTableOnly();
+      }
+
+      reset() {
+        sound.playClick();
+        for (let c = 0; c < this.stage.size; c++) {
+          this.tableState[c] = { suspect: '', drink: '' };
+        }
+        this.crossedClues.clear();
+        this.history = [];
+        this.render();
+      }
+
+      giveHint() {
+        sound.playClue();
+        const stage = this.stage;
+        let unassignedCol = -1;
+        for (let c = 0; c < stage.size; c++) {
+          const colId = stage.columns[c].id;
+          const sol = stage.solution.find(s => s.table === colId);
+          if (this.tableState[c].suspect !== sol.suspect || this.tableState[c].drink !== sol.drink) {
+            unassignedCol = c;
+            break;
+          }
+        }
+
+        if (unassignedCol !== -1) {
+          const colId = stage.columns[unassignedCol].id;
+          const sol = stage.solution.find(s => s.table === colId);
+          this.saveHistory();
+          this.tableState[unassignedCol].suspect = sol.suspect;
+          this.tableState[unassignedCol].drink = sol.drink;
+          this.renderTableOnly();
+          const suspName = stage.suspects.find(s => s.id === sol.suspect).name;
+          const drinkName = stage.drinks.find(d => d.id === sol.drink).name;
+          this.showToast(`💡 Hint: ${stage.columns[unassignedCol].name} -> ${suspName} & ${drinkName}`);
+        } else {
+          this.showToast("All items currently match the solution!");
         }
       }
 
-      if (closeBtn) closeBtn.addEventListener('click', closeHintModal);
-      if (claimBtn) claimBtn.addEventListener('click', claimHint);
+      checkSolution() {
+        const stage = this.stage;
+        let allCorrect = true;
+        let emptyCount = 0;
 
-      window.showHintWith5sAd = showHintAdModal;
+        for (let c = 0; c < stage.size; c++) {
+          const colId = stage.columns[c].id;
+          const sol = stage.solution.find(s => s.table === colId);
+          const current = this.tableState[c];
 
-      window.addEventListener('DOMContentLoaded', () => {
-        setTimeout(() => {
-          const hintSelectors = [
-            '#btn-hint', '#hint-btn', '#button-hint', '#hint',
-            '.btn-hint', '.hint-btn', '[data-action="hint"]',
-            'button[title*="Hint" i]', 'button[aria-label*="Hint" i]'
-          ];
+          if (!current.suspect || !current.drink) {
+            emptyCount++;
+          }
+          if (current.suspect !== sol.suspect || current.drink !== sol.drink) {
+            allCorrect = false;
+          }
+        }
 
-          hintSelectors.forEach(selector => {
-            document.querySelectorAll(selector).forEach(btn => {
-              if (!btn.getAttribute('data-fl-hooked')) {
-                btn.setAttribute('data-fl-hooked', 'true');
-                btn.addEventListener('click', function(e) {
-                  if (!this.hasAttribute('data-hint-approved')) {
-                    e.stopImmediatePropagation();
-                    e.preventDefault();
-                    showHintAdModal(() => {
-                      this.setAttribute('data-hint-approved', 'true');
-                      this.click();
-                      setTimeout(() => this.removeAttribute('data-hint-approved'), 500);
-                    });
-                  }
-                }, true);
-              }
-            });
+        if (emptyCount > 0) {
+          sound.playError();
+          this.showToast(`⚠️ Please fill in all table selections (${emptyCount} empty)`);
+          return;
+        }
+
+        if (allCorrect) {
+          sound.playWin();
+          const elapsedSec = Math.round((Date.now() - this.startTime) / 1000);
+          
+          // Unlock next stage
+          if (this.currentStageIndex >= this.unlockedStage && this.unlockedStage < COFFEE_STAGES.length - 1) {
+            this.unlockedStage = this.currentStageIndex + 1;
+            localStorage.setItem('fl_unlocked_' + this.gameKey, this.unlockedStage);
+          }
+
+          // Trigger platform win
+          if (typeof window.triggerPlatformWin === 'function') {
+            window.triggerPlatformWin(elapsedSec);
+          }
+
+          this.showWinModal(elapsedSec);
+        } else {
+          sound.playError();
+          this.showToast("❌ Some deduction entries do not match the clues. Keep investigating!");
+        }
+      }
+
+      showWinModal(elapsedSec) {
+        const modal = document.getElementById('win-modal');
+        const title = document.getElementById('win-title');
+        const desc = document.getElementById('win-desc');
+        const statTime = document.getElementById('stat-time');
+        const statMoves = document.getElementById('stat-moves');
+        const nextBtn = document.getElementById('btn-next-stage');
+
+        const m = Math.floor(elapsedSec / 60);
+        const s = elapsedSec % 60;
+        statTime.textContent = `${m < 10 ? '0' : ''}${m}:${s < 10 ? '0' : ''}${s}`;
+        statMoves.textContent = this.movesCount;
+
+        if (this.currentStageIndex < COFFEE_STAGES.length - 1) {
+          title.textContent = `Stage ${this.currentStageIndex + 1} Cleared!`;
+          desc.textContent = "Flawless deduction! Stage " + (this.currentStageIndex + 2) + " is now UNLOCKED!";
+          nextBtn.textContent = `Play Stage ${this.currentStageIndex + 2} ➡️`;
+          nextBtn.onclick = () => {
+            modal.classList.remove('active');
+            this.initStage(this.currentStageIndex + 1);
+          };
+        } else {
+          title.textContent = "Grand Master Detective!";
+          desc.textContent = "You cracked all 4 Poisoned Coffee cases. The café is safe once more!";
+          nextBtn.textContent = "Replay All Cases 🔄";
+          nextBtn.onclick = () => {
+            modal.classList.remove('active');
+            this.initStage(0);
+          };
+        }
+
+        modal.classList.add('active');
+      }
+
+      showToast(msg) {
+        const t = document.getElementById('toast-popup');
+        t.textContent = msg;
+        t.classList.add('show');
+        clearTimeout(this.toastTimer);
+        this.toastTimer = setTimeout(() => {
+          t.classList.remove('show');
+        }, 2600);
+      }
+
+      render() {
+        this.renderTabs();
+        this.renderStory();
+        this.renderTableOnly();
+        this.renderClues();
+      }
+
+      renderTabs() {
+        const cont = document.getElementById('level-tabs-container');
+        cont.innerHTML = '';
+        COFFEE_STAGES.forEach((st, idx) => {
+          const pill = document.createElement('div');
+          const isLocked = idx > this.unlockedStage;
+          pill.className = `level-tab-pill ${idx === this.currentStageIndex ? 'active' : ''} ${isLocked ? 'locked' : ''}`;
+          pill.innerHTML = `<span>${isLocked ? '🔒' : '☕'} Stage ${idx + 1}</span>`;
+          pill.addEventListener('click', () => {
+            sound.playClick();
+            this.initStage(idx);
           });
-        }, 300);
-      });
-    })();
-  </script>
+          cont.appendChild(pill);
+        });
+      }
 
+      renderStory() {
+        const st = this.stage;
+        const card = document.getElementById('story-card');
+        card.innerHTML = `
+          <div class="story-icon">☕</div>
+          <div class="story-body">
+            <div class="story-title">${st.title} (${st.difficulty})</div>
+            <div class="story-text">${st.story}</div>
+          </div>
+        `;
+      }
+
+      renderTableOnly() {
+        const st = this.stage;
+        const card = document.getElementById('table-card');
+
+        let html = `
+          <table class="zebra-grid-table">
+            <thead>
+              <tr>
+                <th class="zebra-category-cell">
+                  <div class="cat-cell-content"><span>📍 Café Area</span></div>
+                </th>
+        `;
+
+        st.columns.forEach((col, idx) => {
+          html += `
+            <th>
+              <div class="table-col-header">
+                <span class="table-col-num">#${idx + 1}</span>
+                <span class="table-col-name">${col.name}</span>
+              </div>
+            </th>
+          `;
+        });
+
+        html += `</tr></thead><tbody>`;
+
+        // Suspects Row
+        html += `
+          <tr>
+            <td class="zebra-category-cell">
+              <div class="cat-cell-content"><span>👤 Suspect</span></div>
+            </td>
+        `;
+        st.columns.forEach((col, cIdx) => {
+          const currentVal = this.tableState[cIdx].suspect;
+          html += `
+            <td>
+              <select class="zebra-select ${currentVal ? 'has-value' : ''}" data-col="${cIdx}" data-cat="suspect">
+                <option value="">-- Choose --</option>
+          `;
+          st.suspects.forEach(s => {
+            html += `<option value="${s.id}" ${currentVal === s.id ? 'selected' : ''}>${s.name}</option>`;
+          });
+          html += `</select></td>`;
+        });
+        html += `</tr>`;
+
+        // Drinks / Clues Row
+        html += `
+          <tr>
+            <td class="zebra-category-cell">
+              <div class="cat-cell-content"><span>🧪 Drink / Evidence</span></div>
+            </td>
+        `;
+        st.columns.forEach((col, cIdx) => {
+          const currentVal = this.tableState[cIdx].drink;
+          html += `
+            <td>
+              <select class="zebra-select ${currentVal ? 'has-value' : ''}" data-col="${cIdx}" data-cat="drink">
+                <option value="">-- Choose --</option>
+          `;
+          st.drinks.forEach(d => {
+            html += `<option value="${d.id}" ${currentVal === d.id ? 'selected' : ''}>${d.name}</option>`;
+          });
+          html += `</select></td>`;
+        });
+        html += `</tr></tbody></table>`;
+
+        card.innerHTML = html;
+
+        card.querySelectorAll('.zebra-select').forEach(sel => {
+          sel.addEventListener('change', (e) => {
+            const cIdx = parseInt(e.target.getAttribute('data-col'), 10);
+            const cat = e.target.getAttribute('data-cat');
+            this.saveHistory();
+            this.tableState[cIdx][cat] = e.target.value;
+            this.movesCount++;
+            sound.playSelect();
+            if (e.target.value) {
+              e.target.classList.add('has-value');
+            } else {
+              e.target.classList.remove('has-value');
+            }
+          });
+        });
+      }
+
+      renderClues() {
+        const st = this.stage;
+        const card = document.getElementById('clues-card');
+
+        let html = `
+          <div class="clues-header">
+            <span class="clues-title">📋 Forensic Clues</span>
+            <span class="clues-subtitle">Tap clue to cross out</span>
+          </div>
+          <div class="clues-list">
+        `;
+
+        st.clues.forEach((clueText, idx) => {
+          const isCrossed = this.crossedClues.has(idx);
+          html += `
+            <div class="clue-item ${isCrossed ? 'crossed' : ''}" data-clue="${idx}">
+              <span class="clue-checkbox">${isCrossed ? '✔️' : '◻️'}</span>
+              <span>${clueText}</span>
+            </div>
+          `;
+        });
+
+        html += `</div>`;
+        card.innerHTML = html;
+
+        card.querySelectorAll('.clue-item').forEach(item => {
+          item.addEventListener('click', () => {
+            const idx = parseInt(item.getAttribute('data-clue'), 10);
+            if (this.crossedClues.has(idx)) {
+              this.crossedClues.delete(idx);
+            } else {
+              this.crossedClues.add(idx);
+            }
+            sound.playClue();
+            this.renderClues();
+          });
+        });
+      }
+
+      bindEvents() {
+        const btnSound = document.getElementById('btn-sound');
+        btnSound.textContent = sound.isMuted ? '🔇' : '🔊';
+        btnSound.addEventListener('click', () => {
+          const muted = sound.toggleMute();
+          btnSound.textContent = muted ? '🔇' : '🔊';
+          if (!muted) sound.playClick();
+        });
+
+        document.getElementById('btn-undo').addEventListener('click', () => this.undo());
+        document.getElementById('btn-reset').addEventListener('click', () => this.reset());
+        document.getElementById('btn-hint').addEventListener('click', () => this.giveHint());
+        document.getElementById('btn-check').addEventListener('click', () => this.checkSolution());
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      window.gameInstance = new PoisonedCoffeeGame();
+    });
+  </script>
 </body>
 </html>

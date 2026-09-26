@@ -1,0 +1,17 @@
+{
+  "title": "PAINT SPILL PUZZLE",
+  "categoryId": "logic",
+  "icon": "🎨",
+  "instructions": "Tap color buttons below to spill and flood the board from the top-left corner. Match colors to expand your territory and unify the entire canvas within the move limit!",
+  "description": "Paint Spill Puzzle is a relaxing yet challenging color flood puzzle game. Choose colors wisely to create cascading flood waves and paint the entire board in minimum moves.",
+  "keywords": [
+    "paint spill",
+    "color flood",
+    "flood fill puzzle",
+    "paint puzzle",
+    "color spill puzzle",
+    "brain puzzle",
+    "logic game",
+    "casual puzzle"
+  ]
+}

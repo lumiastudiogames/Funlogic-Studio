@@ -3051,7 +3051,7 @@
       ctx.restore();
     }
     drawTrajectory(ctx, theme) {
-      if (this.trajectoryPoints.length < 2) return;
+      if (!this.trajectoryPoints || this.trajectoryPoints.length < 2) return;
       ctx.save();
       ctx.strokeStyle = theme.accent;
       ctx.lineWidth = 3.5;
@@ -3059,9 +3059,12 @@
       ctx.lineDashOffset = -this.previewAnimTime * 35;
       ctx.globalAlpha = 0.65;
       ctx.beginPath();
-      ctx.moveTo(this.trajectoryPoints[0].x, this.trajectoryPoints[0].y);
+      const firstPt = this.trajectoryPoints[0];
+      if (!firstPt) { ctx.restore(); return; }
+      ctx.moveTo(firstPt.x, firstPt.y);
       for (let i = 1; i < this.trajectoryPoints.length; i++) {
-        ctx.lineTo(this.trajectoryPoints[i].x, this.trajectoryPoints[i].y);
+        const p = this.trajectoryPoints[i];
+        if (p) ctx.lineTo(p.x, p.y);
       }
       ctx.stroke();
       const totalPts = this.trajectoryPoints.length;
@@ -3070,6 +3073,7 @@
       ctx.setLineDash([]);
       for (let i = beadOffset; i < totalPts; i += beadSpacing) {
         const pt = this.trajectoryPoints[i];
+        if (!pt) continue;
         const alpha = Math.max(0.1, 0.85 * (1 - i / totalPts));
         ctx.fillStyle = theme.accent;
         ctx.globalAlpha = alpha * 0.45;

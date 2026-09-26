@@ -369,6 +369,21 @@
     setTimeout(spawnStarCelebration, 300);
     setTimeout(spawnStarCelebration, 600);
 
+    const gardenBox = document.getElementById('garden-box');
+    const gardenIcon = document.getElementById('garden-icon');
+    const gardenLabel = document.getElementById('garden-label');
+    const waterArrowOut = document.getElementById('water-arrow-out');
+    if (gardenBox) {
+      gardenBox.classList.remove('wilted');
+      gardenBox.classList.add('bloomed');
+    }
+    if (gardenIcon) gardenIcon.textContent = '🌸';
+    if (gardenLabel) gardenLabel.textContent = 'BLOOMING GARDEN!';
+    if (waterArrowOut) {
+      waterArrowOut.classList.remove('dry');
+      waterArrowOut.classList.add('flowing');
+    }
+
     const elapsed = Math.max(1, Math.floor((Date.now() - startTime) / 1000));
     statusMsg.textContent = '🎉 Splendid! Fresh water reached the flowers and they bloomed beautifully!';
     statusMsg.style.color = '#15803d';
@@ -385,6 +400,22 @@
       }));
       rotationsCount = 0;
       isWon = false;
+
+      const gardenBox = document.getElementById('garden-box');
+      const gardenIcon = document.getElementById('garden-icon');
+      const gardenLabel = document.getElementById('garden-label');
+      const waterArrowOut = document.getElementById('water-arrow-out');
+      if (gardenBox) {
+        gardenBox.classList.remove('bloomed');
+        gardenBox.classList.add('wilted');
+      }
+      if (gardenIcon) gardenIcon.textContent = '🥀';
+      if (gardenLabel) gardenLabel.textContent = 'GOAL FLOWERBED';
+      if (waterArrowOut) {
+        waterArrowOut.classList.remove('flowing');
+        waterArrowOut.classList.add('dry');
+      }
+
       statusMsg.textContent = 'Tap tiles to rotate pipes and flow water to flowers 🌸.';
       statusMsg.style.color = '#9d174d';
       renderGrid();

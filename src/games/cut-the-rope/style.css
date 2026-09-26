@@ -23,35 +23,41 @@ body {
   width: 100%;
   max-width: 900px;
   height: 100dvh;
-  background: radial-gradient(circle at center, #2e442c 0%, #152418 100%);
+  background: radial-gradient(circle at 50% 40%, #1f3d23 0%, #0d1e12 100%);
   display: flex;
   flex-direction: column;
   position: relative;
   overflow: hidden;
+  box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.8), inset 0 2px 4px rgba(255, 255, 255, 0.1);
 }
 
 @media (min-width: 640px) {
   #game-stage {
-    height: 90vh;
-    max-height: 850px;
-    border-radius: 24px;
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.1);
+    height: 92vh;
+    max-height: 860px;
+    border-radius: 28px;
+    border: 3px solid #2e4f32;
+    box-shadow: 
+      0 25px 60px -15px rgba(0, 0, 0, 0.85),
+      0 0 0 1px rgba(255, 255, 255, 0.15),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2);
   }
 }
 
 .header-hud {
   width: 100%;
-  height: 56px;
-  background: rgba(18, 30, 20, 0.85);
-  backdrop-filter: blur(8px);
-  padding: 0 16px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  height: 58px;
+  background: rgba(13, 26, 16, 0.92);
+  backdrop-filter: blur(12px);
+  padding: 0 18px;
+  border-bottom: 2px solid rgba(46, 79, 50, 0.6);
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 8px;
   flex-shrink: 0;
   z-index: 20;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
 .hud-group {

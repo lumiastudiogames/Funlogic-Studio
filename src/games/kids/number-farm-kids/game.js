@@ -17,6 +17,7 @@
   let startTime = Date.now();
   let isWon = false;
   let soundEnabled = true;
+  let musicEnabled = true;
 
   // Web Audio Synthesizer
   let audioCtx = null;
@@ -88,9 +89,55 @@
     }
   }
 
+  // Cheerful Farm Background Music Engine
+  let bgmTimer = null;
+  let bgmStep = 0;
+  // C major chord progression: C - G - Am - F
+  const BGM_CHORDS = [
+    [261.63, 329.63, 392.00, 523.25], // C
+    [196.00, 246.94, 293.66, 392.00], // G
+    [220.00, 261.63, 329.63, 440.00], // Am
+    [174.61, 220.00, 261.63, 349.23]  // F
+  ];
+
+  function playBGMNote() {
+    if (!musicEnabled || isWon) return;
+    const ctx = getAudioContext();
+    if (!ctx) return;
+
+    const chordIdx = Math.floor(bgmStep / 4) % BGM_CHORDS.length;
+    const chord = BGM_CHORDS[chordIdx];
+    const noteIdx = bgmStep % 4;
+    const freq = chord[noteIdx];
+    const now = ctx.currentTime;
+
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = 'triangle';
+    osc.frequency.setValueAtTime(freq, now);
+
+    gain.gain.setValueAtTime(0.035, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start(now);
+    osc.stop(now + 0.35);
+
+    bgmStep++;
+  }
+
+  function startBGM() {
+    clearInterval(bgmTimer);
+    bgmTimer = setInterval(playBGMNote, 420);
+  }
+
+  function stopBGM() {
+    clearInterval(bgmTimer);
+  }
+
   // Generate 4x4 Sudoku with 2x2 boxes
   function generatePuzzle() {
-    // Base 4x4 valid Sudoku
     const base = [
       [1, 2, 3, 4],
       [3, 4, 1, 2],
@@ -98,7 +145,6 @@
       [4, 3, 2, 1]
     ];
 
-    // Permute numbers
     const perm = [1, 2, 3, 4].sort(() => Math.random() - 0.5);
     const map = {};
     for (let i = 1; i <= 4; i++) map[i] = perm[i - 1];
@@ -113,7 +159,6 @@
       }
     }
 
-    // Keep 9 clues so it's super accessible for young kids (easy, encouraging)
     const positions = [];
     for (let r = 0; r < 4; r++) {
       for (let c = 0; c < 4; c++) positions.push([r, c]);
@@ -135,8 +180,9 @@
     isWon = false;
     startTime = Date.now();
     document.getElementById('win-modal').classList.remove('active');
-    updateStatus('Tap a square, then choose a farm pet!');
+    updateStatus('Arraste os bichinhos para o cercado ou toque no quadrado!');
     render();
+    if (musicEnabled) startBGM();
   }
 
   function updateStatus(text) {
@@ -184,26 +230,31 @@
       for (let c = 0; c < 4; c++) {
         const cell = document.createElement('div');
         cell.className = 'cell';
+        cell.dataset.r = r;
+        cell.dataset.c = c;
         if (fixed[r][c]) cell.classList.add('fixed');
         if (selectedRow === r && selectedCol === c) cell.classList.add('selected');
         if (hasConflict(r, c)) cell.classList.add('conflict');
 
         const val = board[r][c];
         if (val && ANIMALS[val]) {
-          cell.textContent = ANIMALS[val].emoji;
+          cell.innerHTML = `
+            <span class="animal-emoji">${ANIMALS[val].emoji}</span>
+            <span class="corner-num">${val}</span>
+          `;
         }
 
         cell.addEventListener('click', () => {
           if (isWon) return;
           if (fixed[r][c]) {
             playSound('tap');
-            updateStatus('That animal is already happily resting there!');
+            updateStatus('Este bichinho já está feliz descansando aí! 🌾');
             return;
           }
           selectedRow = r;
           selectedCol = c;
           playSound('tap');
-          updateStatus(`Square selected! Pick an animal below.`);
+          updateStatus(`Quadrado escolhido! Toque ou arraste um bichinho.`);
           render();
         });
 
@@ -212,17 +263,20 @@
     }
   }
 
-  function placeAnimal(val) {
-    if (selectedRow === null || selectedCol === null || isWon) return;
-    if (fixed[selectedRow][selectedCol]) return;
+  function placeAnimalAt(r, c, val) {
+    if (r === null || c === null || isWon) return;
+    if (fixed[r][c]) return;
 
-    board[selectedRow][selectedCol] = val;
+    board[r][c] = val;
+    selectedRow = r;
+    selectedCol = c;
+
     if (val === 0) {
       playSound('tap');
-      updateStatus('Square cleared.');
+      updateStatus('Quadrado limpo.');
     } else {
       playSound('place');
-      updateStatus(`Placed ${ANIMALS[val].name} ${ANIMALS[val].emoji}!`);
+      updateStatus(`Colocou ${ANIMALS[val].name} ${ANIMALS[val].emoji}!`);
     }
 
     render();
@@ -232,11 +286,17 @@
     }
   }
 
+  function placeAnimal(val) {
+    if (selectedRow === null || selectedCol === null) return;
+    placeAnimalAt(selectedRow, selectedCol, val);
+  }
+
   function handleWin() {
     isWon = true;
     playSound('win');
+    stopBGM();
     const elapsedSeconds = Math.max(1, Math.floor((Date.now() - startTime) / 1000));
-    updateStatus('🎉 Farm is happy! All animals in place!');
+    updateStatus('🎉 A fazenda está completa e todos os animais felizes!');
 
     try {
       if (window.parent && window.parent !== window) {
@@ -251,12 +311,97 @@
     }, 400);
   }
 
-  // Setup Tray buttons
+  // Setup Drag & Drop Engine (Pointer events for Mobile + Desktop)
+  let activeDragVal = null;
+  let ghostEl = null;
+
+  function createGhost(val, x, y) {
+    if (ghostEl) ghostEl.remove();
+    ghostEl = document.createElement('div');
+    ghostEl.className = 'drag-ghost';
+    if (val === 0) {
+      ghostEl.textContent = '❌';
+    } else if (ANIMALS[val]) {
+      ghostEl.innerHTML = `${ANIMALS[val].emoji}<span class="corner-num" style="top:-8px;right:-8px;">${val}</span>`;
+    }
+    ghostEl.style.left = `${x}px`;
+    ghostEl.style.top = `${y}px`;
+    document.body.appendChild(ghostEl);
+  }
+
+  function updateGhost(x, y) {
+    if (!ghostEl) return;
+    ghostEl.style.left = `${x}px`;
+    ghostEl.style.top = `${y}px`;
+
+    // Highlight cell under pointer
+    document.querySelectorAll('.cell.drop-target').forEach(el => el.classList.remove('drop-target'));
+    const target = document.elementFromPoint(x, y);
+    if (target) {
+      const cell = target.closest('.cell');
+      if (cell && !cell.classList.contains('fixed')) {
+        cell.classList.add('drop-target');
+      }
+    }
+  }
+
+  function finishDrag(x, y) {
+    document.querySelectorAll('.cell.drop-target').forEach(el => el.classList.remove('drop-target'));
+    if (ghostEl) {
+      ghostEl.remove();
+      ghostEl = null;
+    }
+    if (activeDragVal === null) return;
+
+    const target = document.elementFromPoint(x, y);
+    if (target) {
+      const cell = target.closest('.cell');
+      if (cell && !cell.classList.contains('fixed')) {
+        const r = parseInt(cell.dataset.r, 10);
+        const c = parseInt(cell.dataset.c, 10);
+        placeAnimalAt(r, c, activeDragVal);
+      }
+    }
+    activeDragVal = null;
+  }
+
+  // Setup Tray buttons (Click & Drag)
   document.querySelectorAll('.tray-btn').forEach(btn => {
+    const val = parseInt(btn.dataset.val, 10);
+
     btn.addEventListener('click', () => {
-      const val = parseInt(btn.dataset.val, 10);
       placeAnimal(val);
     });
+
+    btn.addEventListener('pointerdown', (e) => {
+      if (isWon) return;
+      activeDragVal = val;
+      createGhost(val, e.clientX, e.clientY);
+      getAudioContext();
+      if (musicEnabled && !bgmTimer) startBGM();
+    });
+  });
+
+  window.addEventListener('pointermove', (e) => {
+    if (activeDragVal !== null) {
+      e.preventDefault();
+      updateGhost(e.clientX, e.clientY);
+    }
+  });
+
+  window.addEventListener('pointerup', (e) => {
+    if (activeDragVal !== null) {
+      finishDrag(e.clientX, e.clientY);
+    }
+  });
+
+  window.addEventListener('pointercancel', () => {
+    if (ghostEl) {
+      ghostEl.remove();
+      ghostEl = null;
+    }
+    activeDragVal = null;
+    document.querySelectorAll('.cell.drop-target').forEach(el => el.classList.remove('drop-target'));
   });
 
   document.getElementById('btn-restart').addEventListener('click', initGame);
@@ -269,6 +414,19 @@
     if (soundEnabled) playSound('tap');
   });
 
+  const musicBtn = document.getElementById('btn-music');
+  if (musicBtn) {
+    musicBtn.addEventListener('click', () => {
+      musicEnabled = !musicEnabled;
+      musicBtn.textContent = musicEnabled ? '🎵' : '🔇';
+      if (musicEnabled) {
+        startBGM();
+      } else {
+        stopBGM();
+      }
+    });
+  }
+
   const howBtn = document.getElementById('btn-how');
   const howModal = document.getElementById('how-modal');
   const closeHowBtn = document.getElementById('btn-close-how');
@@ -280,6 +438,12 @@
   closeHowBtn.addEventListener('click', () => {
     howModal.classList.remove('active');
   });
+
+  // Start BGM on first user interaction
+  window.addEventListener('pointerdown', () => {
+    getAudioContext();
+    if (musicEnabled && !bgmTimer && !isWon) startBGM();
+  }, { once: true });
 
   initGame();
 })();

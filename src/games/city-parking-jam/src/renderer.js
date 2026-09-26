@@ -39,13 +39,13 @@ export class GameRenderer {
     const lvl = game.getCurrentLevelDef();
     if (!lvl) return;
 
-    // 1. Calculate optimal responsive grid cell size
-    const pad = Math.min(this.cssWidth, this.cssHeight) > 600 ? 50 : 24;
+    // 1. Calculate optimal responsive grid cell size (scaled up generously)
+    const pad = Math.min(this.cssWidth, this.cssHeight) > 600 ? 36 : 18;
     const availW = this.cssWidth - pad * 2;
     const availH = this.cssHeight - pad * 2;
 
     const cellSize = Math.min(
-      64,
+      92,
       Math.floor(Math.min(availW / lvl.gridWidth, availH / lvl.gridHeight))
     );
 
@@ -73,25 +73,19 @@ export class GameRenderer {
 
       const interp = this.carInterpolationMap.get(car.id);
       
-      // Calculate smooth interpolation rate based on delta time & car status
       let lerpRate;
       if (car.state === 'moving_exit') {
-        // Smooth progressive glide on acceleration & exit
         lerpRate = 1 - Math.exp(-24 * dt);
       } else if (car.state === 'bumping') {
-        // Quick spring response on collision bounce
         lerpRate = 1 - Math.exp(-32 * dt);
       } else {
-        // Silky glide settling back into parked or undo position
         lerpRate = 1 - Math.exp(-20 * dt);
       }
 
-      // Apply linear interpolation to X, Y, and rotation angle
       interp.x = lerp(interp.x, car.visualX, lerpRate);
       interp.y = lerp(interp.y, car.visualY, lerpRate);
       interp.angle = lerp(interp.angle, car.visualAngle || 0, lerpRate);
 
-      // Snap when close enough to eliminate floating point micro-jitters
       if (Math.abs(interp.x - car.visualX) < 0.0005) interp.x = car.visualX;
       if (Math.abs(interp.y - car.visualY) < 0.0005) interp.y = car.visualY;
 
@@ -100,14 +94,10 @@ export class GameRenderer {
       car.renderAngle = interp.angle;
     }
 
-    // 3. Clear & Draw Urban Asphalt Canvas Background
-    ctx.fillStyle = '#090d16';
-    ctx.fillRect(0, 0, this.cssWidth, this.cssHeight);
-
-    // Subtle background ambient asphalt texture
+    // 3. Clear & Draw Urban Street Canvas Background
     this.drawAsphaltBackground(ctx, ox, oy, gridW, gridH);
 
-    // 4. Draw Parking Lot Base Plate (2.5D Beveled Concrete Border)
+    // 4. Draw Parking Lot Base Plate (Concrete Curb, Bays, Numbers)
     this.drawParkingLotBase(ctx, ox, oy, gridW, gridH, lvl, cellSize);
 
     // 5. Draw Hint Path Guides (if car is hinted)
@@ -130,78 +120,169 @@ export class GameRenderer {
   }
 
   drawAsphaltBackground(ctx, ox, oy, gridW, gridH) {
-    // Subtle background street grid lines
     ctx.save();
-    ctx.strokeStyle = 'rgba(30, 41, 59, 0.4)';
-    ctx.lineWidth = 1;
+    // Urban Road dark asphalt
+    ctx.fillStyle = '#0b1120';
+    ctx.fillRect(0, 0, this.cssWidth, this.cssHeight);
 
-    const step = 40;
-    for (let x = 0; x < this.cssWidth; x += step) {
+    // Outer road lane markings
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.12)';
+    ctx.lineWidth = 2;
+    ctx.setLineDash([12, 12]);
+
+    // Top & bottom road centerlines
+    if (oy > 40) {
       ctx.beginPath();
-      ctx.moveTo(x, 0);
-      ctx.lineTo(x, this.cssHeight);
+      ctx.moveTo(0, oy / 2);
+      ctx.lineTo(this.cssWidth, oy / 2);
       ctx.stroke();
     }
-    for (let y = 0; y < this.cssHeight; y += step) {
+    if (this.cssHeight - (oy + gridH) > 40) {
+      const by = oy + gridH + (this.cssHeight - (oy + gridH)) / 2;
       ctx.beginPath();
-      ctx.moveTo(0, y);
-      ctx.lineTo(this.cssWidth, y);
+      ctx.moveTo(0, by);
+      ctx.lineTo(this.cssWidth, by);
       ctx.stroke();
     }
+    // Left & right road centerlines
+    if (ox > 40) {
+      ctx.beginPath();
+      ctx.moveTo(ox / 2, 0);
+      ctx.lineTo(ox / 2, this.cssHeight);
+      ctx.stroke();
+    }
+    if (this.cssWidth - (ox + gridW) > 40) {
+      const rx = ox + gridW + (this.cssWidth - (ox + gridW)) / 2;
+      ctx.beginPath();
+      ctx.moveTo(rx, 0);
+      ctx.lineTo(rx, this.cssHeight);
+      ctx.stroke();
+    }
+
+    ctx.setLineDash([]);
+
+    // Decorative sidewalk curb around outer edges
+    ctx.fillStyle = 'rgba(51, 65, 85, 0.4)';
+    ctx.fillRect(0, 0, this.cssWidth, 8);
+    ctx.fillRect(0, this.cssHeight - 8, this.cssWidth, 8);
+    ctx.fillRect(0, 0, 8, this.cssHeight);
+    ctx.fillRect(this.cssWidth - 8, 0, 8, this.cssHeight);
+
+    // Corner city greenery / trees
+    const treeRadius = 14;
+    const corners = [
+      [22, 22],
+      [this.cssWidth - 22, 22],
+      [22, this.cssHeight - 22],
+      [this.cssWidth - 22, this.cssHeight - 22]
+    ];
+    for (const [tx, ty] of corners) {
+      // Tree canopy shadow
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.4)';
+      ctx.beginPath();
+      ctx.arc(tx + 2, ty + 3, treeRadius, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Green canopy
+      ctx.fillStyle = '#15803d';
+      ctx.beginPath();
+      ctx.arc(tx, ty, treeRadius, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Highlight
+      ctx.fillStyle = '#22c55e';
+      ctx.beginPath();
+      ctx.arc(tx - 3, ty - 3, treeRadius * 0.6, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
     ctx.restore();
   }
 
   drawParkingLotBase(ctx, ox, oy, gridW, gridH, lvl, cellSize) {
     ctx.save();
 
-    // Deep outer shadow
-    ctx.shadowColor = 'rgba(0, 0, 0, 0.65)';
+    // 1. Deep 3D drop shadow of the parking lot base plate
+    ctx.shadowColor = 'rgba(0, 0, 0, 0.7)';
     ctx.shadowBlur = 24;
     ctx.shadowOffsetY = 12;
 
-    // Outer curb border (Dark Charcoal Concrete)
-    ctx.fillStyle = '#1e293b';
+    // 2. Concrete 3D Curb Border with bevel
+    ctx.fillStyle = '#334155';
     ctx.beginPath();
-    ctx.roundRect(ox - 8, oy - 8, gridW + 16, gridH + 16, 16);
+    ctx.roundRect(ox - 10, oy - 10, gridW + 20, gridH + 20, 18);
     ctx.fill();
 
     ctx.shadowColor = 'transparent';
     ctx.shadowBlur = 0;
     ctx.shadowOffsetY = 0;
 
-    // Inner asphalt pavement
-    ctx.fillStyle = '#0f172a';
+    // Top curb bevel highlight
+    ctx.fillStyle = '#475569';
     ctx.beginPath();
-    ctx.roundRect(ox, oy, gridW, gridH, 10);
+    ctx.roundRect(ox - 10, oy - 10, gridW + 20, 6, [18, 18, 0, 0]);
     ctx.fill();
 
-    // Parking slot bay markings (Dashed Yellow/White Paint)
-    ctx.strokeStyle = 'rgba(148, 163, 184, 0.25)';
-    ctx.lineWidth = 1.5;
-    ctx.setLineDash([4, 4]);
+    // 3. Dark textured asphalt pavement of the parking lot
+    const lotGrad = ctx.createLinearGradient(ox, oy, ox, oy + gridH);
+    lotGrad.addColorStop(0, '#1e293b');
+    lotGrad.addColorStop(1, '#0f172a');
+    ctx.fillStyle = lotGrad;
+    ctx.beginPath();
+    ctx.roundRect(ox, oy, gridW, gridH, 12);
+    ctx.fill();
+
+    // 4. White painted parking stall lines & markings [   ]
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
+    ctx.lineWidth = 2;
+    ctx.setLineDash([]);
 
     for (let c = 1; c < lvl.gridWidth; c++) {
       ctx.beginPath();
-      ctx.moveTo(ox + c * cellSize, oy + 4);
-      ctx.lineTo(ox + c * cellSize, oy + gridH - 4);
+      ctx.moveTo(ox + c * cellSize, oy + 6);
+      ctx.lineTo(ox + c * cellSize, oy + gridH - 6);
       ctx.stroke();
     }
 
     for (let r = 1; r < lvl.gridHeight; r++) {
       ctx.beginPath();
-      ctx.moveTo(ox + 4, oy + r * cellSize);
-      ctx.lineTo(ox + gridW - 4, oy + r * cellSize);
+      ctx.moveTo(ox + 6, oy + r * cellSize);
+      ctx.lineTo(ox + gridW - 6, oy + r * cellSize);
       ctx.stroke();
     }
 
-    ctx.setLineDash([]);
+    // 5. Stenciled Parking Bay Numbers (P1, P2, P3...)
+    ctx.fillStyle = 'rgba(148, 163, 184, 0.25)';
+    ctx.font = `bold ${Math.max(9, Math.floor(cellSize * 0.18))}px monospace`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
 
-    // Yellow perimeter edge dashes (Caution curb striping)
-    ctx.strokeStyle = '#eab308';
-    ctx.lineWidth = 2.5;
+    let stallIdx = 1;
+    for (let r = 0; r < lvl.gridHeight; r++) {
+      for (let c = 0; c < lvl.gridWidth; c++) {
+        const sx = ox + c * cellSize + cellSize / 2;
+        const sy = oy + r * cellSize + cellSize / 2;
+        ctx.fillText(`P${stallIdx++}`, sx, sy);
+      }
+    }
+
+    // 6. Yellow Caution Curb Perimeter with diagonal stripes
+    ctx.strokeStyle = '#facc15';
+    ctx.lineWidth = 3;
     ctx.setLineDash([8, 8]);
     ctx.strokeRect(ox - 3, oy - 3, gridW + 6, gridH + 6);
     ctx.setLineDash([]);
+
+    // 7. Exit Indicator Gate Stencils
+    ctx.fillStyle = '#22c55e';
+    ctx.font = 'bold 11px system-ui, sans-serif';
+    ctx.textAlign = 'center';
+
+    // Draw exit markers on all 4 borders
+    ctx.fillText('EXIT ▲', ox + gridW / 2, oy - 14);
+    ctx.fillText('EXIT ▼', ox + gridW / 2, oy + gridH + 20);
+    ctx.fillText('◀ EXIT', ox - 26, oy + gridH / 2);
+    ctx.fillText('EXIT ▶', ox + gridW + 26, oy + gridH / 2);
 
     ctx.restore();
   }

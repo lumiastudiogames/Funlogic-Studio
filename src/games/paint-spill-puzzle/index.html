@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <title>Paint Spill Puzzle - Color Flood</title>
+  <link rel="stylesheet" href="./style.css" />
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#0f172a" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Paint Spill" />
+  <link rel="apple-touch-icon" href="cover.svg" />
+</head>
+<body>
+  <div id="game-stage">
+    <!-- Header -->
+    <header class="game-header">
+      <div class="hud-group">
+        <button id="btn-level-picker" class="badge-level">🎨 FASE <span id="level-num">1</span></button>
+      </div>
+      <div class="hud-group">
+        <button id="btn-undo" class="btn-icon" title="Desfazer">↩</button>
+        <button id="btn-restart" class="btn-icon" title="Reiniciar">↺</button>
+        <button id="btn-sound" class="btn-icon" title="Som">🔊</button>
+        <button id="btn-help" class="btn-icon" title="Como Jogar">❓</button>
+      </div>
+    </header>
+
+    <!-- Stats & Progress -->
+    <div class="info-bar">
+      <div class="stat-item">
+        <span class="stat-label">Movimentos</span>
+        <span class="stat-val"><span id="moves-used">0</span>/<span id="moves-max">22</span></span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-label">Preenchimento</span>
+        <span class="stat-val" id="percent-val">12%</span>
+        <div class="progress-track">
+          <div id="progress-fill" class="progress-fill"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Board Area -->
+    <main class="board-arena">
+      <div id="spill-grid" class="spill-grid"></div>
+    </main>
+
+    <!-- Color Palette Selection Dock -->
+    <footer id="palette-dock" class="palette-dock">
+      <!-- Injected dynamically by JS -->
+    </footer>
+
+    <!-- Level Complete Modal -->
+    <div id="modal-win" class="modal-overlay">
+      <div class="modal-card">
+        <div style="font-size: 48px; margin-bottom: 8px;">🎨 ✨</div>
+        <h2 style="color: #ec4899; font-size: 22px; font-weight: 900; margin-bottom: 4px;">TELA COLORIDA!</h2>
+        <p style="color: #94a3b8; font-size: 14px;">Você inundou todo o tabuleiro com perfeição!</p>
+        <div id="win-stars" class="stars-rating">⭐⭐⭐</div>
+        <p style="font-size: 13px; color: #cbd5e1;">Movimentos: <strong id="win-moves">14</strong> / <span id="win-max-moves">22</span></p>
+        <button id="btn-next-level" class="btn-primary-action">PRÓXIMA FASE ▶</button>
+      </div>
+    </div>
+
+    <!-- Game Over Modal -->
+    <div id="modal-over" class="modal-overlay">
+      <div class="modal-card">
+        <div style="font-size: 48px; margin-bottom: 8px;">💧 ❌</div>
+        <h2 style="color: #ef4444; font-size: 22px; font-weight: 900; margin-bottom: 4px;">FIM DE TINTA!</h2>
+        <p style="color: #94a3b8; font-size: 14px; margin-bottom: 12px;">Seus movimentos esgotaram antes de cobrir todo o quadro.</p>
+        <button id="btn-retry" class="btn-primary-action" style="background: linear-gradient(135deg, #ef4444, #f97316);">TENTAR NOVAMENTE ↺</button>
+      </div>
+    </div>
+
+    <!-- How To Play Modal -->
+    <div id="modal-help" class="modal-overlay">
+      <div class="modal-card">
+        <h2 style="color: #8b5cf6; font-size: 20px; font-weight: 900; margin-bottom: 12px;">Como Jogar Paint Spill 🎨</h2>
+        <div style="font-size: 13px; color: #cbd5e1; line-height: 1.6; text-align: left; margin-bottom: 16px;">
+          <p>1. O derramamento começa no canto superior esquerdo.</p>
+          <p>2. Toque em qualquer cor da paleta abaixo para mudar a cor da poça de tinta.</p>
+          <p>3. Todos os blocos adjacentes daquela cor serão absorvidos pela sua poça!</p>
+          <p>4. Conquiste todo o tabuleiro antes de esgotar os movimentos!</p>
+        </div>
+        <button id="btn-close-help" class="btn-primary-action">Entendi, Vamos Jogar!</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="./game.js"></script>
+</body>
+</html>

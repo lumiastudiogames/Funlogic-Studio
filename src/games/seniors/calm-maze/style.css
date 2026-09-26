@@ -131,40 +131,38 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 10px;
+  padding: 12px;
   position: relative;
   background: radial-gradient(circle at 50% 30%, #f0fdfa 0%, #e6fffa 100%);
-  overflow-y: auto;
+  overflow: hidden;
 }
 
 .instructions-banner {
-  font-size: 17px;
+  font-size: 15px;
   font-weight: 700;
   color: #0f766e;
   text-align: center;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
   padding: 6px 18px;
   background: #ffffff;
   border-radius: 9999px;
   border: 1px solid #5eead4;
+  box-shadow: 0 2px 6px rgba(13, 148, 136, 0.1);
 }
 
-/* 9x9 Maze Container with Thick 6px Perimeter & Walls */
+/* 9x9 Maze Container - Responsive without scrollbars */
 .maze-container {
   display: grid;
-  grid-template-columns: repeat(9, 36px);
-  grid-template-rows: repeat(9, 36px);
-  border: 6px solid #0f172a; /* Strictly 6px border */
-  background: #f8fafc;
-  border-radius: 10px;
-  box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.2);
-}
-
-@media (min-width: 480px) {
-  .maze-container {
-    grid-template-columns: repeat(9, 42px);
-    grid-template-rows: repeat(9, 42px);
-  }
+  width: min(88vw, 440px, 64vh);
+  height: min(88vw, 440px, 64vh);
+  grid-template-columns: repeat(9, 1fr);
+  grid-template-rows: repeat(9, 1fr);
+  border: 6px solid #0f766e;
+  background: #f0fdfa;
+  border-radius: 20px;
+  box-shadow: 0 16px 32px -6px rgba(15, 118, 110, 0.25), inset 0 2px 4px rgba(255, 255, 255, 0.8);
+  padding: 4px;
+  box-sizing: border-box;
 }
 
 .maze-cell {
@@ -172,61 +170,59 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 24px;
+  font-size: clamp(20px, 4vw, 28px);
+  cursor: pointer;
 }
 
-/* Thick 6px Wall Styles */
+/* Thick 6px Pastel Clay Wall Styles */
 .wall-top {
-  border-top: 6px solid #0f172a;
+  border-top: 5px solid #0d9488;
+  box-shadow: inset 0 1.5px 0 #5eead4;
 }
 .wall-right {
-  border-right: 6px solid #0f172a;
+  border-right: 5px solid #0d9488;
 }
 .wall-bottom {
-  border-bottom: 6px solid #0f172a;
+  border-bottom: 5px solid #0f766e;
 }
 .wall-left {
-  border-left: 6px solid #0f172a;
+  border-left: 5px solid #0d9488;
 }
 
 /* Breadcrumb trail */
 .trail-dot {
   width: 10px;
   height: 10px;
-  background: #99f6e4;
+  background: linear-gradient(135deg, #fde047 0%, #f59e0b 100%);
   border-radius: 50%;
+  box-shadow: 0 1px 3px rgba(245, 158, 11, 0.4);
 }
 
+/* 3D Sticker Character (Larger & Cute) */
 .player-marker {
-  font-size: 26px;
-  display: inline-block;
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(180deg, #ffffff 0%, #e0f2fe 100%);
+  border: 2px solid #ffffff;
+  border-radius: 50%;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2), inset 0 1px 2px rgba(255, 255, 255, 0.9);
   animation: gentle-bob 1.5s infinite ease-in-out;
   transition: transform 0.12s ease;
+  z-index: 10;
 }
 
-.player-marker.facing-left {
-  transform: scaleX(-1);
-}
-
-.player-marker.facing-right {
-  transform: scaleX(1);
-}
-
-.player-marker.facing-up {
-  transform: translateY(-2px) scale(0.96);
-}
-
-.player-marker.facing-down {
-  transform: translateY(2px) scale(1.04);
-}
-
-@keyframes gentle-bob {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-3px); }
+.player-marker svg {
+  width: 30px;
+  height: 30px;
 }
 
 .goal-marker {
-  font-size: 26px;
+  font-size: 28px;
+  filter: drop-shadow(0 3px 4px rgba(245, 158, 11, 0.4));
+  animation: gentle-bob 2s infinite ease-in-out 0.5s;
 }
 
 /* 60px On-Screen D-Pad 2.5D */

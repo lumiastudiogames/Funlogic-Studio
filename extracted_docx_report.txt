@@ -1,0 +1,439 @@
+--- ITEM 0 ---
+IMAGES: ['media/image1.png', 'media/image2.png']
+TEXT: a regra é juntar os números consecutivo e não esta indo
+
+
+
+erro
+/game/ancient-egypt-explorers---logic-grid:1 Banner not shown: beforeinstallpromptevent.preventDefault() called. The page must call beforeinstallpromptevent.prompt() to show the banner.
+--- ITEM 1 ---
+IMAGES: ['media/image3.png', 'media/image4.png']
+TEXT: /games/ancient-egypt-explorers---logic-grid/src/index.css:1 Failed to load module script: Expected a JavaScript-or-Wasm module script but the server responded with a MIME type of "text/css". Strict MIME type checking is enforced for module scripts per HTML spec.
+
+
+
+
+mudar foto
+
+
+
+tela preta
+
+index-COlyFim4.js:1560 Unregistered conflicting game-level service worker: https://playfunlogic.vercel.app/games/animal-tictac-kids/
+--- ITEM 2 ---
+TEXT: index-COlyFim4.js:1560 Successfully purged legacy game PWA cache.
+--- ITEM 3 ---
+TEXT: ball-bounce-target:1 Banner not shown: beforeinstallpromptevent.preventDefault() called. The page must call beforeinstallpromptevent.prompt() to show the banner.
+--- ITEM 4 ---
+TEXT: (index):64 cdn.tailwindcss.com should not be used in production. To use Tailwind CSS in production, install it as a PostCSS plugin or use the Tailwind CLI: https://tailwindcss.com/docs/installation
+--- ITEM 5 ---
+TEXT: (anonymous) @ (index):64
+--- ITEM 6 ---
+TEXT: game.js:3077 Uncaught TypeError: Cannot read properties of undefined (reading 'x')
+--- ITEM 7 ---
+TEXT: at BallBounceGame.drawTrajectory (game.js:3077:20)
+--- ITEM 8 ---
+TEXT: at BallBounceGame.render (game.js:2856:14)
+--- ITEM 9 ---
+TEXT: at BallBounceGame.loop (game.js:3304:12)
+--- ITEM 10 ---
+IMAGES: ['media/image5.png', 'media/image6.png', 'media/image7.png', 'media/image8.png']
+TEXT: at game.js:1908:41
+
+
+
+melhorar css com stickers e  não se ajsuta na tela mobile portrait
+
+
+
+melhorar css, coloca rum sticker  no lucar do personagem e amior, , e verificar solução sempre antes que lanças um cenário, se pudar gráfico pastel colorido
+
+css pseudo 3d
+
+
+t
+
+tela preta, e não redimensionam em mobile portrait
+sem grande erro no console
+
+/game/07-time-paradox-chronos:1 Banner not shown: beforeinstallpromptevent.preventDefault() called. The page must call beforeinstallpromptevent.prompt() to show the banner.
+
+
+
+
+
+sem css, colcoar um css pseudo 3D, 
+/game/city-parking-jam:1 Banner not shown: beforeinstallpromptevent.preventDefault() called. The page must call beforeinstallpromptevent.prompt() to show the banner.
+--- ITEM 11 ---
+TEXT: tailwindcss:1  Failed to load resource: the server responded with a status of 404 ()
+--- ITEM 12 ---
+IMAGES: ['media/image9.png', 'media/image10.png']
+TEXT: tailwindcss:1  Failed to load resource: the server responded with a status of 404 ()
+
+
+mudar capa 
+
+esta rodando em loop de iframe, so fica na barra superior e não mostar o jogo
+
+
+
+
+/game/clock-gears---ratio-&-speed-challenge:1 Banner not shown: beforeinstallpromptevent.preventDefault() called. The page must call beforeinstallpromptevent.prompt() to show the banner.
+--- ITEM 13 ---
+IMAGES: ['media/image11.png', 'media/image12.png', 'media/image13.png', 'media/image14.png', 'media/image15.png', 'media/image16.png', 'media/image17.png', 'media/image18.png', 'media/image19.png', 'media/image20.png']
+TEXT: clock-gears---ratio-&-speed-challenge/:1  Failed to load resource: the server responded with a status of 404 ()
+
+
+
+
+
+colocar em css pseus 3d um papagaio  de verdade estilo chibii 2.5d
+
+
+
+
+o jogo já começa dando tela de victory, e se possível verifica se usa css pseudo 3d , para deixar melhor o gráfico
+
+
+
+
+não acontece nada
+
+
+
+
+nada acontece
+
+
+
+
+cada acontece
+
+
+
+so consigo clicar uma vez, depois não tem açao nenhuma no domino, e precisa ser css pseudo 3d
+
+
+
+esta desconfigurado a hud, não tem efeito de deslize, nem de merge, nem estrelinhas quando merge, em é css pseudo 3d, precisa aquele efeito de desliar e unir, com efeitos bonito.
+
+
+
+
+
+ precisa melhorar o css pseudp3d, e mostar onde é o local para irrigar, ficou parecendo 3 locais possível, devido ao tamanho do cards das flores
+
+
+
+
+
+além de não caber na tela, mobile portrait, 
+eta em ptbr, é so inglês, 
+não da para entender o que é para safe ro objetido e não tem dicar, sem nada, mude para algo logico,  decifrar um código com base em dicas, cálculos de somar e subtração, exemplo, se 1 =a, 2=b, 5=6, 6 = j, 5+4 = k , 5+5 = l , (poude usar varias centrenas de combinações para fomra um nome,  code, bank, four, etc infinitar combinações que dao cada uma letra, e essas letras forma uma palavra passe)
+então abcj910 =?, um sisteminha alfa numérico que a pesso  so precisa usar a logica para descobrir o resultado
+e o usuário digita o código para desbloquear o prpoximo, poderia ser 20 niveis, procedurais com verificação, 
+
+
+
+
+
+não ficou claro o objetivo,  precisa ser drag e drop, com, animação de arraste, e css pseudo 3d, e tem que ser um jogo de encaixar no lugar certo as peças, ae não ser possível encaixar, mude a logica para isso,  o usuário ira receber peças e ele vai enxiar , se preencher tudo de azul ele ganha, mude a logica  e formação das peças para isso, e que seja verificável o resultado, pois se trata de jogo procedural.
+--- ITEM 14 ---
+IMAGES: ['media/image21.png', 'media/image22.png', 'media/image23.png', 'media/image24.png', 'media/image25.png', 'media/image26.png', 'media/image27.png', 'media/image28.png', 'media/image29.png']
+TEXT: ficou sem o css
+
+
+
+
+
+aumente mais os cards representativos para o game ficar mais dinâmico, use css pseudo3d, e faça esse modelo de layout e css, e efeitos no outros logic grid, de vc colocar ele ele autocompletar no suymary, e coloque o tema mais animado pastel/cryon;/divertido
+
+
+
+deu erro, sem css, e coloque o css pseudo 3d, 
+
+
+o tempo precisa ser renovado a cada jogada, se acaber perder
+
+Mudar Capa
+
+
+
+
+quando a peça some, ainda fica a estrutura roxa ao redor, ela precisa sair junto.
+
+
+
+
+
+
+,udar capa, tirar a velhinha
+
+
+
+
+
+
+mudar capa tirar mao de velhinha
+
+
+
+
+
+nao acontece nada
+--- ITEM 15 ---
+IMAGES: ['media/image30.png', 'media/image31.png', 'media/image32.png', 'media/image33.png']
+TEXT: erro e não carregaa o jogo
+
+
+tirar as mãos de velhinha
+
+
+
+falta retirar as setas, e o modo double não esta multiplicando no no emexmo ele so faz somar, exemplo : no modo double, 8x8 = 64 e não 16,. O modo adtion esta correto, ele soma os iguais
+
+
+
+
+
+so cortou o menu superior um pouco o botão de ?, no modo mobile portrait
+--- ITEM 16 ---
+IMAGES: ['media/image34.png', 'media/image35.png', 'media/image36.png', 'media/image37.png', 'media/image38.png', 'media/image39.png', 'media/image40.png', 'media/image41.png', 'media/image42.png', 'media/image43.png', 'media/image44.png', 'media/image45.png', 'media/image46.png', 'media/image47.png', 'media/image48.png', 'media/image49.png', 'media/image50.png', 'media/image51.png', 'media/image52.png']
+TEXT: é melhor iniciar com os trens  em stopped, depois que o jogador libera, e acrescente linahs triplas e quadruplas,  e quíntuplas  e, com o passar dos níveis. E linhas que andar outra formas não so em linha reta,, bifurcações, etc.
+
+
+
+
+coloque em css pseudo 3d, e com efeitos de explosão, 
+
+
+
+retirar a velhinha da capa
+
+
+
+
+retirar a velhinha da capa
+
+
+
+
+
+sem responder, so tela preta
+
+
+
+
+so tela preta
+
+
+
+o jogo não esta claro o objetivo, a iamgem diz que é para arras tar com dedo e somar, ç fala com efeito de arrastar e soltar, e eles vei se somanto ate o resultado esperado, , precisa de um tutorial animado, no inivo mostrando com mover e o objetivo
+
+
+
+
+so precisa de uma animção do animal sendo arrastado par ao local e se css pseudo 3d, com stickeres. A musica de fundo, e tero no numero co cantinho  pois se trata de um sudoku infantil
+, um nuemro bem queno no canto inferios direito.
+
+
+
+
+
+
+
+
+
+
+
+não ficou claro o bjetivo, se ó merge é 100,quando jogador perde??? O correto seria ter bolas que tivessem um nuemro negativo, para ser dificl o jogador chegar aos 100 ou ate passar ai perderia o jogo, por exemplo , qualquer lado que a bola se mover, ela soma, o jogador começa sempre com 0, então aao mover comom em math 2048, ira surgir numeor aleatórios, negativos ou posivitos, se  o jogador não souber direcionar ele pode ficar sempre subtraindo, somando a te ultrapassar ou bater a meta rápido. E ajusta p css, est sem as bolas numeradas(), e coloque boals estilo bilhar, com css pseudo 3d, e que elas tenha o efeito de rolar
+
+
+
+ajuste que o robô tem limite de energia, se fizer um percurso longo ele fica parado, então o jogador tem que fazer o caminho mais curto e o correto para não ficar fechado, pois não pode voltar atrás.
+
+
+
+não aparece nada ao inciar o jogo, a maioroa de logic grid  esta com mesmo problema
+
+
+
+
+coloque stickers, css pseuso 3d, animão da agua, barquinho flutuando na agua, efeitos diversos.
+
+
+
+falta efeito de deslise, de andat, de empurra a caixa, musica de fundo
+
+
+
+
+falta stickers, sons melhores, musica de funto, a tinta ficar ultrapando os objetoe e fica caindo, , esta feito, calfa css pseudo 3d, melhor o backgorund
+falta menu, fase procesural com verificação de resolução, 
+
+
+
+colocar um som divertido, de feira de ciências
+
+
+
+não consigo arrastar e soltar, e precis ser css pseudo 3d
+
+
+não aparece nada
+
+
+
+
+falta menu, tutorial interativo, coloque varoas figuras geométricas, não coloque nome, e coloque varias figuras, para o jogador tentar usando observação qual delas se encaixaria para forma a outra, se doi trigando, um hexagno , etc, estilo tangran, e quem quer ser procedutal, use inteliogencia para saber o que formar, exemplo, a logica dos lado, se vc colcoa uma silhuera com uam figura de 3 lados, e outra de 4 lados, vc vai dar figuras com que 3 lados,4 lados 5 lados, e o jogador vai per qual delas é mais coerente para arrastar e soltar, e tem efeito, de erro,acerto, deslisar, arrastar e soltar,
+--- ITEM 17 ---
+IMAGES: ['media/image53.png', 'media/image54.png']
+TEXT: falta menu, tutorial interativo, coloque varoas figuras geométricas, não coloque nome, e coloque varias figuras, para o jogador tentar usando observação qual delas se encaixaria para forma a outra, se foi trigando, um hexagno , etc, estilo tangran, e quem quer ser procedutal, use inteliogencia para saber o que formar, exemplo, a logica dos lado, se vc colcoa uma silhuera  de um gato, cahrrocho(quadrado com arrolhar de triangulo e olhas em ciculo, ) macaco(cabela reconda, orelha redonda, olhas redondos) e por ai vai, pense em 20 animais e faça a silhueta e vi mudando colcoando um por nível, , ,  efeito, de erro,acerto, deslisar, arrastar e soltar, 
+
+
+
+
+
+sem css
+
+
+mude a capa tiro o velhinho
+--- ITEM 18 ---
+IMAGES: ['media/image55.png']
+TEXT: erro 
+/game/sokoban-warehouse:1 Banner not shown: beforeinstallpromptevent.preventDefault() called. The page must call beforeinstallpromptevent.prompt() to show the banner.
+--- ITEM 19 ---
+IMAGES: ['media/image56.png', 'media/image57.png', 'media/image58.png', 'media/image59.png', 'media/image60.png', 'media/image61.png', 'media/image62.png', 'media/image63.png', 'media/image64.png', 'media/image65.png', 'media/image66.png', 'media/image67.png', 'media/image68.png', 'media/image69.png', 'media/image70.png', 'media/image71.png', 'media/image72.png', 'media/image73.png', 'media/image74.png', 'media/image75.png', 'media/image76.png', 'media/image77.png', 'media/image78.png', 'media/image79.png', 'media/image80.png', 'media/image81.png', 'media/image82.png', 'media/image83.png', 'media/image84.png']
+TEXT: /games/sokoban-warehouse/src/index.css:1 Failed to load module script: Expected a JavaScript-or-Wasm module script but the server responded with a MIME type of "text/css". Strict MIME type checking is enforced for module scripts per HTML spec.
+
+
+
+coloque efeito de derramar liquido no outro tubinho
+
+
+
+
+
+
+verifique se a logica esta certa
+
+
+
+tela preta
+
+
+
+
+
+tela preta
+
+
+
+
+
+
+
+
+não cabe no mobile portratir, e esta muito fácil, so um sentido, sem conexoa em curta, t, L, sem tabuleiro
+
+
+falta animação de transferência de líquidos
+
+
+
+
+tirar idoso desses 4
+
+
+
+
+transforme em laboratório de quimoca, ao misturar as cores, o liquido reaje e explode, , pois isso pode deixar uma cor misturar na outra, e musar a cor simulando reação, com animação em css pseudo 3d
+falta menu incial
+
+
+
+falta o css no hud menu inicial
+
+
+
+
+
+tirar idoso
+
+
+
+falta animações, css de liquido, transferência de liquido, css pseudo 3d
+menu
+
+
+
+
+tirar idoso
+
+
+
+
+
+ao mover ele da um atela branco um flash bem rápido como se atualizae a tela
+
+
+
+
+tirar idoso
+
+
+
+
+tela preta
+
+
+falta css pseudo 3d, e estickeres que mudam de carinha quando muda o status deles, de suspeito, cultpado ,etc
+
+
+tela preta
+
+ tela preta
+
+
+
+tela preta
+
+
+
+
+tirar idoso
+
+
+tela preta
+
+
+tela preta
+
+
+ tela preta
+
+
+
+tela preta
+
+
+tirar idoso
+
+
+
+
+
+o objeivo é misturar as cores para formal uma so em cada tupo, coloque o menu,  e no gameplay um barra com o mapa de cores, exemplo azul + verda = amarelo, vermelhor + preto = marrom, usando a grade de mistura real, precisa mudar no meta.json como funciona o game
+
+
+
+
+
+
+tela preta
+
+
+
+
+
+mude essa tela tradicional para essaa baixo, colorido, css pseudo 3d, efeitos de estrelinhos, qunaod colcoar o numero, e sendo drag e drop, com efeito de arrastar e soltar e sano sometne sugir

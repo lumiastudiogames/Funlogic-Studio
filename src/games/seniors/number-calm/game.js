@@ -305,5 +305,100 @@
     soundBtn.textContent = soundEnabled ? '🔊 Sound' : '🔇 Muted';
   });
 
+  // Interactive Animated Tutorial Controls
+  const tutorialModal = document.getElementById('tutorial-modal');
+  const tutorialBtn = document.getElementById('btn-tutorial');
+  const startPlayingBtn = document.getElementById('btn-start-playing');
+  const btnDemoSlide = document.getElementById('btn-demo-slide');
+  const demoTileLeft = document.getElementById('demo-cell-left');
+  const demoTileRight = document.getElementById('demo-cell-right');
+  const demoHand = document.getElementById('demo-hand-pointer');
+  const demoResult = document.getElementById('demo-result-badge');
+  let demoMerged = false;
+  let ladderTimer = null;
+
+  function runDemoSlide() {
+    if (!demoTileLeft || !demoTileRight) return;
+    if (demoMerged) {
+      // Reset demo
+      demoMerged = false;
+      demoTileLeft.style.transform = 'none';
+      demoTileLeft.style.opacity = '1';
+      demoTileLeft.textContent = '256';
+      demoTileRight.textContent = '256';
+      demoTileRight.style.background = 'linear-gradient(135deg, #fcd34d, #f59e0b)';
+      demoTileRight.style.transform = 'none';
+      if (demoHand) demoHand.style.display = 'block';
+      if (demoResult) demoResult.style.display = 'none';
+      if (btnDemoSlide) btnDemoSlide.innerHTML = '<span>👉 TOQUE PARA DESLIZAR</span>';
+      return;
+    }
+
+    // Perform interactive slide
+    playMoveSound();
+    if (demoHand) demoHand.style.display = 'none';
+    demoTileLeft.style.transform = 'translateX(68px)';
+    demoTileLeft.style.opacity = '0';
+
+    setTimeout(() => {
+      playMergeSound();
+      demoMerged = true;
+      demoTileRight.textContent = '512';
+      demoTileRight.style.background = 'linear-gradient(135deg, #f59e0b, #d97706)';
+      demoTileRight.style.boxShadow = '0 0 16px rgba(245, 158, 11, 0.9)';
+      demoTileRight.style.transform = 'scale(1.2)';
+
+      setTimeout(() => {
+        demoTileRight.style.transform = 'scale(1)';
+        if (demoResult) demoResult.style.display = 'block';
+        if (btnDemoSlide) btnDemoSlide.innerHTML = '<span>↺ REPETIR DEMONSTRAÇÃO</span>';
+      }, 250);
+    }, 350);
+  }
+
+  function startLadderAnimation() {
+    clearInterval(ladderTimer);
+    const steps = document.querySelectorAll('.ladder-step');
+    let idx = 0;
+    ladderTimer = setInterval(() => {
+      steps.forEach((s, i) => {
+        if (i === idx) s.classList.add('active');
+        else s.classList.remove('active');
+      });
+      idx = (idx + 1) % steps.length;
+    }, 500);
+  }
+
+  function openTutorial() {
+    if (tutorialModal) {
+      tutorialModal.classList.add('open');
+      startLadderAnimation();
+    }
+  }
+
+  function closeTutorial() {
+    clearInterval(ladderTimer);
+    if (tutorialModal) tutorialModal.classList.remove('open');
+    try {
+      localStorage.setItem('number_calm_tutorial_seen', 'true');
+    } catch (_) {}
+  }
+
+  if (btnDemoSlide) btnDemoSlide.addEventListener('click', runDemoSlide);
+  if (tutorialBtn) tutorialBtn.addEventListener('click', openTutorial);
+  if (startPlayingBtn) startPlayingBtn.addEventListener('click', closeTutorial);
+  if (tutorialModal) {
+    tutorialModal.addEventListener('click', (e) => {
+      if (e.target === tutorialModal) closeTutorial();
+    });
+  }
+
+  // Show tutorial on first launch
+  try {
+    if (localStorage.getItem('number_calm_tutorial_seen') !== 'true') {
+      setTimeout(openTutorial, 400);
+    }
+  } catch (_) {}
+
   initGame();
 })();

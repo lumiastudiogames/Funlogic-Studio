@@ -1,5 +1,4 @@
-@import "tailwindcss";
-
+/* tailwindcss loaded via cdn */
 @layer base {
   * {
     box-sizing: border-box;

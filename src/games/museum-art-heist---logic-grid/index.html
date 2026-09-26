@@ -1,595 +1,1569 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-    <title>Museum Art Heist - Logic Grid</title>
-    <meta name="description" content="Investigative logic puzzle game connecting detectives, stolen artwork, and forensic clues." />
-    <meta property="og:title" content="Museum Art Heist - Logic Grid" />
-    <meta property="og:description" content="Solve the museum heist mystery by linking detectives, paintings, and forensic clues through pure logical deduction." />
-    <meta property="og:type" content="website" />
-    <meta name="twitter:card" content="summary_large_image" />
-    <link rel="stylesheet" href="./src/index.css" />
-  
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <title>Museum Art Heist - Logic Grid</title>
+  <meta name="description" content="Investigative Einstein-style logic grid game connecting detectives, stolen artwork, and forensic clues." />
+  <meta property="og:title" content="Museum Art Heist - Logic Grid" />
+  <meta property="og:description" content="Solve the museum heist mystery by linking detectives, paintings, and forensic clues through pure logical deduction." />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary_large_image" />
+
+  <style>
+    :root {
+      --bg-page: #fbf9f4;
+      --bg-card: #ffffff;
+      --bg-card-alt: #f4f0e6;
+      --border-subtle: #e2dcd0;
+      --border-strong: #c8bfb0;
+      --text-main: #2d261e;
+      --text-muted: #73695d;
+      --accent-gold: #d97706;
+      --accent-gold-dark: #b45309;
+      --accent-gold-light: #fef3c7;
+      --accent-green: #059669;
+      --accent-blue: #2563eb;
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.08), 0 2px 4px -1px rgba(0, 0, 0, 0.04);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 16px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    html, body {
+      width: 100vw;
+      height: 100vh;
+      height: 100dvh;
+      overflow: hidden;
+      background-color: var(--bg-page);
+      color: var(--text-main);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    #app {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .zebra-app-root {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      background-color: var(--bg-page);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* HEADER */
+    .zebra-header {
+      flex: 0 0 auto;
+      padding: 10px 16px;
+      display: flex;
+      flex-direction: column;
+      background: #ffffff;
+      border-bottom: 1px solid var(--border-subtle);
+      box-shadow: var(--shadow-sm);
+      z-index: 20;
+      gap: 8px;
+    }
+
+    .header-top-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      gap: 8px;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+      flex: 1 1 auto;
+    }
+
+    .btn-icon-text {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 6px 10px;
+      background: #f1ede4;
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      color: var(--text-main);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: all 0.15s ease;
+    }
+
+    .btn-icon-text:hover { background: #e6e0d3; }
+    .btn-icon-text:active { transform: scale(0.96); }
+
+    .header-title-box {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+      overflow: hidden;
+    }
+
+    .header-title {
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--text-main);
+      letter-spacing: -0.2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      line-height: 1.2;
+    }
+
+    .header-badge {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--accent-gold);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .stage-nav-pills {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      overflow-x: auto;
+      padding: 2px 0;
+      width: 100%;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+    }
+    .stage-nav-pills::-webkit-scrollbar { display: none; }
+
+    .stage-pill {
+      padding: 5px 12px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 700;
+      border: 1px solid var(--border-subtle);
+      background: #f8f6f0;
+      color: var(--text-muted);
+      cursor: pointer;
+      white-space: nowrap;
+      flex-shrink: 0;
+      transition: all 0.15s ease;
+    }
+
+    .stage-pill:hover {
+      background: #ede7d9;
+      color: var(--text-main);
+    }
+
+    .stage-pill.active {
+      background: var(--accent-gold);
+      border-color: var(--accent-gold-dark);
+      color: #ffffff;
+      box-shadow: 0 2px 6px rgba(217, 119, 6, 0.35);
+    }
+
+    .stage-pill.locked {
+      opacity: 0.6;
+      background: #f1ede4;
+      color: var(--text-muted);
+      border-style: dashed;
+      cursor: pointer;
+    }
+    .stage-pill.locked:hover {
+      background: #e7e2d6;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+
+    .btn-icon-only {
+      width: 36px;
+      height: 36px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-subtle);
+      background: #f8f6f0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .btn-icon-only:hover { background: #ede7d9; }
+
+    /* MAIN SCROLLABLE CONTENT */
+    .zebra-main-content {
+      flex: 1 1 auto;
+      overflow-y: auto;
+      padding: 12px 14px 90px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      max-width: 1100px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .zebra-main-content > * {
+      flex-shrink: 0;
+    }
+
+    .level-intro-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-left: 4px solid var(--accent-gold);
+      border-radius: var(--radius-md);
+      padding: 10px 14px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .intro-badge {
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--accent-gold-dark);
+      margin-bottom: 2px;
+    }
+
+    .intro-desc {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    /* THE TABLE GRID */
+    .table-card-wrapper {
+      background: #ffffff;
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-md);
+      padding: 8px;
+      overflow: visible;
+      position: relative;
+    }
+
+    .table-scroll-hint {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--accent-gold-dark);
+      text-align: center;
+      padding: 4px 6px;
+      background: var(--accent-gold-light);
+      border-radius: var(--radius-sm);
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+    }
+
+    .table-responsive-wrapper {
+      width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      padding-bottom: 4px;
+    }
+
+    .zebra-grid-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 6px;
+    }
+
+    .category-header-cell {
+      position: sticky;
+      left: 0;
+      z-index: 15;
+      background: #ffffff;
+      padding: 6px 8px;
+      font-size: 11px;
+      font-weight: 800;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      text-align: left;
+      width: 120px;
+      min-width: 110px;
+      box-shadow: 2px 0 6px -2px rgba(0, 0, 0, 0.08);
+    }
+
+    .category-label-cell {
+      position: sticky;
+      left: 0;
+      z-index: 10;
+      background: var(--bg-card-alt);
+      padding: 8px 8px;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-main);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      white-space: normal;
+      line-height: 1.2;
+      word-break: break-word;
+      box-shadow: 2px 0 6px -2px rgba(0, 0, 0, 0.08);
+    }
+
+    .column-header-cell {
+      padding: 6px 10px;
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--accent-gold-dark);
+      background: var(--accent-gold-light);
+      border: 1px solid #fde68a;
+      border-radius: var(--radius-sm);
+      text-align: center;
+      min-width: 135px;
+    }
+
+    .cat-icon { font-size: 15px; flex-shrink: 0; }
+    .cat-name { white-space: normal; line-height: 1.15; word-break: break-word; }
+
+    .grid-select-cell {
+      text-align: center;
+      min-width: 135px;
+    }
+
+    .zebra-select {
+      width: 100%;
+      min-height: 40px;
+      padding: 6px 8px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-main);
+      background-color: #ffffff;
+      border: 1.5px solid var(--border-strong);
+      border-radius: var(--radius-md);
+      outline: none;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      box-shadow: inset 0 1px 2px rgba(0,0,0,0.04);
+    }
+
+    .zebra-select:focus {
+      border-color: var(--accent-gold);
+      box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.2);
+    }
+
+    .zebra-select.selected {
+      background-color: #fefce8;
+      border-color: #eab308;
+      font-weight: 700;
+      color: #854d0e;
+    }
+
+    .zebra-select.hint-flash {
+      animation: hintPulse 1s ease;
+    }
+
+    @keyframes hintPulse {
+      0%, 100% { background-color: #ffffff; }
+      50% { background-color: #bbf7d0; border-color: #16a34a; transform: scale(1.03); }
+    }
+
+    /* CLUES SECTION */
+    .clues-card-section {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 14px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .clues-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      padding-bottom: 6px;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .clues-title {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .clues-icon { font-size: 16px; }
+
+    .clues-title h2 {
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--text-main);
+    }
+
+    .clues-hint-note {
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    .clues-two-col-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 8px;
+    }
+
+    .clue-card {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      padding: 10px;
+      background: #fdfcf9;
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      transition: all 0.15s ease;
+      overflow: hidden;
+    }
+
+    .clue-card:hover {
+      background: #f7f3ea;
+      border-color: var(--border-strong);
+    }
+
+    .clue-num {
+      flex: 0 0 auto;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: #ede7d9;
+      color: var(--text-muted);
+      font-size: 10px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 1px;
+    }
+
+    .clue-text {
+      flex: 1 1 auto;
+      font-size: 12px;
+      color: var(--text-main);
+      line-height: 1.4;
+      margin: 0;
+      word-break: break-word;
+    }
+
+    .clue-card.crossed {
+      background: #f1ede4;
+      opacity: 0.55;
+    }
+
+    .clue-card.crossed .clue-text {
+      text-decoration: line-through;
+      color: var(--text-muted);
+    }
+
+    .clue-card.crossed .clue-num {
+      background: #cbd5e1;
+      color: #64748b;
+    }
+
+    /* FOOTER TOOLBAR */
+    .zebra-footer-toolbar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 58px;
+      background: #ffffff;
+      border-top: 1px solid var(--border-subtle);
+      box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.06);
+      padding: 0 12px;
+      padding-bottom: max(4px, env(safe-area-inset-bottom));
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      z-index: 30;
+      gap: 8px;
+    }
+
+    .toolbar-left {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex: 1 1 auto;
+    }
+
+    .tool-btn {
+      height: 38px;
+      padding: 0 10px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-subtle);
+      background: #f8f6f0;
+      color: var(--text-main);
+      font-size: 12px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.15s ease;
+    }
+
+    .tool-btn:hover { background: #ede7d9; }
+    .tool-btn:active { transform: scale(0.96); }
+
+    .tool-btn.highlight {
+      background: var(--accent-gold-light);
+      border-color: #fde68a;
+      color: var(--accent-gold-dark);
+    }
+    .tool-btn.highlight:hover { background: #fef08a; }
+
+    .btn-solve-action {
+      height: 40px;
+      padding: 0 14px;
+      border-radius: var(--radius-md);
+      border: none;
+      background: linear-gradient(135deg, #d97706, #b45309);
+      color: #ffffff;
+      font-size: 13px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      white-space: nowrap;
+      box-shadow: 0 4px 10px rgba(217, 119, 6, 0.35);
+      transition: all 0.15s ease;
+      flex-shrink: 0;
+    }
+
+    .btn-solve-action:hover {
+      background: linear-gradient(135deg, #b45309, #92400e);
+      transform: translateY(-1px);
+    }
+    .btn-solve-action:active { transform: scale(0.96); }
+
+    @media (min-width: 769px) {
+      .zebra-header {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        height: 56px;
+        padding: 0 20px;
+        gap: 16px;
+      }
+      .header-top-row {
+        width: auto;
+        flex: 0 0 auto;
+      }
+      .stage-nav-pills {
+        width: auto;
+        flex: 1 1 auto;
+        justify-content: center;
+      }
+      .table-scroll-hint {
+        display: none;
+      }
+    }
+
+    .btn-solve-action:hover {
+      background: linear-gradient(135deg, #b45309, #92400e);
+      transform: translateY(-1px);
+    }
+    .btn-solve-action:active { transform: scale(0.96); }
+
+    /* TOAST & MODALS */
+    .game-toast {
+      position: fixed;
+      top: 70px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-20px);
+      background: rgba(30, 25, 20, 0.95);
+      color: #ffffff;
+      padding: 10px 18px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 700;
+      box-shadow: var(--shadow-lg);
+      pointer-events: none;
+      opacity: 0;
+      transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      z-index: 99999;
+    }
+
+    .game-toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+
+    .victory-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(20, 15, 10, 0.7);
+      backdrop-filter: blur(6px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      padding: 16px;
+      animation: fadeIn 0.25s ease;
+    }
+
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+    .victory-card {
+      background: #ffffff;
+      border-radius: var(--radius-lg);
+      padding: 28px;
+      max-width: 440px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+      animation: scaleUp 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    @keyframes scaleUp { from { transform: scale(0.85); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+    .victory-icon { font-size: 48px; margin-bottom: 8px; }
+    .victory-title { font-size: 22px; font-weight: 900; color: var(--accent-gold-dark); margin-bottom: 6px; }
+    .victory-sub { font-size: 14px; color: var(--text-muted); margin-bottom: 20px; }
+
+    .victory-stats { display: flex; gap: 10px; margin-bottom: 24px; }
+    .stat-box {
+      flex: 1;
+      background: #f8f6f0;
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 10px 6px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .stat-label { font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; }
+    .stat-val { font-size: 15px; font-weight: 800; color: var(--text-main); }
+
+    .victory-actions { display: flex; flex-direction: column; gap: 8px; }
+    .btn-primary-action {
+      width: 100%;
+      height: 46px;
+      border-radius: var(--radius-md);
+      border: none;
+      background: linear-gradient(135deg, #d97706, #b45309);
+      color: #ffffff;
+      font-size: 15px;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(217, 119, 6, 0.35);
+      transition: all 0.15s ease;
+    }
+    .btn-primary-action:hover { background: linear-gradient(135deg, #b45309, #92400e); }
+
+    .btn-secondary-action {
+      width: 100%;
+      height: 40px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-subtle);
+      background: #f8f6f0;
+      color: var(--text-muted);
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .btn-secondary-action:hover { background: #ede7d9; color: var(--text-main); }
+
+    @media (max-width: 640px) {
+      .zebra-header { height: auto; min-height: unset; padding: 6px 8px; gap: 5px; }
+      .header-title { font-size: 13px; }
+      .btn-icon-text { height: 30px; padding: 4px 7px; font-size: 11px; }
+      .btn-icon-text .btn-text { display: inline; }
+      .btn-icon-only { width: 30px; height: 30px; font-size: 13px; }
+      .stage-pill { padding: 3px 9px; font-size: 10.5px; }
+      .level-intro-card { padding: 6px 8px; }
+      .intro-badge { font-size: 10.5px; }
+      .intro-desc { font-size: 10.5px; }
+      .zebra-main-content { padding: 6px 8px 65px 8px; gap: 8px; }
+      .clues-two-col-grid { grid-template-columns: 1fr; }
+      .category-header-cell { width: 92px; min-width: 92px; max-width: 92px; font-size: 10px; padding: 5px 6px; }
+      .column-header-cell { min-width: 112px; width: 112px; font-size: 11px; padding: 5px 6px; }
+      .category-label-cell { width: 92px; min-width: 92px; max-width: 92px; font-size: 10.5px; padding: 5px 6px; }
+      .grid-select-cell { min-width: 112px; width: 112px; }
+      .zebra-select { font-size: 11px; height: 35px; min-height: 35px; padding: 3px 4px; }
+      .zebra-footer-toolbar { height: 48px; padding: 0 6px; gap: 4px; }
+      .tool-btn { height: 34px; padding: 0 6px; font-size: 11px; gap: 2px; }
+      .btn-solve-action { height: 34px; padding: 0 10px; font-size: 11.5px; }
+    }
+  </style>
+
   <script>
     function triggerPlatformWin(timeInSeconds) {
       const elapsed = Math.round(timeInSeconds || 45);
       try {
-        if (typeof window.onWin === 'function') {
-          window.onWin(elapsed);
-        }
+        if (typeof window.onWin === 'function') window.onWin(elapsed);
         if (window.parent && window.parent !== window) {
           window.parent.postMessage({ type: 'win', time: elapsed }, '*');
         }
       } catch(e) { console.error('Platform win notify error:', e); }
     }
   </script>
-
 </head>
-  <body class="bg-slate-950 text-slate-100 antialiased select-none overflow-hidden font-sans">
-    
-    <!-- SAFE VIEWPORT ENVELOPE (Zero-Scroll Layout) -->
-    <div id="game-stage" class="fixed inset-0 w-full h-full overflow-hidden flex flex-col bg-slate-950 select-none">
-      
-      <!-- SCREEN 1: MAIN MENU -->
-      <section id="screen-main-menu" class="w-full h-full flex flex-col items-center justify-between p-4 sm:p-8 bg-gradient-to-b from-slate-900 via-slate-950 to-slate-950 z-20 overflow-y-auto custom-scroll">
-        <!-- Top status bar -->
-        <div class="w-full max-w-4xl flex items-center justify-between">
-          <div class="px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs font-bold flex items-center gap-1.5">
-            <span>🏛️</span>
-            <span>METROPOLITAN ART GALLERY</span>
-          </div>
-          <button id="btn-sound-toggle-menu" class="btn-tactile w-9 h-9 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center shrink-0 cursor-pointer" title="Toggle Sound">
-            <span class="sound-icon text-sm">🔊</span>
-          </button>
-        </div>
+<body>
+  <div id="app"></div>
 
-        <!-- Center Emblem / Logo -->
-        <div class="flex flex-col items-center text-center my-auto py-6">
-          <div class="relative mb-4">
-            <div class="w-24 h-24 sm:w-28 sm:h-28 rounded-3xl bg-gradient-to-tr from-amber-600 via-amber-500 to-yellow-300 p-1 shadow-xl shadow-amber-500/20 flex items-center justify-center">
-              <div class="w-full h-full bg-slate-950 rounded-[22px] flex items-center justify-center text-5xl sm:text-6xl">
-                🕵️‍♂️
-              </div>
-            </div>
-            <div class="absolute -bottom-2 -right-2 px-2.5 py-0.5 rounded-full bg-rose-600 text-white text-[10px] font-black uppercase tracking-wider shadow-md">
-              FORENSIC CASE
-            </div>
-          </div>
-
-          <h1 class="text-3xl sm:text-5xl font-black tracking-tight text-white mb-2">
-            MUSEUM <span class="text-amber-400">ART HEIST</span>
-          </h1>
-          <p class="text-xs sm:text-sm text-slate-400 max-w-md px-4">
-            Link each <b>detective</b> to their assigned <b>stolen painting</b> and <b>forensic clue</b> using pure logical deduction.
-          </p>
-        </div>
-
-        <!-- Action Buttons -->
-        <div class="w-full max-w-sm flex flex-col gap-3 shrink-0 mb-2">
-          <button id="btn-play-now" class="btn-tactile w-full py-3.5 px-6 rounded-2xl font-black text-sm sm:text-base bg-gradient-to-r from-amber-500 to-yellow-400 text-slate-950 flex items-center justify-center gap-2 cursor-pointer shadow-lg shadow-amber-500/25 active:scale-98">
-            <span>🔍</span>
-            <span>INVESTIGATE NOW</span>
-          </button>
-
-          <button id="btn-level-select" class="btn-tactile w-full py-3 px-6 rounded-2xl font-bold text-sm bg-slate-800/90 hover:bg-slate-800 text-slate-200 border border-slate-700/80 flex items-center justify-center gap-2 cursor-pointer">
-            <span>📂</span>
-            <span>CASE FILES (LEVELS)</span>
-          </button>
-
-          <button id="btn-how-to-play" class="btn-tactile w-full py-2.5 px-6 rounded-2xl font-bold text-xs sm:text-sm bg-slate-900 hover:bg-slate-800/60 text-slate-400 border border-slate-800 flex items-center justify-center gap-2 cursor-pointer">
-            <span>❓</span>
-            <span>HOW TO PLAY (TUTORIAL)</span>
-          </button>
-        </div>
-
-        <div class="text-[10px] text-slate-500 uppercase tracking-widest font-semibold mt-2">
-          Vanilla JS Logic Grid Engine • Special Art Edition
-        </div>
-      </section>
-
-      <!-- SCREEN 2: LEVEL SELECT -->
-      <section id="screen-level-select" class="w-full h-full flex flex-col p-4 sm:p-6 bg-slate-950 z-20 hidden overflow-y-auto custom-scroll">
-        <div class="w-full max-w-4xl mx-auto flex flex-col h-full">
-          <div class="flex items-center justify-between pb-4 border-b border-slate-800 mb-4 shrink-0">
-            <button id="btn-back-menu-from-levels" class="btn-tactile px-3 py-1.5 rounded-xl bg-slate-800 text-slate-300 text-xs font-bold flex items-center gap-1.5 cursor-pointer">
-              <span>⬅️</span>
-              <span>MENU</span>
-            </button>
-            <h2 class="text-base sm:text-lg font-black text-white">DEPARTMENT CASE FILES</h2>
-            <div class="w-16"></div>
-          </div>
-
-          <div id="level-select-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5 my-auto w-full">
-            <!-- Filled dynamically -->
-          </div>
-        </div>
-      </section>
-
-      <!-- SCREEN 3: HOW TO PLAY -->
-      <section id="screen-how-to-play" class="w-full h-full flex flex-col p-4 sm:p-6 bg-slate-950 z-20 hidden overflow-y-auto custom-scroll">
-        <div class="w-full max-w-2xl mx-auto flex flex-col h-full">
-          <div class="flex items-center justify-between pb-4 border-b border-slate-800 mb-4 shrink-0">
-            <button id="btn-back-menu-from-tutorial" class="btn-tactile px-3 py-1.5 rounded-xl bg-slate-800 text-slate-300 text-xs font-bold flex items-center gap-1.5 cursor-pointer">
-              <span>⬅️</span>
-              <span>BACK</span>
-            </button>
-            <h2 class="text-base sm:text-lg font-black text-white">HOW TO PLAY (LOGIC GRID)</h2>
-            <div class="w-16"></div>
-          </div>
-
-          <div class="flex-1 flex flex-col justify-center gap-3.5 my-auto w-full">
-            <!-- Card 1 -->
-            <div class="p-3.5 sm:p-4 rounded-2xl bg-slate-900 border border-slate-800 flex items-start gap-3">
-              <div class="w-10 h-10 rounded-xl bg-sky-500/20 text-sky-400 border border-sky-500/30 flex items-center justify-center text-lg font-bold shrink-0">
-                1
-              </div>
-              <div>
-                <h3 class="font-bold text-sm text-sky-300 mb-1">Tap Grid Cells to Mark</h3>
-                <p class="text-xs text-slate-300 leading-relaxed">
-                  Tap grid cells to cycle between <b>Empty</b>, <b>❌ (No/Eliminated)</b>, and <b>✔️ (Yes/Confirmed)</b>. Marking ✔️ automatically eliminates all other options in the same row and column!
-                </p>
-              </div>
-            </div>
-
-            <!-- Card 2 -->
-            <div class="p-3.5 sm:p-4 rounded-2xl bg-slate-900 border border-slate-800 flex items-start gap-3">
-              <div class="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-400 border border-amber-500/30 flex items-center justify-center text-lg font-bold shrink-0">
-                2
-              </div>
-              <div>
-                <h3 class="font-bold text-sm text-amber-300 mb-1">Analyze Forensic Clues</h3>
-                <p class="text-xs text-slate-300 leading-relaxed">
-                  Read each numbered clue. Tap clues to strike them off as read. Cross-reference categories (Detectives, Paintings, and Clues) through logical elimination.
-                </p>
-              </div>
-            </div>
-
-            <!-- Card 3 -->
-            <div class="p-3.5 sm:p-4 rounded-2xl bg-slate-900 border border-slate-800 flex items-start gap-3">
-              <div class="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 flex items-center justify-center text-lg font-bold shrink-0">
-                3
-              </div>
-              <div>
-                <h3 class="font-bold text-sm text-emerald-300 mb-1">Solve the Full Case</h3>
-                <p class="text-xs text-slate-300 leading-relaxed">
-                  Switch between the <b>Logic Grid</b> and the <b>2.5D Board</b> to watch red evidence threads physically link together as you solve the heist mystery!
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- SCREEN 4: GAMEPLAY HUD & WORKSPACE -->
-      <section id="screen-playing" class="w-full h-full flex flex-col bg-slate-950 z-10 hidden overflow-hidden">
-        
-        <!-- UNIVERSAL RESPONSIVE HEADER -->
-        <header class="w-full bg-slate-900/95 border-b border-slate-800 flex flex-col shrink-0 z-30 pt-safe">
-          
-          <!-- TOP ROW: Pause, Level Badge & Action Controls -->
-          <div class="w-full px-2 sm:px-4 py-1.5 flex items-center justify-between gap-1.5 overflow-x-auto no-scrollbar">
-            <!-- Left: Menu & Level Badge -->
-            <div class="flex items-center gap-1.5 shrink-0">
-              <button id="btn-pause-menu" class="btn-tactile w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 flex items-center justify-center shrink-0 cursor-pointer" title="Main Menu">
-                <span class="text-xs sm:text-sm">⏸️</span>
-              </button>
-              <div id="hud-level-badge" class="px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full text-[10px] sm:text-xs font-black bg-amber-500/20 text-amber-300 border border-amber-500/40 shrink-0 uppercase">
-                LEVEL 1
-              </div>
-            </div>
-
-            <!-- Right: Counters & Action Buttons -->
-            <div class="flex items-center gap-1 sm:gap-1.5 shrink-0">
-              <!-- Timer Counter -->
-              <div class="bg-slate-950 border border-slate-800 rounded-lg px-2 py-0.5 text-center min-w-[48px] shrink-0">
-                <span class="block text-[8px] font-bold text-slate-400 uppercase leading-none">TIME</span>
-                <span id="score-counter" class="font-extrabold text-xs text-amber-300 leading-none">00:00</span>
-              </div>
-
-              <!-- Undo Button -->
-              <button id="btn-undo" class="btn-tactile px-2 py-1 sm:px-2.5 sm:py-1.5 rounded-lg font-bold text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 flex items-center gap-1 shrink-0 cursor-pointer" title="Undo Move">
-                <span>↩️</span>
-                <span class="hidden sm:inline">Undo</span>
-              </button>
-
-              <!-- Reset Button -->
-              <button id="btn-reset-grid" class="btn-tactile w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 flex items-center justify-center shrink-0 cursor-pointer" title="Reset Grid">
-                <span>🔄</span>
-              </button>
-
-              <!-- Hint Button (Rewarded Ad) -->
-              <button id="btn-hint" class="btn-tactile px-2 py-1 sm:px-2.5 sm:py-1.5 rounded-lg font-bold text-xs bg-gradient-to-r from-amber-500 to-yellow-400 text-slate-950 flex items-center gap-1 shrink-0 cursor-pointer shadow-sm shadow-amber-500/20">
-                <span>💡</span>
-                <span class="hidden sm:inline">Hint</span>
-              </button>
-
-              <!-- Sound Button -->
-              <button id="btn-sound-toggle-hud" class="btn-tactile w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 flex items-center justify-center shrink-0 cursor-pointer" title="Toggle Sound">
-                <span class="sound-icon text-xs">🔊</span>
-              </button>
-            </div>
-          </div>
-
-          <!-- BOTTOM ROW: 3-Tabs Navigation Bar (Grid | Clues 0/4 | Summary) -->
-          <div class="w-full px-2 py-1 bg-slate-950/60 border-t border-slate-800/60 flex items-center justify-center shrink-0">
-            <div class="flex items-center bg-slate-950/90 p-1 rounded-2xl border border-slate-800/90 gap-1 overflow-x-auto no-scrollbar max-w-full">
-              <button id="tab-btn-grid" class="px-3 py-1.5 rounded-xl text-xs font-bold transition-all shrink-0 cursor-pointer bg-indigo-600 text-white shadow-md shadow-indigo-600/30 flex items-center gap-1.5">
-                <span>▦</span>
-                <span>Grid</span>
-              </button>
-
-              <button id="tab-btn-clues" class="px-3 py-1.5 rounded-xl text-xs font-bold transition-all shrink-0 cursor-pointer bg-slate-800 text-slate-300 hover:bg-slate-700 flex items-center gap-1.5">
-                <span>🔍</span>
-                <span>Clues</span>
-                <span id="hud-clues-badge" class="px-1.5 py-0.5 rounded-full text-[10px] font-extrabold bg-slate-900/90 text-amber-300 border border-slate-700">0/4</span>
-              </button>
-
-              <button id="tab-btn-summary" class="px-3 py-1.5 rounded-xl text-xs font-bold transition-all shrink-0 cursor-pointer bg-slate-800 text-slate-300 hover:bg-slate-700 flex items-center gap-1.5">
-                <span>📋</span>
-                <span>Summary</span>
-              </button>
-            </div>
-          </div>
-        </header>
-
-        <!-- TICKER BANNER (Clickable Clue Bar) -->
-        <div id="hud-ticker-banner" class="w-full bg-slate-900/95 hover:bg-slate-800/90 transition-colors border-b border-slate-800/80 px-3.5 py-2.5 flex items-center justify-between text-xs text-slate-200 shadow-sm shrink-0 cursor-pointer" title="Tap to view all clues">
-          <div class="flex items-center gap-2 flex-1 min-w-0 pr-2">
-            <span class="w-2.5 h-2.5 rounded-full bg-indigo-500 shrink-0 animate-pulse"></span>
-            <span id="hud-ticker-clue-text" class="truncate font-medium text-slate-200 text-xs sm:text-sm">
-              1. Loading forensic case clues...
-            </span>
-          </div>
-          <button id="btn-ticker-see-clues" class="text-indigo-300 hover:text-white font-bold text-xs flex items-center gap-1.5 shrink-0 cursor-pointer px-2.5 py-1 rounded-lg bg-indigo-600/30 hover:bg-indigo-600/50 border border-indigo-500/40 shadow-sm">
-            <span>View Clues</span>
-            <span>➔</span>
-          </button>
-        </div>
-
-        <!-- MAIN GAMEPLAY WORKSPACE -->
-        <div class="flex-1 w-full h-full flex flex-col lg:flex-row overflow-hidden relative">
-          
-          <!-- LEFT PANEL: 2.5D EVIDENCE BOARD CANVAS (Visual Layer) -->
-          <div id="view-board" class="w-full lg:w-1/2 h-full relative overflow-hidden hidden lg:block bg-slate-950">
-            <canvas id="board-canvas" class="w-full h-full block cursor-crosshair"></canvas>
-            
-            <div class="absolute bottom-3 left-3 right-3 bg-slate-950/85 backdrop-blur-md px-3.5 py-2 rounded-xl border border-slate-800 text-[11px] text-slate-300 pointer-events-none flex items-center gap-2">
-              <span>🧵</span>
-              <span>Red evidence threads automatically link as you confirm deductions!</span>
-            </div>
-          </div>
-
-          <!-- TAB 1 VIEW: LOGIC GRID MATRIX -->
-          <div id="view-grid" class="flex-1 w-full h-full flex flex-col p-2 sm:p-3 overflow-y-auto custom-scroll gap-2">
-            <!-- Interactive Logic Grid Container -->
-            <div id="logic-grid-container" class="w-full flex justify-center shrink-0">
-              <!-- Grid Table populated dynamically -->
-            </div>
-          </div>
-
-          <!-- TAB 2 VIEW: CLUES LIST (PISTAS) -->
-          <div id="view-clues" class="flex-1 w-full h-full p-3 sm:p-6 overflow-y-auto custom-scroll hidden">
-            <div class="max-w-3xl mx-auto flex flex-col gap-3">
-              <div class="p-3 bg-slate-900/90 rounded-2xl border border-slate-800 text-xs text-slate-300 flex items-center justify-between">
-                <div class="flex items-center gap-2">
-                  <span class="text-base">📜</span>
-                  <span><b>Forensic Case Clues</b> • Tap to mark or strike through analyzed clues:</span>
-                </div>
-                <span id="clues-progress-badge" class="px-2.5 py-1 rounded-full text-xs font-black bg-indigo-950 text-indigo-300 border border-indigo-800 shrink-0">0/4 Read</span>
-              </div>
-
-              <div id="tab-clues-list-container" class="flex flex-col gap-2.5">
-                <!-- Clues list items populated dynamically -->
-              </div>
-            </div>
-          </div>
-
-          <!-- TAB 3 VIEW: SUMMARY (RESUMO) -->
-          <div id="view-summary" class="flex-1 w-full h-full p-3 sm:p-6 overflow-y-auto custom-scroll hidden">
-            <div class="max-w-2xl mx-auto flex flex-col gap-3">
-              <div class="p-3 bg-slate-900/90 rounded-xl border border-slate-800 text-xs text-slate-300 flex items-center gap-2">
-                <span>📋</span>
-                <span>Consolidated Case File. As you confirm deductions on the logic grid, investigator records will update here automatically.</span>
-              </div>
-              
-              <div id="summary-cards-container" class="flex flex-col gap-2.5">
-                <!-- Summary rows populated dynamically -->
-              </div>
-            </div>
-          </div>
-
-        </div>
-
-        <!-- FOOTER / TICKER BAR -->
-        <div class="w-full bg-slate-900/90 border-t border-slate-800 px-3 py-1.5 flex items-center justify-between text-[11px] text-slate-400 shrink-0">
-          <div id="hud-ticker-text" class="truncate font-medium text-slate-300 flex items-center gap-1.5">
-            <span>💡</span>
-            <span class="truncate">Tap grid cells to cycle between Empty / ❌ / ✔️</span>
-          </div>
-          <div class="text-[10px] text-slate-500 font-mono uppercase tracking-wider shrink-0 ml-2">
-            Vanilla Engine
-          </div>
-        </div>
-
-        <!-- WIN VICTORY CELEBRATION BAR (Platform Integrated) -->
-        <div id="win-banner" class="w-full bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 text-slate-950 px-4 py-3 border-t border-emerald-400 flex items-center justify-between shadow-2xl z-40 hidden animate-bounce-short">
-          <div class="flex items-center gap-2.5">
-            <div class="w-9 h-9 rounded-xl bg-slate-950 text-emerald-400 flex items-center justify-center text-xl shrink-0 font-black">
-              🏆
-            </div>
-            <div>
-              <h3 class="font-black text-xs sm:text-sm text-white">CASE SOLVED SUCCESSFULLY!</h3>
-              <p class="text-[11px] text-emerald-100 font-medium">All artworks have been recovered and all evidence cross-checked.</p>
-            </div>
-          </div>
-          <div class="flex items-center gap-2 shrink-0">
-            <button id="btn-next-level" class="btn-tactile px-3.5 py-2 rounded-xl bg-slate-950 text-emerald-300 font-black text-xs border border-emerald-400 hover:bg-slate-900 shrink-0 cursor-pointer">
-              NEXT CASE ➔
-            </button>
-            <button id="btn-restart-level" class="btn-tactile px-3 py-2 rounded-xl bg-slate-900/90 text-amber-300 font-bold text-xs border border-amber-500/40 hover:bg-slate-800 shrink-0 cursor-pointer">
-              Restart
-            </button>
-          </div>
-        </div>
-
-      </section>
-
-      <!-- MODAL: REWARDED AD SPONSOR / FORENSIC HINT -->
-      <div id="hint-reward-modal" class="absolute inset-0 bg-slate-950/85 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-        <div class="w-full max-w-sm rounded-2xl bg-slate-900 border border-slate-800 p-5 flex flex-col items-center text-center shadow-2xl">
-          <div class="w-14 h-14 rounded-2xl bg-amber-500/20 border border-amber-500/40 text-amber-400 flex items-center justify-center text-2xl mb-3">
-            💡
-          </div>
-          <h3 class="font-black text-lg text-white mb-1">FORENSIC ANALYSIS (HINT)</h3>
-          <p class="text-xs text-slate-400 mb-4">
-            The lab team is processing cross-evidence data to reveal a key deduction on your grid.
-          </p>
-
-          <!-- Progress bar -->
-          <div class="w-full bg-slate-800 h-2.5 rounded-full overflow-hidden mb-2 border border-slate-700">
-            <div id="hint-countdown-bar" class="h-full bg-gradient-to-r from-amber-500 to-yellow-300 transition-all duration-300 w-0"></div>
-          </div>
-          
-          <span id="hint-countdown-text" class="text-xs font-mono text-amber-300 font-bold mb-5">
-            Awaiting forensic analysis (5s)...
-          </span>
-
-          <div class="w-full flex flex-col gap-2">
-            <button id="btn-claim-hint" disabled class="btn-tactile w-full py-2.5 px-4 rounded-xl font-bold text-xs bg-gradient-to-r from-amber-500 to-yellow-400 text-slate-950 opacity-50 cursor-not-allowed">
-              CLAIM HINT 💡
-            </button>
-            <button id="btn-close-hint" class="w-full py-2 px-4 rounded-xl font-bold text-xs bg-slate-800 text-slate-400 hover:text-slate-200 cursor-pointer">
-              Cancel
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <!-- TOAST NOTIFICATION -->
-      <div id="game-toast" class="absolute top-16 left-1/2 -translate-x-1/2 bg-amber-500 text-slate-950 px-4 py-2 rounded-xl font-bold text-xs shadow-xl border border-yellow-300 z-50 pointer-events-none transition-opacity duration-300 opacity-0 hidden">
-      </div>
-
-    </div>
-
-    <!-- Script entry point -->
-    <script type="module" src="./src/main.ts"></script>
-  
-  <!-- PWA Service Worker Registration -->
   <script>
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js').catch(() => {});
-      });
+    class SoundFX {
+      constructor() {
+        this.ctx = null;
+        this.isMuted = localStorage.getItem('heist_logic_muted') === 'true';
+      }
+
+      init() {
+        if (!this.ctx) {
+          const AudioCtx = window.AudioContext || window.webkitAudioContext;
+          if (AudioCtx) this.ctx = new AudioCtx();
+        }
+        if (this.ctx && this.ctx.state === 'suspended') this.ctx.resume();
+      }
+
+      toggleMute() {
+        this.isMuted = !this.isMuted;
+        localStorage.setItem('heist_logic_muted', this.isMuted);
+        return this.isMuted;
+      }
+
+      playClick() {
+        if (this.isMuted) return;
+        this.init();
+        if (!this.ctx) return;
+        const now = this.ctx.currentTime;
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(600, now);
+        osc.frequency.exponentialRampToValueAtTime(300, now + 0.04);
+        gain.gain.setValueAtTime(0.08, now);
+        gain.gain.linearRampToValueAtTime(0.001, now + 0.04);
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.05);
+      }
+
+      playSelect() {
+        if (this.isMuted) return;
+        this.init();
+        if (!this.ctx) return;
+        const now = this.ctx.currentTime;
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(440, now);
+        osc.frequency.exponentialRampToValueAtTime(659.25, now + 0.08);
+        gain.gain.setValueAtTime(0.12, now);
+        gain.gain.linearRampToValueAtTime(0.001, now + 0.08);
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.09);
+      }
+
+      playClue() {
+        if (this.isMuted) return;
+        this.init();
+        if (!this.ctx) return;
+        const now = this.ctx.currentTime;
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(523.25, now);
+        gain.gain.setValueAtTime(0.09, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.13);
+      }
+
+      playUndo() {
+        if (this.isMuted) return;
+        this.init();
+        if (!this.ctx) return;
+        const now = this.ctx.currentTime;
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(480, now);
+        osc.frequency.exponentialRampToValueAtTime(320, now + 0.08);
+        gain.gain.setValueAtTime(0.08, now);
+        gain.gain.linearRampToValueAtTime(0.001, now + 0.08);
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.09);
+      }
+
+      playHint() {
+        if (this.isMuted) return;
+        this.init();
+        if (!this.ctx) return;
+        const now = this.ctx.currentTime;
+        [440, 554.37, 659.25, 880].forEach((freq, idx) => {
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(freq, now + idx * 0.06);
+          gain.gain.setValueAtTime(0.12, now + idx * 0.06);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.06 + 0.25);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start(now + idx * 0.06);
+          osc.stop(now + idx * 0.06 + 0.26);
+        });
+      }
+
+      playVictory() {
+        if (this.isMuted) return;
+        this.init();
+        if (!this.ctx) return;
+        const now = this.ctx.currentTime;
+        const notes = [
+          { f: 523.25, t: 0 },
+          { f: 659.25, t: 0.12 },
+          { f: 783.99, t: 0.24 },
+          { f: 1046.50, t: 0.38 },
+          { f: 1318.51, t: 0.52 }
+        ];
+        notes.forEach(n => {
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(n.f, now + n.t);
+          gain.gain.setValueAtTime(0.16, now + n.t);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + n.t + 0.45);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start(now + n.t);
+          osc.stop(now + n.t + 0.5);
+        });
+      }
+
+      playError() {
+        if (this.isMuted) return;
+        this.init();
+        if (!this.ctx) return;
+        const now = this.ctx.currentTime;
+        [320, 260].forEach((freq, idx) => {
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(freq, now + idx * 0.08);
+          gain.gain.setValueAtTime(0.08, now + idx * 0.08);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.08 + 0.15);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start(now + idx * 0.08);
+          osc.stop(now + idx * 0.08 + 0.16);
+        });
+      }
     }
-  </script>
 
+    const sound = new SoundFX();
 
-  <!-- 5-Second Hint Ad Modal System -->
-  <div id="fl-hint-modal-overlay" style="
-    display: none;
-    position: fixed;
-    inset: 0;
-    z-index: 999999;
-    background: rgba(10, 15, 30, 0.85);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    align-items: center;
-    justify-content: center;
-    font-family: system-ui, -apple-system, sans-serif;
-    padding: 16px;
-    box-sizing: border-box;
-  ">
-    <div style="
-      background: linear-gradient(145deg, #1e293b, #0f172a);
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      box-shadow: 0 20px 50px rgba(0,0,0,0.6), 0 0 30px rgba(245, 158, 11, 0.2);
-      border-radius: 20px;
-      max-width: 420px;
-      width: 100%;
-      padding: 24px;
-      text-align: center;
-      color: #f8fafc;
-      position: relative;
-    ">
-      <button id="fl-hint-close-btn" style="
-        position: absolute;
-        top: 14px;
-        right: 14px;
-        background: rgba(255,255,255,0.08);
-        border: none;
-        color: #94a3b8;
-        font-size: 18px;
-        width: 32px;
-        height: 32px;
-        border-radius: 50%;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      ">✕</button>
+    const HEIST_LEVELS = [
+      {
+        id: 1,
+        title: "Level 1: Mystery of the North Gallery",
+        subtitle: "3 Detectives • 3 Artworks • 3 Clues",
+        difficulty: "Easy",
+        size: 3,
+        story: "In the dead of night, three priceless masterpieces disappeared from the North Gallery. Three top forensic investigators took the case.",
+        detectives: [
+          { id: "sarah", name: "Det. Sarah Vance" },
+          { id: "charles", name: "Insp. Charles Roux" },
+          { id: "elena", name: "Agent Elena Vega" }
+        ],
+        paintings: [
+          { id: "starry", name: "Starry Night Stolen" },
+          { id: "mona", name: "Golden Mona Lisa" },
+          { id: "sunflower", name: "Twilight Sunflower" }
+        ],
+        clues: [
+          { id: "glove", name: "Velvet Glove Fiber" },
+          { id: "footprint", name: "Muddy Boot Print" },
+          { id: "card", name: "Royal Joker Card" }
+        ],
+        cluesList: [
+          "1. Detective Sarah Vance did NOT find the Muddy Boot Print nor the Royal Joker Card.",
+          "2. The case involving 'Starry Night Stolen' was assigned directly to Sarah Vance.",
+          "3. The theft of 'Golden Mona Lisa' left behind the Royal Joker Card.",
+          "4. Inspector Charles Roux is NOT in charge of the 'Golden Mona Lisa' case."
+        ],
+        solution: [
+          { detective: "sarah", painting: "starry", clue: "glove" },
+          { detective: "charles", painting: "sunflower", clue: "footprint" },
+          { detective: "elena", painting: "mona", clue: "card" }
+        ]
+      },
+      {
+        id: 2,
+        title: "Level 2: The Baroque Relics Hall",
+        subtitle: "4 Detectives • 4 Artworks • 4 Clues",
+        difficulty: "Medium",
+        size: 4,
+        story: "Four paintings vanished simultaneously from the East and West wings. Four forensic experts cross-examined gathered evidence.",
+        detectives: [
+          { id: "sarah", name: "Det. Sarah Vance" },
+          { id: "charles", name: "Insp. Charles Roux" },
+          { id: "elena", name: "Agent Elena Vega" },
+          { id: "kenji", name: "Specialist Kenji Sato" }
+        ],
+        paintings: [
+          { id: "portrait", name: "Imperial Portrait" },
+          { id: "lady", name: "Lady with an Ermine" },
+          { id: "scream", name: "Midnight Scream" },
+          { id: "boat", name: "Moonlit Sailboat" }
+        ],
+        clues: [
+          { id: "glove", name: "Velvet Glove Fiber" },
+          { id: "laser", name: "Severed Laser Wire" },
+          { id: "perfume", name: "Rare French Perfume" },
+          { id: "key", name: "Lost Master Key" }
+        ],
+        cluesList: [
+          "1. Agent Elena Vega found the Severed Laser Wire in her assigned case.",
+          "2. The theft of 'Midnight Scream' features the Lost Master Key as physical evidence.",
+          "3. Kenji Sato is NOT investigating 'Moonlit Sailboat' nor 'Imperial Portrait', and found the Lost Master Key.",
+          "4. 'Lady with an Ermine' was assigned to Sarah Vance, who found neither Laser Wire nor Perfume.",
+          "5. Inspector Charles Roux located the vial of Rare French Perfume, but is not investigating 'Imperial Portrait'."
+        ],
+        solution: [
+          { detective: "sarah", painting: "lady", clue: "glove" },
+          { detective: "charles", painting: "boat", clue: "perfume" },
+          { detective: "elena", painting: "portrait", clue: "laser" },
+          { detective: "kenji", painting: "scream", clue: "key" }
+        ]
+      },
+      {
+        id: 3,
+        title: "Level 3: Renaissance Masters Gallery",
+        subtitle: "4 Detectives • 4 Artworks • 4 Clues",
+        difficulty: "Medium",
+        size: 4,
+        story: "A syndicate breached the climate-controlled vault, leaving subtle high-tech traces and chemical residues on scene.",
+        detectives: [
+          { id: "sarah", name: "Det. Sarah Vance" },
+          { id: "charles", name: "Insp. Charles Roux" },
+          { id: "elena", name: "Agent Elena Vega" },
+          { id: "kenji", name: "Specialist Kenji Sato" }
+        ],
+        paintings: [
+          { id: "venus", name: "The Birth of Venus" },
+          { id: "creation", name: "The Hidden Creation" },
+          { id: "anatomy", name: "Forbidden Anatomy" },
+          { id: "garden", name: "Garden of Earthly Delights" }
+        ],
+        clues: [
+          { id: "wax", name: "Noble Sealing Wax" },
+          { id: "lens", name: "Shattered Optical Lens" },
+          { id: "chip", name: "Disabled Microchip" },
+          { id: "marble", name: "Ancient Marble Dust" }
+        ],
+        cluesList: [
+          "1. 'The Birth of Venus' was stolen leaving behind traces of Noble Sealing Wax.",
+          "2. The detective investigating 'The Hidden Creation' found the Disabled Microchip.",
+          "3. Sarah Vance is the lead detective on 'The Hidden Creation'.",
+          "4. Elena Vega found the Shattered Optical Lens, and the painting she investigates is NOT 'Forbidden Anatomy'.",
+          "5. Kenji Sato uncovered Ancient Marble Dust at his crime scene."
+        ],
+        solution: [
+          { detective: "sarah", painting: "creation", clue: "chip" },
+          { detective: "charles", painting: "venus", clue: "wax" },
+          { detective: "elena", painting: "garden", clue: "lens" },
+          { detective: "kenji", painting: "anatomy", clue: "marble" }
+        ]
+      },
+      {
+        id: 4,
+        title: "Level 4: The Imperial Vault",
+        subtitle: "5 Detectives • 5 Artworks • 5 Clues",
+        difficulty: "Hard",
+        size: 5,
+        story: "A global criminal syndicate replaced five historical masterpieces with flawless counterfeit replicas.",
+        detectives: [
+          { id: "sarah", name: "Det. Sarah Vance" },
+          { id: "charles", name: "Insp. Charles Roux" },
+          { id: "elena", name: "Agent Elena Vega" },
+          { id: "kenji", name: "Specialist Kenji Sato" },
+          { id: "beatrice", name: "Dr. Beatrice Hall" }
+        ],
+        paintings: [
+          { id: "pearl", name: "Girl with a Pearl Earring" },
+          { id: "kiss", name: "The Golden Kiss" },
+          { id: "wave", name: "The Great Blue Wave" },
+          { id: "guernica", name: "Guernica of Resistance" },
+          { id: "wanderer", name: "Wanderer Above the Mist" }
+        ],
+        clues: [
+          { id: "hair", name: "Platinum Hair Strand" },
+          { id: "watch", name: "Swiss Watch Hand" },
+          { id: "origami", name: "Dark Swan Origami" },
+          { id: "poison", name: "Rare Sedative Residue" },
+          { id: "coin", name: "Counterfeit Roman Coin" }
+        ],
+        cluesList: [
+          "1. Sarah Vance was assigned to 'Girl with a Pearl Earring' and retrieved the Platinum Hair Strand.",
+          "2. Kenji Sato investigates 'The Great Blue Wave' and retrieved the Dark Swan Origami.",
+          "3. The theft of 'The Golden Kiss' left a Swiss Watch Hand and is led by Charles Roux.",
+          "4. Dr. Beatrice Hall found a Counterfeit Roman Coin at her crime scene.",
+          "5. Agent Elena Vega is investigating 'Guernica of Resistance' and identified the Rare Sedative Residue."
+        ],
+        solution: [
+          { detective: "sarah", painting: "pearl", clue: "hair" },
+          { detective: "charles", painting: "kiss", clue: "watch" },
+          { detective: "elena", painting: "guernica", clue: "poison" },
+          { detective: "kenji", painting: "wave", clue: "origami" },
+          { detective: "beatrice", painting: "wanderer", clue: "coin" }
+        ]
+      },
+      {
+        id: 5,
+        title: "Level 5: Grand Heist of the Century",
+        subtitle: "5 Detectives • 5 Artworks • 5 Clues",
+        difficulty: "Master",
+        size: 5,
+        story: "The legendary thief 'Louvre Phantom' orchestrated the biggest art heist in history. Deduce all pairings to crack the case.",
+        detectives: [
+          { id: "sarah", name: "Det. Sarah Vance" },
+          { id: "charles", name: "Insp. Charles Roux" },
+          { id: "elena", name: "Agent Elena Vega" },
+          { id: "kenji", name: "Specialist Kenji Sato" },
+          { id: "beatrice", name: "Dr. Beatrice Hall" }
+        ],
+        paintings: [
+          { id: "nightwatch", name: "The Night Watch" },
+          { id: "liberty", name: "Liberty Leading the People" },
+          { id: "lastsupper", name: "The Last Supper Restored" },
+          { id: "medusa", name: "Raft of the Medusa" },
+          { id: "garden", name: "Garden of Earthly Delights" }
+        ],
+        clues: [
+          { id: "diamond", name: "Laser Diamond Cutter" },
+          { id: "feather", name: "Albino Peacock Feather" },
+          { id: "keycard", name: "Cloned Hacker Keycard" },
+          { id: "fuse", name: "Blown High-Voltage Fuse" },
+          { id: "cologne", name: "Imperial Royal Cologne" }
+        ],
+        cluesList: [
+          "1. 'The Night Watch' was breached using the Laser Diamond Cutter, assigned to Sarah Vance.",
+          "2. Inspector Charles Roux is investigating 'Liberty Leading the People', finding the Albino Peacock Feather.",
+          "3. Agent Elena Vega investigates 'The Last Supper Restored', where the Cloned Hacker Keycard was used.",
+          "4. Kenji Sato is investigating 'Raft of the Medusa' and found the Blown High-Voltage Fuse.",
+          "5. Dr. Beatrice Hall caught the scent of Imperial Royal Cologne during the theft of 'Garden of Earthly Delights'."
+        ],
+        solution: [
+          { detective: "sarah", painting: "nightwatch", clue: "diamond" },
+          { detective: "charles", painting: "liberty", clue: "feather" },
+          { detective: "elena", painting: "lastsupper", clue: "keycard" },
+          { detective: "kenji", painting: "medusa", clue: "fuse" },
+          { detective: "beatrice", painting: "garden", clue: "cologne" }
+        ]
+      }
+    ];
 
-      <div style="
-        width: 56px;
-        height: 56px;
-        margin: 0 auto 14px auto;
-        background: rgba(245, 158, 11, 0.15);
-        border: 1px solid rgba(245, 158, 11, 0.3);
-        border-radius: 16px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 28px;
-      ">💡</div>
+    class HeistZebraGame {
+      constructor(container) {
+        this.container = container;
+        this.gameKey = 'museum_art_heist';
+        this.unlockedLevel = parseInt(localStorage.getItem('fl_unlocked_' + this.gameKey) || '0', 10);
+        this.currentLevelIndex = 0;
+        this.tableState = {};
+        this.crossedClues = new Set();
+        this.history = [];
+        this.startTime = Date.now();
+        this.movesCount = 0;
 
-      <h3 style="margin: 0 0 6px 0; font-size: 19px; font-weight: 800; color: #fbbf24;">Unlocking Hint</h3>
-      <p style="margin: 0 0 18px 0; font-size: 13px; color: #94a3b8; line-height: 1.4;">
-        Sponsored Reward: Wait 5 seconds to reveal your clue assistance.
-      </p>
+        this.initLevel(this.currentLevelIndex);
+      }
 
-      <div id="fl-hint-ad-box" style="
-        background: rgba(0, 0, 0, 0.35);
-        border: 1px dashed rgba(255, 255, 255, 0.15);
-        border-radius: 12px;
-        padding: 16px;
-        margin-bottom: 18px;
-      ">
-        <div style="font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: #64748b; margin-bottom: 4px;">Advertisement</div>
-        <div style="font-size: 14px; font-weight: 600; color: #e2e8f0;">Brain Booster Puzzles</div>
-        <div style="font-size: 11px; color: #38bdf8; margin-top: 2px;">play.funlogic.games</div>
-      </div>
+      get level() {
+        return HEIST_LEVELS[this.currentLevelIndex];
+      }
 
-      <div style="margin-bottom: 16px;">
-        <div style="display: flex; justify-content: space-between; font-size: 12px; font-weight: 700; margin-bottom: 6px;">
-          <span style="color: #94a3b8;">Sponsor Video</span>
-          <span id="fl-hint-timer-txt" style="color: #f59e0b;">5s</span>
-        </div>
-        <div style="width: 100%; height: 8px; background: rgba(255,255,255,0.1); border-radius: 4px; overflow: hidden;">
-          <div id="fl-hint-progress-bar" style="width: 0%; height: 100%; background: linear-gradient(90deg, #f59e0b, #10b981); transition: width 0.1s linear;"></div>
-        </div>
-      </div>
+      initLevel(index) {
+        if (index > this.unlockedLevel) {
+          sound.playError();
+          this.showToast(`🔒 Complete Case ${this.unlockedLevel + 1} first to unlock!`);
+          return;
+        }
+        this.currentLevelIndex = index;
+        this.tableState = {};
+        for (let c = 0; c < this.level.size; c++) {
+          this.tableState[c] = { detective: '', painting: '', clue: '' };
+        }
+        this.crossedClues.clear();
+        this.history = [];
+        this.startTime = Date.now();
+        this.movesCount = 0;
+        this.render();
+      }
 
-      <button id="fl-hint-claim-btn" disabled style="
-        width: 100%;
-        padding: 12px;
-        border-radius: 12px;
-        border: none;
-        background: #334155;
-        color: #64748b;
-        font-weight: 700;
-        font-size: 14px;
-        cursor: not-allowed;
-        transition: all 0.2s;
-      ">Please wait 5s...</button>
-    </div>
-  </div>
+      saveHistory() {
+        this.history.push(JSON.stringify(this.tableState));
+        if (this.history.length > 30) this.history.shift();
+      }
 
-  <script>
-    (function() {
-      let countdownTimer = null;
-      let originalHintCallback = null;
+      undo() {
+        if (this.history.length === 0) return;
+        const prev = this.history.pop();
+        this.tableState = JSON.parse(prev);
+        sound.playUndo();
+        this.renderTableOnly();
+      }
 
-      const overlay = document.getElementById('fl-hint-modal-overlay');
-      const timerTxt = document.getElementById('fl-hint-timer-txt');
-      const progressBar = document.getElementById('fl-hint-progress-bar');
-      const claimBtn = document.getElementById('fl-hint-claim-btn');
-      const closeBtn = document.getElementById('fl-hint-close-btn');
+      reset() {
+        sound.playClick();
+        for (let c = 0; c < this.level.size; c++) {
+          this.tableState[c] = { detective: '', painting: '', clue: '' };
+        }
+        this.crossedClues.clear();
+        this.history = [];
+        this.movesCount = 0;
+        this.render();
+      }
 
-      function showHintAdModal(callback) {
-        if (!overlay) return;
-        originalHintCallback = callback;
-        overlay.style.display = 'flex';
-        
-        let timeLeft = 50; // 5.0 seconds
-        claimBtn.disabled = true;
-        claimBtn.style.background = '#334155';
-        claimBtn.style.color = '#64748b';
-        claimBtn.style.cursor = 'not-allowed';
-        claimBtn.textContent = 'Please wait 5s...';
-        progressBar.style.width = '0%';
-        timerTxt.textContent = '5s';
+      giveHint() {
+        sound.playHint();
+        const sol = this.level.solution;
+        const size = this.level.size;
+        const categories = ['detective', 'painting', 'clue'];
 
-        try {
-          if (window.parent && window.parent !== window) {
-            window.parent.postMessage({ type: 'hint_ad_started', duration: 5 }, '*');
-          }
-        } catch(e) {}
+        for (let c = 0; c < size; c++) {
+          const correctCol = sol[c];
+          for (const cat of categories) {
+            if (this.tableState[c][cat] !== correctCol[cat]) {
+              this.saveHistory();
+              this.tableState[c][cat] = correctCol[cat];
+              this.movesCount++;
+              this.renderTableOnly();
 
-        clearInterval(countdownTimer);
-        countdownTimer = setInterval(() => {
-          timeLeft--;
-          const percent = ((50 - timeLeft) / 50) * 100;
-          progressBar.style.width = percent + '%';
-          const secondsRemaining = Math.ceil(timeLeft / 10);
-          timerTxt.textContent = secondsRemaining + 's';
-          claimBtn.textContent = 'Please wait ' + secondsRemaining + 's...';
-
-          if (timeLeft <= 0) {
-            clearInterval(countdownTimer);
-            timerTxt.textContent = 'Ready!';
-            timerTxt.style.color = '#10b981';
-            claimBtn.disabled = false;
-            claimBtn.style.background = 'linear-gradient(90deg, #f59e0b, #10b981)';
-            claimBtn.style.color = '#0f172a';
-            claimBtn.style.cursor = 'pointer';
-            claimBtn.textContent = '✨ Get Hint Now';
-
-            try {
-              if (window.parent && window.parent !== window) {
-                window.parent.postMessage({ type: 'hint_ad_completed' }, '*');
+              const sel = document.querySelector(`select[data-col="${c}"][data-cat="${cat}"]`);
+              if (sel) {
+                sel.classList.add('hint-flash');
+                setTimeout(() => sel.classList.remove('hint-flash'), 1200);
               }
-            } catch(e) {}
+              const itemObj = this.level[cat === 'detective' ? 'detectives' : cat === 'painting' ? 'paintings' : 'clues'].find(i => i.id === correctCol[cat]);
+              this.showToast(`Hint: Assigned ${itemObj ? itemObj.name : correctCol[cat]} to Case ${c + 1}`);
+              return;
+            }
           }
-        }, 100);
+        }
+        this.showToast('All fields already match the solution!');
       }
 
-      function closeHintModal() {
-        clearInterval(countdownTimer);
-        if (overlay) overlay.style.display = 'none';
-      }
+      checkSolution() {
+        const sol = this.level.solution;
+        const size = this.level.size;
+        const categories = ['detective', 'painting', 'clue'];
 
-      function claimHint() {
-        closeHintModal();
-        if (typeof originalHintCallback === 'function') {
-          originalHintCallback();
+        let unfilled = 0;
+        for (let c = 0; c < size; c++) {
+          for (const cat of categories) {
+            if (!this.tableState[c][cat]) unfilled++;
+          }
+        }
+
+        if (unfilled > 0) {
+          sound.playError();
+          this.showToast(`Please fill all dropdowns (${unfilled} remaining)`);
+          return;
+        }
+
+        const matchedIndices = new Set();
+        let isAllCorrect = true;
+
+        for (let c = 0; c < size; c++) {
+          const currentCol = this.tableState[c];
+          const matchIdx = sol.findIndex((item, idx) => {
+            if (matchedIndices.has(idx)) return false;
+            return (
+              item.detective === currentCol.detective &&
+              item.painting === currentCol.painting &&
+              item.clue === currentCol.clue
+            );
+          });
+
+          if (matchIdx !== -1) {
+            matchedIndices.add(matchIdx);
+          } else {
+            isAllCorrect = false;
+          }
+        }
+
+        if (isAllCorrect) {
+          if (this.currentLevelIndex + 1 > this.unlockedLevel) {
+            this.unlockedLevel = Math.min(HEIST_LEVELS.length - 1, this.currentLevelIndex + 1);
+            localStorage.setItem('fl_unlocked_' + this.gameKey, this.unlockedLevel);
+          }
+          sound.playVictory();
+          const elapsedSec = Math.round((Date.now() - this.startTime) / 1000);
+          triggerPlatformWin(elapsedSec);
+          this.showVictoryModal(elapsedSec);
+        } else {
+          sound.playError();
+          this.showToast('Some forensic links are incorrect. Check your clues!');
         }
       }
 
-      if (closeBtn) closeBtn.addEventListener('click', closeHintModal);
-      if (claimBtn) claimBtn.addEventListener('click', claimHint);
+      showToast(msg) {
+        let toast = document.getElementById('game-toast');
+        if (!toast) {
+          toast = document.createElement('div');
+          toast.id = 'game-toast';
+          toast.className = 'game-toast';
+          document.body.appendChild(toast);
+        }
+        toast.textContent = msg;
+        toast.classList.add('show');
+        clearTimeout(this.toastTimeout);
+        this.toastTimeout = setTimeout(() => toast.classList.remove('show'), 2800);
+      }
 
-      window.showHintWith5sAd = showHintAdModal;
+      showVictoryModal(elapsedSec) {
+        const isLast = this.currentLevelIndex >= HEIST_LEVELS.length - 1;
+        const modal = document.createElement('div');
+        modal.className = 'victory-overlay';
+        modal.innerHTML = `
+          <div class="victory-card">
+            <div class="victory-icon">🏛️✨</div>
+            <h2 class="victory-title">Case Closed!</h2>
+            <p class="victory-sub">You solved the forensic mystery of <strong>${this.level.title}</strong>!</p>
+            
+            <div class="victory-stats">
+              <div class="stat-box">
+                <span class="stat-label">Time</span>
+                <span class="stat-val">${Math.floor(elapsedSec / 60)}m ${elapsedSec % 60}s</span>
+              </div>
+              <div class="stat-box">
+                <span class="stat-label">Moves</span>
+                <span class="stat-val">${this.movesCount}</span>
+              </div>
+              <div class="stat-box">
+                <span class="stat-label">Difficulty</span>
+                <span class="stat-val">${this.level.difficulty}</span>
+              </div>
+            </div>
 
-      window.addEventListener('DOMContentLoaded', () => {
-        setTimeout(() => {
-          const hintSelectors = [
-            '#btn-hint', '#hint-btn', '#button-hint', '#hint',
-            '.btn-hint', '.hint-btn', '[data-action="hint"]',
-            'button[title*="Hint" i]', 'button[aria-label*="Hint" i]'
-          ];
+            <div class="victory-actions">
+              ${isLast ? `
+                <button id="btn-replay-all" class="btn-primary-action">🏆 Play Level 1</button>
+              ` : `
+                <button id="btn-next-stage" class="btn-primary-action">Next Level →</button>
+              `}
+              <button id="btn-close-victory" class="btn-secondary-action">Review Evidence</button>
+            </div>
+          </div>
+        `;
 
-          hintSelectors.forEach(selector => {
-            document.querySelectorAll(selector).forEach(btn => {
-              if (!btn.getAttribute('data-fl-hooked')) {
-                btn.setAttribute('data-fl-hooked', 'true');
-                btn.addEventListener('click', function(e) {
-                  if (!this.hasAttribute('data-hint-approved')) {
-                    e.stopImmediatePropagation();
-                    e.preventDefault();
-                    showHintAdModal(() => {
-                      this.setAttribute('data-hint-approved', 'true');
-                      this.click();
-                      setTimeout(() => this.removeAttribute('data-hint-approved'), 500);
-                    });
-                  }
-                }, true);
-              }
-            });
+        document.body.appendChild(modal);
+
+        const btnNext = modal.querySelector('#btn-next-stage');
+        if (btnNext) {
+          btnNext.addEventListener('click', () => {
+            modal.remove();
+            this.initLevel(this.currentLevelIndex + 1);
           });
-        }, 300);
-      });
-    })();
-  </script>
+        }
 
+        const btnReplay = modal.querySelector('#btn-replay-all');
+        if (btnReplay) {
+          btnReplay.addEventListener('click', () => {
+            modal.remove();
+            this.initLevel(0);
+          });
+        }
+
+        const btnClose = modal.querySelector('#btn-close-victory');
+        if (btnClose) btnClose.addEventListener('click', () => modal.remove());
+      }
+
+      renderTableOnly() {
+        const container = this.container.querySelector('#zebra-table-container');
+        if (container) {
+          container.innerHTML = this.buildTableHtml();
+          this.bindTableEvents();
+        }
+      }
+
+      buildTableHtml() {
+        const lvl = this.level;
+        const size = lvl.size;
+
+        const categories = [
+          { id: 'detective', label: 'Detective', icon: '🕵️‍♂️', items: lvl.detectives },
+          { id: 'painting', label: 'Stolen Artwork', icon: '🖼️', items: lvl.paintings },
+          { id: 'clue', label: 'Forensic Clue', icon: '🔍', items: lvl.clues }
+        ];
+
+        let html = `
+          <div class="table-responsive-wrapper">
+            <table class="zebra-grid-table">
+              <thead>
+                <tr>
+                  <th class="category-header-cell">Evidence</th>
+        `;
+
+        for (let c = 0; c < size; c++) {
+          html += `<th class="column-header-cell">Case #${c + 1}</th>`;
+        }
+
+        html += `</tr></thead><tbody>`;
+
+        categories.forEach(cat => {
+          html += `
+            <tr>
+              <td class="category-label-cell">
+                <span class="cat-icon">${cat.icon}</span>
+                <span class="cat-name">${cat.label}</span>
+              </td>
+          `;
+
+          for (let c = 0; c < size; c++) {
+            const currentVal = this.tableState[c] ? this.tableState[c][cat.id] : '';
+            html += `
+              <td class="grid-select-cell">
+                <select class="zebra-select ${currentVal ? 'selected' : ''}" data-col="${c}" data-cat="${cat.id}">
+                  <option value="">— Select —</option>
+                  ${cat.items.map(itm => `
+                    <option value="${itm.id}" ${currentVal === itm.id ? 'selected' : ''}>${itm.name}</option>
+                  `).join('')}
+                </select>
+              </td>
+            `;
+          }
+
+          html += `</tr>`;
+        });
+
+        html += `</tbody></table></div>`;
+        return html;
+      }
+
+      bindTableEvents() {
+        const selects = this.container.querySelectorAll('.zebra-select');
+        selects.forEach(sel => {
+          sel.addEventListener('change', (e) => {
+            const col = parseInt(e.target.getAttribute('data-col'), 10);
+            const cat = e.target.getAttribute('data-cat');
+            const val = e.target.value;
+
+            this.saveHistory();
+            if (!this.tableState[col]) this.tableState[col] = { detective: '', painting: '', clue: '' };
+            this.tableState[col][cat] = val;
+            this.movesCount++;
+
+            if (val) {
+              sound.playSelect();
+              e.target.classList.add('selected');
+            } else {
+              sound.playClick();
+              e.target.classList.remove('selected');
+            }
+          });
+        });
+      }
+
+      render() {
+        const isMuted = sound.isMuted;
+
+        this.container.innerHTML = `
+          <div class="zebra-app-root">
+            <!-- HEADER -->
+            <header class="zebra-header">
+              <div class="header-top-row">
+                <div class="header-left">
+                  <button id="btn-back" class="btn-icon-text" title="Go back">
+                    <span class="btn-icon">←</span>
+                    <span class="btn-text">Back</span>
+                  </button>
+                  <div class="header-title-box">
+                    <h1 class="header-title">Museum Art Heist</h1>
+                    <span class="header-badge">Forensic Logic Grid</span>
+                  </div>
+                </div>
+
+                <div class="header-right">
+                  <button id="btn-sound-toggle" class="btn-icon-only" title="Toggle Sound">
+                    ${isMuted ? '🔇' : '🔔'}
+                  </button>
+                </div>
+              </div>
+
+              <div class="stage-nav-pills">
+                ${HEIST_LEVELS.map((lvl, idx) => {
+                  const isLocked = idx > this.unlockedLevel;
+                  const isActive = idx === this.currentLevelIndex;
+                  return `
+                    <button class="stage-pill ${isActive ? 'active' : ''} ${isLocked ? 'locked' : ''}" data-stage="${idx}" title="${isLocked ? 'Locked Case' : `Case ${idx + 1}`}">
+                      ${isLocked ? '🔒 ' : ''}Case ${idx + 1}
+                    </button>
+                  `;
+                }).join('')}
+              </div>
+            </header>
+
+            <!-- MAIN CONTENT -->
+            <main class="zebra-main-content">
+              <div class="level-intro-card">
+                <div class="intro-badge">${this.level.title} • ${this.level.difficulty}</div>
+                <p class="intro-desc">${this.level.story}</p>
+              </div>
+
+              <!-- TABLE -->
+              <div class="table-card-wrapper">
+                <div class="table-scroll-hint">↔ Swipe horizontally to view all cases</div>
+                <div id="zebra-table-container">
+                  ${this.buildTableHtml()}
+                </div>
+              </div>
+
+              <!-- CLUES -->
+              <section class="clues-card-section">
+                <div class="clues-header">
+                  <div class="clues-title">
+                    <span class="clues-icon">📜</span>
+                    <h2>Forensic Clues & Witness Statements</h2>
+                  </div>
+                  <span class="clues-hint-note">Click any clue to cross it out</span>
+                </div>
+
+                <div class="clues-two-col-grid">
+                  ${this.level.cluesList.map((clueText, idx) => {
+                    const isCrossed = this.crossedClues.has(idx);
+                    return `
+                      <div class="clue-card ${isCrossed ? 'crossed' : ''}" data-clue-idx="${idx}">
+                        <span class="clue-num">${idx + 1}</span>
+                        <p class="clue-text">${clueText}</p>
+                      </div>
+                    `;
+                  }).join('')}
+                </div>
+              </section>
+            </main>
+
+            <!-- TOOLBAR -->
+            <footer class="zebra-footer-toolbar">
+              <div class="toolbar-left">
+                <button id="btn-undo" class="tool-btn" title="Undo last change">
+                  <span class="tool-icon">↶</span>
+                  <span>Undo</span>
+                </button>
+                <button id="btn-reset" class="tool-btn" title="Reset table">
+                  <span class="tool-icon">🔄</span>
+                  <span>Reset</span>
+                </button>
+                <button id="btn-hint" class="tool-btn highlight" title="Get a hint">
+                  <span class="tool-icon">💡</span>
+                  <span>Hint</span>
+                </button>
+              </div>
+
+              <button id="btn-check-solution" class="btn-solve-action">
+                <span class="solve-icon">🔍</span>
+                <span>Check Solution</span>
+              </button>
+            </footer>
+          </div>
+        `;
+
+        this.bindEvents();
+        this.bindTableEvents();
+      }
+
+      bindEvents() {
+        this.container.querySelectorAll('.stage-pill').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const idx = parseInt(btn.getAttribute('data-stage'), 10);
+            sound.playClick();
+            this.initLevel(idx);
+          });
+        });
+
+        const btnBack = this.container.querySelector('#btn-back');
+        if (btnBack) {
+          btnBack.addEventListener('click', () => {
+            sound.playClick();
+            if (window.history.length > 1) {
+              window.history.back();
+            } else {
+              window.location.href = '../../index.html';
+            }
+          });
+        }
+
+        const btnSound = this.container.querySelector('#btn-sound-toggle');
+        if (btnSound) {
+          btnSound.addEventListener('click', () => {
+            const isMuted = sound.toggleMute();
+            btnSound.textContent = isMuted ? '🔇' : '🔔';
+            if (!isMuted) sound.playClick();
+          });
+        }
+
+        this.container.querySelectorAll('.clue-card').forEach(card => {
+          card.addEventListener('click', () => {
+            sound.playClue();
+            const idx = parseInt(card.getAttribute('data-clue-idx'), 10);
+            if (this.crossedClues.has(idx)) {
+              this.crossedClues.delete(idx);
+              card.classList.remove('crossed');
+            } else {
+              this.crossedClues.add(idx);
+              card.classList.add('crossed');
+            }
+          });
+        });
+
+        const btnUndo = this.container.querySelector('#btn-undo');
+        if (btnUndo) btnUndo.addEventListener('click', () => this.undo());
+
+        const btnReset = this.container.querySelector('#btn-reset');
+        if (btnReset) btnReset.addEventListener('click', () => this.reset());
+
+        const btnHint = this.container.querySelector('#btn-hint');
+        if (btnHint) btnHint.addEventListener('click', () => this.giveHint());
+
+        const btnCheck = this.container.querySelector('#btn-check-solution');
+        if (btnCheck) btnCheck.addEventListener('click', () => this.checkSolution());
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      const root = document.getElementById('app');
+      if (root) new HeistZebraGame(root);
+    });
+  </script>
 </body>
 </html>

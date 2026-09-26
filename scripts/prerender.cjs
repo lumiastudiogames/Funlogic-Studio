@@ -103,7 +103,7 @@ canonicalGames.forEach(game => {
   }
 
   const title = meta.title || game.title;
-  const canonicalUrl = `https://funlogic.games/game/${game.slug}/`;
+  const canonicalUrl = `https://playfunlogic.com/game/${game.slug}/`;
   const baseDesc = meta.description || meta.shortDesc || game.description || '';
   const fullDesc = baseDesc.length > 120 
     ? baseDesc 
@@ -112,12 +112,12 @@ canonicalGames.forEach(game => {
   const metaDesc = fullDesc.length > 160 ? fullDesc.substring(0, 157) + '...' : fullDesc;
 
   // Cover image
-  let imageUrl = 'https://funlogic.games/icon.svg';
+  let imageUrl = 'https://playfunlogic.com/icon.svg';
   if (folder) {
     const files = fs.readdirSync(folder);
     const coverFile = files.find(f => /^cover\.(webp|jpg|png|svg)$/i.test(f));
     if (coverFile) {
-      imageUrl = `https://funlogic.games/src/games/${game.slug}/${coverFile}`;
+      imageUrl = `https://playfunlogic.com/src/games/${game.slug}/${coverFile}`;
     }
   }
 
@@ -179,13 +179,13 @@ canonicalGames.forEach(game => {
           "@type": "ListItem",
           "position": 1,
           "name": "Home",
-          "item": "https://funlogic.games/"
+          "item": "https://playfunlogic.com/"
         },
         {
           "@type": "ListItem",
           "position": 2,
           "name": game.categoryLabel,
-          "item": `https://funlogic.games/category/${game.categoryId}/`
+          "item": `https://playfunlogic.com/category/${game.categoryId}/`
         },
         {
           "@type": "ListItem",
@@ -216,7 +216,7 @@ canonicalGames.forEach(game => {
         <div class="max-w-7xl mx-auto flex items-center justify-between">
           <a href="/" class="flex items-center gap-2 text-white font-black text-xl tracking-tight no-underline">
             <span class="w-8 h-8 rounded-xl bg-[#58CC02] flex items-center justify-center text-white text-lg">🧩</span>
-            <span>FunLogic<span class="text-[#58CC02]">.games</span></span>
+            <span>PlayFunLogic<span class="text-[#58CC02]">.games</span></span>
           </a>
           <nav class="flex items-center gap-4 text-xs font-bold text-slate-300">
             <a href="/" class="hover:text-white transition">Home</a>
@@ -300,7 +300,7 @@ canonicalGames.forEach(game => {
 
       <footer class="w-full bg-[#0F172A] border-t border-slate-800 py-6 text-center text-xs text-slate-400">
         <div class="max-w-7xl mx-auto px-4">
-          <p>© 2026 FunLogic.games by Lumia Studio. All rights reserved. Free casual logic puzzles with zero installation.</p>
+          <p>© 2026 PlayFunLogic.com by Lumia Studio. All rights reserved. Free casual logic puzzles with zero installation.</p>
         </div>
       </footer>
     </div>
@@ -310,7 +310,7 @@ canonicalGames.forEach(game => {
   let pageHtml = baseTemplate;
 
   // Replace title
-  pageHtml = pageHtml.replace(/<title>.*?<\/title>/i, `<title>${escapeHtml(title)} - Play Free Online (No Download) | FunLogic.games</title>`);
+  pageHtml = pageHtml.replace(/<title>.*?<\/title>/i, `<title>${escapeHtml(title)} - Play Free Online (No Download) | PlayFunLogic.com</title>`);
 
   // Replace / inject meta tags in <head>
   const metaTags = `
@@ -318,14 +318,14 @@ canonicalGames.forEach(game => {
     <meta name="keywords" content="${escapeHtml(topKeywords)}" />
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
     <link rel="canonical" href="${canonicalUrl}" />
-    <meta property="og:title" content="${escapeHtml(title)} — FunLogic.games" />
+    <meta property="og:title" content="${escapeHtml(title)} — PlayFunLogic.com" />
     <meta property="og:description" content="${escapeHtml(metaDesc)}" />
     <meta property="og:url" content="${canonicalUrl}" />
     <meta property="og:type" content="game" />
     <meta property="og:image" content="${imageUrl}" />
-    <meta property="og:site_name" content="FunLogic.games" />
+    <meta property="og:site_name" content="PlayFunLogic.com" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="${escapeHtml(title)} — FunLogic.games" />
+    <meta name="twitter:title" content="${escapeHtml(title)} — PlayFunLogic.com" />
     <meta name="twitter:description" content="${escapeHtml(metaDesc)}" />
     <meta name="twitter:image" content="${imageUrl}" />
     <script type="application/ld+json">${JSON.stringify(jsonLd, null, 2)}</script>
@@ -348,8 +348,8 @@ console.log(`Generated ${gamePagesCount} static game HTML landing pages!`);
 // 4. Generate pages for each of the 13 categories
 console.log('Generating pre-rendered HTML for 13 categories...');
 CATEGORIES_DATA.forEach(cat => {
-  const canonicalUrl = `https://funlogic.games/category/${cat.id}/`;
-  const catTitle = `${cat.label} Logic Games — Free Online Puzzles | FunLogic.games`;
+  const canonicalUrl = `https://playfunlogic.com/category/${cat.id}/`;
+  const catTitle = `${cat.label} Logic Games — Free Online Puzzles | PlayFunLogic.com`;
   const catDesc = `${cat.desc} Play the best free ${cat.label} logic games online with no download directly in your web browser.`;
 
   const catGames = canonicalGames.filter(g => g.categoryId === cat.id);
@@ -370,7 +370,7 @@ CATEGORIES_DATA.forEach(cat => {
           "@type": "ListItem",
           "position": 1,
           "name": "Home",
-          "item": "https://funlogic.games/"
+          "item": "https://playfunlogic.com/"
         },
         {
           "@type": "ListItem",
@@ -388,7 +388,7 @@ CATEGORIES_DATA.forEach(cat => {
         <div class="max-w-7xl mx-auto flex items-center justify-between">
           <a href="/" class="flex items-center gap-2 text-white font-black text-xl tracking-tight no-underline">
             <span class="w-8 h-8 rounded-xl bg-[#58CC02] flex items-center justify-center text-white text-lg">🧩</span>
-            <span>FunLogic<span class="text-[#58CC02]">.games</span></span>
+            <span>PlayFunLogic<span class="text-[#58CC02]">.games</span></span>
           </a>
           <nav class="flex items-center gap-4 text-xs font-bold text-slate-300">
             <a href="/" class="hover:text-white transition">Home</a>
@@ -417,7 +417,7 @@ CATEGORIES_DATA.forEach(cat => {
       </main>
 
       <footer class="w-full bg-[#0F172A] border-t border-slate-800 py-6 text-center text-xs text-slate-400">
-        <p>© 2026 FunLogic.games. Free casual logic puzzles with zero installation.</p>
+        <p>© 2026 PlayFunLogic.com. Free casual logic puzzles with zero installation.</p>
       </footer>
     </div>
   `;
@@ -433,7 +433,7 @@ CATEGORIES_DATA.forEach(cat => {
     <meta property="og:description" content="${escapeHtml(catDesc)}" />
     <meta property="og:url" content="${canonicalUrl}" />
     <meta property="og:type" content="website" />
-    <meta property="og:site_name" content="FunLogic.games" />
+    <meta property="og:site_name" content="PlayFunLogic.com" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="${escapeHtml(catTitle)}" />
     <meta name="twitter:description" content="${escapeHtml(catDesc)}" />
@@ -451,9 +451,9 @@ console.log('Generated 13 static category HTML landing pages!');
 
 // 5. Generate Human Sitemap Page (/sitemap/)
 console.log('Generating pre-rendered Human Sitemap page...');
-const sitemapUrl = 'https://funlogic.games/sitemap/';
-const sitemapTitle = 'Human Sitemap & Directory — All 104 Logic Games | FunLogic.games';
-const sitemapDesc = 'Browse the complete directory of 104 casual logic, reasoning, puzzle, and brain training games on FunLogic.games.';
+const sitemapUrl = 'https://playfunlogic.com/sitemap/';
+const sitemapTitle = 'Human Sitemap & Directory — All 102 Logic Games | PlayFunLogic.com';
+const sitemapDesc = 'Browse the complete directory of 102 casual logic, reasoning, puzzle, and brain training games on PlayFunLogic.com.';
 
 const sitemapBodyHtml = `
   <div id="app-layout" class="min-h-screen bg-[#0F172A] flex flex-col justify-between">
@@ -461,7 +461,7 @@ const sitemapBodyHtml = `
       <div class="max-w-7xl mx-auto flex items-center justify-between">
         <a href="/" class="flex items-center gap-2 text-white font-black text-xl tracking-tight no-underline">
           <span class="w-8 h-8 rounded-xl bg-[#58CC02] flex items-center justify-center text-white text-lg">🧩</span>
-          <span>FunLogic<span class="text-[#58CC02]">.games</span></span>
+          <span>PlayFunLogic<span class="text-[#58CC02]">.games</span></span>
         </a>
       </div>
     </header>
@@ -497,7 +497,7 @@ const sitemapBodyHtml = `
     </main>
 
     <footer class="w-full bg-[#0F172A] border-t border-slate-800 py-6 text-center text-xs text-slate-400">
-      <p>© 2026 FunLogic.games. All 104 logic puzzles cataloged.</p>
+      <p>© 2026 PlayFunLogic.com. All 102 logic puzzles cataloged.</p>
     </footer>
   </div>
 `;
@@ -518,18 +518,18 @@ console.log('Generating pre-rendered Legal & Compliance pages...');
 const legalPages = [
   {
     slug: 'privacy',
-    title: 'Privacy Policy & Cookie Disclosure — FunLogic.games',
-    desc: 'Privacy Policy and Cookie Disclosure for FunLogic.games by Lumia Studio. Learn how your data is protected and our compliance with Google AdSense, GDPR, and LGPD.',
+    title: 'Privacy Policy & Cookie Disclosure — PlayFunLogic.com',
+    desc: 'Privacy Policy and Cookie Disclosure for PlayFunLogic.com by Lumia Studio. Learn how your data is protected and our compliance with Google AdSense, GDPR, and LGPD.',
     h1: 'Privacy Policy',
     badge: 'Legal Compliance',
     content: `
       <section class="space-y-3">
         <h2 class="text-base font-black text-white">1. Introduction & Overview</h2>
-        <p class="text-sm text-slate-300">Welcome to FunLogic.games by Lumia Studio. We respect your privacy and are committed to protecting any data collected during gameplay. This policy outlines our compliance with Google AdSense publisher policies, GDPR (EU), LGPD (Brazil), and COPPA.</p>
+        <p class="text-sm text-slate-300">Welcome to PlayFunLogic.com by Lumia Studio. We respect your privacy and are committed to protecting any data collected during gameplay. This policy outlines our compliance with Google AdSense publisher policies, GDPR (EU), LGPD (Brazil), and COPPA.</p>
       </section>
       <section class="space-y-3">
         <h2 class="text-base font-black text-white">2. Information Collection & Storage</h2>
-        <p class="text-sm text-slate-300">FunLogic.games is 100% free to play without mandatory registration. Progress, streak records, and level unlocks are stored locally in your browser via HTML5 LocalStorage and never transmitted to our private servers.</p>
+        <p class="text-sm text-slate-300">PlayFunLogic.com is 100% free to play without mandatory registration. Progress, streak records, and level unlocks are stored locally in your browser via HTML5 LocalStorage and never transmitted to our private servers.</p>
       </section>
       <section class="space-y-3">
         <h2 class="text-base font-black text-white">3. Third-Party Advertising & Google AdSense</h2>
@@ -541,20 +541,20 @@ const legalPages = [
       </section>
       <section class="space-y-3">
         <h2 class="text-base font-black text-white">5. Contact Information</h2>
-        <p class="text-sm text-slate-300">For privacy inquiries or data rights requests, email Lumia Studio at <a href="mailto:contact@funlogic.games" class="text-[#58CC02] font-bold underline">contact@funlogic.games</a>.</p>
+        <p class="text-sm text-slate-300">For privacy inquiries or data rights requests, email Lumia Studio at <a href="mailto:contact@playfunlogic.com" class="text-[#58CC02] font-bold underline">contact@playfunlogic.com</a>.</p>
       </section>
     `
   },
   {
     slug: 'terms',
-    title: 'Terms of Service — FunLogic.games',
-    desc: 'Terms of Service and End-User Usage Agreement for FunLogic.games casual logic and puzzle web games.',
+    title: 'Terms of Service — PlayFunLogic.com',
+    desc: 'Terms of Service and End-User Usage Agreement for PlayFunLogic.com casual logic and puzzle web games.',
     h1: 'Terms of Service',
     badge: 'Terms & Conditions',
     content: `
       <section class="space-y-3">
         <h2 class="text-base font-black text-white">1. Acceptance of Terms</h2>
-        <p class="text-sm text-slate-300">By accessing and playing games on FunLogic.games, you agree to abide by these Terms of Service. If you disagree with any terms, please discontinue use of the site.</p>
+        <p class="text-sm text-slate-300">By accessing and playing games on PlayFunLogic.com, you agree to abide by these Terms of Service. If you disagree with any terms, please discontinue use of the site.</p>
       </section>
       <section class="space-y-3">
         <h2 class="text-base font-black text-white">2. License to Play</h2>
@@ -568,14 +568,14 @@ const legalPages = [
   },
   {
     slug: 'about',
-    title: 'About Lumia Studio & FunLogic.games',
-    desc: 'About FunLogic.games and Lumia Studio: independent creator of accessible, fast, and cognitive-friendly web puzzles for all generations.',
-    h1: 'About Lumia Studio & FunLogic.games',
+    title: 'About Lumia Studio & PlayFunLogic.com',
+    desc: 'About PlayFunLogic.com and Lumia Studio: independent creator of accessible, fast, and cognitive-friendly web puzzles for all generations.',
+    h1: 'About Lumia Studio & PlayFunLogic.com',
     badge: 'Our Mission',
     content: `
       <section class="space-y-3">
         <h2 class="text-base font-black text-white">Accessible Brain Training for Everyone</h2>
-        <p class="text-sm text-slate-300">FunLogic.games by Lumia Studio is dedicated to creating accessible, high-performance logic, math, memory, and puzzle games that run smoothly on every device with zero downloads.</p>
+        <p class="text-sm text-slate-300">PlayFunLogic.com by Lumia Studio is dedicated to creating accessible, high-performance logic, math, memory, and puzzle games that run smoothly on every device with zero downloads.</p>
       </section>
       <section class="space-y-3">
         <h2 class="text-base font-black text-white">Designed for All Generations</h2>
@@ -585,8 +585,8 @@ const legalPages = [
   },
   {
     slug: 'contact',
-    title: 'Contact Lumia Studio — FunLogic.games',
-    desc: 'Contact Lumia Studio and the FunLogic.games team for support, game suggestions, developer partnerships, and bug reports.',
+    title: 'Contact Lumia Studio — PlayFunLogic.com',
+    desc: 'Contact Lumia Studio and the PlayFunLogic.com team for support, game suggestions, developer partnerships, and bug reports.',
     h1: 'Contact Us',
     badge: 'Support & Inquiries',
     content: `
@@ -595,9 +595,9 @@ const legalPages = [
         <p class="text-sm text-slate-300">Have feedback, a game idea, or found a bug? We welcome your questions and suggestions.</p>
         <div class="p-4 rounded-2xl bg-slate-800/80 border border-slate-700/60 space-y-2">
           <p class="text-xs font-black uppercase text-[#58CC02]">General Inquiries & Support:</p>
-          <a href="mailto:contact@funlogic.games" class="text-base font-black text-white hover:text-[#58CC02] transition block">contact@funlogic.games</a>
+          <a href="mailto:contact@playfunlogic.com" class="text-base font-black text-white hover:text-[#58CC02] transition block">contact@playfunlogic.com</a>
           <p class="text-xs font-black uppercase text-[#1CB0F6] pt-2">Developer Submissions & Publishing:</p>
-          <a href="mailto:partners@funlogic.games" class="text-base font-black text-white hover:text-[#1CB0F6] transition block">partners@funlogic.games</a>
+          <a href="mailto:partners@playfunlogic.com" class="text-base font-black text-white hover:text-[#1CB0F6] transition block">partners@playfunlogic.com</a>
         </div>
       </section>
     `
@@ -605,14 +605,14 @@ const legalPages = [
 ];
 
 legalPages.forEach(p => {
-  const canonicalUrl = `https://funlogic.games/${p.slug}/`;
+  const canonicalUrl = `https://playfunlogic.com/${p.slug}/`;
   const staticBodyHtml = `
     <div id="app-layout" class="min-h-screen bg-[#0F172A] flex flex-col justify-between">
       <header class="w-full bg-[#0F172A]/90 border-b border-slate-800 px-4 py-3 sticky top-0 z-50">
         <div class="max-w-7xl mx-auto flex items-center justify-between">
           <a href="/" class="flex items-center gap-2 text-white font-black text-xl tracking-tight no-underline">
             <span class="w-8 h-8 rounded-xl bg-[#58CC02] flex items-center justify-center text-white text-lg">🧩</span>
-            <span>FunLogic<span class="text-[#58CC02]">.games</span></span>
+            <span>PlayFunLogic<span class="text-[#58CC02]">.games</span></span>
           </a>
           <nav class="flex items-center gap-4 text-xs font-bold text-slate-300">
             <a href="/" class="hover:text-white transition">Home</a>
@@ -632,7 +632,7 @@ legalPages.forEach(p => {
       </main>
 
       <footer class="w-full bg-[#0F172A] border-t border-slate-800 py-6 text-center text-xs text-slate-400">
-        <p>© 2026 FunLogic.games by Lumia Studio. All rights reserved.</p>
+        <p>© 2026 PlayFunLogic.com by Lumia Studio. All rights reserved.</p>
       </footer>
     </div>
   `;

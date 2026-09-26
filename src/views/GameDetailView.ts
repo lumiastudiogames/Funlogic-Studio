@@ -4,9 +4,20 @@ import { createGameCardHTML } from '../components/GameCard';
 import { updateHeadSeo } from '../utils/seo';
 import { STICKERS } from '../components/Stickers';
 import { getGameLiveStats, recordGameRating, recordGamePlay } from '../utils/gameStats';
+import { getGameCoverUrl, getGameCoverPlaceholder } from '../utils/imageUtils';
+
+const GAME_ALIASES: Record<string, string> = {
+  'mahjong': 'mahjong-solitaire',
+  '2048': 'math-2048-operations',
+  'sokoban': 'sokoban-warehouse',
+  'sudoku': 'sudoku-classic',
+  'water-sort': 'water-sort-lab',
+  'chess': 'chess-mate-in-one'
+};
 
 export function renderGameDetailView(container: HTMLElement, gameId: string): void {
-  const game: Game = GAMES.find(g => g.id === gameId) || GAMES[0];
+  const resolvedId = GAME_ALIASES[gameId.toLowerCase()] || gameId;
+  const game: Game = GAMES.find(g => g.id === resolvedId) || GAMES.find(g => g.id === gameId) || GAMES[0];
   const category = CATEGORIES.find(c => c.id === game.categoryId) || CATEGORIES[0];
   const stats = getGameLiveStats(game);
 
@@ -38,9 +49,9 @@ export function renderGameDetailView(container: HTMLElement, gameId: string): vo
     description: fullDescription,
     keywords: game.keywords || game.tags,
     imageUrl: game.coverImage,
-    canonicalUrl: `https://funlogic.games/game/${game.id}/`,
+    canonicalUrl: `https://playfunlogic.com/game/${game.id}/`,
     categoryName: category.label,
-    categoryUrl: `https://funlogic.games/category/${game.categoryId}/`,
+    categoryUrl: `https://playfunlogic.com/category/${game.categoryId}/`,
     type: 'game',
     faqs: gameFaqs,
     ratingValue: stats.ratingValue,
@@ -66,7 +77,7 @@ export function renderGameDetailView(container: HTMLElement, gameId: string): vo
     : '<span class="px-2.5 py-1 rounded-lg text-xs font-black bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">⚡ All Ages</span>';
 
   container.innerHTML = `
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-6 space-y-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 py-6 space-y-8 safe-padding-x">
       
       <!-- Top Breadcrumb & Back Navigation -->
       <div class="flex flex-wrap items-center justify-between gap-3 text-xs font-bold text-slate-500">
@@ -95,10 +106,16 @@ export function renderGameDetailView(container: HTMLElement, gameId: string): vo
           <div class="lg:col-span-5 flex flex-col items-center">
             <div class="w-full aspect-[4/3] rounded-2xl sm:rounded-3xl relative overflow-hidden bg-slate-800 border-2 border-slate-700/80 shadow-lg group">
               <img 
-                src="${game.coverImage || `https://picsum.photos/seed/${game.id}/800/600`}" 
+                src="${getGameCoverUrl(game)}" 
                 alt="${game.title} Cover" 
                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
-                referrerPolicy="no-referrer"
+                referrerpolicy="no-referrer"
+                loading="eager"
+                decoding="async"
+                fetchpriority="high"
+                width="600"
+                height="450"
+                onerror="this.onerror=null;this.src='${getGameCoverPlaceholder(game)}';"
               />
               <div class="absolute top-3 left-3 flex flex-wrap gap-1.5">
                 <span class="bg-black/75 backdrop-blur-md text-white text-[10px] font-black uppercase px-2.5 py-1 rounded-lg border border-white/10">
@@ -147,7 +164,7 @@ export function renderGameDetailView(container: HTMLElement, gameId: string): vo
                 </span>
                 <span>•</span>
                 <span class="text-slate-300">
-                  🔒 100% Free & No Ads
+                  🔒 100% Free to Play
                 </span>
               </div>
 
@@ -314,7 +331,7 @@ export function renderGameDetailView(container: HTMLElement, gameId: string): vo
             </a>
           </div>
 
-          <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+          <div class="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
             ${relatedGames.map(relGame => createGameCardHTML(relGame)).join('')}
           </div>
         </section>

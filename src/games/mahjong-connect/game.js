@@ -160,6 +160,7 @@
 
       this.initEvents();
       this.updateMenuSelectedMode();
+      this.startNewGame();
     }
 
     detectOrientation() {

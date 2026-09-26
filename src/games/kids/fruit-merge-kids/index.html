@@ -66,8 +66,10 @@
     <header class="header">
       <div class="hud-group">
         <span class="badge">🍉 Fruit Merge</span>
+        <div class="target-chip">Goal: 🍉</div>
       </div>
       <div class="hud-group">
+        <div class="score-chip">Score: <span id="score-val">0</span></div>
         <button id="btn-restart" class="btn-tactile btn-icon" title="Restart">
           <span>🔄</span>
         </button>
@@ -97,6 +99,42 @@
 
         <!-- Dynamic Tiles Layer -->
         <div id="tiles-layer"></div>
+      </div>
+
+      <!-- Accessible Slide Controls -->
+      <div class="d-pad">
+        <button class="d-pad-btn d-up" data-dir="UP" title="Slide Up">▲</button>
+        <button class="d-pad-btn d-left" data-dir="LEFT" title="Slide Left">◀</button>
+        <button class="d-pad-btn d-down" data-dir="DOWN" title="Slide Down">▼</button>
+        <button class="d-pad-btn d-right" data-dir="RIGHT" title="Slide Right">▶</button>
+      </div>
+
+      <!-- Fruit Cards Evolution Dock (Lower Shelf) -->
+      <div class="fruit-cards-shelf" id="fruit-cards-shelf">
+        <div class="fruit-card unlocked active" data-tier="1" title="Apple">
+          <span class="card-icon">🍎</span>
+          <span class="card-name">Apple</span>
+        </div>
+        <div class="card-arrow">➔</div>
+        <div class="fruit-card" data-tier="2" title="Banana">
+          <span class="card-icon">🍌</span>
+          <span class="card-name">Banana</span>
+        </div>
+        <div class="card-arrow">➔</div>
+        <div class="fruit-card" data-tier="3" title="Grapes">
+          <span class="card-icon">🍇</span>
+          <span class="card-name">Grapes</span>
+        </div>
+        <div class="card-arrow">➔</div>
+        <div class="fruit-card" data-tier="4" title="Orange">
+          <span class="card-icon">🍊</span>
+          <span class="card-name">Orange</span>
+        </div>
+        <div class="card-arrow">➔</div>
+        <div class="fruit-card" data-tier="5" title="Watermelon">
+          <span class="card-icon">🍉</span>
+          <span class="card-name">Melon</span>
+        </div>
       </div>
     </main>
 

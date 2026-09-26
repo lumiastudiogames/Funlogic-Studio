@@ -608,24 +608,26 @@ export class YardRenderer {
 
   private renderTrainStopBadge(ctx: CanvasRenderingContext2D, leadCar: ActiveCar) {
     ctx.save();
-    const pulse = 1 + Math.sin(this.frameCount * 0.1) * 0.08;
+    const pulse = 1 + Math.sin(this.frameCount * 0.12) * 0.1;
     ctx.translate(leadCar.x, leadCar.y - 28);
     ctx.scale(pulse, pulse);
 
-    // Badge bubble
-    ctx.fillStyle = '#ef4444';
+    ctx.shadowColor = 'rgba(16, 185, 129, 0.6)';
+    ctx.shadowBlur = 8;
+    ctx.fillStyle = '#10b981';
     ctx.strokeStyle = '#ffffff';
     ctx.lineWidth = 1.5;
     ctx.beginPath();
-    ctx.roundRect(-24, -10, 48, 20, 10);
+    ctx.roundRect(-36, -11, 72, 22, 11);
     ctx.fill();
     ctx.stroke();
+    ctx.shadowBlur = 0;
 
     ctx.fillStyle = '#ffffff';
-    ctx.font = 'bold 9px sans-serif';
+    ctx.font = "bold 9px 'Plus Jakarta Sans', sans-serif";
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.fillText('STOPPED', 0, 0);
+    ctx.fillText('TAP TO START ▶', 0, 0);
 
     ctx.restore();
   }

@@ -90,7 +90,7 @@ function extractSlug(filePath: string): string | null {
 // Map of discovered game engines: gameId -> engine function
 const discoveredEnginesMap = new Map<string, (container: HTMLElement, onWin: (time: number, streak?: number) => void) => (() => void) | void>();
 
-// Map of discovered games: gameId -> Game object (strictly 103 items)
+// Map of discovered games: gameId -> Game object
 const discoveredGamesMap = new Map<string, Game>();
 
 interface GameAssetRecord {
@@ -103,7 +103,7 @@ interface GameAssetRecord {
 
 const gameAssetMap = new Map<string, GameAssetRecord>();
 
-// Pre-populate asset map with all 103 canonical games
+// Pre-populate asset map with all canonical games
 for (const canonical of CANONICAL_103_GAMES) {
   gameAssetMap.set(canonical.slug, { slug: canonical.slug });
 }
@@ -163,7 +163,7 @@ for (const canonical of CANONICAL_103_GAMES) {
   const slug = canonical.slug;
   const record = gameAssetMap.get(slug);
   const metadata = record?.metadata;
-  const htmlUrl = `${base}/games/${slug}/index.html`;
+  const htmlUrl = `${base}/games/${slug}/`;
   const coverImage = record?.coverImage;
 
   const catId = canonical.categoryId as CategoryId;
@@ -186,10 +186,10 @@ for (const canonical of CANONICAL_103_GAMES) {
           <div class="h-10 bg-gray-900/90 backdrop-blur px-4 flex items-center justify-between text-xs text-gray-300">
             <span class="font-bold flex items-center gap-1.5">
               <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-              Jogo Carregado
+              Game Loaded
             </span>
             <button id="btn-iframe-finish" class="px-3 py-1 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg font-bold transition">
-              Concluir / Vencer 🏆
+              Complete / Win 🏆
             </button>
           </div>
         </div>
@@ -258,7 +258,7 @@ for (const canonical of CANONICAL_103_GAMES) {
 }
 
 /**
- * Retorna exatamente os 103 jogos oficiais descobertos e cadastrados.
+ * Retorna os jogos oficiais cadastrados.
  */
 export function getDiscoveredGames(): Game[] {
   return Array.from(discoveredGamesMap.values());

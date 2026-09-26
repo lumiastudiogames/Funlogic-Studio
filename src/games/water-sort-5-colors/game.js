@@ -183,8 +183,10 @@
     });
   }
 
+  let isAnimating = false;
+
   function handleTubeClick(idx) {
-    if (isWon) return;
+    if (isWon || isAnimating) return;
     const tube = tubes[idx];
 
     if (selectedTubeIdx === null) {
@@ -219,23 +221,69 @@
   }
 
   function executePour(srcIdx, dstIdx) {
+    if (isAnimating) return;
+    isAnimating = true;
+
     history.push(JSON.parse(JSON.stringify(tubes)));
 
     const src = tubes[srcIdx];
     const dst = tubes[dstIdx];
     const color = src[src.length - 1];
+    const colorGrad = COLORS[color].gradient;
 
-    while (src.length > 0 && src[src.length - 1] === color && dst.length < TUBE_CAPACITY) {
-      dst.push(src.pop());
+    // Find tube DOM elements
+    const srcEl = document.querySelector(`.tube[data-idx="${srcIdx}"]`);
+    const dstEl = document.querySelector(`.tube[data-idx="${dstIdx}"]`);
+
+    if (srcEl && dstEl) {
+      const srcRect = srcEl.getBoundingClientRect();
+      const dstRect = dstEl.getBoundingClientRect();
+      const deltaX = dstRect.left - srcRect.left;
+      const deltaY = dstRect.top - srcRect.top;
+      const tiltDeg = deltaX > 0 ? 55 : -55;
+
+      srcEl.classList.add('pouring');
+      srcEl.style.transform = `translate(${deltaX + (deltaX > 0 ? -18 : 18)}px, ${deltaY - 30}px) rotate(${tiltDeg}deg)`;
+
+      // Spawn falling liquid stream
+      const stream = document.createElement('div');
+      stream.className = 'pouring-stream';
+      stream.style.background = colorGrad;
+      stream.style.left = deltaX > 0 ? '36px' : '8px';
+      stream.style.top = '10px';
+      stream.style.height = `${Math.abs(deltaY) + 50}px`;
+      srcEl.appendChild(stream);
+
+      playSound('pour');
+
+      setTimeout(() => {
+        while (src.length > 0 && src[src.length - 1] === color && dst.length < TUBE_CAPACITY) {
+          dst.push(src.pop());
+        }
+
+        moves++;
+        selectedTubeIdx = null;
+        srcEl.style.transform = 'none';
+        srcEl.classList.remove('pouring');
+        if (stream.parentNode) stream.remove();
+        isAnimating = false;
+
+        updateHUD();
+        renderTubes();
+        checkWinCondition();
+      }, 420);
+    } else {
+      while (src.length > 0 && src[src.length - 1] === color && dst.length < TUBE_CAPACITY) {
+        dst.push(src.pop());
+      }
+      moves++;
+      selectedTubeIdx = null;
+      isAnimating = false;
+      playSound('pour');
+      updateHUD();
+      renderTubes();
+      checkWinCondition();
     }
-
-    moves++;
-    selectedTubeIdx = null;
-    playSound('pour');
-
-    updateHUD();
-    renderTubes();
-    checkWinCondition();
   }
 
   function undoMove() {

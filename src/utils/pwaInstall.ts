@@ -78,10 +78,10 @@ export function showIOSGuidedInstall() {
     <div class="w-full max-w-sm bg-[#1E293B] border-2 border-slate-700 rounded-3xl p-6 shadow-2xl relative text-white border-b-6 border-b-slate-800">
       <div class="flex items-center gap-3 mb-4">
         <div class="w-12 h-12 rounded-2xl bg-[#58CC02] flex items-center justify-center font-black text-2xl shadow-md text-white border-b-4 border-[#46A302]">
-          F
+          P
         </div>
         <div>
-          <h3 class="text-base font-black text-white leading-tight">Install FunLogic</h3>
+          <h3 class="text-base font-black text-white leading-tight">Install PlayFunLogic</h3>
           <p class="text-xs text-slate-400 font-bold">Add to your Home Screen</p>
         </div>
       </div>

@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://funlogic.games/sitemap.xml
+Sitemap: https://playfunlogic.com/sitemap.xml

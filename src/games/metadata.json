@@ -1,6 +1,6 @@
 {
-  "name": "FunLogic.games",
-  "description": "FunLogic.games — Jogos de lógica e raciocínio online grátis no navegador. Water sort puzzle, Mahjong Solitaire, Sudoku 2048, Sokoban e quebra-cabeças cognitivos para crianças, adultos e idosos 60+.",
+  "name": "PlayFunLogic.com",
+  "description": "PlayFunLogic.com — Jogos de lógica e raciocínio online grátis no navegador. Water sort puzzle, Mahjong Solitaire, Sudoku, Sokoban e quebra-cabeças cognitivos para crianças, adultos e idosos 60+.",
   "requestFramePermissions": [],
   "majorCapabilities": [
     "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"

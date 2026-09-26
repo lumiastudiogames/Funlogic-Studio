@@ -190,7 +190,8 @@ export class GameStateManager {
 
   pickUpMatch(seg) {
     if (this.isWon || !seg.hasMatch) return false;
-    if (this.moveHistory.length >= 1) {
+    const maxMoves = this.getCurrentLevel().maxMoves || 1;
+    if (this.moveHistory.length >= maxMoves) {
       audio.playError();
       return false;
     }
@@ -340,7 +341,8 @@ export class GameStateManager {
 
   checkWinCondition() {
     const { isTrue } = this.parseCurrentEquation();
-    if (isTrue && !this.heldMatch && this.moveHistory.length === 1) {
+    const maxMoves = this.getCurrentLevel().maxMoves || 1;
+    if (isTrue && !this.heldMatch && this.moveHistory.length >= 1 && this.moveHistory.length <= maxMoves) {
       this.isWon = true;
       audio.playVictory();
 

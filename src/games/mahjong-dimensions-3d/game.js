@@ -449,8 +449,14 @@
         this.sound.playMatch(this.combo);
 
         setTimeout(() => {
-          first.element.style.display = 'none';
-          tile.element.style.display = 'none';
+          if (first.element) {
+            first.element.style.display = 'none';
+            first.element.remove();
+          }
+          if (tile.element) {
+            tile.element.style.display = 'none';
+            tile.element.remove();
+          }
           this.updateFreeStates();
           this.checkWinCondition();
         }, 350);

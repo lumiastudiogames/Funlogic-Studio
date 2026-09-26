@@ -1,5 +1,8 @@
 {
-  "name": "Remix FunLogic.games",
-  "description": "FunLogic.games — International casual logic and reasoning game portal by Lumia Studio.",
-  "requestFramePermissions": []
+  "name": "FunLogic.games",
+  "description": "PlayFunLogic.com — International casual logic and reasoning game portal by Lumia Studio.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
 }

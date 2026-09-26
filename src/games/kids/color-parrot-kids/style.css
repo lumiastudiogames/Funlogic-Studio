@@ -174,30 +174,192 @@ body {
   border-bottom-right-radius: 100%;
 }
 
-/* Center Mascot */
+/* Center Mascot - 2.5D Chibi 3D Parrot */
 .center-mascot {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 90px;
-  height: 90px;
+  width: 96px;
+  height: 96px;
   border-radius: 50%;
-  background: #ffffff;
-  border: 6px solid #0f172a;
+  background: radial-gradient(circle, #ffffff 40%, #e2e8f0 100%);
+  border: 5px solid #0f172a;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 42px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.35), inset 0 2px 4px #ffffff;
   pointer-events: none;
+  overflow: visible;
+  z-index: 5;
+}
+
+.parrot-chibi-3d {
+  position: relative;
+  width: 68px;
+  height: 72px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  animation: parrotBob 2s infinite ease-in-out;
+}
+
+@keyframes parrotBob {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  35% { transform: translateY(-3px) rotate(2deg); }
+  70% { transform: translateY(1px) rotate(-2deg); }
+}
+
+/* Crest Feathers */
+.parrot-crest {
+  position: absolute;
+  top: -8px;
+  display: flex;
+  gap: 2px;
+  z-index: 2;
+}
+
+.crest-feather {
+  display: inline-block;
+  border-radius: 10px 10px 0 0;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+}
+.crest-feather.f1 {
+  width: 7px;
+  height: 14px;
+  background: linear-gradient(180deg, #ef4444 0%, #dc2626 100%);
+  transform: rotate(-15deg);
+}
+.crest-feather.f2 {
+  width: 8px;
+  height: 18px;
+  background: linear-gradient(180deg, #facc15 0%, #eab308 100%);
+  transform: translateY(-2px);
+}
+.crest-feather.f3 {
+  width: 7px;
+  height: 14px;
+  background: linear-gradient(180deg, #38bdf8 0%, #0284c7 100%);
+  transform: rotate(15deg);
+}
+
+/* Body & Head */
+.parrot-body {
+  position: relative;
+  width: 54px;
+  height: 56px;
+  margin-top: 6px;
+  background: linear-gradient(180deg, #22c55e 0%, #16a34a 65%, #15803d 100%);
+  border-radius: 26px 26px 24px 24px;
+  border: 2px solid #86efac;
+  box-shadow: inset 0 3px 4px rgba(255,255,255,0.6), 0 5px 0 #14532d;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Belly */
+.parrot-belly {
+  position: absolute;
+  bottom: 4px;
+  width: 32px;
+  height: 32px;
+  background: linear-gradient(180deg, #fef08a 0%, #facc15 100%);
+  border-radius: 50%;
+  border: 1.5px solid #fef9c3;
+  box-shadow: inset 0 2px 2px rgba(255,255,255,0.7);
+}
+
+/* Wings */
+.parrot-wing {
+  position: absolute;
+  top: 12px;
+  width: 12px;
+  height: 26px;
+  border-radius: 12px;
+  background: linear-gradient(180deg, #38bdf8 0%, #2563eb 100%);
+  border: 1.5px solid #93c5fd;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+.parrot-wing.wing-l { left: -6px; transform: rotate(10deg); }
+.parrot-wing.wing-r { right: -6px; transform: rotate(-10deg); }
+
+/* Face & Cheeks */
+.parrot-face {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  z-index: 3;
+}
+
+.parrot-cheek {
+  position: absolute;
+  top: 20px;
+  width: 9px;
+  height: 7px;
+  background: #f472b6;
+  border-radius: 50%;
+  opacity: 0.85;
+}
+.parrot-cheek.cheek-l { left: 5px; }
+.parrot-cheek.cheek-r { right: 5px; }
+
+/* Anime Sparkly Eyes */
+.parrot-eye {
+  position: absolute;
+  top: 12px;
+  width: 11px;
+  height: 13px;
+  background: #0f172a;
+  border-radius: 50%;
+  border: 1.5px solid #ffffff;
+  overflow: hidden;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.3);
+  animation: eyeBlink 4s infinite;
+}
+.parrot-eye.eye-l { left: 11px; }
+.parrot-eye.eye-r { right: 11px; }
+
+@keyframes eyeBlink {
+  0%, 96%, 100% { transform: scaleY(1); }
+  98% { transform: scaleY(0.1); }
+}
+
+.eye-sparkle {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 4px;
+  height: 4px;
+  background: #ffffff;
+  border-radius: 50%;
+}
+
+/* 3D Beak */
+.parrot-beak {
+  position: absolute;
+  top: 19px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 14px;
+  height: 15px;
+  background: linear-gradient(180deg, #fb923c 0%, #ea580c 70%, #9a3412 100%);
+  border-radius: 4px 4px 10px 10px;
+  border: 1px solid #fdba74;
+  box-shadow: inset 0 2px 2px rgba(255,255,255,0.7), 0 2px 4px rgba(0,0,0,0.3);
 }
 
 .hint-bar {
   font-size: 15px;
-  font-weight: 700;
+  font-weight: 800;
   color: #0e7490;
   text-align: center;
+  padding: 6px 18px;
+  background: #ffffff;
+  border-radius: 9999px;
+  border: 2px solid #a5f3fc;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.06);
 }
 
 /* Modals */

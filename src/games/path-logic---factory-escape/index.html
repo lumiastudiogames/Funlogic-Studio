@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <script src="https://cdn.tailwindcss.com"></script>
+
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>Path Logic - Factory Escape</title>
@@ -810,7 +812,8 @@
     }
   </script>
 
-</head>
+    <link rel="stylesheet" href="./src/index.css" />
+  </head>
 <body>
 
   <!-- Background Particle Sparks Canvas -->
@@ -855,8 +858,8 @@
           <span id="stat-battery" class="stat-value battery">0 / 2 ⚡</span>
         </div>
         <div class="stat-item">
-          <span class="stat-label">Steps</span>
-          <span id="stat-steps" class="stat-value">0</span>
+          <span class="stat-label">Energy</span>
+          <span id="stat-steps" class="stat-value">12 / 12</span>
         </div>
       </div>
     </header>
@@ -1668,6 +1671,10 @@
           this.batterySet = new Set(levelData.batteries.map(b => b[0] * 6 + b[1]));
           this.totalBatteries = this.batterySet.size;
 
+          const opt = solveLevel(levelData);
+          const optSteps = opt ? (opt.length - 1) : (this.totalBatteries + 6);
+          this.maxEnergy = optSteps + 4;
+
           this.path = [this.startIdx];
           this.isDrawing = false;
           this.isGliding = false;
@@ -1869,6 +1876,13 @@
             return;
           }
 
+          if (this.path.length - 1 >= this.maxEnergy) {
+            this.sound.playError();
+            this.shakeCell(idx);
+            this.showHintBanner('⚡ Limite de energia atingido! Sparky parou. Desfaça passos para otimizar.', true);
+            return;
+          }
+
           const collectedBatteries = this.getCollectedBatteriesCount(this.path);
           if (idx === this.exitIdx && collectedBatteries < this.totalBatteries && !this.batterySet.has(idx)) {
             this.sound.playError();
@@ -1974,7 +1988,9 @@
           const collected = this.getCollectedBatteriesCount(this.path);
           this.statLevel.textContent = `${this.currentLevelIdx + 1} / ${LEVELS.length}`;
           this.statBattery.textContent = `${collected} / ${this.totalBatteries} ⚡`;
-          this.statSteps.textContent = `${this.path.length - 1}`;
+          const energyLeft = Math.max(0, (this.maxEnergy || 15) - (this.path.length - 1));
+          this.statSteps.textContent = `${energyLeft} / ${this.maxEnergy || 15} ⚡`;
+          this.statSteps.style.color = (energyLeft <= 2) ? '#ff3b5c' : '#00f0ff';
 
           const exitCell = document.getElementById(`cell-${this.exitIdx}`);
           if (exitCell) {
@@ -2292,7 +2308,7 @@
       ">
         <div style="font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: #64748b; margin-bottom: 4px;">Advertisement</div>
         <div style="font-size: 14px; font-weight: 600; color: #e2e8f0;">Brain Booster Puzzles</div>
-        <div style="font-size: 11px; color: #38bdf8; margin-top: 2px;">play.funlogic.games</div>
+        <div style="font-size: 11px; color: #38bdf8; margin-top: 2px;">playfunlogic.com</div>
       </div>
 
       <div style="margin-bottom: 16px;">

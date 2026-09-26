@@ -1,5 +1,5 @@
 (() => {
-  // sky-control---air-traffic-collision-avoidance/src/display.ts
+  // src/display.ts
   var DisplayManager = class {
     constructor(canvas) {
       this.dpr = 1;
@@ -53,7 +53,7 @@
     }
   };
 
-  // sky-control---air-traffic-collision-avoidance/src/audio.ts
+  // src/audio.ts
   var SoundManager = class {
     constructor() {
       this.ctx = null;
@@ -292,7 +292,7 @@
   };
   var sound = new SoundManager();
 
-  // sky-control---air-traffic-collision-avoidance/src/game-state.ts
+  // src/game-state.ts
   var PLANE_CONFIGS = {
     airliner: {
       name: "Boeing 777 Airliner",
@@ -1212,7 +1212,7 @@
     }
   };
 
-  // sky-control---air-traffic-collision-avoidance/src/renderer.ts
+  // src/renderer.ts
   var GameRenderer = class {
     constructor(ctx) {
       this.animTimer = 0;
@@ -2221,7 +2221,7 @@
     }
   };
 
-  // sky-control---air-traffic-collision-avoidance/src/screen-manager.ts
+  // src/screen-manager.ts
   var ScreenManager = class {
     constructor(state, onStartLevel, onResize, onEmergencyScan) {
       this.currentScreen = "MAIN_MENU";
@@ -2537,7 +2537,7 @@
     }
   };
 
-  // sky-control---air-traffic-collision-avoidance/src/main.ts
+  // src/main.ts
   var SkyControlApp = class {
     constructor() {
       this.lastTime = 0;

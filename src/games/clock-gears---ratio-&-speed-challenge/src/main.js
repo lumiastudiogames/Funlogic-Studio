@@ -1,4 +1,4 @@
-import './index.css';
+
 import './games/gear-train/game.js';
 
 function bootstrapGame() {

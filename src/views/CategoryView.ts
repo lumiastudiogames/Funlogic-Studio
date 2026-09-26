@@ -19,7 +19,7 @@ export function renderCategoryView(
     title: `${category.label} Games`,
     description: category.description || `Play the best ${category.label} games online free with no download.`,
     keywords: category.keywords,
-    canonicalUrl: `https://funlogic.games/category/${category.id}/`,
+    canonicalUrl: `https://playfunlogic.com/category/${category.id}/`,
     type: 'website',
     faqs: category.faqs
   });
@@ -48,7 +48,7 @@ export function renderCategoryView(
     : sortedGames.slice(startIndex, startIndex + itemsPerPage);
 
   container.innerHTML = `
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-6 space-y-6">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 py-6 space-y-6 safe-padding-x">
       
       <!-- Back Navigation Button -->
       <div>
@@ -206,20 +206,20 @@ export function renderCategoryView(
           
           <div class="flex items-center justify-between gap-2 px-1">
             <h3 class="text-sm sm:text-base font-extrabold text-white tracking-tight">
-              Jogos da Categoria
+              Category Games
             </h3>
             <span class="text-[11px] font-extrabold text-slate-400 bg-slate-800 px-2.5 py-0.5 rounded-full border border-slate-700 shrink-0">
-              ${sortedGames.length} ${sortedGames.length === 1 ? 'jogo' : 'jogos'}
+              ${sortedGames.length} ${sortedGames.length === 1 ? 'game' : 'games'}
             </span>
           </div>
 
           <!-- Horizontal Carousel Track with Snap Points -->
           <div 
             id="games-carousel-track" 
-            class="flex items-stretch gap-4 sm:gap-5 overflow-x-auto snap-x snap-mandatory scroll-smooth no-scrollbar py-2 -mx-2 px-2 sm:mx-0 sm:px-0"
+            class="flex items-stretch gap-4 sm:gap-5 overflow-x-auto snap-x snap-mandatory scroll-smooth no-scrollbar py-2"
           >
             ${sortedGames.map(game => `
-              <div class="w-[80vw] max-w-[290px] xs:w-[260px] sm:w-[280px] shrink-0 snap-start flex flex-col">
+              <div class="w-[80vw] max-w-[280px] xs:w-[250px] sm:w-[270px] shrink-0 snap-start flex flex-col">
                 ${createGameCardHTML(game)}
               </div>
             `).join('')}

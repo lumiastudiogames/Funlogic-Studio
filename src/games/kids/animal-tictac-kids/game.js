@@ -34,33 +34,34 @@
     const now = ctx.currentTime;
 
     if (type === 'bark') {
-      // Puppy yip
+      // Puppy cheerful playful bark
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();
       osc.type = 'triangle';
-      osc.frequency.setValueAtTime(320, now);
-      osc.frequency.exponentialRampToValueAtTime(560, now + 0.09);
-      gain.gain.setValueAtTime(0.18, now);
-      gain.gain.exponentialRampToValueAtTime(0.01, now + 0.09);
+      osc.frequency.setValueAtTime(340, now);
+      osc.frequency.exponentialRampToValueAtTime(620, now + 0.1);
+      gain.gain.setValueAtTime(0.22, now);
+      gain.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
       osc.connect(gain);
       gain.connect(ctx.destination);
       osc.start(now);
-      osc.stop(now + 0.09);
+      osc.stop(now + 0.1);
     } else if (type === 'meow') {
-      // Kitty meow
+      // Kitty cute meow
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();
       osc.type = 'sine';
-      osc.frequency.setValueAtTime(450, now);
-      osc.frequency.linearRampToValueAtTime(650, now + 0.15);
-      osc.frequency.linearRampToValueAtTime(500, now + 0.3);
-      gain.gain.setValueAtTime(0.15, now);
-      gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+      osc.frequency.setValueAtTime(460, now);
+      osc.frequency.linearRampToValueAtTime(680, now + 0.16);
+      osc.frequency.linearRampToValueAtTime(520, now + 0.32);
+      gain.gain.setValueAtTime(0.18, now);
+      gain.gain.exponentialRampToValueAtTime(0.01, now + 0.32);
       osc.connect(gain);
       gain.connect(ctx.destination);
       osc.start(now);
-      osc.stop(now + 0.3);
+      osc.stop(now + 0.32);
     } else if (type === 'win') {
+      // Cheerful fanfare
       const notes = [440, 554.37, 659.25, 880];
       notes.forEach((freq, idx) => {
         const osc = ctx.createOscillator();
@@ -74,6 +75,45 @@
         osc.start(now + idx * 0.12);
         osc.stop(now + idx * 0.12 + 0.3);
       });
+    } else if (type === 'lose') {
+      // Soft gentle 'oops' slide down (not scary for kids)
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(360, now);
+      osc.frequency.exponentialRampToValueAtTime(180, now + 0.35);
+      gain.gain.setValueAtTime(0.16, now);
+      gain.gain.exponentialRampToValueAtTime(0.01, now + 0.35);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(now);
+      osc.stop(now + 0.35);
+    }
+  }
+
+  // Spawn starburst explosion effect on click
+  function spawnStarParticles(clientX, clientY) {
+    const stars = ['⭐', '✨', '🌟', '💛', '🐾'];
+    const count = 7;
+    for (let i = 0; i < count; i++) {
+      const star = document.createElement('div');
+      star.className = 'star-particle';
+      star.textContent = stars[Math.floor(Math.random() * stars.length)];
+      
+      const angle = (i / count) * 2 * Math.PI + (Math.random() * 0.5 - 0.25);
+      const distance = 35 + Math.random() * 45;
+      const tx = Math.cos(angle) * distance;
+      const ty = Math.sin(angle) * distance;
+      const rot = Math.floor(Math.random() * 360) + 'deg';
+
+      star.style.left = `${clientX}px`;
+      star.style.top = `${clientY}px`;
+      star.style.setProperty('--tx', `${tx}px`);
+      star.style.setProperty('--ty', `${ty}px`);
+      star.style.setProperty('--rot', rot);
+
+      document.body.appendChild(star);
+      setTimeout(() => star.remove(), 700);
     }
   }
 
@@ -82,9 +122,35 @@
     isPlayerTurn = true;
     isGameOver = false;
     startTime = Date.now();
-    document.getElementById('win-modal').classList.remove('active');
-    updateHint('Your turn! Tap a tile to place a Puppy 🐶');
+
+    document.getElementById('win-modal')?.classList.remove('active');
+    document.getElementById('lose-modal')?.classList.remove('active');
+    document.getElementById('tie-modal')?.classList.remove('active');
+
+    updateTurnUI(true);
+    updateHint('Your turn! Tap a tile to place Puppy 🐶');
     renderBoard();
+  }
+
+  function updateTurnUI(isPlayer) {
+    const dogCard = document.getElementById('player-card-dog');
+    const catCard = document.getElementById('player-card-cat');
+
+    if (isPlayer) {
+      dogCard?.classList.add('active-turn');
+      catCard?.classList.remove('active-turn');
+      const statusDog = dogCard?.querySelector('.player-status');
+      const statusCat = catCard?.querySelector('.player-status');
+      if (statusDog) statusDog.textContent = 'Your Turn';
+      if (statusCat) statusCat.textContent = 'Waiting';
+    } else {
+      dogCard?.classList.remove('active-turn');
+      catCard?.classList.add('active-turn');
+      const statusDog = dogCard?.querySelector('.player-status');
+      const statusCat = catCard?.querySelector('.player-status');
+      if (statusDog) statusDog.textContent = 'Please Wait';
+      if (statusCat) statusCat.textContent = 'Thinking...';
+    }
   }
 
   function updateHint(text) {
@@ -94,26 +160,40 @@
 
   function renderBoard(winningCombo = null) {
     const boardEl = document.getElementById('tictac-board');
+    if (!boardEl) return;
     boardEl.innerHTML = '';
 
     board.forEach((val, idx) => {
       const cell = document.createElement('div');
       cell.className = 'tictac-cell';
+
       if (val !== null) {
         cell.classList.add('taken');
-        cell.textContent = val;
+        const emojiSpan = document.createElement('span');
+        emojiSpan.className = 'emoji-3d';
+        emojiSpan.textContent = val;
+        cell.appendChild(emojiSpan);
       }
+
       if (winningCombo && winningCombo.includes(idx)) {
         cell.classList.add('winning-cell');
       }
 
-      cell.addEventListener('click', () => handleCellClick(idx));
+      cell.addEventListener('click', (e) => {
+        handleCellClick(idx, e);
+      });
+
       boardEl.appendChild(cell);
     });
   }
 
-  function handleCellClick(idx) {
+  function handleCellClick(idx, event) {
     if (!isPlayerTurn || isGameOver || board[idx] !== null) return;
+
+    // Starburst particles on click
+    if (event) {
+      spawnStarParticles(event.clientX, event.clientY);
+    }
 
     // Player move (Puppy 🐶)
     board[idx] = '🐶';
@@ -133,19 +213,23 @@
 
     // AI Turn (Kitty 🐱)
     isPlayerTurn = false;
-    updateHint('Kitty 🐱 is thinking...');
+    updateTurnUI(false);
+    updateHint('Kitty 🐱 is planning a move...');
 
     setTimeout(() => {
       aiMove();
-    }, 400);
+    }, 450);
   }
 
   function aiMove() {
     if (isGameOver) return;
 
-    // Gentle AI: Check if kitty can win in 1 move, else pick random
+    // Gentle AI with priority:
+    // 1. Can Cat win now? Take it!
+    // 2. Can Player win? Block it sometimes (65%)
+    // 3. Else take center or best open
     let moveIdx = findWinningMove('🐱');
-    if (moveIdx === -1 && Math.random() < 0.6) {
+    if (moveIdx === -1 && Math.random() < 0.65) {
       moveIdx = findWinningMove('🐶'); // friendly block occasionally
     }
     if (moveIdx === -1) {
@@ -162,11 +246,17 @@
       playSound('meow');
       renderBoard();
 
+      // Trigger small starburst on cat placement
+      const cells = document.querySelectorAll('.tictac-cell');
+      const targetCell = cells[moveIdx];
+      if (targetCell) {
+        const rect = targetCell.getBoundingClientRect();
+        spawnStarParticles(rect.left + rect.width / 2, rect.top + rect.height / 2);
+      }
+
       const winCombo = checkWin('🐱');
       if (winCombo) {
-        isGameOver = true;
-        renderBoard(winCombo);
-        updateHint('Kitty got 3 in a row! Tap restart to try again.');
+        handleLose(winCombo);
         return;
       }
 
@@ -176,6 +266,7 @@
       }
 
       isPlayerTurn = true;
+      updateTurnUI(true);
       updateHint('Your turn! Place Puppy 🐶');
     }
   }
@@ -209,7 +300,21 @@
 
   function handleTie() {
     isGameOver = true;
-    updateHint("It's a friendly tie! 🐶❤️🐱 Tap restart to play again!");
+    updateHint("Friendly tie! 🐶❤️🐱 Tap restart to play again!");
+    setTimeout(() => {
+      document.getElementById('tie-modal')?.classList.add('active');
+    }, 400);
+  }
+
+  function handleLose(combo) {
+    isGameOver = true;
+    renderBoard(combo);
+    playSound('lose');
+    updateHint('Kitty got 3 in a row! Tap try again 🐱🐾');
+
+    setTimeout(() => {
+      document.getElementById('lose-modal')?.classList.add('active');
+    }, 500);
   }
 
   function handleWin(combo) {
@@ -228,15 +333,17 @@
     setTimeout(() => {
       const wtEl = document.getElementById('win-time');
       if (wtEl) wtEl.textContent = `${elapsedSeconds}s`;
-      document.getElementById('win-modal').classList.add('active');
+      document.getElementById('win-modal')?.classList.add('active');
     }, 500);
   }
 
-  document.getElementById('btn-restart').addEventListener('click', initGame);
-  document.getElementById('btn-play-again').addEventListener('click', initGame);
+  document.getElementById('btn-restart')?.addEventListener('click', initGame);
+  document.getElementById('btn-play-again')?.addEventListener('click', initGame);
+  document.getElementById('btn-try-again')?.addEventListener('click', initGame);
+  document.getElementById('btn-tie-again')?.addEventListener('click', initGame);
 
   const soundBtn = document.getElementById('btn-sound');
-  soundBtn.addEventListener('click', () => {
+  soundBtn?.addEventListener('click', () => {
     soundEnabled = !soundEnabled;
     soundBtn.textContent = soundEnabled ? '🔊' : '🔇';
     if (soundEnabled) playSound('bark');
@@ -246,12 +353,13 @@
   const howModal = document.getElementById('how-modal');
   const closeHowBtn = document.getElementById('btn-close-how');
 
-  howBtn.addEventListener('click', () => {
-    howModal.classList.add('active');
+  howBtn?.addEventListener('click', () => {
+    howModal?.classList.add('active');
   });
-  closeHowBtn.addEventListener('click', () => {
-    howModal.classList.remove('active');
+  closeHowBtn?.addEventListener('click', () => {
+    howModal?.classList.remove('active');
   });
 
   initGame();
 })();
+

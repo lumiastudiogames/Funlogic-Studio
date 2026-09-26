@@ -82,10 +82,31 @@
 
     <!-- Game Area -->
     <main class="game-area">
-      <!-- 3x3 Board -->
+      <!-- Dog vs Cat Matchup Scoreboard / Turn Indicator -->
+      <div class="vs-scoreboard">
+        <div id="player-card-dog" class="player-pill active-turn">
+          <span class="player-avatar-3d">🐶</span>
+          <div class="player-info">
+            <span class="player-name">Puppy (You)</span>
+            <span class="player-status">Your Turn</span>
+          </div>
+        </div>
+
+        <div class="vs-badge">VS</div>
+
+        <div id="player-card-cat" class="player-pill">
+          <div class="player-info text-right">
+            <span class="player-name">Kitty (Bot)</span>
+            <span class="player-status">Waiting</span>
+          </div>
+          <span class="player-avatar-3d">🐱</span>
+        </div>
+      </div>
+
+      <!-- 3x3 Board with fixed, stable square dimensions -->
       <div id="tictac-board" class="tictac-board"></div>
 
-      <div id="hint-bar" class="hint-bar">Your turn! Tap a tile to place a Puppy 🐶</div>
+      <div id="hint-bar" class="hint-bar">Your turn! Tap a tile to place Puppy 🐶</div>
     </main>
 
     <!-- How to Play Modal -->
@@ -93,21 +114,41 @@
       <div class="modal-card">
         <h2 style="margin: 0 0 12px; color: #ca8a04; font-size: 20px;">Puppy vs Kitty 🐶🐱</h2>
         <div style="text-align: left; font-size: 14px; line-height: 1.6; color: #475569; margin-bottom: 20px;">
-          <p>1. You are the happy Puppy 🐶!</p>
-          <p>2. Tap any empty square to place your puppy.</p>
-          <p>3. Line up 3 puppies horizontally, vertically, or diagonally to win!</p>
+          <p>1. You play as the friendly <strong>Puppy 🐶</strong>!</p>
+          <p>2. Tap any empty square to make your move.</p>
+          <p>3. Line up 3 puppies in a row (across, down, or diagonal) to win!</p>
         </div>
-        <button id="btn-close-how" class="btn-tactile btn-primary" style="width: 100%;">Play Puppy!</button>
+        <button id="btn-close-how" class="btn-tactile btn-primary" style="width: 100%;">Play Now!</button>
       </div>
     </div>
 
-    <!-- Win Modal -->
+    <!-- Win Modal (Victory) -->
     <div id="win-modal" class="modal-overlay">
       <div class="modal-card">
-        <div style="font-size: 52px; margin-bottom: 8px;">🐶🎉🏆</div>
-        <h2 style="margin: 0 0 8px; color: #ca8a04; font-size: 22px;">Puppy Wins!</h2>
+        <div class="modal-emoji-banner">🐶🎉🏆</div>
+        <h2 style="margin: 0 0 8px; color: #16a34a; font-size: 22px;">Puppy Wins!</h2>
         <p style="margin: 0 0 16px; color: #64748b; font-size: 14px;">Great job! You lined up 3 in a row in <strong id="win-time">0s</strong>!</p>
         <button id="btn-play-again" class="btn-tactile btn-primary" style="width: 100%;">Play Again 🐶</button>
+      </div>
+    </div>
+
+    <!-- Lose Modal (Kitty Wins) -->
+    <div id="lose-modal" class="modal-overlay">
+      <div class="modal-card modal-lose">
+        <div class="modal-emoji-banner">🐱🐟💨</div>
+        <h2 style="margin: 0 0 8px; color: #ea580c; font-size: 22px;">Kitty Wins!</h2>
+        <p style="margin: 0 0 16px; color: #64748b; font-size: 14px;">So close! Kitty got 3 in a row this time. Try again and win!</p>
+        <button id="btn-try-again" class="btn-tactile btn-lose-replay" style="width: 100%;">Try Again 🐶</button>
+      </div>
+    </div>
+
+    <!-- Tie Modal (Draw) -->
+    <div id="tie-modal" class="modal-overlay">
+      <div class="modal-card">
+        <div class="modal-emoji-banner">🐶🤝🐱</div>
+        <h2 style="margin: 0 0 8px; color: #ca8a04; font-size: 22px;">Friendly Tie!</h2>
+        <p style="margin: 0 0 16px; color: #64748b; font-size: 14px;">All tiles are filled! Who will win the next round?</p>
+        <button id="btn-tie-again" class="btn-tactile btn-primary" style="width: 100%;">Play Again 🐾</button>
       </div>
     </div>
   </div>

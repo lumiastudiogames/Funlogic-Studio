@@ -185,7 +185,7 @@ body {
   border: 1px solid #86efac;
 }
 
-/* The Water River */
+/* The Water River with Wave Animations */
 .river-water {
   flex: 1;
   background: linear-gradient(180deg, #38bdf8 0%, #0284c7 100%);
@@ -193,24 +193,76 @@ body {
   display: flex;
   align-items: center;
   padding: 10px;
+  overflow: hidden;
 }
 
-/* Boat */
+.river-waves-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-repeat: repeat-x;
+  opacity: 0.35;
+}
+
+.wave-layer-1 {
+  background-image: radial-gradient(ellipse at 50% 100%, rgba(255, 255, 255, 0.45) 0%, transparent 60%);
+  background-size: 80px 24px;
+  animation: waveDrift1 4s linear infinite;
+}
+
+.wave-layer-2 {
+  background-image: radial-gradient(ellipse at 50% 0%, rgba(255, 255, 255, 0.35) 0%, transparent 50%);
+  background-size: 110px 32px;
+  animation: waveDrift2 6s linear infinite reverse;
+}
+
+.wave-layer-3 {
+  background: repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.08) 0px, rgba(255, 255, 255, 0.08) 30px, transparent 30px, transparent 60px);
+  animation: waveDrift3 8s linear infinite;
+}
+
+@keyframes waveDrift1 {
+  0% { background-position-x: 0; }
+  100% { background-position-x: 80px; }
+}
+@keyframes waveDrift2 {
+  0% { background-position-x: 0; }
+  100% { background-position-x: 110px; }
+}
+@keyframes waveDrift3 {
+  0% { background-position-x: 0; }
+  100% { background-position-x: 60px; }
+}
+
+/* 3D Floating Boat */
 .boat-container {
   position: absolute;
   top: 50%;
-  transform: translateY(-50%);
   width: 160px;
   height: 90px;
-  background: #78350f;
-  border: 4px solid #451a03;
-  border-radius: 0 0 45px 45px;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+  background: linear-gradient(180deg, #92400e 0%, #78350f 50%, #451a03 100%);
+  border: 4px solid #3b1d06;
+  border-radius: 0 0 50px 50px;
+  box-shadow: 0 16px 24px rgba(0, 0, 0, 0.45), inset 0 3px 5px rgba(255, 255, 255, 0.3);
   display: flex;
   align-items: center;
   justify-content: space-evenly;
   transition: left 0.8s cubic-bezier(0.4, 0, 0.2, 1);
   z-index: 3;
+  animation: boatBob 2.8s ease-in-out infinite alternate;
+  transform-origin: center bottom;
+}
+
+@keyframes boatBob {
+  0% {
+    transform: translateY(-50%) rotate(-2deg);
+  }
+  50% {
+    transform: translateY(calc(-50% - 6px)) rotate(1.5deg);
+  }
+  100% {
+    transform: translateY(calc(-50% + 4px)) rotate(-1.5deg);
+  }
 }
 
 .boat-left {
@@ -221,35 +273,59 @@ body {
   left: calc(100% - 170px);
 }
 
-/* Character Card (Large 20-24px text) */
+/* Character Stickers (Die-cut white border + vinyl gloss) */
 .char-card {
-  width: 90px;
-  height: 80px;
+  width: 92px;
+  height: 84px;
   background: #ffffff;
-  border: 3px solid #38bdf8;
-  border-radius: 16px;
+  border: 4px solid #ffffff;
+  border-radius: 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  transition: all 0.15s ease;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.18), 0 0 0 2px rgba(3, 105, 161, 0.25);
+  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Vinyl sticker sheen */
+.char-card::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.45) 0%, rgba(255, 255, 255, 0) 50%);
+  pointer-events: none;
+}
+
+/* Playful sticker tilt on the banks */
+.river-bank .char-card:nth-child(odd) {
+  transform: rotate(-2.5deg);
+}
+.river-bank .char-card:nth-child(even) {
+  transform: rotate(2.5deg);
 }
 
 .char-card:hover {
-  transform: scale(1.06);
-  border-color: #0284c7;
+  transform: scale(1.1) rotate(0deg) !important;
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.25), 0 0 0 3px #0284c7;
+  z-index: 10;
 }
 
 .char-card:active {
-  transform: scale(0.95);
+  transform: scale(0.95) rotate(0deg) !important;
 }
 
 .char-card.in-boat {
   width: 65px;
   height: 65px;
-  border-width: 2px;
+  border-width: 3px;
+  transform: none !important;
 }
 
 .char-icon {
